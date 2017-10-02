@@ -1,3 +1,5 @@
+## DEPRECATED
+
 # Fluxo comum de trabalho
 
 Além da master, existem duas branches principais de trabalho no SALIC, identificadas com as duas frentes de trabalho:
