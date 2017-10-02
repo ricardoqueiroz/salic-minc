@@ -1930,7 +1930,8 @@ class Agente_AgentesController extends MinC_Controller_Action_Abstract
             if ($this->modal == "s") {
                 $nome = Seguranca::tratarVarAjaxUFT8($nome);
             }
-            $nome = preg_replace('/[^A-Za-zZ0-9\ ]/', '', $nome);
+//            $nome = preg_replace('/[^A-Za-zZ0-9\ ]/', '', $nome);
+            $nome = preg_replace('/[\'\"\n\`\´]/', '', $nome);
 
             try {
                 $arrNome = array(
