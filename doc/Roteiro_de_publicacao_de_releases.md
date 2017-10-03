@@ -1,121 +1,76 @@
 # Roteiro de publicação de release
 
 
-## 1) Certifique-se de que funcionalidade está ok em desenvolvimento no seu branch
+## Fluxo de desenvolvimento (simplificado)
 
-Todo o trabalho é feito em uma branch específica, que agrupa um conjunto de tarefas.
+Existem dois tipos de releases: hotfixes e features. Cada um segue um caminho diferente de desenvolvimento e publicação.
 
-## 2) Faça o merge da branch com a master
+## 1) Hotfix
 
-Certifique-se de que está trabalhando no branch correto e que os commits estão na versão correta:
+Hotfix é uma alteração emergencial a ser aplicada à produção. Envolve alguns commits no máximo e dificilmente dura mais que um dia.
 
-    $ git branch
-    * nome-do-branch
-      correcoes
-      hotfix-readequacoes
-      master
-
-    $ git log
-
-Mude para o branch master e faça o merge
+Para criar uma hotfix, siga os passos abaixo:
 
     $ git checkout master
-    $ git pull origin master
-    $ git merge nome-do-branch
+    $ git checkout -b hotfix-nome-da-correcao
+    $ ... comite suas correções
+    $ git push hotfix-nome-da-correcao
 
-É possível que ocorram conflitos. Um conflito é quando um arquivo é alterado em duas branches e o git não consegue fazer o merge automático. Nesse caso, você deve resolver o conflito na mão. Verifique a seção <http://192.168.14.67/wiki/Comandos_gerais_de_GIT/#merge-conflitos>
+    No github:
+    * crie um pull request da branch hotfix-nome-da-correcao em https://github.com/culturagovbr/salic-minc/pulls
+    * revise o pull request
+    * aceite ou rejeite
+    * crie uma nova release em https://github.com/culturagovbr/salic-minc/releases
+    (draft a new release)
+    * preencha a release com:
+      - número da tag
+      - título da release
+      - texto descritivo contendo modelo anterior do CHANGELOG (listagem de novas funcionalidades):
+        Release 2.x.x
+	* [FIX] Área do sistema: descrição da alteração (#3 [número da issue])
+	(O identificador da issue deveria ser informado sempre que houver)
 
-
-
-
-## 2) Listar correções e novidades, adicionando as linhas
-
-Verificar qual será o número da próxima versão, seguindo as <http://192.168.14.67/wiki/Salic/RegrasVersionamento/>
-
-Para o changelog, adotar o padrão:
-
-* fix: correção de bug
-* novo: nova funcionalidade
-
-## 3) Edite o arquivo CHANGELOG
-
-Adicione o texto do release ao CHANGELOG
-
-    // edite
-    $ vim CHANGELOG
+    Publicação da release
+    * acesse os nós
+    * cd /var/www/salic/app
+    * git pull origin master
     
+## 2) Feature
 
-    // faca o commit
-    $ git add CHANGELOG
-    $ git commit -m 'adicionando changelog da versao v1.x.x'
-    $ git push
+Para criar uma feature, siga os passos abaixo:
 
-## 4) Editar texto de tela de release
-
-  <http://192.168.14.67/wiki/ReleasesSalic/>
-
-## 5) Criar tag no código
-
-    // certifique-se de estar trabalhando no branch correto e faca o merge com o master, caso isso ainda nao tenha sido feito
-    $ git branch
-      correcoes
-    * master
-
-    // liste as tags que ja existem
-    $ git tag
-    v1.3.0
-    v1.3.1
-    v1.3.2
-    v1.3.3
-   
-    // crie a tag
-    $ git tag -a v1.3.1 -m 'informacoes sobre o release v1.3.1'
+    $ git checkout develop
+    $ git checkout -b feature-nome-da-feature
+    $ ... comite suas correções
+    $ git checkout test
+    $ git merge feature-nome-da-feature
+    $ git push origin test
     
-    // envie a tag para o repositório central (ex: github, gitlab). Caso contrario a tag sera apenas local
-    $ git push --follow-tags
-
-Em caso de dúvida, consultar <http://192.168.14.67/wiki/Comandos_gerais_de_GIT/#tags>
-
-## 6) Subir para homologação
-
-    // verifique qual e a tag atual
-    $ git describe --tags
-    v1.3.0
-
-    // atualize o repositório
-    $ git pull
+    ... homologação pelo cliente
     
-    // baixe a tag nova criando uma branch para ela
-    # git checkout v1.3.1 -b v1.3.1
-
-    $ git describe --tags
-    v1.3.0
-
-## 7) Verificar publicação
-
-## 8) Preparar email de release
-
-Caso haja necessidade, elaborar um email de release.
-
-
-## 9) Subir para produção
-
-    # cd /var/www/novosalic.cultura.gov.br 
+    Se aceito:
+    $ git checkout develop
+    $ git merge feature-nome-da-feature
+    $ git push origin develop
     
-    // verifique qual e a tag atual
-    # git describe --tags
-    v1.3.0
+    Se rejeitado:
+    * não sobe para develop e volta para o desenvolvimento da feature
     
-    // atualize as referencias do repositório sem alterar os arquivos
-    # git fetch
+    No github (irá publicar todas as features aprovadas e mergeadas na develop):
+    * crie um pull request da feature develop em https://github.com/culturagovbr/salic-minc/pulls
+    * revise o pull request
+    * aceite ou rejeite
+    * crie uma nova release em https://github.com/culturagovbr/salic-minc/releases
+    (draft a new release)
+    * preencha a release com:
+      - número da tag
+      - título da release
+      - texto descritivo contendo modelo anterior do CHANGELOG (listagem de novas funcionalidades)
+        Release 2.x.x
+	* [FIX] Área do sistema: descrição da alteração (#3 [número da issue])
+	(O identificador da issue deveria ser informado sempre que houver)
 
-    // verifique se a nova tag apareceu
-    # git tag
-    v1.3.0
-    v1.3.1
-
-    // baixe a tag nova criando uma branch para ela
-    # git checkout v1.3.1 -b v1.3.1
-
-## 10) Enviar email
-
+    Publicação da release
+    * acesse os nós
+    * cd /var/www/salic/app
+    * git pull origin master
