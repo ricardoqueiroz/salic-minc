@@ -229,15 +229,15 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
         $dados = array();
         //TRATANDO SITUACAO DO PROJETO QUANDO ESTE FOR DE READEQUACAO
         if ($this->bln_readequacao == "false") {
-            $dados['Situacao'] = 'D03';
-            $buscarsituacao = $tblSituacao->listasituacao(array('D03'))->current();
+            $dados['Situacao'] = 'D50';
+            $buscarsituacao = $tblSituacao->listasituacao(array('D50'))->current();
         } else {
             $dados['Situacao'] = 'D02';
             $buscarsituacao = $tblSituacao->listasituacao(array('D02'))->current();
         }
         $dados['DtSituacao'] = date('Y-m-d H:i:s');
-        $dados['ProvidenciaTomada'] = 'PROJETO APROVADO NA CNIC N&ordm ' . $buscarnrreuniaoprojeto->NrReuniao . ' - ' . $buscarsituacao['Descricao'];
-        $dados['Logon'] = $auth->getIdentity()->usu_codigo;
+        $dados['ProvidenciaTomada'] = 'PROJETO APRECIADO NA CNIC N&ordm ' . $buscarnrreuniaoprojeto->NrReuniao . ' - ' . $buscarsituacao['Descricao'];
+        $dados['Logon'] = $this->auth->getIdentity()->usu_codigo;
         $where = "IdPRONAC = " . $idpronac;
         $tblProjetos->alterar($dados, $where);
         
