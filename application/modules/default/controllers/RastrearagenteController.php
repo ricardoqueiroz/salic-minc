@@ -17,6 +17,7 @@ class RastrearagenteController extends MinC_Controller_Action_Abstract {
      */
 
     public function init() {
+
         // verifica as permiss�es
         $PermissoesGrupo = array();
         $PermissoesGrupo[] = 92;

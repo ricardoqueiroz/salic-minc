@@ -1,14 +1,4 @@
 <?php
-/**
- * DAO Email
- * @author Equipe RUP - Politec
- * @since 01/12/2010
- * @version 1.0
- * @package application
- * @subpackage application.model.DAO
- * @link http://www.cultura.gov.br
- */
-
 class EmailDAO extends Zend_Db_Table
 {
     /**
@@ -22,13 +12,14 @@ class EmailDAO extends Zend_Db_Table
     public static function enviarEmail($email, $assunto, $texto, $perfil = 'PerfilGrupoPRONAC')
     {
         $config = new Zend_Config_Ini(APPLICATION_PATH .'/configs/application.ini', APPLICATION_ENV);
+        $emailDefault = $config->mail->default->toArray();
         $config = $config->mail->transport->toArray();
 
         $transport = new Zend_Mail_Transport_Smtp($config['host'], $config);
         $mail = new Zend_Mail();
 
         $mail->setBodyHtml($texto);
-        $mail->setFrom('srv_salic@cultura.gov.br', 'Salic BR');
+        $mail->setFrom($emailDefault['email'], 'Salic BR');
         $mail->addTo($email);
         $mail->setSubject($assunto);
         return $mail->send($transport);
