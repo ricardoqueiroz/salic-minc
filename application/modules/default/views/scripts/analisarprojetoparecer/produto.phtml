@@ -30,7 +30,7 @@
     </div>
     <div class="row" >
         <div class="col s12">
-            <h3 class="left">An&aacute;lise do Produto </h3> 
+            <h3 class="left">An&aacute;lise do Produto </h3>
             <a class="btn right" href="javascript:voltar();" title="P&aacute;gina Anterior">Voltar</a>
         </div>
     </div>
@@ -57,7 +57,7 @@
           <ul class="tabs">
             <li class="tab col s3"><a class="active" href="#test1">An&aacute;lise de conte&uacute;do</a></li>
             <li class="tab col s3"><a href="#test2">An&aacute;lise de custos</a></li>
-                <li 
+                <li
                     class="tab col s3
                             <?php if(!(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA))): ?>
                                 disabled text-gray grey lighten-2
@@ -104,298 +104,19 @@
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>
 
-<!-- ========== FIM RODAP¿ DO CONTE&UACUTE;DO ========== -->
 <input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?php echo $this->grupoAtivo; ?>" />
+<input type="hidden" name="somenteLeitura" id="somenteLeitura" value="<?php echo $this->somenteLeitura ? 1 : 0; ?>" />
+<input type="hidden" name="IN2017" id="IN2017" value="<?php echo ($this->IN2017 == 1)? 1 : 0; ?>" />
+<input type="hidden" name="stPrincipal" id="stPrincipal" value="<?php echo ($this->stPrincipal == 1) ? 1 : 0; ?>" />
+<input type="hidden" name="produtosSecundariosEmAnalise" id="produtosSecundariosEmAnalise" value="<?php echo ($this->produtosSecundariosEmAnalise > 0 ) ? 1 : 0; ?>" />
+<input type="hidden" name="valorpossivelApresentacao" id="valorpossivelApresentacao" value="<?php echo $this->formatarReal($this->valorpossivel);?>" />
+<input type="hidden" name="IdPRONAC" id="IdPRONAC" value="<?php echo $this->projeto->IdPRONAC; ?>" />
+<input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
+<input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?php echo $this->vlSolicitado;?>" />
+<input type="hidden" name="idProduto" id="idProduto" value="<?php echo $this->projeto->idProduto; ?>" />
 
-<script type="text/javascript">
-    /*todo retirar php*/
-    function carregarTextAreaCKEditor(){
-        <?php if (!$this->somenteLeitura) : ?>
-            CKEDITOR.replace( 'ParecerDeConteudo', { toolbar: [] } );
-        <?php else : ?>
-            var parecer = $('#ParecerDeConteudo').val();
-            $('#ParecerDeConteudo').before(parecer).remove();
-            $('#ParecerFavoravel').attr('disabled', 1);
-            $('#ParecerDesfavoravel').attr('disabled', 1);
-            $('#btSalvarAnaliseDeConteudo').remove();
-            <?php if ($this->IN2017 && $this->stPrincipal && ($this->produtosSecundariosEmAnalise == 0)): ?>
-                var dsAcaoAlcanceProduto = $('#dsAcaoAlcanceProduto').val();
-                $('#dsAcaoAlcanceProduto').before(dsAcaoAlcanceProduto).remove();
-            <?php endif; ?>
-        <?php endif; ?>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/tinymce/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/jquery/plugins/editorRico.js"></script>
 
-        <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)){ ?>
-            <?Php if ($this->IN2017 && $this->stPrincipal): ?>
-                CKEDITOR.replace( 'dsAcaoAlcanceProduto', { toolbar: [] } );
-            <?php endif; ?>
-
-            CKEDITOR.replace( 'dsConsolidacao', { toolbar: [] } );
-        <?php } ?>
-    }
-
-    /*todo retirar php*/
-    $(document).ready(function(){
-
-        carregarAnaliseDeConteudo();
-
-        $('#btSalvarAnaliseDeConteudo').click(function()
-        {
-            <?php if (!$this->somenteLeitura) : ?>
-                var parecer = CKEDITOR.instances['ParecerDeConteudo'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
-            <?php endif; ?>
-            erros = 0;
-
-            <?php if ($this->IN2017 && $this->stPrincipal && ($this->produtosSecundariosEmAnalise == 0)): ?>
-                var acoesRelevantes = CKEDITOR.instances['dsAcaoAlcanceProduto'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
-                if( acoesRelevantes.length  < 11){
-                    alertar('As a\xE7\xF5es relevantes devem ter no m\xEDnimo 11 caracteres!');
-                    erros ++;
-                }
-            <?php endif; ?>
-
-            if( parecer.length  < 11){
-                alertar('O parecer t&eacute;cnico deve ter no m\xEDnimo 11 caracteres!');
-                erros ++;
-            }
-
-            if (!erros) {
-                $('#formAnaliseConteudo').submit();
-            }
-            return false;
-        });
-
-        window.setTimeout('carregarTextAreaCKEditor()', 1000);
-
-        $('#areaCultural').change(function() {
-            carregarSegmento();
-        });
-
-        $('#segmentoCultural').change(function() {
-            carregarEnquadramento();
-        });
-
-        $('#btSalvarConsolidacao').click(function() {
-            <?php if ($this->IN2017 && $this->stPrincipal && ($this->produtosSecundariosEmAnalise == 0)) : ?>
-                $('#consolidacaoDsAcaoAlcanceProduto').val($('#dsAcaoAlcanceProduto').val());
-            <?php endif; ?>
-
-            var i = 0;
-            $('.obrigatorio').each(function(){
-                if($.trim($(this).val()) == ''){
-                    i++;
-                }
-            });
-
-            var boolValid = false;
-            $('.obrigatorioRadio').each(function() {
-                if ($(this).is(':checked') ) {
-                    boolValid = true;
-                }
-            });
-
-            var texto = CKEDITOR.instances['dsConsolidacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
-            if (texto == '' || texto == 'Digiteseutextoaqui...'){
-                i++;
-            }
-
-            if(i > 0 || !boolValid) {
-                $("#camposObrigatorios").dialog("destroy");
-                $("#camposObrigatorios").html("Favor preencher os dados obrig&aacute;torios!");
-                $("#camposObrigatorios").dialog({
-                    resizable: false,
-                    title: 'Alerta!',
-                    width:320,
-                    height:160,
-                    modal: true,
-                    buttons : {
-                        'OK' : function(){
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-                $('.ui-dialog-titlebar-close').remove();
-
-            } else {
-                $('#formConsolidacao').submit();
-            }
-        });
-
-        $("#valorpossivelApresentacao").html('<?php echo $this->formatarReal($this->valorpossivel);?>');
-        var grupoAtivo = $("#grupoAtivo").val();
-        if(grupoAtivo == "93"){
-            desabilitaFormConteudo(true);
-            $("#divAnaliseCusto a").click(function() { return false; });
-        }
-
-        var cont = 0;
-        $('.class_relatorio').each(function(){
-            var contAux = cont;
-            $('#abrir_fechar'+contAux).click(function(){
-                $('#div_relatorio'+contAux).toggle('slow');
-            });
-            cont++;
-        });
-
-        $('.linkrelatorio').click(function(){
-            var este = this;
-            var cont = $(este).attr('cont');
-            $('#div_relatorio'+cont).html('<table class="tabelaRelatorio" cellspacing="1" style="margin: 0;margin-left: 52px; width: 90%;  padding: 0px;"><tr><td align="center"><img src="../public/img/ajax.gif"/>&nbsp;Carregando...</td><tr></table>');
-            $('#div_relatorio'+cont).css('display','');
-            $.post($(este).attr('link'),{nrRelatorio: cont,idPRONAC:<?php echo $this->projeto->IdPRONAC; ?>},function(data){
-                $('#div_relatorio'+$(este).attr('cont')).html(data);
-            });
-        });
-        $(".icn_menos").click(function(){
-            var tipo = $(this).attr('tipo');
-            var aberto = $(this).attr('aberto');
-            if(aberto == 'true'){
-                adisplay = 'none';
-                $(this).attr('aberto','false');
-                $(this).removeClass('icn_menos').addClass('icn_mais');
-            }
-            else{
-                adisplay = '';
-                $(this).attr('aberto','true');
-                $(this).removeClass('icn_mais').addClass('icn_menos');
-            }
-            if(tipo == 'fonte'){
-                fonte = $(this).attr('fonte');
-                $(".master[fonte='"+fonte+"']").css('display', adisplay);
-                $(".clickproduto").removeClass('icn_mais').addClass('icn_menos');
-            }
-            if(tipo == 'produto'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                $(".produto[produto='"+produto+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-            if(tipo == 'etapa'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                etapa = $(this).attr('etapa');
-                $(".etapa[produto='"+produto+"'][etapa='"+etapa+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-            if(tipo == 'cidade'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                etapa = $(this).attr('etapa');
-                cidade = $(this).attr('cidade');
-                $(".cidade[produto='"+produto+"'][etapa='"+etapa+"'][cidade='"+cidade+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-        });
-        $(".item").mouseover(function(){
-            $(this).addClass('fundo_linha3');
-        });
-        $(".item").mouseout(function(){
-            $(this).removeClass('fundo_linha3');
-        });
-        $(".item").click(function(){
-            if($(this).hasClass('fundo_linha4')){
-                $(this).removeClass('fundo_linha4');
-            }
-            else{
-                $(this).addClass('fundo_linha4');
-            }
-        });
-
-        APPescolherLei_8313();
-
-        carregarEnquadramento();
-    }); //fecha document.ready
-
-    function AlterarItem(idPlanilhaProjeto,idPronac,idProduto,stPrincipal)
-    {
-        var este = $('#alteraritemsolicitado');
-        este.html('<br><br><br><br><br><br><br><center>Aguarde, carregando dados...<br><img src="/public/img/ajax.gif" /></center><br>');
-
-        este.dialog(
-            {
-                title:"Alterar Item",
-                resizable: false,
-                width:800,
-                height:600,
-                modal: false,
-                autoOpen:true,
-                closeOnEscape:true
-            }
-        );
-
-        $.post(
-            este.attr('link'),
-            {idPlanilhaProjeto:idPlanilhaProjeto,idPronac:idPronac,idProduto:idProduto,stPrincipal:stPrincipal},
-            function(data)
-                {
-                    este.html(data);
-                    este.dialog(
-                    {
-                        title:"Alterar Item",
-                        resizable: false,
-                        width:800,
-                        height:600,
-                        modal: false,
-                        autoOpen:true,
-                        closeOnEscape:true,
-                        buttons:
-                            {
-                            'Cancelar': function() {
-                                    $(this).dialog('close');
-                            },
-                            'Salvar': function() {
-                                var texto = $('#justificativa'+$('#idPlanilhaProjeto').val()).val();
-                                texto = texto.replace(/^\s+|\s+$/g,""); //retirando espa¿os
-                                if (texto.length <= 0 || texto=="")
-                                {
-                                    alertar('Dados obrigat\xF3rios n\xE3o informados.');
-                                    return false;
-                                }
-                                else
-                                {
-                                    var vlSugerido = $('#calcular_total'+$('#idPlanilhaProjeto').val()).html().replace(/\R\$\s+/g, '');
-                                    $('#totalcalculos'+$('#idPlanilhaProjeto').val()).val(vlSugerido);
-
-                                    var dados = $('#formSalvarItem').serialize();
-                                    $(this).append('<br><center>Aguarde, salvando informa\xE7\xF5es...<br><img src="<?php echo $this->baseUrl(); ?>/public/img/ajax.gif" /></center><br>');
-                                    $.post($('#formSalvarItem').attr('action'),dados
-                                    ,function(data)
-                                    {
-                                        var resposta = data;
-                                        $('#item'+$('#idPlanilhaProjeto').val()+' .JustParecerista').html($("#justificativa"+$('#idPlanilhaProjeto').val()).val());
-                                        $('#item'+$('#idPlanilhaProjeto').val()+' .ValorSugerido').html($("#calcular_total"+$('#idPlanilhaProjeto').val()).html());
-                                        somarValores();
-
-                                        //atualiza novo valor possivel de remanejamento
-                                        var vlSolicitado = '<?php echo $this->vlSolicitado;?>';
-                                        var vlTotalSugerido = recuperaTotalSugerido();
-                                        var valorpossivel = vlSolicitado - vlTotalSugerido;
-
-                                        $("#valorpossivel").val(valorpossivel);
-
-                                        //atualiza campo de apresentacao do novo valor possivel de remanejamento
-                                        var valorpossivelApresentacao = formatarParaReal(valorpossivel);
-                                        $("#valorpossivelApresentacao").html(valorpossivelApresentacao);
-
-                                        este.dialog('close');
-                                        janelaAlerta('Informa&ccedil;&otilde;es salvas com sucesso');
-                                    });
-                                }
-                            }
-                        }
-                    });
-                });
-    }
-
-    /*todo retirar php*/
-    function carregarAnaliseDeConteudo()
-    {
-        obj = {
-                stAcao: 1,
-                idPRONAC: <?php echo $this->projeto->IdPRONAC; ?>,
-                idProduto: <?php echo $this->projeto->idProduto; ?>,
-                stPrincipal: <?php echo $this->projeto->stPrincipal; ?>
-        };
-
-        recuperaFormulario($('#formAnaliseConteudo').attr('action'), obj);
-        return true;
-    }
-</script>
 <script type="text/javascript" src="/public/scripts/default/analisarprojetoparecer/produto.js"></script>
 <script type="text/javascript">APPescolherArt_18(); APPescolherArt_26(); APPescolherLei_8313(); APPescolherArtigo3();</script>
