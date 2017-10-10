@@ -1,10 +1,5 @@
 <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)){ ?>
-    <table class="tabela">
-        <tr>
-            <td><input type="button" id="abaProdutosSecundarios" class="btn_adicionar" onclick="abrirfechar('produtosSecundarios');"/>Dados dos Produtos Secund&aacute;rios</td>
-        </tr>
-    </table>
-    <table class="tabela sumir" id="produtosSecundarios" style="width:95%" width="95%">
+    <table class="bordered" id="produtosSecundarios">
         <?php if (count($this->produtosSecundarios)){ ?>
             <tr>
                 <th align="left">PRODUTO</th>

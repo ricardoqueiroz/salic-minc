@@ -16,16 +16,23 @@
 
 <div class="container-fluid">
     <!-- ========== INÍCIO BREADCRUMB (LINKS TOPO) ========== -->
-    <div id="breadcrumb">
-        <ul>
-            <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
-            <li class="second">An&aacute;lise T&eacute;cnica Inicial</li>
-            <li class="second"><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
-            <li class="last">An&aacute;lise do Produtos</li>
-        </ul>
+    <div class="row" >
+        <div class="col s12">
+            <div id="breadcrumb">
+                <ul>
+                    <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
+                    <li class="second">An&aacute;lise T&eacute;cnica Inicial</li>
+                    <li class="second"><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
+                    <li class="last">An&aacute;lise do Produtos</li>
+                </ul>
+            </div>
+        </div>
     </div>
-    <div id="titulo">
-        <div>An&aacute;lise do Produto <span class="voltar"><a href="javascript:voltar();" title="P&aacute;gina Anterior">Voltar</a></span></div>
+    <div class="row" >
+        <div class="col s12">
+            <h3 class="left">An&aacute;lise do Produto </h3> 
+            <a class="btn right" href="javascript:voltar();" title="P&aacute;gina Anterior">Voltar</a>
+        </div>
     </div>
     <div id="dialog-valor" class="sumir" title="Valor Inv&aacute;lido">
         <div class="msgERROR">
@@ -50,35 +57,47 @@
           <ul class="tabs">
             <li class="tab col s3"><a class="active" href="#test1">An&aacute;lise de conte&uacute;do</a></li>
             <li class="tab col s3"><a href="#test2">An&aacute;lise de custos</a></li>
-            <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                <li class="tab col s3 "><a href="#test3">Dados dos Produtos Secund&aacute;rios</a></li>
-            <?php endif; ?>
-            <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)): ?>
-                <li class="tab col s3"><a href="#test4"></a></li>
-            <?php endif; ?>
+                <li 
+                    class="tab col s3
+                            <?php if(!(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA))): ?>
+                                disabled text-gray grey lighten-2
+                            <?php endif; ?>
+                ">
+                    <a href="#test3">Dados dos Produtos Secund&aacute;rios</a></li>
+                <li class="tab col s3
+                            <?php if(!(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0))): ?>
+                                disabled grey lighten-2
+                            <?php endif; ?>
+                ">
+                    <a href="#test4">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
+                </li>
           </ul>
         </div>
-        <div id="test1" class="col s12">
-            <?php echo $this->partial('produto/analise-conteudo.phtml', 'parecer', $this); ?>
-        </div>
-        <div id="test2" class="col s12">
-            <?php echo $this->partial('produto/analise-custo.phtml', 'parecer', $this); ?>
-        </div>
-        <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-            <div id="test3" class="col s12">
-                <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
-            </div>
-        <?php endif; ?>
-        <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)): ?>
-            <div id="test4" class="col s12">
-                <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
-           </div>
-        <?php endif; ?>
     </div>
-    <!-- MODAL -->
-    <div id="alteraritemsolicitado" link="<?php echo $hrefAlteraritemsolicitado; ?>" style="display: none;"></div>
-    <div id="confirmacao" style="display: none;"></div>
-    <!-- FIM MODAL -->
+    <div class="row">
+        <div class="col s12">
+            <div id="test1" class="col s12">
+                <?php echo $this->partial('produto/analise-conteudo.phtml', 'parecer', $this); ?>
+            </div>
+            <div id="test2" class="col s12">
+                <?php echo $this->partial('produto/analise-custo.phtml', 'parecer', $this); ?>
+            </div>
+            <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <div id="test3" class="col s12">
+                    <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
+                </div>
+            <?php endif; ?>
+            <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)): ?>
+                <div id="test4" class="col s12">
+                    <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
+               </div>
+            <?php endif; ?>
+        </div>
+        <!-- MODAL -->
+        <div id="alteraritemsolicitado" link="<?php echo $hrefAlteraritemsolicitado; ?>" style="display: none;"></div>
+        <div id="confirmacao" style="display: none;"></div>
+        <!-- FIM MODAL -->
+    </div>
 </div>
 <!-- ========== FIM CONTE&UACUTE;DO ========== -->
 
