@@ -249,4 +249,47 @@ class Assinatura_Model_DbTable_TbDocumentoAssinatura extends MinC_Db_Table_Abstr
 
         return (count($objModelDocumentoAssinatura->findBy($where)) > 1);
     }
+
+
+    public function obterDocumentosAssinadosPorProjeto($idPronac)
+    {
+
+        $objQuery = $this->select();
+        $objQuery->setIntegrityCheck(false);
+        $objQuery->from(
+            ["tbDocumentoAssinatura" => $this->_name],
+            [
+                'tbDocumentoAssinatura.idTipoDoAtoAdministrativo',
+                "tbDocumentoAssinatura.idDocumentoAssinatura",
+                "tbDocumentoAssinatura.dt_criacao"
+            ],
+            $this->_schema
+        );
+
+        $objQuery->joinInner(
+            ["Projetos" => "Projetos"],
+            "tbDocumentoAssinatura.IdPRONAC = Projetos.IdPRONAC",
+            [
+                'pronac' => New Zend_Db_Expr('Projetos.AnoProjeto + Projetos.Sequencial'),
+                'Projetos.nomeProjeto',
+                'Projetos.IdPRONAC',
+            ],
+            $this->_schema
+        );
+
+        $objQuery->joinInner(
+            ["Verificacao" => "Verificacao"],
+            "(tbDocumentoAssinatura.idTipoDoAtoAdministrativo = Verificacao.idVerificacao)",
+            [
+                'Verificacao.Descricao as dsAtoAdministrativo'
+            ],
+            $this->_schema
+        );
+
+        $objQuery->where('tbDocumentoAssinatura.stEstado = ?', 1);
+        $objQuery->where('tbDocumentoAssinatura.cdSituacao = ?', 2);
+        $objQuery->where('tbDocumentoAssinatura.IdPRONAC = ?', $idPronac);
+
+        return $this->_db->fetchAll($objQuery);
+    }
 }

@@ -1,0 +1,73 @@
+<?php echo $this->documentoAssinatura['conteudo'] ?>
+
+<?php if (count($this->assinaturas) > 0) : ?>
+    <div class="row">
+        <div class="col s1"></div>
+        <div class="col s10">
+            <p>
+                <label class="margin-bottom20">Assinaturas</label>
+            </p>
+            <div class="bordered padding20">
+                <p> Documento assinado eletronicamente com fundamento no artigo 132 da instru&ccedil;&atilde;o
+                    normativa n&ordm; 01/2017 do Minist&eacute;rio da Cultura publicado conforme hor&aacute;rio
+                    oficial de bras&iacute;lia no Di&aacute;rio Oficial da Uni&atilde;o data de 20/03/2017
+                    por: </p>
+                <div class="padding20 bordered row">
+                    <div class="row">
+                        <div class="col s1"></div>
+                        <div class="col s4 bold">Colaborador</div>
+                        <div class="col s4 bold center-align">Cargo</div>
+                        <div class="col s3 bold center-align">Hor&aacute;rio</div>
+                    </div>
+                    <?php
+                    foreach ($this->assinaturas as $assinatura) :
+                        $objDateTime = new DateTime($assinatura['dtAssinatura']);
+                        $dataAssinatura = $objDateTime->format('d/m/Y');
+                        $horaAssinatura = $objDateTime->format('H:i:s');
+                        ?>
+                        <div class="row">
+                            <div class="col s1 center-align"><i class="material-icons blue-text">lock</i>
+                            </div>
+                            <div class="col s4 "><?php echo $assinatura['usu_nome'] ?></div>
+                            <div
+                                class="col s4 center-align"><?php echo $assinatura['dsCargoAssinante'] ?></div>
+                            <div
+                                class="col s3 center-align"><?php echo $dataAssinatura ?> &agrave;s <?php echo $horaAssinatura ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="center-align">
+                <img src="/public/img/logo-500px.png" style="width:68px">
+            </div>
+        </div>
+        <div class="col s1"></div>
+    </div>
+<?php endif; ?>
+<div class="row">
+    <div class="col s1"></div>
+    <div class="col s10">
+        <p>
+            <label class="margin-bottom20">Acompanhamento do Projeto</label>
+        </p>
+        <div class="padding20 bordered row">
+            <div class="row center-align">
+                Utilize o QR Code abaixo para acompanhar as assinaturas do projeto.
+            </div>
+            <div class="row center-align">
+                <img src="<?php echo $this->url(array(
+                        'module' => 'qrcode',
+                        'controller' => 'QRCode',
+                        'action' => 'exibir'
+                    )) . "?texto=http://{$_SERVER['SERVER_NAME']}" . $this->url(array(
+                        'module' => 'assinatura',
+                        'controller' => 'index',
+                        'action' => 'visualizar-projeto'
+                    )) . "?idDocumentoAssinatura={$this->idDocumentoAssinatura}" ?>"/>
+            </div>
+        </div>
+    </div>
+    <div class="col s1"></div>
+</div>
+
+<input type="hidden" id="html" name="html"/>

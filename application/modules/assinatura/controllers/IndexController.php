@@ -14,9 +14,10 @@ class Assinatura_IndexController extends Assinatura_GenericController
 
         $this->auth = Zend_Auth::getInstance();
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
-        parent::perfil();
 
         $this->cod_usuario = $this->auth->getIdentity()->usu_codigo;
+
+        isset($this->auth->getIdentity()->usu_codigo) ? parent::perfil() : parent::perfil(4);
 
         $this->definirModuloDeOrigem();
     }
@@ -62,10 +63,23 @@ class Assinatura_IndexController extends Assinatura_GenericController
         $this->view->codGrupo = $this->grupoAtivo->codGrupo;
     }
 
-    public function visualizarProjetoAction()
+    public function visualizarDocumentosAssinaturaAjaxAction()
     {
-        $get = Zend_Registry::get('get');
-        $idDocumentoAssinatura = $get->idDocumentoAssinatura;
+        $this->_helper->layout->disableLayout();
+        $idPronac = $this->_request->getParam("idPronac");
+        $idPronac = isset($idPronac) ? $idPronac : null;
+
+        $this->view->idUsuarioLogado = $this->cod_usuario;
+
+        $documentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+        $this->view->dados = $documentoAssinatura->obterDocumentosAssinadosPorProjeto(
+            $idPronac
+        );
+
+        $this->view->codGrupo = $this->grupoAtivo->codGrupo;
+    }
+
+    protected function obterDocumentoAssinado($idDocumentoAssinatura) {
 
         try {
             try {
@@ -122,19 +136,64 @@ class Assinatura_IndexController extends Assinatura_GenericController
                 $idDocumentoAssinatura
             );
 
-            $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
-            $this->view->quantidade_minima_assinaturas = $objTbAtoAdministrativo->obterQuantidadeMinimaAssinaturas(
-                $this->view->idTipoDoAtoAdministrativo,
-                $this->auth->getIdentity()->usu_org_max_superior
-            );
+//            $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
+//            $this->view->quantidade_minima_assinaturas = $objTbAtoAdministrativo->obterQuantidadeMinimaAssinaturas(
+//                $this->view->idTipoDoAtoAdministrativo,
+//                $this->auth->getIdentity()->usu_org_max_superior
+//            );
 
             $moduleAndControllerArray = explode('/', $this->view->origin);
             $this->view->moduleOrigin = $moduleAndControllerArray[0];
             $this->view->controllerOrigin = $moduleAndControllerArray[1];
 
         } catch (Exception $objException) {
-            parent::message($objException->getMessage(), "/{$this->moduleName}/index/visualizar-projeto?idDocumentoAssinatura={$idDocumentoAssinatura}&origin={$this->view->origin}");
+            parent::message($objException->getMessage(), "/{$this->moduleName}/index/visualizar-documento-assinado?idDocumentoAssinatura={$idDocumentoAssinatura}&origin={$this->view->origin}");
         }
+    }
+
+    public function visualizarProjetoAction()
+    {
+        $get = Zend_Registry::get('get');
+        $idDocumentoAssinatura = $get->idDocumentoAssinatura;
+
+        self::obterDocumentoAssinado($idDocumentoAssinatura);
+
+    }
+
+    public function visualizarDocumentoAssinadoAction()
+    {
+//        $this->_helper->layout->disableLayout();
+//        $this->_helper->viewRenderer->setNoRender();
+
+//        $layout = Zend_Layout::getMvcInstance();
+//        $layout->disableLayout();
+//        $layout->setLayout('layout_visualizar');
+
+//        $config = Zend_Registry::get('config');
+//        $config = new Zend_Config_Ini('/path/to/layout.ini', 'layout');
+//        $layout = Zend_Layout::startMvc($config);
+
+        Zend_Layout::startMvc(array('layout' => 'layout_visualizar'));
+//        Zend_Layout::startMvc(array('layout'     => 'layout_visualizar'));
+        # paginacao
+//        Zend_View_Helper_PaginationControl::setDefaultViewPartial('paginacao/paginacaoMinc.phtml');
+
+//        // Initialize view
+//        $view         = new Zend_View();
+//        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper(
+//            'ViewRenderer'
+//        );
+//        $viewRenderer->setView($view);
+//        $view->addHelperPath(
+//            APPLICATION_PATH . '/../library/MinC/View/Helper/',
+//            'MinC_View_Helper_'
+//        );
+
+        $get = Zend_Registry::get('get');
+        $idDocumentoAssinatura = $get->idDocumentoAssinatura;
+
+        self::obterDocumentoAssinado($idDocumentoAssinatura);
+
     }
 
     public function assinarProjetoAction()

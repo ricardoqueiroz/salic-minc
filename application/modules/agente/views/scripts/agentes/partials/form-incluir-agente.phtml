@@ -27,7 +27,7 @@
         <input type="hidden" name="exibirTelefone" id="exibirTelefone" value="<?= $this->exibirTelefone; ?>"/>
         <input type="hidden" name="exibirEmail" id="exibirEmail" value="<?= $this->exibirEmail; ?>"/>
         <input type="hidden" id="autoCarregarDadosCPF" value="<?= $this->autoCarregarDadosCPF; ?>"/>
-        <input type="hidden" name="modal" id="modal" class="input_simples" value="<?php echo $this->modal; ?>" />
+        <input type="hidden" name="modal" id="modal" class="input_simples" value="<?php echo $this->modal; ?>"/>
 
         <?php if ($this->modulo != "movimentacaobancaria") : ?>
             <input type="hidden" name="movimentacaobancaria" id="movimentacaobancaria" value=""/>
@@ -91,24 +91,24 @@
                     <span id="erroNome" class="spanError"></span>
                 </div>
                 <div class="col s12 m3 l3">
-                        <label for="visao">Vis&atilde;o do Agente: </label>
-                        <select name="visao" id="visao"
-                                onchange="verificarVisao(this.value, <?= $this->grupoAtivo; ?>);"
-                                class="browser-default">
-                            <?php if ($this->combovisoes): ?>
+                    <label for="visao">Vis&atilde;o do Agente: </label>
+                    <select name="visao" id="visao"
+                            onchange="verificarVisao(this.value, <?= $this->grupoAtivo; ?>);"
+                            class="browser-default">
+                        <?php if ($this->combovisoes): ?>
 
-                                <?php if (count($this->combovisoes) > 1) : ?>
-                                    <option value="0" selected="selected"> - Selecione -</option>
-                                <?php endif; ?>
-
-                                <?php foreach ($this->combovisoes as $combovisoes): ?>
-                                    <option
-                                        value="<?= $combovisoes['idVerificacao']; ?>"> <?= $combovisoes['Descricao']; ?> </option>
-                                <?php endforeach; ?>
+                            <?php if (count($this->combovisoes) > 1) : ?>
+                                <option value="0" selected="selected"> - Selecione -</option>
                             <?php endif; ?>
-                        </select>
-                        <span id="erroVisao" class="spanError"></span>
-                        <span id="spanVisao"></span>
+
+                            <?php foreach ($this->combovisoes as $combovisoes): ?>
+                                <option
+                                    value="<?= $combovisoes['idVerificacao']; ?>"> <?= $combovisoes['Descricao']; ?> </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </select>
+                    <span id="erroVisao" class="spanError"></span>
+                    <span id="spanVisao"></span>
                 </div>
             </div>
         </fieldset>
@@ -510,7 +510,7 @@
 
                             var event = new CustomEvent("agenteJaCadastrado", {"detail": data[0].agente});
                             document.dispatchEvent(event);
-                            if($("#modal").val() != 's') {
+                            if ($("#modal").val() != 's') {
                                 window.location = '<?= $this->url(array('module' => 'agente', "controller" => "agentes", "action" => "agentes")); ?>/id/' + data[0].idAgente;
                             }
                         }
@@ -576,169 +576,108 @@
     }
 
     function buscarcep(cep) {
+
         $3('#cidade').material_select('destroy');
 
-        // pega os dados a serem populados
-        logradouro = document.getElementById("logradouro");
-        tipoLogradouro = document.getElementById("tipoLogradouro");
-        bairro = document.getElementById("bairro");
-        cidade = document.getElementById("cidade");
-        uf = document.getElementById("uf");
+        var elmLogradouro = $3("#logradouro");
+        var elmTipoLogradouro = $3("#tipoLogradouro");
+        var elmBairro = $3("#bairro");
+        var elmCidade = $3("#cidade");
+        var elmUF = $3("#uf");
 
-        var elmLogradouro = $("#logradouro");
-        var elmTipoLogradouro = $("#tipoLogradouro");
-        var elmBairro = $("#bairro");
-        var elmCidade = $("#cidade");
-        var elmUF = $("#uf");
+        if (cep.length != 10) {
+            $3('#erroCep').html("CEP inv&aacute;lido");
+            return false;
+        }
 
-        ajax = xmlhttp(); // instancia ajax
-        ajax.open("GET", "<?= $this->url(array('module' => 'default', 'controller' => 'cep', 'action' => 'cep')); ?>?cep=" + cep, true);
-        ajax.onreadystatechange = function () {
-            if (cep.length != 10) {
-                $('#erroCep').html("CEP inv&aacute;lido ou n&atilde;o encontrado!");
+        $3("#erroCep").html("<img src='/public/img/ajax.gif' alt='' /> Aguarde...");
 
+        elmLogradouro.attr("disabled", "disabled");
+        elmTipoLogradouro.attr("disabled", "disabled");
+        elmBairro.attr("disabled", "disabled");
+        elmCidade.attr("disabled", "disabled");
+        elmUF.attr("disabled", "disabled");
+
+        elmTipoLogradouro.find('option').removeAttr("selected");
+        elmCidade.find('option').removeAttr("selected");
+        elmUF.find('option').removeAttr("selected");
+
+        elmLogradouro.val("carregando...");
+        elmTipoLogradouro.find('option:eq(0)').html("carregando...");
+        elmBairro.val("carregando...");
+        elmCidade.find('option:eq(0)').text("carregando...");
+        elmUF.find('option:eq(0)').text("carregando...");
+
+        $3.ajax({
+            url: "<?= $this->url(array('module' => 'default', 'controller' => 'cep', 'action' => 'cep-ajax')); ?>",
+            data: {
+                cep: cep
+            }
+        }).done(function (result) {
+
+            elmLogradouro.val(" ");
+            elmBairro.val("");
+            elmTipoLogradouro.find('option:eq(0)').html("- Selecione -");
+            elmCidade.find('option:eq(0)').text("- selecione -");
+            elmUF.find('option:eq(0)').text("- selecione -");
+
+            if (result.status === true) {
+
+                $3('#erroCep').html("");
+
+                elmLogradouro.val(result.logradouro);
+                if (result.logradouro !== null && result.logradouro.length < 2) {
+                    elmLogradouro.removeAttr("disabled");
+                    elmLogradouro.attr("placeholder", "Informe o logradouro");
+                }
+
+                elmTipoLogradouro.find('option:eq(0)').html("- Selecione -").attr('selected', true);
+                if (result.tipoLogradouro !== null && result.tipoLogradouro.length > 1) {
+                    elmTipoLogradouro.find("option:contains(" + result.tipoLogradouro + ")").attr('selected', true);
+                } else {
+                    elmTipoLogradouro.removeAttr("disabled");
+                }
+
+                elmBairro.val('');
+                if (result.bairro !== null && result.bairro.length > 2) {
+                    elmBairro.val(result.bairro);
+                } else {
+                    elmBairro.removeAttr("disabled");
+                }
+
+                elmUF.find('option:eq(0)').html("- Selecione -").attr('selected', true);
+                if (result.uf !== null && result.uf.length > 1) {
+                    elmUF.find("option:contains(" + result.uf + ")").attr('selected', true);
+                } else {
+                    elmUF.removeAttr("disabled");
+                }
+
+                elmCidade.find('option:eq(0)').html("- Selecione -").attr('selected', true);
+                if (result.cidade !== null && result.cidade.length < 1) {
+                    elmCidade.removeAttr("disabled");
+                    carregar_combo(elmUF.val(), 'cidade', '/cidade/combo', ' - Selecione - ');
+                } else {
+                    elmCidade.empty();
+                    elmCidade.append($('<option>', {
+                        value: result.idCidade,
+                        text: result.cidade
+                    }));
+                }
+
+                $3('select').material_select();
+                Materialize.updateTextFields()
+
+            } else {
+
+                $3('#erroCep').html("CEP inv&aacute;lido ou n&atilde;o encontrado!");
                 elmLogradouro.removeAttr("disabled").val('');
                 elmTipoLogradouro.removeAttr("disabled").val('');
                 elmBairro.removeAttr("disabled").val('');
                 elmCidade.removeAttr("disabled").val(0);
                 elmUF.removeAttr("disabled").val(0);
             }
-            else {
-                $('#erroCep').html("");
-            }
+        });
 
-            // enquanto estiver processando bloqueia os campos
-            if (ajax.readyState > 0 && ajax.readyState <= 3 && cep.length == 10) {
-
-                elmLogradouro.attr("disabled", "disabled");
-                elmTipoLogradouro.attr("disabled", "disabled");
-                elmBairro.attr("disabled", "disabled");
-                elmCidade.attr("disabled", "disabled");
-                elmUF.attr("disabled", "disabled");
-
-                logradouro.value = "carregando...";
-                tipoLogradouro.options[0].text = "carregando...";
-                bairro.value = "carregando...";
-                cidade.options[0].text = "carregando...";
-                uf.options[0].text = "...";
-
-                $('#erroCep').html("<img src='/public/img/ajax.gif' alt='' /> Aguarde...");
-            }
-            if (ajax.readyState == 4 && ajax.status == 200 && cep.length == 10) {
-                // divide a string para colocar cada uma em seu campo
-                var s = ajax.responseText;
-
-                if (s == "") // caso os dados retornem vazios ou o cep nao exista
-                {
-                    logradouro.value = " ";
-                    tipoLogradouro.options[0].text = " - Selecione - ";
-                    bairro.value = " ";
-                    cidade.options[0].text = " - Selecione - ";
-                    uf.options[0].text = " -- ";
-
-                    elmLogradouro.removeAttr("disabled");
-                    elmTipoLogradouro.removeAttr("disabled");
-                    elmBairro.removeAttr("disabled");
-                    elmCidade.removeAttr("disabled");
-                    elmUF.removeAttr("disabled");
-
-                    $('#erroCep').html("CEP n&atilde;o encontrado!");
-                }
-                else // caso o cep exista
-                {
-
-                    $('#erroCep').html("");
-                    txtLogradouro = s.substring(0, (i = s.indexOf(':')));
-
-                    s = s.substring(++i);
-                    txtTipoLogradouro = s.substring(0, (i = s.indexOf(':')));
-                    s = s.substring(++i);
-                    txtBairro = s.substring(0, (i = s.indexOf(':')));
-                    s = s.substring(++i);
-                    txtCodCidade = s.substring(0, (i = s.indexOf(':')));
-                    s = s.substring(++i);
-                    txtCidade = s.substring(0, (i = s.indexOf(':')));
-                    s = s.substring(++i);
-                    txtUF = s.substring(0, (i = s.indexOf(';')));
-
-                    // volta os textos dos combos
-                    tipoLogradouro.options[0].text = " - Selecione - ";
-                    cidade.options[0].text = " - Selecione - ";
-                    uf.options[0].text = " -- ";
-                    if (txtUF == "" && txtCidade == "") {
-                        cidade.options[0].text = " - Selecione primeiro o UF - ";
-                    }
-
-                    // logradouro
-                    logradouro.value = txtLogradouro;
-                    if (txtLogradouro == "") {
-//                        logradouro.disabled = false; // habilita para preenchimento
-                        elmLogradouro.removeAttr("disabled");
-                    }
-
-                    // tipoLogradouro
-                    // seleciona o combo de acordo com a lista existente no formulario
-                    for (i = 0; i < tipoLogradouro.options.length; i++) {
-                        if (txtTipoLogradouro == tipoLogradouro.options[i].text) {
-                            // seleciona o item igual
-                            tipoLogradouro.options[i].selected = true;
-                        }
-                    }
-
-                    if (tipoLogradouro.options[tipoLogradouro.selectedIndex].value == "" ||
-                        tipoLogradouro.options[tipoLogradouro.selectedIndex].text != txtTipoLogradouro) {
-                        tipoLogradouro.options[0].selected = true; // seleciona o primeiro option
-//                        tipoLogradouro.disabled = false; // habilita para preenchimento
-                        elmTipoLogradouro.removeAttr("disabled");
-                    }
-
-                    // bairro
-                    bairro.value = txtBairro;
-                    if (elmBairro.length > 2) {
-                        elmBairro.removeAttr("disabled");
-                    }
-
-                    // uf
-                    // seleciona o combo de acordo com a lista existente no formulario
-                    for (i = 0; i < uf.options.length; i++) {
-                        if (txtUF == uf.options[i].text) {
-                            // seleciona o item igual
-                            uf.options[i].selected = true;
-                        }
-                    }
-                    if (uf.options[uf.selectedIndex].value == "" ||
-                        uf.options[uf.selectedIndex].text != txtUF) {
-                        uf.options[0].selected = true; // seleciona o primeiro option
-                        uf.disabled = false; // habilita para preenchimento
-                        elmUF.removeAttr("disabled");
-                    }
-
-                    // cidade
-                    // verifica se a cidade veio vazia
-                    if (txtCidade == "") {
-                        cidade.disabled = false; // habilita para preenchimento
-                        carregar_combo($("#uf").val(), 'cidade', '/cidade/combo', ' - Selecione - ');
-                    }
-                    // preenche o combo com a cidade
-                    else {
-
-                        // deixa apenas um elemento no combo, os outros sao excluidos
-                        document.getElementById("cidade").options.length = 0;
-
-                        // cria um novo option
-                        var novo = document.createElement("option");
-                        novo.value = txtCodCidade; // atribui um valor ao option
-                        novo.text = txtCidade; // atribui um texto ao option
-                        document.getElementById("cidade").options.add(novo);
-                    }
-
-                    $3('select').material_select();
-                    Materialize.updateTextFields()
-                }
-            }
-        };
-
-        ajax.send(null);
 
     } // fecha funcao buscar_cep()
 
@@ -758,7 +697,7 @@
 
         $("#cpf").val(cpf);
 
-        if(cpf.length > 1 && $("#autoCarregarDadosCPF").val() == true ) {
+        if (cpf.length > 1 && $("#autoCarregarDadosCPF").val() == true) {
             $("#cpf").blur();
         }
     });
