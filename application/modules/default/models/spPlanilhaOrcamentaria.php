@@ -39,7 +39,7 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract {
                 $tipoPlanilha = 0;
             }
         }
-
+        
         switch ($tipoPlanilha) {
             case 0:
                 return $this->planilhaOrcamentariaProposta($idPronac);
@@ -51,12 +51,17 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract {
                 return $this->orcamentariaParecerista($idPronac);
                 break;
             case 3:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 4:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 5:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             case 6:
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
             default:
-                $spVisualizarPlanilha = new Projeto_Model_spVisualizarPlanilhaOrcamentaria();
-                return $spVisualizarPlanilha->exec($idPronac); // @todo: atualmente o codigo migrado apresenta algumas divergencias, usar a sp agora e migrar assim que possivel
+                return $this->execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha);
+                //$spVisualizarPlanilha = new Projeto_Model_spVisualizarPlanilhaOrcamentaria();
+                //return $spVisualizarPlanilha->exec($idPronac); // @todo: atualmente o codigo migrado apresenta algumas divergencias, usar a sp agora e migrar assim que possivel
                 break;
 // @todo: nao apagar, migrar a sp VisualizarPlanilha  para o codigo, atualizando os metodos abaixo
 //            case 3:
@@ -738,5 +743,11 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract {
             ;
         }
         return $db->fetchAll($sql);
+    }
+
+    public function execSpPlanilhaOrcamentaria($idPronac, $tipoPlanilha)
+    {
+        $sql = "exec ".$this->_schema.".".$this->_name." $idPronac, $tipoPlanilha";
+        return $this->getAdapter()->fetchAll($sql);
     }
 }

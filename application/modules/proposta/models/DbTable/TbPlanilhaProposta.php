@@ -284,7 +284,7 @@ class Proposta_Model_DbTable_TbPlanilhaProposta extends MinC_Db_Table_Abstract
         $somar = $this->select();
         $somar->from($this,
             array(
-                'sum(Quantidade*Ocorrencia*ValorUnitario) as soma'
+                'ROUND(sum(Quantidade*Ocorrencia*ValorUnitario), 2) as soma'
             )
         )
             ->where('idProjeto = ?', $idprojeto)

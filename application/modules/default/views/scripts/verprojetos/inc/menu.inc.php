@@ -204,11 +204,11 @@
 
 
                 <!-- ======================= Readequação  =======================   -->
-                <?php if( $this->blnProponente && ($this->fnLiberarLinks['Readequacao'] || $this->fnLiberarLinks['Readequacao_20']) ) { ?>
+                <?php if( $this->blnProponente && ($this->fnLiberarLinks['Readequacao'] || $this->fnLiberarLinks['Readequacao_50']) ) { ?>
                 <div class="sanfonaDiv" style="display:none;"></div>
                 <a href="#" title="Execução" class="ancoraExecucao" onclick="return false;">Readequa&ccedil;&atilde;o</a>
                 <div class="sanfonaDiv" style="width: 90%; margin-left: 20px;">
-                    <?php if($this->fnLiberarLinks['Readequacao_20']) { ?>
+                    <?php if($this->fnLiberarLinks['Readequacao_50']) { ?>
                     <a href="<?php echo $this->url(array('controller' => 'verprojetos', 'action' => 'remanejamento-menor'), '', true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac);?>" title="Ir para Remanejamento &le; 20%">Remanejamento &le; 20%</a>
                     <?php } ?>
 

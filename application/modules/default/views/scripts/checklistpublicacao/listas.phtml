@@ -93,14 +93,13 @@
                     }
                 },
                 'Finalizar': function() {
-                    var idpronac = $('#idpronac').val(idpronac);
                     //recupera datas de captacao do formulario de editar projeto
-                    var dataCaptacaoIni  = $("form[name='formularioeditar']").find("input:[name='dataCaptacaoIni']").val();
-                    var dataCaptacaoFim  = $("form[name='formularioeditar']").find("input:[name='dataCaptacaoFim']").val();
+                    var dataCaptacaoIni  = $("form[name='formularioeditar']").find("input[name='dataCaptacaoIni']").val();
+                    var dataCaptacaoFim  = $("form[name='formularioeditar']").find("input[name='dataCaptacaoFim']").val();
 
                     //atualiza o valor das datas no formulario de finalizar analise do projeto
-                    $("form[name='formulariofinalizar']").find("input:[name='dataCaptacaoIni_finalizar']").val(dataCaptacaoIni);
-                    $("form[name='formulariofinalizar']").find("input:[name='dataCaptacaoFim_finalizar']").val(dataCaptacaoFim);
+                    $("form[name='formulariofinalizar']").find("input[name='dataCaptacaoIni_finalizar']").val(dataCaptacaoIni);
+                    $("form[name='formulariofinalizar']").find("input[name='dataCaptacaoFim_finalizar']").val(dataCaptacaoFim);
 
                     $("form[name='formulariofinalizar']").submit();
                     $("#divDinamica").remove();
@@ -162,18 +161,18 @@
                 },
                 'Sim': function() {
                     $("#modalConfirmacao").html('Aguarde, salvando dados...');
-                    var areacultural     = $("form[name='formularioeditar']").find("select:[name='areacultural']").val();
-                    var segmento         = $("form[name='formularioeditar']").find("select:[name='segmento']").val();
-                    var enquadramento    = $("form[name='formularioeditar']").find("select:[name='enquadramento']").val();
-                    var justificativa    = $("form[name='formularioeditar']").find("textarea:[name='dsjustificativa']").val();
-                    var dataCaptacaoIni  = $("form[name='formularioeditar']").find("input:[name='dataCaptacaoIni']").val();
-                    var dataCaptacaoFim  = $("form[name='formularioeditar']").find("input:[name='dataCaptacaoFim']").val();
-                    var dtinicioexecucao = $("form[name='formularioeditar']").find("input:[name='dtinicioexecucao']").val();
-                    var dtfimexecucao    = $("form[name='formularioeditar']").find("input:[name='dtfimexecucao']").val();
-                    var idAprovacao      = $("form[name='formularioeditar']").find("input:[name='idAprovacao']").val();
-                    var idpronac         = $("form[name='formularioeditar']").find("input:[name='idpronac']").val();
-                    var nomeProjeto      = $("form[name='formularioeditar']").find("input:[name='nomeProjeto']").val();
-                    var resumoProjeto    = $("form[name='formularioeditar']").find("textarea:[name='resumoProjeto']").val();
+                    var areacultural     = $("form[name='formularioeditar']").find("select[name='areacultural']").val();
+                    var segmento         = $("form[name='formularioeditar']").find("select[name='segmento']").val();
+                    var enquadramento    = $("form[name='formularioeditar']").find("select[name='enquadramento']").val();
+                    var justificativa    = $("form[name='formularioeditar']").find("textarea[name='dsjustificativa']").val();
+                    var dataCaptacaoIni  = $("form[name='formularioeditar']").find("input[name='dataCaptacaoIni']").val();
+                    var dataCaptacaoFim  = $("form[name='formularioeditar']").find("input[name='dataCaptacaoFim']").val();
+                    var dtinicioexecucao = $("form[name='formularioeditar']").find("input[name='dtinicioexecucao']").val();
+                    var dtfimexecucao    = $("form[name='formularioeditar']").find("input[name='dtfimexecucao']").val();
+                    var idAprovacao      = $("form[name='formularioeditar']").find("input[name='idAprovacao']").val();
+                    var idpronac         = $("form[name='formularioeditar']").find("input[name='idpronac']").val();
+                    var nomeProjeto      = $("form[name='formularioeditar']").find("input[name='nomeProjeto']").val();
+                    var resumoProjeto    = $("form[name='formularioeditar']").find("textarea[name='resumoProjeto']").val();
 
                     $.ajax({
                         async: true,

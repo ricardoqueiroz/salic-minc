@@ -106,7 +106,7 @@
         
         $('#finalizarRemanejamento').click(function(){
             $("#alerta").dialog("destroy");
-            $("#alerta").html('Deseja realmente finalizar o remanejamento?<br /><br />Ap&oacute;s a confirma&ccedil;&atilde;o, voc&ecirc; n&atilde;o ter&aacute; mais acesso a essa funcionalidade.');
+            $("#alerta").html('Deseja realmente finalizar o remanejamento?<br /><br />');
             $("#alerta").dialog({
                 resizable: false,
                 title: 'Alerta!',
@@ -191,6 +191,9 @@
                         $(this).dialog('close');
                     },
                     'Sim' : function(){
+                        $(".ui-dialog-buttonpane button").html('');                            
+                        $("#alerta").html("Aguarde, reintegrando a planilha...");
+                        
                         $.ajax({
                             type: 'POST',
                             url: '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'remanejamento-reintegrar-planilha'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
@@ -248,7 +251,7 @@
                 url: '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'remanejamento-alterar-item'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
                 data: {
                   idPlanilha: idPlanilhaAprovacao,
-                  idPlanilhaAprovacaoPai: idPlanilhaAprovacaoPai
+                    idPlanilhaAprovacaoPai: idPlanilhaAprovacaoPai
                 },
                 success: function(data){
                     
@@ -267,8 +270,8 @@
                         $('#campoDiasSolicitado').html(data.dadosPlanilhaAtiva.QtdeDias);
                         $('#campoTotalSolicitado').html(data.dadosPlanilhaAtiva.TotalSolicitado);
                         
-                        $('#campoValorMinimo').html(data.dadosPlanilhaAtiva.ValorMinimoProItem);
-                        $('#campoValorMaximo').html(data.dadosPlanilhaAtiva.ValorMaximoProItem);
+                        $('#campoValorMinimo').html(data.dadosPlanilhaOriginal.ValorMinimoProItem);
+                        $('#campoValorMaximo').html(data.dadosPlanilhaOriginal.ValorMaximoProItem);
                         $('#campoValorComprovado').html(data.valoresDoItem.vlComprovadoDoItem);
 
                         //$('#modalUnidade').val(data.dadosPlanilhaEditavel.idUnidade);
@@ -280,10 +283,10 @@
                         $('#TotalCalculado').html(data.dadosPlanilhaEditavel.TotalSolicitado);
                         
                         $('#campoIdPlanilha').attr('idPlanilha', idPlanilhaAprovacao);
-			$('#campoIdPlanilha').attr('idPlanilhaAprovacaoPai', idPlanilhaAprovacaoPai);
+                        $('#campoIdPlanilha').attr('idPlanilhaAprovacaoPai', idPlanilhaAprovacaoPai);
 
-                        var valorMinimoValidacao = data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao,
-                            valorMaximoValidacao = data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao,
+                        var valorMinimoValidacao = data.dadosPlanilhaOriginal.ValorMinimoProItemValidacao,
+                            valorMaximoValidacao = data.dadosPlanilhaOriginal.ValorMaximoProItemValidacao,
                             vlComprovadoDoItemValidacao = data.valoresDoItem.vlComprovadoDoItemValidacao,
                             valorParaMsgErro = data.dadosPlanilhaAtiva.TotalSolicitado,
                             mensagem = '';
@@ -325,6 +328,7 @@
                                     }
 
                                     var TotalCalculadoComponente = $('#TotalCalculado').html().replace(/[^\d]/g, "");
+                                    
                                     if(parseInt(TotalCalculadoComponente) < parseInt(vlComprovadoDoItemValidacao)){
                                         //$('#TotalCalculado').css('color','red');
                                         mensagem += '- O valor total do item n&atilde;o pode ser menor do que o valor comprovado de '+data.valoresDoItem.vlComprovadoDoItem+'.<br/>';
@@ -336,12 +340,12 @@
                                         erros++;
                                         var vlComp = parseInt(vlComprovadoDoItemValidacao+'00');
                                         if(vlComp < data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao){
-                                            mensagem += '- O valor total do item n&atilde;o pode ser menor que '+data.dadosPlanilhaAtiva.ValorMinimoProItem+'.<br/>';
+                                            mensagem += '- O valor total do item n&atilde;o pode ser menor que '+data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao+'.<br/>';
                                         }
                                     }
                                     
-                                    if(parseInt(TotalCalculadoComponente).toFixed(2) > parseInt(valorMaximoValidacao)){
-                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que '+data.dadosPlanilhaAtiva.ValorMaximoProItem+'.<br/>';
+                                    if(parseInt($('#TotalCalculado').html().replace(/[^\d]/g, "")) > parseInt(valorMaximoValidacao)){
+                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que '+data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao+'.<br/>';
                                         erros++;
                                     }
 
