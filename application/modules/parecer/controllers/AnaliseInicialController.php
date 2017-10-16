@@ -94,8 +94,16 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
         $situacao = $this->_request->getParam('situacao');
 
+        /* die('deteste'); */
         $projeto = new Projetos();
         $resp = $projeto->buscaProjetosProdutosParaAnalise(
+            array(
+                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
+                'distribuirParecer.idOrgao = ?' => $idOrgao,
+            )
+        );
+
+        $d = $projeto->buscaprojetosparaanalise(
             array(
                 'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
                 'distribuirParecer.idOrgao = ?' => $idOrgao,
@@ -121,6 +129,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->situacao = $situacao;
         /* $this->view->buscar = $paginator; */
         $this->view->buscar = $resp;
+        $this->view->d = $d;
     }
 
 
@@ -286,5 +295,45 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->view->verifica15porcento = $valoracustosadministrativos['soma'];
             }
         }
+    }
+
+    /*@todo revisar codigo*/
+    public function produtosAnaliseAjaxAction()
+    {
+        $this->validarPerfis();
+
+        $idPRONAC = $this->_request->getParam('idPRONAC');
+
+        $auth = Zend_Auth::getInstance();
+        $idusuario = $auth->getIdentity()->usu_codigo;
+        $this->view->idUsuario = $idusuario;
+
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $idOrgao = $GrupoAtivo->codOrgao;
+
+        $UsuarioDAO = new Autenticacao_Model_Usuario();
+        $agente = $UsuarioDAO->getIdUsuario($idusuario);
+        $idAgenteParecerista = $agente['idagente'];
+        $this->view->idAgenteParecerista = $idAgenteParecerista;
+
+        $situacao = $this->_request->getParam('situacao');
+
+        $projeto = new Projetos();
+        $resp = $projeto->projetosParaAnaliseProdutos(
+            array(
+                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
+                'distribuirParecer.idOrgao = ?' => $idOrgao,
+                'projeto.idPRONAC = ?' => $idPRONAC
+            )
+        );
+
+        $produtoAux = [];
+        foreach ($resp->toArray() as $key => $produto) {
+            $produtoAux[$key] = $produto;
+
+            $produtoAux[$key]['dsProduto'] = utf8_encode($produtoAux[$key]['dsProduto']);
+        }
+
+        $this->_helper->json($produtoAux);
     }
 }

@@ -1,338 +1,466 @@
-<main>
-    <?php
-    $links = array(
-        array('An&aacute;lise t&eacute;cnica inicial' => array())
-    );
-    ?>
-    <div class="content padding20 clearfix">
-	<?php if($this->qtdRegistro != 0){ ?>
-        <div class="row">
-          <div class="col s10">
-            <?php gerarBreadCrumb($links); ?>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col s12">
-	    
-	    <table class="tabela">
-              <table class="bordered margin0 dataTable">	      
-                <thead>
-		  <th class="center-align">PRONAC</th>
-		  <th class="center-align">Nome do Projeto</th>
-		  <th class="center-align">Produto</th>
-		  <th class="center-align">Tipo de produto</th>
-		  <th class="center-align">Data de Recebimento</th>
-		  <th class="center-align">Tempo Restante</th>
-		  <th class="center-align">Dilig&ecirc;ncia</th>
-		  <th class="center-align">Tempo da Dilig&ecirc;ncia</th>
-		  <th class="center-align">Hist&oacute;rico</th>
-		  <th class="center-align" width="250">Conclus&atilde;o</th>
-		  <th class="center-align">Declarar impedimento</th>
-		</thead>
-<?php
-$rp = '';
-$diligenciado = '';
-$Titlediligenciado = '';
+<?php $links = array( array('An&aacute;lise t&eacute;cnica inicial' => array())); ?>
+<?php if($this->qtdRegistro != 0): ?>
+  <div class="row">
+    <div class="col s10">
+      <?php gerarBreadCrumb($links); ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <table class="bordered">
+        <thead>
+          <th class="center-align">PRONAC</th>
+          <th class="center-align">Nome do Projeto</th>
+          <th class="center-align">Produto</th>
+          <th class="center-align">Tipo de produto</th>
+          <th class="center-align">Data de Recebimento</th>
+          <th class="center-align">Tempo Restante</th>
+          <th class="center-align">Dilig&ecirc;ncia</th>
+          <th class="center-align">Tempo da Dilig&ecirc;ncia</th>
+          <th class="center-align">Hist&oacute;rico</th>
+          <th class="center-align">Conclus&atilde;o</th>
+          <th class="center-align">Declarar impedimento</th>
+        </thead>
+        <?php
+          $rp = '';
+          $diligenciado = '';
+          $Titlediligenciado = '';
 
-foreach($this->buscar as $d) {
+          foreach($this->buscar as $d) {
+            /* Verifica se tem diligencia para o projeto  */
+            $tbDiligencia = new tbDiligencia();
+            $rsDilig = $tbDiligencia->buscarDados($d->IdPRONAC);
 
-    /* Verifica se tem diligencia para o projeto  */
-    $tbDiligencia = new tbDiligencia();
-    $rsDilig = $tbDiligencia->buscarDados($d->IdPRONAC);
+            // Conta quantas diligencias existe
+            $dilig = count($rsDilig);
 
-    // Conta quantas diligencias existe
-    $dilig = count($rsDilig);
+            $diligencia = NULL;
+            $tempoRestante = NULL;
+            $tempoDiligencia = NULL;
 
-    $diligencia = NULL;
-    $tempoRestante = NULL;
-    $tempoDiligencia = NULL;
+            /* Diligencia */
+            if ($d->DtSolicitacao && $d->DtResposta == NULL) {
+                $diligencia = 1;
+            } else if ($d->DtSolicitacao && $d->DtResposta != NULL) {
+                $diligencia = 2;
+            } else if ($d->DtSolicitacao && round(data::CompararDatas($d->DtDistribuicao)) > $d->tempoFimDiligencia) {
+                $diligencia = 3;
+            } else {
+                $diligencia = 0;
+            }
 
-    /* Diligencia */
-    if ($d->DtSolicitacao && $d->DtResposta == NULL) {
-        $diligencia = 1;
-    } else if ($d->DtSolicitacao && $d->DtResposta != NULL) {
-        $diligencia = 2;
-    } else if ($d->DtSolicitacao && round(data::CompararDatas($d->DtDistribuicao)) > $d->tempoFimDiligencia) {
-        $diligencia = 3;
-    } else {
-        $diligencia = 0;
-    }
+            switch ($diligencia) {
+            case 0:
+                $diligenciado = "notice1.png";
+                $Titlediligenciado = "A Diligenciar";
+                $corDiligencia =  "light-green accent-3";
+                break;
+            case 1:
+                $diligenciado = "notice.png";
+                $Titlediligenciado = "Diligenciado";
+                $corDiligencia = "yellow accent-3";
+                break;
+            case 2:
+                $diligenciado = "notice3.png";
+                $Titlediligenciado = "Diligencia respondida";
+                $corDiligencia = "cyan lighten-1";
+                break;
+            case 3:
+                $diligenciado = "notice2.png";
+                $Titlediligenciado = "Diligencia n&atilde;o respondida";
+                $corDiligencia = "amber accent-4";
 
-    switch ($diligencia) {
-    case 0:
-        $diligenciado = "notice1.png";
-        $Titlediligenciado = "A Diligenciar";
-        $corDiligencia =  "light-green accent-3";
-        break;
-    case 1:
-        $diligenciado = "notice.png";
-        $Titlediligenciado = "Diligenciado";
-        $corDiligencia = "yellow accent-3";
-        break;
-    case 2:
-        $diligenciado = "notice3.png";
-        $Titlediligenciado = "Diligencia respondida";
-        $corDiligencia = "cyan lighten-1";
-        break;
-    case 3:
-        $diligenciado = "notice2.png";
-        $Titlediligenciado = "Diligencia n&atilde;o respondida";
-        $corDiligencia = "amber accent-4";
-              
-        break;
-    }
+                break;
+            }
 
 
-    /* Tempo Restante */
-    switch ($diligencia) {
-    case 0:
-        $tempoRestante = round(data::CompararDatas($d->DtDistribuicao));
-        break;
-    case 1:
-        $tempoRestante = round(data::CompararDatas($d->DtDistribuicao, $d->DtSolicitacao));
-        break;
-    case 2:
-        $tempoRestante = round(data::CompararDatas($d->DtResposta));
-        break;
-    case 3:
-        $tempoRestante = round(data::CompararDatas($d->DtResposta));
-        break;
-    }
+            /* Tempo Restante */
+            switch ($diligencia) {
+            case 0:
+                $tempoRestante = round(data::CompararDatas($d->DtDistribuicao));
+                break;
+            case 1:
+                $tempoRestante = round(data::CompararDatas($d->DtDistribuicao, $d->DtSolicitacao));
+                break;
+            case 2:
+                $tempoRestante = round(data::CompararDatas($d->DtResposta));
+                break;
+            case 3:
+                $tempoRestante = round(data::CompararDatas($d->DtResposta));
+                break;
+            }
 
-    /* Tempo Diligencia */
-    switch ($diligencia) {
-    case 1: $tempoDiligencia = round(data::CompararDatas($d->DtSolicitacao));
-        break;
-    }
+            /* Tempo Diligencia */
+            switch ($diligencia) {
+            case 1: $tempoDiligencia = round(data::CompararDatas($d->DtSolicitacao));
+                break;
+            }
 
-    /* At&eacute; 10 dias (Verde)
-       -Entre 10 at&eacute; 20 dias (amarelo)
-       -Produto distribuido apos 20 dias (vermelho); *
-    */
+            /* At&eacute; 10 dias (Verde)
+               -Entre 10 at&eacute; 20 dias (amarelo)
+               -Produto distribuido apos 20 dias (vermelho); *
+            */
 
-    if($tempoRestante <= 10) {
-        $tempoCor = 'green';
-    } else if($tempoRestante > 10 && $tempoRestante <=20) {
-        $tempoCor = 'yellow';
-    } else {
-        $tempoCor = 'red';
-    }
-
-?>
-              <tr>
-		<td class="center-align">
-                  <a class="waves-effect waves-dark btn white black-text"
-                     href="<?php echo $this->url(
-                           array(
-                           'module' => 'default',
-                           'controller' => 'consultardadosprojeto',
-                           'action' => 'index'
-                           )
-                           ) . "?idPronac=". $d->IdPRONAC; ?>"><u><?php echo $d->PRONAC; ?></u></a>		  
-		</td>
-		<td class="center-align"><?php if($d->PRONAC != $rp) { echo $d->NomeProjeto; }else { echo ''; } ?></td>
-		<td class="center-align">
-		  <?php if($this->verificarIN2017($d->IdPRONAC)): ?>
-		  <?php if (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
-		  <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
-		  <?php else: ?>
-		  <?php if ($d->idAgenteParecerista == $this->idAgenteParecerista): ?>
-		  <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
-		  <?php else: ?>
-		  <?php echo $d->dsProduto; ?>
-		  <?php endif; ?>
-		  <?php endif; ?>
-		  
-		  <?php else: ?>
-		  <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
-		  <?php endif; ?>
-		</td>
-		<td class="center-align"><?php if($d->stPrincipal == 1): ?><img src="<?php echo $this->baseUrl(); ?>/public/img/ok_16x16.png" width="20px" style="cursor: pointer;" title="Produto principal" alt="Produto principal" /><?php endif;?></td>
-		<td class="center-align"><?php echo Data::tratarDataZend($d->DtDistribuicao, 'Brasileira'); ?></td>
-		<td class="center-align"><?php echo "<b style='color:".$tempoCor."'>".$tempoRestante." de 10</b>"; ?></td>
-		<td class="center-align">
-		  <?php if (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
-		  <img src="<?php echo $this->baseUrl(); ?>/public/img/<?php echo $diligenciado; ?>" title="<?php echo $Titlediligenciado; ?>" width="30px" onclick="window.open('<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&tpDiligencia=124')" style="cursor: pointer;" alt="Diligencia" />
-		  <?php endif; ?>
-		</td>	    
-		<td class="center-align"><?php echo $d->tempoFimDiligencia; ?></td>
-		<td class="center-align">
-		  <a class="btn waves-effect waves-light cyan tooltipped small"
-		     href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'historico', 'idPronac'=> $d->IdPRONAC, 'stPrincipal'=> $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>"
-		    data-tooltip="Hist&oacute;rico">
-		    <i class="material-icons white-text">history</i>
-		  </a>		  
-		</td>
-		<td class="center-align">
-		  <?php if(
-			(($this->IsProdutosSecundariosAnalisados($d->IdPRONAC)) &&
-		  ($d->stPrincipal == 1) &&
-		  (!$this->IsProdutosPendentesParecer($d->IdPRONAC, $d->idProduto)) &&
-		  ($this->IsProjetoEnquadrado($d->IdPRONAC)) &&
-            ($this->IsProjetoComParecer($d->IdPRONAC)) && ($dilig == 0))
-		  ) : ?>
-		  <?php if($this->verificarIN2017($d->IdPRONAC)): ?>         
-		  <?php if($this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)): ?>
-<?php $idDocumentoAssinatura = $this->GetIdDocumentoAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo); ?>
-		  <a class="btn waves-effect waves-light cyan tooltipped small"
-		     href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'visualizar-projeto')) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
-		    data-tooltip="Visualizar documento">
-		    <i class="material-icons white-text">remove_red_eye</i>
-		  </a>
-		  &nbsp;&nbsp;
-		  
-		  <?php if ($this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)):
-          $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer . "&concluir=1";
+            if($tempoRestante <= 10) {
+                $tempoCor = 'green';
+            } else if($tempoRestante > 10 && $tempoRestante <=20) {
+                $tempoCor = 'yellow';
+            } else {
+                $tempoCor = 'red';
+            }
+        ?>
+        <tbody>
+          <tr>
+            <td class="center-align">
+              <a class="pre-visualizar waves-effect waves-dark btn white black-text"
+                data-idpronac="<?php echo $d->IdPRONAC; ?>"
+                href="<?php echo $this->url( ['module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index']) . "?idPronac=". $d->IdPRONAC; ?>">
+                <u>
+                  <?php echo $d->PRONAC; ?>
+                </u>
+              </a>
+            </td>
+            <td class="center-align"><?php if($d->PRONAC != $rp) { echo $d->NomeProjeto; }else { echo ''; } ?></td>
+            <td class="center-align">
+              <?php if($this->verificarIN2017($d->IdPRONAC)): ?>
+                <?php if (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
+                  <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
+                <?php else: ?>
+                  <?php if ($d->idAgenteParecerista == $this->idAgenteParecerista): ?>
+                  <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
+                  <?php else: ?>
+                    <?php echo $d->dsProduto; ?>
+                  <?php endif; ?>
+                <?php endif; ?>
+              <?php else: ?>
+                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a>
+              <?php endif; ?>
+            </td>
+            <td class="center-align"><?php if($d->stPrincipal == 1): ?><img src="<?php echo $this->baseUrl(); ?>/public/img/ok_16x16.png" width="20px" style="cursor: pointer;" title="Produto principal" alt="Produto principal" /><?php endif;?></td>
+            <td class="center-align"><?php echo Data::tratarDataZend($d->DtDistribuicao, 'Brasileira'); ?></td>
+            <td class="center-align"><?php echo "<b style='color:".$tempoCor."'>".$tempoRestante." de 10</b>"; ?></td>
+            <td class="center-align">
+              <?php if (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
+                <img src="<?php echo $this->baseUrl(); ?>/public/img/<?php echo $diligenciado; ?>" title="<?php echo $Titlediligenciado; ?>" width="30px" onclick="window.open('<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&tpDiligencia=124')" style="cursor: pointer;" alt="Diligencia" />
+              <?php endif; ?>
+            </td>
+            <td class="center-align"><?php echo $d->tempoFimDiligencia; ?></td>
+            <td class="center-align">
+              <a class="btn waves-effect waves-light cyan tooltipped small"
+                 href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'historico', 'idPronac'=> $d->IdPRONAC, 'stPrincipal'=> $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>"
+                 data-tooltip="Hist&oacute;rico">
+                <i class="material-icons white-text">history</i>
+              </a>
+            </td>
+            <td class="center-align">
+              <?php
+                if(
+                  ($this->IsProdutosSecundariosAnalisados($d->IdPRONAC)) &&
+                  ($d->stPrincipal == 1) &&
+                  (!$this->IsProdutosPendentesParecer($d->IdPRONAC, $d->idProduto)) &&
+                  ($this->IsProjetoEnquadrado($d->IdPRONAC)) &&
+                  ($this->IsProjetoComParecer($d->IdPRONAC)) &&
+                  ($dilig == 0)
+                ) :
+              ?>
+                <?php if($this->verificarIN2017($d->IdPRONAC)): ?>
+                  <?php if($this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)): ?>
+                    <?php $idDocumentoAssinatura = $this->GetIdDocumentoAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo); ?>
+                      <a class="btn waves-effect waves-light cyan tooltipped small"
+                         href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'visualizar-projeto')) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
+                        data-tooltip="Visualizar documento">
+                        <i class="material-icons white-text">remove_red_eye</i>
+                      </a>
+                      &nbsp;&nbsp;
+                      <?php if ($this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)):
+                        $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer . "&concluir=1";
+                      ?>
+                        <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                           href="#modalConfirmacao"
+                           data-redirect-url="<?php echo $this->url( array( 'module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer')) . $parametrosAssinatura ?>"
+                           data-position="top"
+                           data-delay="50"
+                           data-tooltip="Concluir">
+                          <i class="material-icons">check_circle</i>
+                        </a>
+                      <?php elseif (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
+                        <a class="btn waves-effect waves-light cyan tooltipped small"
+                           href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'assinar-projeto')) . "?IdPRONAC={$d->IdPRONAC}&idTipoDoAtoAdministrativo=" . Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL; ?>&origin=parecer/analise-inicial"
+                          data-tooltip="Assinar documento">
+                          <i class="material-icons white-text">create</i>
+                        </a>
+                      <?php endif; ?>
+                    <?php elseif(!$this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)): ?>
+                      <a class="btn waves-effect waves-light cyan tooltipped small"
+                         href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'encaminhar-assinatura')) . "?IdPRONAC={$d->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
+                        data-tooltip="Gerar documento para assinatura">
+                        <i class="material-icons white-text">note_add</i>
+                      </a>
+                    <?php endif; ?>
+                <?php elseif(!$this->verificarIN2017($d->IdPRONAC)): ?>
+                  <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer', 'idPronac'=> $d->IdPRONAC, 'idD'=> $d->idDistribuirParecer, 'idProduto' => $d->idProduto, 'stPrincipal' => $d->stPrincipal)); ?>')" style="cursor: pointer;" title="Concluir An&aacute;lise" alt="Concluir An&aacute;lise" />
+                <?php endif; ?>
+              <?php endif; ?>
+        <?php if(($d->stPrincipal == 0) && ($this->IsProdutosPendentesParecer($d->IdPRONAC, $d->idProduto) == 0)  && ($dilig == 0)): ?>
+        <?php /* fechamento do produto secundário */  ?>
+        <?php $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer . "&stPrincipal=" . $d->stPrincipal . "&concluir=1"; ?>
+                <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                   href="#modalConfirmacao"
+                   data-redirect-url="<?php echo $this->url( array( 'module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer')) . $parametrosAssinatura ?>"
+                   data-position="top"
+                   data-delay="50"
+                   data-tooltip="Concluir">
+                  <i class="material-icons">check_circle</i>
+          </a>
+        <?php endif; ?>
+            </td>
+            <td class="center-align">
+              <?php if ($this->verificarIN2017($d->IdPRONAC)): ?>
+              <?php if (!$this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)):
+              $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer;
+              ?>
+                <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                   href="<?php echo $this->url(
+                  array(
+                                      'module' => 'default',
+                  'controller' => 'analisarprojetoparecer',
+                  'action' => 'devolver-parecer'
+                  )) . $parametrosAssinatura ?>"
+                   data-position="top"
+                   data-delay="50"
+                   data-tooltip="Declarar impedimento">
+                  <i class="material-icons">arrow_back</i>
+                </a>
+            <?php endif; ?>
+            <?php elseif (!$this->verificarIN2017($d->IdPRONAC)): ?>
+            <img id="img_encaminhar_parecer834782" style="cursor:pointer; " title="Declarar impedimento" src="/public/img/table_multiple.png" onclick="redirecionar('<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'devolver-parecer'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&idD=<?php echo $d->idDistribuirParecer; ?>')">
+            <?php endif; ?>
+            </td>
+          </tr>
+          <?php
+           $rp = $d->PRONAC;
+          }
           ?>
-                  <a class="btn waves-effect waves-light tooltipped small btn cyan"
-                     href="#modalConfirmacao"
-                     data-redirect-url="<?php echo $this->url(
-                                        array(
-                                        'module' => 'parecer',
-                                        'controller' => 'analise-inicial',
-                                        'action' => 'fechar-parecer'
-                                        )
-                                        ) . $parametrosAssinatura ?>"
-                     data-position="top"
-                     data-delay="50"
-                     data-tooltip="Concluir">
-                    <i class="material-icons">check_circle</i>
-                  </a>	
-		  
-		  <?php elseif (!$this->IsProjetoJaAssinado($d->IdPRONAC, $this->idTipoDoAtoAdministrativo, $this->idPerfilDoAssinante)): ?>
-		  <a class="btn waves-effect waves-light cyan tooltipped small"
-		     href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'assinar-projeto')) . "?IdPRONAC={$d->IdPRONAC}&idTipoDoAtoAdministrativo=" . Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL; ?>&origin=parecer/analise-inicial"
-		    data-tooltip="Assinar documento">
-		    <i class="material-icons white-text">create</i>
-		  </a>
-		  <?php endif; ?>
-		  
-		  <?php elseif(!$this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)): ?>
-		  <a class="btn waves-effect waves-light cyan tooltipped small"
-		     href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'encaminhar-assinatura')) . "?IdPRONAC={$d->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
-		    data-tooltip="Gerar documento para assinatura">
-		    <i class="material-icons white-text">note_add</i>
-		  </a>
-		  <?php endif; ?>
-		  <?php elseif(!$this->verificarIN2017($d->IdPRONAC)): ?>
-		  <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer', 'idPronac'=> $d->IdPRONAC, 'idD'=> $d->idDistribuirParecer, 'idProduto' => $d->idProduto, 'stPrincipal' => $d->stPrincipal)); ?>')" style="cursor: pointer;" title="Concluir An&aacute;lise" alt="Concluir An&aacute;lise" />
-		  <?php endif; ?>
-		  <?php endif; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <table class="tabela">
+        <tr>
+          <td>
+            <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice1.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left;"> A diligenciar</div>
+            <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice.png" width="20px"/></div><div style="margin-top: 2px;  margin-right: 15px; margin-left: 3px; float: left"> Diligenciado</div>
+            <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice3.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left"> Dilig&ecirc;ncia respondida</div>
+            <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice2.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left"> Dilig&ecirc;ncia n&atilde;o respondida</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 
-		  <?php if(($d->stPrincipal == 0) && ($this->IsProdutosPendentesParecer($d->IdPRONAC, $d->idProduto) == 0)  && ($dilig == 0)): ?>
-		  <?php /* fechamento do produto secundário */  ?>
-		  <?php $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer . "&stPrincipal=" . $d->stPrincipal . "&concluir=1"; ?>
-                  <a class="btn waves-effect waves-light tooltipped small btn cyan"
-                     href="#modalConfirmacao"
-                     data-redirect-url="<?php echo $this->url(
-                              array(
-                                        'module' => 'parecer',
-                                        'controller' => 'analise-inicial',
-                                        'action' => 'fechar-parecer'
-                                        )
-                                        ) . $parametrosAssinatura ?>"
-                     data-position="top"
-                     data-delay="50"
-                     data-tooltip="Concluir">
-                    <i class="material-icons">check_circle</i>
-		    </a>
-		  <?php endif; ?>
-          
-		</td>
-		<td class="center-align">
-		  <?php if ($this->verificarIN2017($d->IdPRONAC)): ?>
-		  <?php if (!$this->IsProjetoDisponivelParaAssinatura($d->IdPRONAC, $this->idTipoDoAtoAdministrativo)):
-          $parametrosAssinatura = "?idPronac=". $d->IdPRONAC ."&idProduto=". $d->idProduto . "&situacao=". $d->situacao ."&idD=". $d->idDistribuirParecer;
-		  ?>
-                  <a class="btn waves-effect waves-light tooltipped small btn cyan"
-                     href="<?php echo $this->url(
-					array(
-                                        'module' => 'default',
-					'controller' => 'analisarprojetoparecer',
-					'action' => 'devolver-parecer'
-					)) . $parametrosAssinatura ?>"
-                     data-position="top"
-                     data-delay="50"
-                     data-tooltip="Declarar impedimento">
-                    <i class="material-icons">arrow_back</i>
-                  </a>
+  <div class="row">
+    <div class="col s12">
+        <div id="app">
+          <ul class="collapsible" data-collapsible="accordion">
+            <?php foreach($this->d as $d) : ?>
+                <produto
+                    idpronac="<?php echo $d->IdPRONAC; ?>"
+                    nomeprojeto="<?php echo $d->NomeProjeto  ?>"
+                    url-modal=<?php echo $this->url( ['module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index']) . "?idPronac=". $d->IdPRONAC; ?>
+                ></produto>
+            <?php endforeach ?>
+          </ul>
+        </div>
+    </div>
+  </div>
 
-		    <?php endif; ?>
-		    <?php elseif (!$this->verificarIN2017($d->IdPRONAC)): ?>
-		    <img id="img_encaminhar_parecer834782" style="cursor:pointer; " title="Declarar impedimento" src="/public/img/table_multiple.png" onclick="redirecionar('<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'devolver-parecer'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&idD=<?php echo $d->idDistribuirParecer; ?>')">		
-		      <?php endif; ?>
-		</td>
-	      </tr>
-	      <?php
-		 $rp = $d->PRONAC;
-	      }
-	      ?>
-	    </table>
-	  </div>
-	</div>
-	<div class="row">
-	  <div class="col s12">
-	    <table class="tabela">
-	      <tr>
-		<td>
-		  <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice1.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left;"> A diligenciar</div>
-		  <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice.png" width="20px"/></div><div style="margin-top: 2px;  margin-right: 15px; margin-left: 3px; float: left"> Diligenciado</div>
-		  <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice3.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left"> Dilig&ecirc;ncia respondida</div>
-		  <div style="float: left;"><img src="<?php echo $this->baseUrl(); ?>/public/img/notice2.png" width="20px"/></div><div style="margin-top: 2px; margin-right: 15px; margin-left: 3px; float: left"> Dilig&ecirc;ncia n&atilde;o respondida</div>
-		</td>
-	      </tr>
-	    </table>
-	  </div>
-	</div>
+<?php else : ?>
+  <div class="row">
+    <div class="col s10">Nenhum registro encontrado</div>
+  </div>
+<?php endif; ?>
+<div id="conteudoDialogoModal">
+  <div id="modalConfirmacao" class="modal modal-fixed-footer">
+    <div class="modal-content">
+      <h4>Confirma&ccedil;&atilde;o</h4>
+      <p>Tem certeza que deseja concluir a an&aacute;lise do projeto <span class="bold" id="nrPronacConfirmacao"></span> ?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" id="botaoConfirmacaoEncaminhamento" class="modal-action modal-close waves-effect waves-green btn-flat">Sim</a>
+      <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">N&atilde;o</a>
+    </div>
+  </div>
+</div>
+<script>
+    $3(document).ready(function(){
+        $3('.modal').modal({
+            dismissible: true,
+            opacity: .5,
+            inDuration: 300,
+            outDuration: 200,
+            startingTop: '4%',
+            endingTop: '10%',
+            ready: function(modal, trigger) {
+              $(modal).find('#botaoConfirmacaoEncaminhamento').attr('href', $3(trigger).data('redirectUrl'));
+            }
+        });;
+    });
+</script>
+
+<!-- Modal Structure -->
+<div id="abrirModal" class="modal modal-fixed-footer">
+    <div class="modal-content">
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Fechar</a>
+    </div>
+</div>
+<script type="text/javascript">
+    $3('.pre-visualizar').on('click',
+        function(event) {
+            event.preventDefault();
+            $3(".modal-content").empty().load('/consultardadosprojeto/consultar-ajax?idPronac=' + $3(this).data().idpronac)
+            $3('#abrirModal').modal();
+            $3('#abrirModal').modal('open');
+        }
+    );
+</script>
+<style>
+    #abrirModal.modal{
+       height: 90%;
+       max-height: 96%;
+       width: 98%;
+    }
+</style>
+
+<script type="text/javascript">
+    $3('.collapsible-header').on('click',
+        function(event) {
+            /* event.preventDefault(); */
+            console.log('teste');
+            $.ajax({
+              url: "/parecer/analise-inicial/produtos-analise-ajax",
+              data: {'idPRONAC': $3(this).data().idpronac}
+            })
+              .done(function( data ) {
+                  console.log( data );
+              });
+        }
+    );
+</script>
+
+
+<script type="text/x-template" id="produto">
+    <li>
+      <div class="collapsible-header">
+         {{ NomeProjeto}}
       </div>
-    </div>
-
-    <!-- ========== PAGINA&CCEDIL;&ATILDE;O ========== -->
-    <?php //if($this->qtdRegistro > 5){ echo "<p>" . $this->buscar . "</p>"; } ?>
-    <!-- ========== FIM PAGINA&CCEDIL;&ATILDE;O ========== -->
-
-    <?php } else { ?>
-    <div class="row">
-      
-      <div class="col s10">Nenhum registro encontrado</div>
-    </div>
-    <?php } ?>
-
-    <div id="conteudoDialogoModal">
-
-      <div id="modalConfirmacao" class="modal modal-fixed-footer">
-	<div class="modal-content">
-	  <h4>Confirma&ccedil;&atilde;o</h4>
-	  <p>Tem certeza que deseja concluir a an&aacute;lise do projeto <span class="bold" id="nrPronacConfirmacao"></span> ?</p>
-	</div>
-	<div class="modal-footer">
-	  <a href="#!" id="botaoConfirmacaoEncaminhamento" class="modal-action modal-close waves-effect waves-green btn-flat">Sim</a>
-	  <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">N&atilde;o</a>
-	</div>
+      <div class="collapsible-body" >
+        <table class="bordered">
+            <thead>
+                <th> Produto </th>
+                <th> Tipo de Produto </th>
+                <th> Data de Recebimento </th>
+                <th> Tempo Restante </th>
+                <th> Tempo Diligência </th>
+                <th> Diligência </th>
+                <th> Histórico </th>
+                <th> Conclusão</th>
+                <th> Declarar Impedimento</th>
+            </thead>
+            <tbody>
+                <tr v-for="( produto, index ) in p">
+                    <td>
+                        <a
+                            :href="'/analisarprojetoparecer/produto?idPronac='
+                            + `${idpronac}` 
+                            + '&idProduto=' + `${produto.idProduto}`
+                            + '&stPrincipal=' + `${produto.stPrincipal}`
+                            + '&idD=' + `${produto.idDistribuirParecer}`"
+                        >
+                          {{ produto.dsProduto }}
+                        </a
+                    </td>
+                    <td v-if="produto.stPrincipal == 1">
+                         <i class="material-icons">check</i> 
+                    </td> <td v-else>
+                    </td>
+                    <td>{{ dt(produto.DtDistribuicao) }}</td>
+                    <td>{{ tempoRestante(produto.DtDistribuicao) }}</td>
+                    <td v-if="produto.tempoFimDiligencia > 0">{{ produto.tempoFimDiligencia }}</td>
+                    </td> 0 <td v-else>
+                    <td>
+                        <a class="waves-effect waves-dark btn white black-text">
+                           impedimento
+                        </a>
+                    </td>
+                    <td>
+                        <a class="waves-effect waves-dark btn white black-text">
+                           historico
+                        </a>
+                    </td>
+                    <td>
+                        <a class="waves-effect waves-dark btn white black-text">
+                           conclusao
+                        </a>
+                    </td>
+                    <td>
+                        <a class="waves-effect waves-dark btn white black-text">
+                           impedimento
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
       </div>
+    </li>
+</script>
 
-    </div>
+<script src="https://unpkg.com/vue"></script>
+<script src="http://momentjs.com/downloads/moment-with-locales.js"></script>
 
-    <script>
-        $3(document).ready(function(){
-            $3('.modal').modal({
-                dismissible: true,
-                opacity: .5,
-                inDuration: 300,
-                outDuration: 200,
-                startingTop: '4%',
-                endingTop: '10%',
-                ready: function(modal, trigger) {
-		    $(modal).find('#botaoConfirmacaoEncaminhamento').attr('href', $3(trigger).data('redirectUrl'));
+<script type="text/javascript">
+    Vue.component(
+        'produto',
+         {
+            template: '#produto',
+            data: function() {
+                return {
+                    p: [],
+                    NomeProjeto: this.nomeprojeto
                 }
-            });;
-        });
-    </script>
-    
-    <br clear="all"/>
-    <script
-       src="https://code.jquery.com/jquery-1.12.4.js"
-       integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
-       crossorigin="anonymous">
-    </script>
-</main>
+            },
+            props:['idpronac', 'nomeprojeto', 'url-modal'],
+            mounted: function() {
+                var vue = this;
+
+                url = "/parecer/analise-inicial/produtos-analise-ajax";
+                $3.ajax({
+                    url:url,
+                    data: {'idPRONAC': vue.idpronac}
+                }).done(function(data) {
+                    vue.$data.p = data;
+                }).fail(function(){ alert('Erro ao buscar detalhamento'); });
+            },
+            methods: {
+              dt: function (date) {
+                return moment(date).format('DD/MM/YYYY')
+              },
+              tempoRestante: function (date) {
+                date = moment().diff(date,'days');
+                return date + ' de 10';
+              }
+            },
+            computed: {
+            }
+        }
+    );
+
+    moment.locale('pt-br');
+
+    var app6 = new Vue({
+        el: '#app'
+    });
+</script>
