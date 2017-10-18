@@ -2448,7 +2448,6 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosReadequacaoAnterior = array('stAtivo' => 'N');
                 $whereReadequacaoAnterior = array(
                     'IdPRONAC = ?' => $idPronac,
-                    'tpPlanilha = ?' => 'RP',
                     'stAtivo = ?' => 'S'
                 );
                 $update = $tbPlanilhaAprovacao->update($dadosReadequacaoAnterior, $whereReadequacaoAnterior);
@@ -2956,7 +2955,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
         
-        $tbPlanilhaAprovacao = new PlanilhaAprovacao();
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
         $tbReadequacao = new tbReadequacao();
         $existeRemanejamento50EmAndamento = $tbReadequacao->existeRemanejamento50EmAndamento($idPronac);
         //print_r($existeRemanejamento50EmAndamento);die;
@@ -2978,6 +2977,14 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                     'idPlanilhaAprovacaoPai=?'=> $idPlanilhaAprovacaoPai
                 )
             )->current();
+        } else if ($existeRemanejamento50EmAndamento && !$idPlanilhaAprovacaoPai) {
+            $valoresItem = $tbPlanilhaAprovacao->buscar(
+                array(
+                    'IdPRONAC=?'=>$idPronac,
+                    'stAtivo=?'=>'S',
+                    'idPlanilhaAprovacao=?'=> $idPlanilhaAprovacao
+                )
+            )->current();            
         } else if (!$existeRemanejamento50EmAndamento && $idPlanilhaAprovacaoPai) {
             $valoresItem = $tbPlanilhaAprovacao->buscar(
                 array(
@@ -3039,13 +3046,15 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosReadequacao['stEstado'] = 1;
                 $idReadequacao = $tbReadequacao->inserir($dadosReadequacao);
                 
+                $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
                 $planilhaAtiva = $tbPlanilhaAprovacao->buscar(
                     array(
                         'IdPRONAC=?'=>$idPronac,
                         'StAtivo=?'=>'S',
-                        'tpAcao!=?' => 'E'
+                        'tpAcao!=? OR tpAcao IS NULL' => 'E'
                     )
                 );
+                
                 $planilhaRP = array();
                 foreach ($planilhaAtiva as $value) {
                     $planilhaRP['tpPlanilha'] = 'RP';
