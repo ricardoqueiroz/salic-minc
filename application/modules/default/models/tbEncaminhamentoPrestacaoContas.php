@@ -136,18 +136,21 @@ class tbEncaminhamentoPrestacaoContas extends MinC_Db_Table_Abstract {
     }
 
 
-   public function HistoricoEncaminhamentoPrestacaoContas($idPronac){
+    public function HistoricoEncaminhamentoPrestacaoContas($idPronac)
+    {
+
     	$select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(array('a'=>$this->_name),
-                        array(
-			      'b.AnoProjeto+b.Sequencial as PRONAC,b.NomeProjeto,
-                               CONVERT(CHAR(10),
-                               a.dtInicioEncaminhamento, 101) AS dtInicioEncaminhamento,
-a.dsJustificativa,
-                               c.usu_nome AS NomeOrigem,
-                               c.usu_nome AS NomeDestino'
-                              ), $this->_schema
+                        array('
+                           b.AnoProjeto+b.Sequencial as PRONAC,
+                           b.NomeProjeto, 
+                           CONVERT(CHAR(10), a.dtInicioEncaminhamento, 101) AS dtInicioEncaminhamento,
+                           a.dsJustificativa, 
+                           c.usu_nome AS NomeOrigem, 
+                           d.usu_nome AS NomeDestino
+                           '), 
+                        $this->_schema
                       );
 
         $select->joinInner(
@@ -164,14 +167,14 @@ a.dsJustificativa,
                            );
         $select->joinInner(
                             array('d'=>'Usuarios'),
-                            'a.idAgenteOrigem = d.usu_codigo',
+                            'a.idAgenteDestino = d.usu_codigo',
                             array(),
                             'TABELAS.dbo'
                            );
 
         $select->where('a.idPronac = ?',$idPronac);
 
-	return $this->fetchAll($select);
+        return $this->fetchAll($select);
     }
 
 

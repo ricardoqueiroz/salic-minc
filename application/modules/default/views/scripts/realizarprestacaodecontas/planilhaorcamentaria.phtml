@@ -112,7 +112,7 @@
                 $finalizadoHref             =   $this->url(array('controller' => 'comprovarexecucaofinanceira', 'action' => 'finalizado')).'?cadastro=1&idpronac='.$this->idpronac;
             ?>
         </div>
-        <div class="col s10">
+        <div class="col s10" id="pagina">
             <div class="row">
                 <div class="col s12" id="breadcrumb">
                     <ul>
@@ -175,13 +175,9 @@
                                             <td class="destacar bold">Situa&ccedil;&atilde;o</td>
                                             <td>
                                                 <select name="itemAvaliadoFilter" style="width: 245px;" class="input_simples">
-                                                    <option value="0">Todos</option>
-                                                    <?php if ($this->codGrupo != 132 && $this->codGrupo != 125) : ?>
-                                                        <option value="1" <?php echo $this->itemAvaliadoFilter == 1 ? 'selected="true"' : null; ?>>Aguardando Análise</option>
-                                                        <option value="2" <?php echo $this->itemAvaliadoFilter == 2 ? 'selected="true"' : null; ?>>Analisados</option>
-                                                    <?php else : ?>
-                                                        <option value="3" <?php echo $this->itemAvaliadoFilter == 3 ? 'selected="true"' : null; ?>>Impugnados</option>
-                                                    <?php endif; ?>
+                                                    <option value="1" <?php echo $this->itemAvaliadoFilter == 1 ? 'selected="true"' : null; ?>>Aguardando Análise</option>
+                                                    <option value="2" <?php echo $this->itemAvaliadoFilter == 2 ? 'selected="true"' : null; ?>>Analisados</option>
+                                                    <option value="3" <?php echo $this->itemAvaliadoFilter == 3 ? 'selected="true"' : null; ?>>Impugnados</option>
                                                 </select>
                                             </td>
                                             <td colspan="6" align="center">
@@ -276,7 +272,6 @@
                                         <td class="destacar bold">Situa&ccedil;&atilde;o</td>
                                         <td>
                                             <select name="itemAvaliadoFilter" style="width: 245px;" class="input_simples">
-                                                <option value="0">Todos</option>
                                                 <?php if ($this->codGrupo != 132 && $this->codGrupo != 125) : ?>
                                                     <option value="1" <?php echo $this->itemAvaliadoFilter == 1 ? 'selected="true"' : null; ?>>Aguardando Análise</option>
                                                     <option value="2" <?php echo $this->itemAvaliadoFilter == 2 ? 'selected="true"' : null; ?>>Analisados</option>

@@ -276,6 +276,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         } elseif($itemAvaliadoFilter == 3) {
             $select->where('cppa.stItemAvaliado = ?', 3);
         }
+        /* echo $select;die; */
         return $this->fetchAll($select);
     }
 
@@ -1951,7 +1952,6 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         } elseif($itemAvaliadoFilter == 3) {
             $select->where('cppa.stItemAvaliado = ?', 3);
         }
-        /* echo $select;die; */
 
         return $this->fetchAll($select);
     }
@@ -1986,6 +1986,13 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
             'pAprovacao.idMunicipioDespesa = CID.idMunicipioIBGE',
             array('cidade'=>'CID.Descricao', 'idMunicipio'=>'CID.idMunicipioIBGE'),
             'AGENTES.dbo'
+        );
+        /*todo*/
+        $select->joinLeft(
+            array('cppa'=>'tbComprovantePagamentoxPlanilhaAprovacao'),
+            'pAprovacao.idPlanilhaAprovacao = cppa.idPlanilhaAprovacao',
+            array('stItemAvaliado'),
+            'BDCORPORATIVO.scSAC'
         );
 
         $select->where('pAprovacao.IdPRONAC = ?', $idpronac);
