@@ -47,9 +47,10 @@
                     <tr>
                         <td><?php echo $x; ?></td>
                         <td>
-                            <button class="btn pre-visualizar" data-idpronac="<?php echo ($projeto->idPronac); ?>">
-                                <?php echo $projeto->Pronac; ?>
-                            </button>
+                            <a href="/consultardadosprojeto?idPronac=<?php echo ($projeto->idPronac); ?>" class="btn">
+                                 <?php echo $projeto->Pronac; ?>
+                            </a>
+                          </a>
                         </td>
                         <td><?php echo $projeto->NomeProjeto; ?></td>
                         <td><?php echo $projeto->Situacao; ?></td>

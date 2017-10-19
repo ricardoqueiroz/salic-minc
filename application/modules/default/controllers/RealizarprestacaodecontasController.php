@@ -2099,7 +2099,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
 
         $this->dadosProjeto();
         $this->view->idPronac = $this->getRequest()->getParam('idPronac');
-        $this->view->itemAvaliadoFilter = $this->getRequest()->getParam('itemAvaliadoFilter');
+        $this->view->itemAvaliadoFilter = $this->getRequest()->getParam('itemAvaliadoFilter') ? $this->getRequest()->getParam('itemAvaliadoFilter') : 1;
         $this->view->idRelatorio = $this->getRequest()->getParam('relatorio');
 
         $dao = new PlanilhaAprovacao();
