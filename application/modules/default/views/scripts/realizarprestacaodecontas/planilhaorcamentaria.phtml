@@ -221,20 +221,19 @@
                                                 <?php endif ?>
                                             </td>
                                         </tr>
-                                        <?php foreach($this->incFiscaisP as $titulo => $incFiscal): ?>
+
                                             <tr>
                                                 <td>
-                                                    <span class='green-text'><?php echo $titulo ?></span>
-                                                    <?php if(!empty($incFiscal)): ?>
-                                                        <?php foreach($incFiscal as $titulo => $item) : ?>
+                                                    <?php if(!empty($this->incFiscaisP)): ?>
+                                                        <?php foreach($this->incFiscaisP as $titulo => $item) : ?>
                                                             <div style="padding:3px; margin-left: 15px;" >
                                                                 <span class='green-text'><?php echo $titulo ?></span>
                                                                 <?php if(!empty($item)): ?>
-                                                                    <?php foreach($item as $titulo => $subItem): ?>
+                                                                    <?php foreach($item as $titulo => $tabelaItem): ?>
                                                                         <div style="padding:3px; margin-left: 15px;">
                                                                             <span class='orange-text'><?php echo $titulo ?></span>
                                                                             <?php if(!empty($subItem)): ?>
-                                                                                <?php foreach($subItem as $titulo => $tabelaItem) : ?>
+
                                                                                     <?php $id =  rand(); ?>
                                                                                     <div style="padding:3px; margin-left: 15px;">
                                                                                         <button class="waves-effect waves-light btn-flat btn btnToggle" 
@@ -247,7 +246,6 @@
                                                                                         </button>
                                                                                         <div id="div<?php echo $id; ?>"></div>
                                                                                     </div>
-                                                                                <?php endforeach;  ?>
                                                                             <?php endif;  ?>
                                                                         </div>
                                                                     <?php endforeach;  ?>
@@ -257,7 +255,6 @@
                                                     <?php endif; ?>
                                                 </td>
                                             </tr>
-                                        <?php endforeach; ?>
                                 </table>
                             </form>
                         </fieldset>
@@ -482,6 +479,9 @@
                 $.get(url, function(data){
                     jQuery('#div'+ btnId).html(data);
                     i.text('expand_more')
+                    //
+                    $( "ul.tabs" ).unbind();
+                    $3('ul.tabs').tabs();
                 });
 
             } else {

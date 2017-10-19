@@ -2107,6 +2107,13 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->idPronac,
             ($this->view->itemAvaliadoFilter ? $this->view->itemAvaliadoFilter : null)
         );
+        $respostaView = $dao->buscarItensPagamentoDadosView(
+            $this->view->idPronac,
+            ($this->view->itemAvaliadoFilter ? $this->view->itemAvaliadoFilter : null)
+        );
+        /* var_dump($respostaView->toArray()[0], $resposta->toArray()[0]); */
+        $resposta = $respostaView;
+        /* die; */
 
         $tblEncaminhamento = new EncaminhamentoPrestacaoContas();
         $rsEncaminhamento = $tblEncaminhamento->buscar(array('idPronac=?'=>$this->view->idPronac,'stAtivo=?'=>1))->current();
@@ -2137,7 +2144,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                 }
 
                 if ($val->tpCusto == 'P') {
-                    $arrayP[($val->Descricao)][($val->descEtapa)][$val->uf.' - '.($val->cidade)] = array(
+                    $arrayP[($val->descEtapa)][$val->uf.' - ' . $val->cidade] = array(
                         'idPlanilhaEtapa' => $val->idPlanilhaEtapa,
                         'uf' => $val->uf,
                         'codigo' => $val->Codigo,
@@ -2146,12 +2153,12 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                 }
 
                 #Pedro - Somatorio dos Itens Impugnados
-                $obComprovantesPagamento = $planilhaAprovacaoModel->buscarcomprovantepagamento($this->view->idPronac, $val->idPlanilhaAprovacao);
-                foreach ($obComprovantesPagamento as $index => $comprovante) {
-                    if ($comprovante->stItemAvaliado == 3) { //Prestacao de Contas Inpugnada
-                        $arrComprovantesImpugnados[$comprovante->idComprovantePagamento] = $comprovante->vlComprovacao;
-                    }
-                }
+                /* $obComprovantesPagamento = $planilhaAprovacaoModel->buscarcomprovantepagamento($this->view->idPronac, $val->idPlanilhaAprovacao); */
+                /* foreach ($obComprovantesPagamento as $index => $comprovante) { */
+                /*     if ($comprovante->stItemAvaliado == 3) { //Prestacao de Contas Inpugnada */
+                /*         $arrComprovantesImpugnados[$comprovante->idComprovantePagamento] = $comprovante->vlComprovacao; */
+                /*     } */
+                /* } */
             }
         }
         #Realiza a soma dos itens
@@ -2162,7 +2169,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
 
         $this->view->vlComprovacaoImpugnado = $vlTotalImpugnado;
         $this->view->incFiscaisA = array(utf8_encode('Administra&ccedil;&atilde;o do Projeto') =>$arrayA);
-        $this->view->incFiscaisP = array(utf8_encode('Custo por Produto') =>$arrayP);
+        $this->view->incFiscaisP = $arrayP;
     }
 
     public function emitirparecertecnicoAction()
@@ -2696,7 +2703,6 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->projeto = $planilhaAprovacaoModel
             ->dadosdoitem($idPlanilhaAprovacao, $idPronac)
             ;
-        /* var_dump($this->view->projeto);die; */
         $this->view->projeto = $this->view->projeto[0];
 
         if (!$this->view->projeto) {
@@ -2713,7 +2719,6 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->comprovantesPagamento = $planilhaAprovacaoModel
                 ->dadosdoitemPorItem($idPlanilhaItem, $idPronac)
                 ;
-            /* var_dump($this->view->comprovantesPagamento);die; */
         }
 
         $this->view->idPronac = $idPronac;
