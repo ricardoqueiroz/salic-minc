@@ -169,25 +169,6 @@
                             <legend>Comprova&ccedil;&atilde;o de Execu&ccedil;&atilde;o Financeira</legend>
                             <form name="frPagamento" id="frPagamento" >
                                 <input type="hidden" name="idPronac" value="<?php echo $this->idPronac;?>" />
-                                    <table class="tabela">
-                                        <tr><th colspan="3">Filtro de Pesquisa</th></tr>
-                                        <tr class="divFiltroPesquisa">
-                                            <td class="destacar bold">Situa&ccedil;&atilde;o</td>
-                                            <td>
-                                                <select name="itemAvaliadoFilter" style="width: 245px;" class="input_simples">
-                                                    <option value="1" <?php echo $this->itemAvaliadoFilter == 1 ? 'selected="true"' : null; ?>>Aguardando Análise</option>
-                                                    <option value="2" <?php echo $this->itemAvaliadoFilter == 2 ? 'selected="true"' : null; ?>>Analisados</option>
-                                                    <option value="3" <?php echo $this->itemAvaliadoFilter == 3 ? 'selected="true"' : null; ?>>Impugnados</option>
-                                                </select>
-                                            </td>
-                                            <td colspan="6" align="center">
-                                                <button type="submit" id="btn_pesquisar" class="btn" value="">Pesquisar</button>
-                                                <?php if($this->coordenador){ ?>
-                                                <input type="button" name="redistribuir" id="redistribuir" class="btn_devolver_tecnico" value="">
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
-                                    </table>
                                     <table id="planilhaItem" class="tabela bordered">
                                         <tr>
                                             <td>
@@ -205,6 +186,7 @@
                                                                                 <?php $id =  rand(); ?>
                                                                                 <button class="waves-effect waves-light btn btn-flat btnToggleCustos"  
                                                                                     uf="<?php echo $tabelaItem['uf']; unset($tabelaItem['uf']) ?>" 
+                                                                                    idmunicipio="<?php echo $tabelaItem['idMunicipio']; ?>" 
                                                                                     id="<?php echo $id; ?>" 
                                                                                 >
                                                                                     <i class="material-icons left">chevron_right</i><?php echo $titulo ?>
@@ -268,14 +250,6 @@
                                     <tr class="divFiltroPesquisa">
                                         <td class="destacar bold">Situa&ccedil;&atilde;o</td>
                                         <td>
-                                            <select name="itemAvaliadoFilter" style="width: 245px;" class="input_simples">
-                                                <?php if ($this->codGrupo != 132 && $this->codGrupo != 125) : ?>
-                                                    <option value="1" <?php echo $this->itemAvaliadoFilter == 1 ? 'selected="true"' : null; ?>>Aguardando Análise</option>
-                                                    <option value="2" <?php echo $this->itemAvaliadoFilter == 2 ? 'selected="true"' : null; ?>>Analisados</option>
-                                                <?php else : ?>
-                                                    <option value="3" <?php echo $this->itemAvaliadoFilter == 3 ? 'selected="true"' : null; ?>>Impugnados</option>
-                                                <?php endif; ?>
-                                            </select>
                                         </td>
                                         <td colspan="6" align="center">
                                             <button type="submit" id="btn_pesquisar" class="btn" value="">Pesquisar</button>
@@ -439,7 +413,9 @@
 
             idPronac = jQuery('input[name=idPronac]').val();
 
-            url = '/realizarprestacaodecontas/planilha-orcamentaria-custos/idPronac/'+idPronac+'/uf/' + btn.attr('uf');
+            url = '/realizarprestacaodecontas/planilha-orcamentaria-custos/idPronac/'+ idPronac
+                +'/uf/' + btn.attr('uf')
+                + '/idmunicipio/' + btn.attr('idmunicipio');
 
             btnAjax(url, this);
         });

@@ -2198,4 +2198,121 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
 
         return $this->fetchAll($select);
     }
+
+	public function vwComprovacaoFinanceiraProjeto($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoFinanceiraProjeto'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+
+	public function vwComprovacaoProjetoSemAnalise($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoSemAnalise'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+	public function vwComprovacaoProjetoAvaliada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoAvaliada'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+	public function vwComprovacaoProjetoRecusada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoRecusada'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
 }
