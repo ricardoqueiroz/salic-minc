@@ -2315,4 +2315,45 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         /* echo $select;die; */
         return $this->fetchAll($select);
     }
+
+	public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idpronac, $idPlanilhaItem)
+    {
+/* SELECT */
+/*     FROM */
+/*     sac.dbo.vwComprovacaoFinanceiraProjetoPorItemOrcamentario */
+/*     WHERE */
+/*     idPronac = 168849 */
+/*     -- AND cdUF = 35 */
+/*     -- AND cdEtapa = 4 */
+/*     -- AND cdCidade = '355030' */
+/*     -- AND cdProduto = 0 */
+/*     AND idPlanilhaItem = 189 */
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoFinanceiraProjetoPorItemOrcamentario'),
+            ['*', 'tbDocumento as tpDocumento', 'nmForncedor as Descricao', 'nrCNPJCPF as CNPJCPF', 'nrCNPJCPF as nrSerie', 'dtPagamento as dtEmissao'
+        , 'dsJustificativaProponente as dsJustificativa', 'dsJustificativaProponente as dsJustificativa', 'dsOcorrenciaDoTecnico as ocorrencia'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+        $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+
+        /* if($uf){ */
+        /*     $select->where('Uf = ?', $uf); */
+        /* } */
+
+        /* if($idMunicipio){ */
+        /*     $select->where('cdCidade = ?', $idMunicipio); */
+        /* } */
+
+        /* $select->order('tpCusto desc'); */
+        /* $select->order('Produto'); */
+        /* $select->order('cdEtapa'); */
+        /* $select->order('Uf'); */
+        /* $select->order('Cidade'); */
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
 }

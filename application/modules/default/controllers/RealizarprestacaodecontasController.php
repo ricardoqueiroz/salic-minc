@@ -2691,12 +2691,18 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao");
 
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
-        $this->view->projeto = $planilhaAprovacaoModel
-            ->dadosdoitem($idPlanilhaAprovacao, $idPronac)
+        /* $this->view->projeto = $planilhaAprovacaoModel */
+        /*     ->dadosdoitem($idPlanilhaAprovacao, $idPronac) */
+        /*     ; */
+        $projeto = $planilhaAprovacaoModel
+            ->vwComprovacaoFinanceiraProjeto($idPronac)
             ;
-        $this->view->projeto = $this->view->projeto[0];
+        /* var_dump($projeto); */
+        /* die; */
 
-        if (!$this->view->projeto) {
+        /* $this->view->projeto = $this->view->projeto[0]; */
+
+        if (!$projeto) {
             $this->_helper->flashMessengerType->addMessage('ALERT');
             $this->_helper->flashMessenger->addMessage('N&atilde;o houve comprova&ccedil;&atilde;o para este item.');
             $this->_redirect("realizarprestacaodecontas/planilhaorcamentaria/idPronac/{$idPronac}");
@@ -2706,15 +2712,23 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             /*     /1* $idPronac, $idPlanilhaItem *1/ */
             /*     $idPronac, */
             /*     $idPlanilhaAprovacao */
-            /* ); */
-            $this->view->comprovantesPagamento = $planilhaAprovacaoModel
-                ->dadosdoitemPorItem($idPlanilhaItem, $idPronac)
+            /* /1* ); *1/ */
+            /* $this->view->comprovantesPagamento = $planilhaAprovacaoModel */
+            /*     ->dadosdoitemPorItem($idPlanilhaItem, $idPronac) */
+            /*     ; */
+
+            $comprovantes = $planilhaAprovacaoModel
+                ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idPronac, $idPlanilhaItem)
                 ;
+            /* var_dump($comprovantes); */
+            /* die; */
         }
 
         $this->view->idPronac = $idPronac;
         $this->view->idPlanilhaItem = $idPlanilhaItem;
         $this->view->idPlanilhaAprovacao = $idPlanilhaAprovacao;
+        $this->view->projeto = $projeto;
+        $this->view->comprovantesPagamento = $comprovantes;
     }
 
     /**

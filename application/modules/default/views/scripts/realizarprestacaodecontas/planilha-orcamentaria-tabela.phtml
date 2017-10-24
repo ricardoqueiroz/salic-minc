@@ -15,12 +15,12 @@
     <tbody>
         <?php foreach($this->dados as $key => $valor) : ?>
             <tr>
-                <td align="center">
+                <td>
                     <?php
                         $href = $this->url(
                             array(
                                 'module' => 'default',
-                               'controller' => 'realizarprestacaodecontas',
+                                'controller' => 'realizarprestacaodecontas',
                                 'action' => 'analisar-comprovacao',
                                 'idPronac' => $valor->IdPRONAC,
                                 /* 'idPlanilhaAprovacao' => $key, */
