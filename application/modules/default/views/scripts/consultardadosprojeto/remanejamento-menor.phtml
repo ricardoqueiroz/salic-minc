@@ -153,6 +153,7 @@
                         itemClicado.parent().parent().find('.textJustificativa').html('');
                         atualizarDiferencaDeValores();
                         atualizaDadosGrupos();
+                        window.location.reload();
                     } else {
                         //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
                         $("#modalItem").dialog('close');
@@ -191,7 +192,7 @@
                         $(this).dialog('close');
                     },
                     'Sim' : function(){
-                        $(".ui-dialog-buttonpane button").html('');                            
+                        $(".ui-dialog-buttonpane").html('<br/>');                            
                         $("#alerta").html("Aguarde, reintegrando a planilha...");
                         
                         $.ajax({
@@ -439,6 +440,10 @@
                                                     itemClicado.parent().parent().find('.textJustificativa').html(Justificativa);
                                                     atualizarDiferencaDeValores();
                                                     atualizaDadosGrupos();
+<?php //if (!isset($this->idReadequacao)) { ?>
+                                                        window.location.reload();    
+<?php //} ?>
+                                                    
                                                 }
                                                 
                                                 //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
@@ -574,7 +579,7 @@
                 <?php /****** FIM VALOR ENTRE AS PLANILHAS ATIVA E REMANEJADA ******/ ?>
             </td>
             <td class="centro">
-                <img idPronac="<?php echo $this->idPronac; ?>" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Planilha" id="reintegrar-planilha" style="cursor: pointer">
+                <img idPronac="<?php echo $this->idPronac; ?>" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Planilha" id="reintegrar-planilha" style="cursor: pointer; display:<?php if (isset($this->idReadequacao)) { echo 'inline-block'; } else { echo 'none'; } ?>">
             </td>
         </tr>
     </table>
@@ -806,7 +811,7 @@
             <td id="campoDiasSolicitado" class="direita camposModal">&nbsp;</td>
             <td id="campoTotalSolicitado" class="direita camposModal">&nbsp;</td>
             <td class="centro">
-                <img idPlanilha="" idPlanilhaAprovacaoPai="" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Item" class="reintegrar" id="campoIdPlanilha" style="cursor: pointer">
+                <img idPlanilha="" idPlanilhaAprovacaoPai="" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Item" class="reintegrar" id="campoIdPlanilha" style="cursor: pointer; display:<?php if (isset($this->idReadequacao)) { echo 'inline-block'; } else { echo 'none'; } ?>">
             </td>
         </tr>
     </table>
