@@ -63,6 +63,7 @@
                             $('#confirm').dialog('open');
                             $('#confirm').html('Parecer salvo com Sucesso!');
                             $('#alert').dialog('close');
+                            window.location.reload();
                         }
                     }else{
                         if(mostrarMsg != 0){
@@ -547,7 +548,7 @@
 		    </div>
 		    <input id="reuniaoaberta" type="hidden" value="<?php echo $this->plenariaatual; ?>"/>
 		    <div style="margin-left: 13.5em; margin-top: 1.5em; margin-bottom: 1.5em;">
-                      <input id="stEnvioPlenaria" type="checkbox" name="stEnvioPlenaria" disabled="disabled" value="S" />
+                      <input id="stEnvioPlenaria" type="checkbox" name="stEnvioPlenaria" value="S" />
                       <label for="stEnvioPlenaria"> Submeter &agrave; Plen&aacute;ria?</label>
 		    </div>
 		    <div id="justificativaenvioplenaria" style="display: none; width: 99%" class="esquerda">
