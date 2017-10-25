@@ -170,12 +170,13 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
         //CASO O COMPONENTE QUEIRA SALVAR O SEU PARECER - FIM
 
         if (isset($_POST['idpronac'])) {
+            $this->fecharAssinatura($idPronac);
+            
             $this->readequarProjetoAprovadoNaCNIC();
         }        
         
         //FINALIZAR ANALISE - JUSTIFICATIVA DE PLENARIA - INICIO
         if (isset($_POST['justificativaenvioplenaria'])) {
-
             /**** CODIGO DE READEQUACAO ****/
             //SE O PROJETO FOR DE READEQUACAO e a DECISAO FOR DE APROVACAO - INATIVA A ANTIGA PLANILHA 'CO' e ATIVA A 'CO' READEQUADA
             if ($this->bln_readequacao == "true") {
@@ -183,8 +184,7 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
                 // encerra
             }
             /**** FIM CODIGO DE READEQUACAO ****/
-            
-            // revisar variáveis
+
             $this->incluirNaPauta($idPronac, $ConsultaReuniaoAberta);
             
         } // fecha if
@@ -835,5 +835,36 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
             $this->_helper->viewRenderer->setNoRender(TRUE);
         }
     }
-    
+
+    private function fecharAssinatura($idPronac)
+    {
+        $idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_CNIC;
+        
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $idPerfilDoAssinante = $GrupoAtivo->codGrupo;
+        $idOrgaoDoAssinante = $GrupoAtivo->codOrgao;
+        
+        try {
+            $tbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
+            $objAtoAdministrativo = $tbAtoAdministrativo->obterAtoAdministrativoAtual($idTipoDoAtoAdministrativo, $idPerfilDoAssinante, $idOrgaoDoAssinante);
+            if (count($objAtoAdministrativo) > 0) { 
+                $idAtoAdministrativo = $objAtoAdministrativo['idAtoAdministrativo'];
+                
+                $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+                $data = array(
+                    'cdSituacao' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_FECHADO_PARA_ASSINATURA
+                );
+                $where = array(
+                    'IdPRONAC = ?' => $idPronac,
+                    'idTipoDoAtoAdministrativo = ?' => $idTipoDoAtoAdministrativo,
+                    'idAtoDeGestao = ?' => $idAtoAdministrativo,
+                    'cdSituacao = ?' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA,
+                    'stEstado = ?' => Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO
+                );
+                $objModelDocumentoAssinatura->update($data, $where);
+            }
+        } catch (Zend_Exception $ex) {
+            parent::message("Erro ao concluir " . $ex->getMessage(), "parecer/analise-cnic/emitirparecer/$idPronac", "ERROR");
+        }
+    }
 }
