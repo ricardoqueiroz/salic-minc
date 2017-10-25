@@ -215,19 +215,18 @@
                                                                         <div style="padding:3px; margin-left: 15px;">
                                                                             <span class='orange-text'><?php echo $titulo ?></span>
                                                                             <?php if(!empty($subItem)): ?>
-
-                                                                                    <?php $id =  rand(); ?>
-                                                                                    <div style="padding:3px; margin-left: 15px;">
-                                                                                        <button class="waves-effect waves-light btn-flat btn btnToggle" 
-                                                                                                id="<?php echo $id; ?>" 
-                                                                                                uf="<?php echo $tabelaItem['uf']; ?>" 
-                                                                                                idmunicipio="<?php echo $tabelaItem['idMunicipio']; ?>" 
-                                                                                                produto="<?php $tabelaItem['codigo']; ?>" 
-                                                                                                idPlanilhaEtapa="<?php echo $tabelaItem['idPlanilhaEtapa']; ?>">
-                                                                                            <i class="material-icons left">chevron_right</i><?php echo $titulo ?>
-                                                                                        </button>
-                                                                                        <div id="div<?php echo $id; ?>"></div>
-                                                                                    </div>
+                                                                                <?php $id =  rand(); ?>
+                                                                                <div style="padding:3px; margin-left: 15px;">
+                                                                                    <button class="waves-effect waves-light btn-flat btn btnToggle" 
+                                                                                            id="<?php echo $id; ?>" 
+                                                                                            uf="<?php echo $tabelaItem['uf']; ?>" 
+                                                                                            idmunicipio="<?php echo $tabelaItem['idMunicipio']; ?>" 
+                                                                                            produto="<?php echo $tabelaItem['codigo']; ?>" 
+                                                                                            idPlanilhaEtapa="<?php echo $tabelaItem['idPlanilhaEtapa']; ?>">
+                                                                                        <i class="material-icons left">chevron_right</i><?php echo $titulo ?>
+                                                                                    </button>
+                                                                                    <div id="div<?php echo $id; ?>"></div>
+                                                                                </div>
                                                                             <?php endif;  ?>
                                                                         </div>
                                                                     <?php endforeach;  ?>

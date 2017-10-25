@@ -2103,15 +2103,12 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->idRelatorio = $this->getRequest()->getParam('relatorio');
 
         $dao = new PlanilhaAprovacao();
-        /* $resposta = $dao->buscarItensPagamentoDados( */
-        /*     $this->view->idPronac, */
-        /*     ($this->view->itemAvaliadoFilter ? $this->view->itemAvaliadoFilter : null) */
-        /* ); */
+
         $respostaView = $dao->buscarItensPagamentoDadosView(
             $this->view->idPronac,
             ($this->view->itemAvaliadoFilter ? $this->view->itemAvaliadoFilter : null)
         );
-        /* var_dump($respostaView->toArray()[0], $resposta->toArray()[0]); */
+
         $resposta = $respostaView;
 
         $tblEncaminhamento = new EncaminhamentoPrestacaoContas();
@@ -2131,7 +2128,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         #$vlTotalImpugnado = 0;
         $arrComprovantesImpugnados = array();
         if (is_object($resposta)) {
-            foreach ($resposta as $val) {
+            foreach ($respostaView as $val) {
                 if ($val->tpCusto == 'A') {
                     $arrayA[($val->descEtapa)][$val->uf.' '.($val->cidade)] = array(
                         'idMunicipio' => $val->idMunicipio,
@@ -2151,11 +2148,6 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                     );
                 }
             }
-        }
-        #Realiza a soma dos itens
-        $vlTotalImpugnado = 0;
-        foreach ($arrComprovantesImpugnados as $valorImpugnado) {
-            $vlTotalImpugnado += $valorImpugnado;
         }
 
         $this->view->vlComprovacaoImpugnado = $vlTotalImpugnado;
@@ -2691,16 +2683,10 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao");
 
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
-        /* $this->view->projeto = $planilhaAprovacaoModel */
-        /*     ->dadosdoitem($idPlanilhaAprovacao, $idPronac) */
-        /*     ; */
+
         $projeto = $planilhaAprovacaoModel
             ->vwComprovacaoFinanceiraProjeto($idPronac)
             ;
-        /* var_dump($projeto); */
-        /* die; */
-
-        /* $this->view->projeto = $this->view->projeto[0]; */
 
         if (!$projeto) {
             $this->_helper->flashMessengerType->addMessage('ALERT');
@@ -2708,26 +2694,17 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->_redirect("realizarprestacaodecontas/planilhaorcamentaria/idPronac/{$idPronac}");
         } else {
             $this->view->tipoComprovante = $this->tipoDocumento;
-            /* $this->view->comprovantesPagamento = $planilhaAprovacaoModel->buscarcomprovantepagamento( */
-            /*     /1* $idPronac, $idPlanilhaItem *1/ */
-            /*     $idPronac, */
-            /*     $idPlanilhaAprovacao */
-            /* /1* ); *1/ */
-            /* $this->view->comprovantesPagamento = $planilhaAprovacaoModel */
-            /*     ->dadosdoitemPorItem($idPlanilhaItem, $idPronac) */
-            /*     ; */
 
             $comprovantes = $planilhaAprovacaoModel
                 ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idPronac, $idPlanilhaItem)
                 ;
-            /* var_dump($comprovantes); */
-            /* die; */
         }
 
         $this->view->idPronac = $idPronac;
         $this->view->idPlanilhaItem = $idPlanilhaItem;
         $this->view->idPlanilhaAprovacao = $idPlanilhaAprovacao;
-        $this->view->projeto = $projeto;
+        $this->view->projeto = $projeto[0];
+/* var_dump($this->view->projeto);die; */
         $this->view->comprovantesPagamento = $comprovantes;
     }
 
@@ -3912,6 +3889,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->uf = $this->getRequest()->getParam('uf');
         $this->view->idMunicipio = $this->getRequest()->getParam('idmunicipio');
         $this->view->idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
+        /* var_dump($this->view->idPlanilhaEtapa);die; */
         $this->view->codigoProduto = $this->getRequest()->getParam('produto');
 
         $dao = new PlanilhaAprovacao();
@@ -3927,7 +3905,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $respostaAguardandoAnalise = $dao->vwComprovacaoProjetoSemAnalise(
             $this->view->idPronac,
             $uf,
-            null,
+            $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
             $municipio
         );
@@ -3935,7 +3913,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $avaliadas = $dao->vwComprovacaoProjetoAvaliada(
             $this->view->idPronac,
             $uf,
-            null,
+            $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
             $municipio
         );
@@ -3943,7 +3921,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $recusadas = $dao->vwComprovacaoProjetoRecusada(
             $this->view->idPronac,
             $uf,
-            null,
+            $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
             $municipio
         );

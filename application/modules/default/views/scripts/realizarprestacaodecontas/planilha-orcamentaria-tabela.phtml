@@ -30,7 +30,7 @@
                     ?>
                     <a class="btn small btn-primary" href='<?php echo $href ?>'><i class="material-icons">gavel</i></a>
                 </td>
-                <td><?php echo utf8_decode($valor->Item) ?></td>
+                <td><?php echo ($valor->Item) ?></td>
                 <td><?php echo $this->formatarReal($valor->vlAprovado) ?></td>
                 <td><?php echo $this->formatarReal($valor->vlComprovado) ?></td>
                 <td><?php echo $this->formatarReal($valor->ComprovacaoValidada) ?></td>
