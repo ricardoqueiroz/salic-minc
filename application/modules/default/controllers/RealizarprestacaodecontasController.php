@@ -2747,7 +2747,9 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
 
         $idPronac = $this->_request->getParam("idPronac");
         $idPlanilhaItem = $this->_request->getParam("idPlanilhaItem");
-        $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao");
+        /* $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao"); */
+        /* var_dump($this->getRequest()->getParam('comprovantePagamento'));die; */
+
         $redirector = $this->_helper->getHelper('Redirector');
         $redirector
             ->setExit(false)
@@ -2764,13 +2766,14 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
 
         if (!$this->getRequest()->isPost()) {
             $this->_helper->flashMessenger->addMessage('Erro ao validar item.');
-            $this->_helper->flashMessengerType->addMessage('ERROR');
+            $this->_helper->flashoessengerType->addMessage('ERROR');
             $redirector->redirectAndExit();
         }
 
         $itemValidado = false;
         $tblComprovantePag = new ComprovantePagamentoxPlanilhaAprovacao();
         $tblComprovantePag->getAdapter()->beginTransaction();
+
         foreach ($this->getRequest()->getParam('comprovantePagamento') as $comprovantePagamento) {
             try {
                 if (!isset($comprovantePagamento['situacao'])) {
@@ -2779,21 +2782,23 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                 $rsComprovantePag = $tblComprovantePag
                     ->buscar(
                         array(
-                            'idComprovantePagamento=?' => $comprovantePagamento['idComprovantePagamento'],
-                            'idPlanilhaAprovacao=?' => $comprovantePagamento['idPlanilhaAprovacao']
+                            'idComprovantePagamento = ?' => $comprovantePagamento['idComprovantePagamento'],
+                            /* 'idPlanilhaAprovacao=?' => $comprovantePagamento['idPlanilhaAprovacao'] */
                         )
                     )
                     ->current();
+                /* var_dump($rsComprovantePag); */
+                /* die(); */
                 $rsComprovantePag->dtValidacao = date('Y/m/d H:i:s');
                 $rsComprovantePag->dsJustificativa = isset($comprovantePagamento['observacao']) ? $comprovantePagamento['observacao'] : null;
                 $rsComprovantePag->stItemAvaliado = $comprovantePagamento['situacao'];
                 # validacao de valor
-                $tblComprovantePag->validarValorComprovado(
-                    $idPronac,
-                    $idPlanilhaAprovacao,
-                    $idPlanilhaItem,
-                    $rsComprovantePag->vlComprovado
-                );
+                /* $tblComprovantePag->validarValorComprovado( */
+                /*     $idPronac, */
+                /*     $idPlanilhaAprovacao, */
+                /*     $idPlanilhaItem, */
+                /*     $rsComprovantePag->vlComprovado */
+                /* ); */
                 $rsComprovantePag->save();
                 $itemValidado = true;
             } catch (Exception $e) {
@@ -3889,7 +3894,6 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->uf = $this->getRequest()->getParam('uf');
         $this->view->idMunicipio = $this->getRequest()->getParam('idmunicipio');
         $this->view->idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
-        /* var_dump($this->view->idPlanilhaEtapa);die; */
         $this->view->codigoProduto = $this->getRequest()->getParam('produto');
 
         $dao = new PlanilhaAprovacao();

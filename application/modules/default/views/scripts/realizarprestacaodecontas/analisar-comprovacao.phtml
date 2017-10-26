@@ -11,6 +11,8 @@ function mascara($mask,$str){
 ?>
 <script type="text/javascript" src="<?php echo $this->baseUrl();?>/public/js/tinymce/js/tinymce/tinymce.min.js"></script>
 <?php echo $this->partial("realizarprestacaodecontas/inc/menu.inc.php", $this); ?>
+<?php //var_dump( $this->projeto); ?>
+
 <div id="breadcrumb">
     <ul>
        <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para p&aacute;gina inicial">Início</a></li>
@@ -307,7 +309,6 @@ function mascara($mask,$str){
 <br clear="all" />
 
 <div id="rodapeConteudo" ><span></span></div>
-<!-- ========== FIM RODAPÉ DO CONTEÚDO ========== -->
 <br clear="all" />
 
 <style>
