@@ -2680,13 +2680,27 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
     {
         $idPronac = $this->_request->getParam("idPronac");
         $idPlanilhaItem = $this->_request->getParam("idPlanilhaItem");
-        $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao");
+        /* $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao"); */
+
+        $uf = $this->getRequest()->getParam('uf');
+        $municipio = $this->getRequest()->getParam('idmunicipio');
+        $idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
+        $codigoProduto = $this->getRequest()->getParam('produto');
+
 
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
 
         $projeto = $planilhaAprovacaoModel
-            ->vwComprovacaoFinanceiraProjeto($idPronac)
-            ;
+            ->vwComprovacaoFinanceiraProjeto(
+                $idPronac,
+                $uf,
+                null,
+                $codigoProduto != 0 ? $codigoProduto :  null,
+                $municipio
+                , null
+                , $idPlanilhaItem
+            );
+
 
         if (!$projeto) {
             $this->_helper->flashMessengerType->addMessage('ALERT');
