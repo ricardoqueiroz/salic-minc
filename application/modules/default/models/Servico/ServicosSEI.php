@@ -17,6 +17,11 @@ class ServicosSEI
 
     private static $objSoapCliente;
 
+    const SEI_IDENTIFICACAO_SERVICO = "INTRANET";
+    const SEI_SIGLA_SISTEMA = "SALIC";
+    const SEI_ID_UNIDADE  = "110000151";
+    const SEI_ID_UNIDADE_SEFIC  = "110000142";
+    
     public function __construct()
     {
         // @TODO: mover configuração para application.ini
@@ -71,7 +76,7 @@ class ServicosSEI
      * @return mixed
      * @throws Exception
      */
-    public function wsGerarProcedimento($txSiglaSistema = "INTRANET", $txIdentificacaoServico = "SALIC", $nrIdUnidade = '110000151')
+    public function wsGerarProcedimento($txSiglaSistema = self::SEI_IDENTIFICACAO_SERVICO, $txIdentificacaoServico = self::SEI_SIGLA_SISTEMA, $nrIdUnidade = self::SEI_ID_UNIDADE)
     {
         $objSoapCliente = self::getSoapClient();
 
@@ -218,7 +223,52 @@ class ServicosSEI
         return $mixResult;
     }
 
+    /**
+     * Procedimento para incluir um documento dentro de um processo existente do SEI.
+     * @param $txSiglaSistema
+     * @param $txIdentificacaoServico
+     * @return mixed
+     * @throws Exception
+     *
+     * @return VOID
+     */
+    public function wsIncluirDocumento($txSiglaSistema, $txIdentificacaoServico, $nrIdUnidade, $idProcedimento, $conteudo = '')
+    {
+        $objSoapCliente = self::getSoapClient();
+        
+        $DocumentoGerado = array();
+        $DocumentoGerado['Tipo'] = 'G';
+        
+        $DocumentoGerado['IdProcedimento'] = $idProcedimento;
 
+        $DocumentoGerado['IdSerie'] = 10; //Portaria
+        $DocumentoGerado['Numero'] = null;
+        $DocumentoGerado['Data'] = null;
+        $DocumentoGerado['Descricao'] = 'Cria&ccedil;&atilde;o de Projeto';
+        $DocumentoGerado['Remetente'] = null;
+
+        //Interessados no Documento Gerado
+        $arrInteressadosDocumentoGerado = array();
+        #$arrInteressadosDocumentoGerado[] = array('Sigla'=>'dgx', 'Nome'=>'Alberto');
+        #$arrInteressadosDocumentoGerado[] = array('Sigla'=>'utv', 'Nome'=>'Maria');
+        $DocumentoGerado['Interessados'] = $arrInteressadosDocumentoGerado;
+
+        //Destinat�rios para Documento Gerado
+        $arrDestinatarios = array();
+        #$arrDestinatarios[] = array('Sigla'=>'dgx', 'Nome'=>'Alberto');
+        #$arrDestinatarios[] = array('Sigla'=>'dgx', 'Nome'=>'Alberto');
+        $DocumentoGerado['Destinatarios'] = $arrDestinatarios;
+
+        $DocumentoGerado['Observacao'] = 'Observação de Teste';
+        $DocumentoGerado['NomeArquivo'] = null;
+        $DocumentoGerado['Conteudo'] = base64_encode($conteudo);
+        $DocumentoGerado['NivelAcesso'] = 0;
+        #Fim dos dados para Documentos Gerados
+        
+        $ret = $objWS->incluirDocumento('Corregedoria','Suspei��o/Impedimento', $numIdUnidade, $DocumentoGerado);        
+       
+    }
+    
     /**
      * Metodo chamado quando o objeto da classe e serializado
      *

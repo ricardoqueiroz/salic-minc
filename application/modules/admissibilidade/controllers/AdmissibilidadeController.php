@@ -636,18 +636,36 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
             $wsWebServiceSEI = new ServicosSEI();
 
-            $arrRetornoGerarProcedimento = $wsWebServiceSEI->wsGerarProcedimento();
+            $arrRetornoGerarProcedimento = $wsWebServiceSEI->wsGerarProcedimento(
+                ServicosSEI::SEI_IDENTIFICACAO_SERVICO,
+                ServicosSEI::SEI_SIGLA_SISTEMA,
+                ServicosSEI::SEI_ID_UNIDADE_SEFIC
+            );
+            
             $chars = array(".", "/", "-");
             $nrProcessoSemFormatacao = str_replace($chars, "", $arrRetornoGerarProcedimento->ProcedimentoFormatado);
             $nrProcesso = $nrProcessoSemFormatacao;
-
+            
             $this->incluirProjeto($this->idPreProjeto, $cnpjcpf, $idOrgao, $this->idUsuario, $nrProcesso, $rsProposta->stProposta);
             $tblProjeto = new Projetos();
             $rsProjeto = $tblProjeto->buscar(array("idProjeto = ?" => $this->idPreProjeto), "IdPRONAC DESC")->current();
             if (!empty($rsProjeto)) {
                 $nrPronac = $rsProjeto->AnoProjeto . $rsProjeto->Sequencial;
                 $retorno['sucesso'] = "A Proposta " . $this->idPreProjeto . " foi transformada no Projeto No. " . $nrPronac;
+                $idPronac = $rsProjeto->IdPRONAC;
             }
+            
+            $conteudo = "<p>Conte&uacute;do do Documento. <a href='" . $this->baseUrl() . "/consultardadosprojeto/index?idPronac=" . $idPronac . "'>Link Projeto no SALIC</a></p>";
+            
+            $arrRetornoGerarProcedimento = $wsWebServiceSEI->incluirDocumento(
+                ServicosSEI::SEI_IDENTIFICACAO_SERVICO,
+                ServicosSEI::SEI_SIGLA_SISTEMA,
+                ServicosSEI::SEI_ID_UNIDADE_SEFIC,
+                $nrProcesso,
+                $conteudo                
+            );
+
+            
         } catch (Exception $objException) {
 //            $retorno['erro'] = 'Erro ao tentar transformar proposta em projeto!';
             $retorno['erro'] = $objException->getMessage();
