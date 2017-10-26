@@ -3847,7 +3847,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             null,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'A'
         );
 
         $respostaAguardandoAnalise = $dao->vwComprovacaoProjetoSemAnalise(
@@ -3855,7 +3856,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             null,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'A'
         );
 
         $avaliadas = $dao->vwComprovacaoProjetoAvaliada(
@@ -3863,7 +3865,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             null,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'A'
         );
 
         $recusadas = $dao->vwComprovacaoProjetoRecusada(
@@ -3871,7 +3874,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             null,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'A'
         );
 
 
@@ -3903,7 +3907,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->uf,
             $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $this->view->idMunicipio
+            $this->view->idMunicipio,
+            'P'
         );
 
         $respostaAguardandoAnalise = $dao->vwComprovacaoProjetoSemAnalise(
@@ -3911,7 +3916,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'P'
         );
 
         $avaliadas = $dao->vwComprovacaoProjetoAvaliada(
@@ -3919,7 +3925,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'P'
         );
 
         $recusadas = $dao->vwComprovacaoProjetoRecusada(
@@ -3927,7 +3934,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $uf,
             $this->view->idPlanilhaEtapa,
             $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $municipio
+            $municipio,
+            'P'
         );
 
 
