@@ -2772,11 +2772,11 @@ class Projetos extends MinC_Db_Table_Abstract
      * @param string $ProvidenciaTomada
      * @return integer (quantidade de registros alterados)
      */
-    public function alterarSituacao($idPronac = null, $pronac = null, $situacao, $ProvidenciaTomada = null)
+    public function alterarSituacao($idPronac = null, $pronac = null, $situacao, $ProvidenciaTomada = null, $idUsuario = null)
     {
         // pega logon para gravar alteracao da situacao
         $auth = Zend_Auth::getInstance();
-        $Logon = $auth->getIdentity()->usu_codigo;
+        $Logon = empty($idUsuario) ? $auth->getIdentity()->usu_codigo : $idUsuario;
 
         // grava no hist?rico a situacao atual do projeto caso a trigger HISTORICO_INSERT esteja desabilitada
         $HistoricoInsert = new HistoricoInsert();

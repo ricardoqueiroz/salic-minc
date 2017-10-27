@@ -1,0 +1,129 @@
+<div class="card materialize">
+    <div class="row">
+        <div class="col s12">
+            <?php if (!empty($this->dataForm['Pronac'])) : ?>
+                <b>Pronac:</b> <?= $this->dataForm['Pronac']; ?> <br>
+            <?php elseif (!empty($this->dataForm['idProjeto'])) : ?>
+                <b>Nº Proposta: </b><?= $this->dataForm['idProjeto']; ?> <br>
+            <?php endif; ?>
+        </div>
+        <div class="col s12">
+            <b>Título: </b><?= $this->dataForm['NomeProjeto']; ?>
+        </div>
+    </div>
+
+    <div class="row">
+        <form id="form-mensagem" method="post" action="<?php echo $this->urlAction ?>"
+              enctype="multipart/form-data">
+            <input name="idSolicitacao" type="hidden"
+                   value="<?= isset($this->dataForm['idSolicitacao']) ? $this->dataForm['idSolicitacao'] : ''; ?>"/>
+            <input name="idPronac" type="hidden" value="<?= $this->dataForm['idPronac']; ?>"/>
+            <input name="idProjeto" type="hidden" value="<?= $this->dataForm['idProjeto']; ?>"/>
+            <input name="siEncaminhamento" type="hidden" value="<?= $this->dataForm['siEncaminhamento']; ?>"/>
+
+            <?php if (isset($this->arrConfig['dsSolicitacao']['disabled']) && !$this->arrConfig['dsSolicitacao']['disabled']): ?>
+                <div class="row">
+                    <div class="col s12">
+                        <h5>Solicita&ccedil;&atilde;o</h5>
+                        <textarea id="dsSolicitacao" class="materialize-textarea editor"
+                                  name="dsSolicitacao" <?php if (isset($this->arrConfig['dsSolicitacao']) && $this->arrConfig['dsSolicitacao']['disabled']) echo 'disabled="disabled"' ?>><?php if (isset($this->dataForm['dsSolicitacao'])) echo $this->dataForm['dsSolicitacao']; ?>  </textarea>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <h5>Solicita&ccedil;&atilde;o</h5>
+                    </div>
+                    <div class="col s12">
+                        <?= isset($this->dataForm['dsSolicitacao']) ? $this->dataForm['dsSolicitacao'] : 'Nenhum texto encontrado!'; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($this->arrConfig['dsSolicitacao']['disabled']) && !$this->arrConfig['dsSolicitacao']['disabled']): ?>
+                </br>
+                <div class="row">
+                    <div class="col s12">
+                        <div id="anexarDocumento">
+                            <label for="arquivo" style="width: 100px; ">Anexar arquivo: </label>
+                            <input type="file" name="arquivo" id="arquivo" class="input_simples">
+                            <?php if ($this->dataForm['arquivo']['idDocumento']): ?>
+                                <a href="<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'abrirdocumentosolicitacao'), null, true); ?>?id=<?= $this->dataForm['arquivo']['idDocumento']; ?>">
+                                    <?= utf8_decode(htmlentities($this->dataForm['arquivo']['nmArquivo'])); ?>
+                                </a>
+                            <?php endif; ?>
+                            <div id="arquivoinvalido" style="color:#FF0000"></div>
+                        </div>
+                    </div>
+                </div>
+            <?php elseif ($this->dataForm['arquivo']['idDocumento']): ?>
+                <div class="row">
+                    <div class="col s12">
+                        <div id="comprovanteDocumentoAnexado"
+                             class="doc<?= $this->dataForm['arquivo']['idDocumento']; ?>">
+                            <label for="arquivo">Documento anexado: </label>
+                            <a href="<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'abrirdocumentosolicitacao'), null, true); ?>?id=<?= $this->dataForm['arquivo']['idDocumento']; ?>">
+                                <?= utf8_decode(htmlentities($this->dataForm['arquivo']['nmArquivo'])); ?>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            </br>
+            <?php if ($this->arrConfig['dsResposta']['show'] === true): ?>
+                <?php if (isset($this->arrConfig['dsResposta']['disabled']) && !$this->arrConfig['dsResposta']['disabled']): ?>
+                    <div class="row">
+                        <div class="col s12">
+                            <h5>Resposta</h5>
+                            <textarea id="dsResposta" class="materialize-textarea editor"
+                                      name="dsResposta" <?= (isset($this->arrConfig['dsResposta']) && $this->arrConfig['dsResposta']['disabled']) ? 'disabled="disabled"' : '' ?>><?= (isset($this->dataForm['dsResposta'])) ? $this->dataForm['dsResposta'] : ''; ?>  </textarea>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <h5>Resposta</h5>
+                        </div>
+                        <div class="col s12">
+                            <?= ($this->dataForm['dsResposta']) ? $this->dataForm['dsResposta'] : '<br />Sem resposta.'; ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <div class="row">
+                <div class="col s12 center-align">
+                    <?php if ($this->arrConfig['actions']['show'] === true): ?>
+                        <?php if ($this->ehProponente) : ?>
+                            <a id="btn_rascunho" class="btn waves-effect waves-light bt_rascunho">Salvar rascunho</a>
+                        <?php endif; ?>
+                        <a id="btn_enviar" class="btn waves-effect waves-light bt_rascunho">Enviar</a>
+                    <?php endif; ?>
+                    <a onClick="history.go(-1)" href="javascript:void(0)"
+                       class="modal-action modal-close waves-effect waves-orange orange-text btn-flat">Voltar</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function ($) {
+        $("textarea.editor").each(function () {
+            $(this).editorRico({altura: 200});
+        });
+    });
+
+    // Adicionando evento de enviar o formulario via ajax caso tenha a tag data-ajax-form.
+    $3('#btn_rascunho').on('click', function () {
+        $3('input[name=siEncaminhamento]').val('0');
+        $3("#form-mensagem").ajaxFormSubmit();
+    });
+
+    $3('#btn_enviar').on('click', function () {
+        $3('input[name=siEncaminhamento]').val('1');
+        $3("#form-mensagem").ajaxFormSubmit();
+    });
+
+
+</script>

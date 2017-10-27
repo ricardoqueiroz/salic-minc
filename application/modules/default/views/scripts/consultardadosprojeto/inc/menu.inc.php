@@ -315,6 +315,10 @@
                         <a class="no_seta" href="<?php echo $this->url(array('controller' => 'mantermensagens', 'action' => 'consultarmensagem', 'idpronac' => $this->idPronac), '', true); ?>">Mensagens</a>
                 <?php } ?>
                 <!--  ==================== FIM - MANTER MENSAGENS =======================  -->
+
+                <?php if($this->blnProponente) : ?>
+                    <a class="no_seta" href="<?= $this->url(array('module'=>'solicitacao', 'controller' => 'mensagem', 'action' => 'index', 'idPronac' => $this->idPronac)); ?>">Minhas solicita&ccedil;&otilde;es</a>
+                <?php endif; ?>
             </div>
             <div class="bottom"></div>
             <div id="space_menu"></div>

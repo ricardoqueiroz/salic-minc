@@ -195,9 +195,11 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
      */
     public function indexAction()
     {
-        if (isset($_REQUEST['idPronac'])) {
+        $params = $this->getRequest()->getParams();
 
-            $idPronac = $_GET['idPronac'];
+        if (isset($params['idPronac'])) {
+
+            $idPronac = $params['idPronac'];
             if (strlen($idPronac) > 7) {
                 $idPronac = Seguranca::dencrypt($idPronac);
             }
@@ -454,8 +456,10 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
 
         $this->_helper->layout->disableLayout();
 
-        if (isset($_REQUEST['idPronac'])) {
-        	$idPronac = $_REQUEST['idPronac'];
+        $params = $this->getRequest()->getParams();
+
+        if (isset($params['idPronac'])) {
+        	$idPronac = $params['idPronac'];
 			if (strlen($idPronac) > 7) {
 				$idPronac = Seguranca::dencrypt($idPronac);
 			}
@@ -480,7 +484,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
     public function planilhapdfAction() {
         $this->_helper->layout->disableLayout();
 
-        $this->view->idPreProjeto = $_REQUEST['idPreProjeto'];
+        $this->view->idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
     }
 
     public function faseDoProjeto($idPronac){
@@ -652,9 +656,12 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
 
     public function dadosProponenteAction() {
         $this->_helper->layout->disableLayout(); // Desabilita o Zend Layout
-        if (isset($_REQUEST['idPronac'])) {
 
-            $idPronac = $_GET['idPronac'];
+        $params = $this->getRequest()->getParams();
+
+        if (isset($params['idPronac'])) {
+
+            $idPronac = $params['idPronac'];
             if (strlen($idPronac) > 7) {
                 $idPronac = Seguranca::dencrypt($idPronac);
             }

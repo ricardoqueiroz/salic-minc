@@ -57,16 +57,63 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
      */
     public function verificarIN2017($idPronac)
     {
-        $select = $this->select();
-        $select->setIntegrityCheck(false);
-        $select->from(
-            array('projetos' => $this->_name),
+        $retorno = 0;
+
+        $projetoAprovado = $this->select();
+        $projetoAprovado->setIntegrityCheck(false);
+        $projetoAprovado->from(
+            array('a' => $this->_name),
             'idPRONAC',
             $this->_schema
         );
-        $select->where("CONVERT(CHAR(10), (DtProtocolo),112) >= '20170320' AND idPronac = ?", $idPronac);
 
-        return $this->_db->fetchRow($select);
+        $projetoAprovado->joinInner(
+            array('b' => 'preprojeto'),
+            'b.idPreProjeto = a.idProjeto',
+            array(),
+            $this->_schema
+        );
+
+        $projetoAprovado->joinInner(
+            array('c' => 'tbDocumentoAssinatura'),
+            'a.IdPRONAC = c.IdPRONAC',
+            array(),
+            $this->_schema
+        );
+
+        $projetoAprovado->where("CONVERT(CHAR(10), (a.DtProtocolo),112) >= '20170410'");
+        $projetoAprovado->where("CONVERT(CHAR(10), sac.dbo.fnDtEnvioAvaliacao(b.idPreProjeto),112) >= '20170410'");
+        $projetoAprovado->where("a.idPronac = ?", $idPronac);
+
+        $resultadoProjetoAprovado = $this->_db->fetchRow($projetoAprovado);
+
+        $projetoTransformado = $this->select();
+        $projetoTransformado->setIntegrityCheck(false);
+        $projetoTransformado->from(
+            array('a' => $this->_name),
+            'idPRONAC',
+            $this->_schema
+        );
+
+        $projetoTransformado->joinInner(
+            array('b' => 'preprojeto'),
+            'b.idPreProjeto = a.idProjeto',
+            array(),
+            $this->_schema
+        );
+
+        $projetoTransformado->where("CONVERT(CHAR(10), (a.DtProtocolo),112) >= '20170512'");
+        $projetoTransformado->where("CONVERT(CHAR(10), sac.dbo.fnDtEnvioAvaliacao(b.idPreProjeto),112) >= '20170512'");
+        $projetoTransformado->where("a.idPronac = ?", $idPronac);
+
+        $resultadoProjetoTransformado = $this->_db->fetchRow($projetoTransformado);
+
+        if(!empty($resultadoProjetoAprovado) || !empty($resultadoProjetoTransformado)) {
+            $retorno = 1;
+        }
+
+        return $retorno;
+
     }
 
     /*

@@ -145,4 +145,7 @@ class tbArquivo extends MinC_Db_Table_Abstract
     {
         return $this->delete($where);
     }
+
+
+
 }

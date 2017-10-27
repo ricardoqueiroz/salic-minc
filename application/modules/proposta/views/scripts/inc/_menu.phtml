@@ -81,11 +81,11 @@ $arrMenuProponente['itensorcamentario'] = array(
     'grupo' => array()
 );
 $arrMenuProponente['itensorcamentario']['menu'][] = array('label' => 'Solicitar inclus&atilde;o de itens', 'title' => 'Ir para Solicitar inclus&atilde;o de itens',
-    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'index')) . '?idPreProjeto=' . $idPreProjeto,
+    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'index', 'idPreProjeto' => $idPreProjeto)),
     'grupo' => array()
 );
 $arrMenuProponente['itensorcamentario']['menu'][] = array('label' => 'Minhas solicita&ccedil;&otilde;es', 'title' => 'Ir para Minhas solicita&ccedil;&otilde;es',
-    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'minhas-solicitacoes', 'idPreProjeto' => $idPreProjeto)).'?tipoFiltro=solicitado',
+    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'minhas-solicitacoes', 'idPreProjeto' => $idPreProjeto, 'tipoFiltro' => 'solicitado')),
     'grupo' => array()
 );
 
@@ -93,7 +93,7 @@ $arrMenuProponente['anexardocumentos'] = array(
     'id' => 'anexardocumentos',
     'label' => 'Anexar documentos',
     'title' => '',
-    'url' => $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaedital', 'action' => 'enviararquivoedital')) . '?idPreProjeto=' . $idPreProjeto,
+    'url' => $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaedital', 'action' => 'enviararquivoedital', 'idPreProjeto' => $idPreProjeto)),
     'menu' => array(),
     'grupo' => array()
 );
@@ -112,6 +112,15 @@ $arrMenuProponente['mensagensenviadas'] = array(
     'label' => 'Dilig&ecirc;ncias',
     'title' => '',
     'url' => $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaproponente', 'idPreProjeto' => $idPreProjeto)),
+    'menu' => array(),
+    'grupo' => array()
+);
+
+$arrMenuProponente['solicitacoes'] = array(
+    'id' => 'minhassolicitacoes',
+    'label' => 'Minhas solicita&ccedil;&otilde;es',
+    'title' => '',
+    'url' => $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'index', 'idPreProjeto' => $idPreProjeto)),
     'menu' => array(),
     'grupo' => array()
 );
@@ -150,6 +159,7 @@ if ($this->isEditavel) {
 
 }
 ?>
+
 <div class="col s2 m12 l2">
     <aside id="left-sidebar-nav">
         <ul class="sidebar-nav">

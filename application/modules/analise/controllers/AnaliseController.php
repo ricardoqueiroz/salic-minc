@@ -28,7 +28,7 @@ class Analise_AnaliseController extends Analise_GenericController
         //parent::perfil(1, $PermissoesGrupo);
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
 
-        isset($auth->getIdentity()->usu_codigo) ? $this->idUsuario = $auth->getIdentity()->usu_codigo : $this->idUsuario = $auth->getIdentity()->IdUsuario;
+        $this->idUsuario = isset($auth->getIdentity()->usu_codigo) ? $auth->getIdentity()->usu_codigo : $auth->getIdentity()->IdUsuario;
 
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         if (isset($auth->getIdentity()->usu_codigo)) {

@@ -31,12 +31,10 @@
 
 <div class="<?php echo isset($this->proposta['idpreprojeto']) ? 'container-fluid ' : 'container' ?>">
     <div class="row">
-        <?php
-        if (isset($this->proposta['idpreprojeto'])) {
-            echo $this->partial("inc/menu.phtml", $this); // menu
-        }
+        <?php if (isset($this->proposta['idpreprojeto'])) : ?>
+            <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto)); ?>
+        <?php endif; ?>
 
-        ?>
 
         <div class="col <?php echo isset($this->proposta['idpreprojeto']) ? 's10 m12 l10 ' : 's12 m12 l12' ?>">
             <?php if (isset($this->proposta['idpreprojeto'])) {
@@ -136,7 +134,7 @@
                                             deve
                                             responder &agrave; quest&atilde;o: O QU&Ecirc;? *</p>
 
-                                        <textarea id="resumodoprojeto" class="browser-default"
+                                        <textarea id="resumodoprojeto" class="browser-default editor"
                                                   name="resumodoprojeto" <?php echo isset($this->arrConfig['resumodoprojeto']['disabled']) ? 'disabled="disabled"' : '' ?>>
                                          <?php if (isset($this->proposta['resumodoprojeto'])) echo $this->proposta['resumodoprojeto']; ?>
                                         </textarea>
@@ -405,8 +403,7 @@
     $(document).ready(function () {
 
         <?php if (!$this->isEditavel) : ?>
-        //DESABILITA ALTERACOES NOS DADOS DO FORMULARIO (INCLUIR/ALTERAR/EXCLUIR)
-       // JSBloquearAlteracaoFormulario();
+            JSBloquearAlteracaoFormulario();
         <?php endif; ?>
 
         $("#resumodoprojeto").editorRico({
@@ -416,7 +413,7 @@
             isDesabilitarEdicao: 0
         });
 
-        $("textarea.editor").each(function () {
+        $("textarea.editor:not(#resumodoprojeto)").each(function () {
 
             $(this).editorRico({
                 altura: 400,

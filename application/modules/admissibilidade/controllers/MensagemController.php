@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @name Admissibilidade_MensagemController
  * @package Modules/admissibilidade
@@ -28,7 +29,8 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
      * @param void
      * @return void
      */
-    public function init() {
+    public function init()
+    {
         $auth = Zend_Auth::getInstance(); // instancia da autenticacao
 
         // verifica as permissoes
@@ -72,19 +74,19 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         parent::init();
 
         //recupera ID do pre projeto (proposta)
-        if(!empty ($_REQUEST['idPreProjeto'])){
+        if (!empty ($_REQUEST['idPreProjeto'])) {
             $this->idPreProjeto = $_REQUEST['idPreProjeto'];
         }
 
         isset($auth->getIdentity()->usu_codigo) ? $this->idUsuario = $auth->getIdentity()->usu_codigo : $this->idUsuario = $auth->getIdentity()->IdUsuario;
         //$this->idUsuario = $auth->getIdentity()->usu_codigo;
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sess�o com o grupo ativo
-        if(isset($auth->getIdentity()->usu_codigo)){
+        if (isset($auth->getIdentity()->usu_codigo)) {
 
             $this->codGrupo = $GrupoAtivo->codGrupo; // manda o grupo ativo do usu�rio para a vis�o
             $this->codOrgao = $GrupoAtivo->codOrgao; // manda o �rg�o ativo do usu�rio para a vis�o
 
-            $this->codOrgaoSuperior = (!empty($auth->getIdentity()->usu_org_max_superior))?$auth->getIdentity()->usu_org_max_superior:$auth->getIdentity()->usu_orgao;
+            $this->codOrgaoSuperior = (!empty($auth->getIdentity()->usu_org_max_superior)) ? $auth->getIdentity()->usu_org_max_superior : $auth->getIdentity()->usu_orgao;
         }
 
         $intIdPronac = $this->getRequest()->getParam('idPronac');
@@ -143,7 +145,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         $intIdPronac = $this->getRequest()->getParam('idPronac', null);
         $auth = Zend_Auth::getInstance(); // pega a autenticacao
 
-        $arrAuth = array_change_key_case((array) $auth->getIdentity());
+        $arrAuth = array_change_key_case((array)$auth->getIdentity());
         $intUsuCodigo = $arrAuth['usu_codigo'];
         $grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
 
@@ -169,14 +171,14 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         $this->_helper->layout->disableLayout();
         $intIdPronac = $this->getRequest()->getParam('idPronac', null);
         $auth = Zend_Auth::getInstance(); // pega a autenticacao
-        $arrAuth = array_change_key_case((array) $auth->getIdentity());
+        $arrAuth = array_change_key_case((array)$auth->getIdentity());
         $intUsuCodigo = $arrAuth['usu_codigo'];
         $grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $intUsuOrgao = $grupoAtivo->codOrgao;
         //$intUsuOrgao = $grupoAtivo->codGrupo;
         //var_dump($intUsuOrgao, $grupoAtivo->codOrgao);die;
         $dbTable = new Admissibilidade_Model_DbTable_VwPainelDeMensagens();
-        $this->view->arrResult =  $dbTable->carregarPerguntasSemResposta($intUsuCodigo, $intUsuOrgao);
+        $this->view->arrResult = $dbTable->carregarPerguntasSemResposta($intUsuCodigo, $intUsuOrgao);
         $this->view->usuCodigo = $intUsuCodigo;
         $this->view->usuOrgao = $intUsuOrgao;
         $this->view->idPronac = $intIdPronac;
@@ -199,7 +201,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
             $this->_helper->viewRenderer->setNoRender(true);
             $mapper = new Admissibilidade_Model_TbMensagemProjetoMapper();
             $strUrl = '/admissibilidade/mensagem/index';
-            $strUrl .= ($this->arrProjeto)? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
+            $strUrl .= ($this->arrProjeto) ? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
             $this->_helper->json(array('status' => $mapper->salvar($this->getRequest()->getPost()), 'msg' => $mapper->getMessages(), 'redirect' => $strUrl));
         } else {
             $this->prepareForm(array('dsResposta' => array('show' => false)));
@@ -252,7 +254,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
             $this->_helper->json(array('status' => $mapper->encaminhar($this->getRequest()->getPost()), 'msg' => $mapper->getMessages()));
         } else {
             $strUrlAction = '/admissibilidade/mensagem/encaminhar';
-            $strUrlAction .= ($this->arrProjeto)? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
+            $strUrlAction .= ($this->arrProjeto) ? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
             $this->view->title = 'Encaminhar pergunta';
             $this->view->action = 'encaminhar';
             $this->prepareForm(array(
@@ -281,7 +283,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
             $this->_helper->viewRenderer->setNoRender(true);
             $mapper = new Admissibilidade_Model_TbMensagemProjetoMapper();
             $strUrl = '/admissibilidade/mensagem/' . $strActionBack;
-            $strUrl .= ($this->arrProjeto)? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
+            $strUrl .= ($this->arrProjeto) ? '?idPronac=' . $this->arrProjeto['IdPRONAC'] : '';
             $this->_helper->json(array('status' => $mapper->responder($this->getRequest()->getPost()), 'msg' => $mapper->getMessages(), 'redirect' => $strUrl));
         } else {
             $this->prepareForm(array(
@@ -315,7 +317,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
 //            $this->view->title = "Perguntas: {$this->arrProjeto['NomeProjeto']} ({$this->arrProjeto['IdPRONAC']})";
             $arrConfig['idDestinatario'] = array('show' => true);
 //            if (in_array($this->arrProjeto['Situacao'], array('B02', 'B03'))) {
-                $arrConfig['idDestinatario'] = array('show' => false);
+            $arrConfig['idDestinatario'] = array('show' => false);
 //            }
         }
 
@@ -326,7 +328,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         $dataForm = array();
         if ($intId) {
             $dataForm = $dbTable->findBy($intId);
-            $dataForm['dsResposta'] = ($arrMensagemResposta = $dbTable->findBy(array('idMensagemOrigem' => $intId)))? $arrMensagemResposta['dsMensagem'] : '';
+            $dataForm['dsResposta'] = ($arrMensagemResposta = $dbTable->findBy(array('idMensagemOrigem' => $intId))) ? $arrMensagemResposta['dsMensagem'] : '';
         }
 
         $this->view->arrPartial = array(
