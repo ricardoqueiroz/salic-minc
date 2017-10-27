@@ -96,10 +96,10 @@ class Aprovacao extends MinC_Db_Table_Abstract {
                           "CodTipoAprovacao"=>"a.TipoAprovacao",
                           "Concedido"=>new Zend_Db_Expr("(ConcedidoCusteioReal+ConcedidoCapitalReal) - ContrapartidaReal"),
                           "TipoAprovacao" => new Zend_Db_Expr("CASE WHEN a.TipoAprovacao = 1 THEN 'Inicial'
-                                                               WHEN a.TipoAprovacao = 2 THEN 'Complementa��o'
-                                                               WHEN a.TipoAprovacao = 3 THEN 'Prorroga��o'
-                                                               WHEN a.TipoAprovacao = 4 THEN 'Redu��o'
-                                                               WHEN a.TipoAprovacao = 8 THEN 'Readequa��o' END"),
+                                                               WHEN a.TipoAprovacao = 2 THEN 'Complementa&ccedil;&atilde;o'
+                                                               WHEN a.TipoAprovacao = 3 THEN 'Prorroga&ccedil;&atilde;o'
+                                                               WHEN a.TipoAprovacao = 4 THEN 'Redu&ccedil;&atilde;o'
+                                                               WHEN a.TipoAprovacao = 8 THEN 'Readequa&ccedil;&atilde;o' END"),
                         "a.idReadequacao"
                         ), "SAC.dbo"
                     );

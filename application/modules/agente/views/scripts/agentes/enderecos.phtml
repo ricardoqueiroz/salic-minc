@@ -6,11 +6,11 @@
 	{
 		if(validaEndereco())
 		{
-			$("#logradouro").attr("disabled" , "");
-	        $("#tipoLogradouro").attr("disabled" , "");
-	        $("#bairro").attr("disabled" , "");
-	        $("#cidade").attr("disabled" , "");
-	        $("#uf").attr("disabled" , "");
+			$("#logradouro").removeAttr("disabled");
+	        $("#tipoLogradouro").removeAttr("disabled");
+	        $("#bairro").removeAttr("disabled");
+	        $("#cidade").removeAttr("disabled");
+	        $("#uf").removeAttr("disabled");
 
 	         $("#form").submit();
 		}

@@ -6,7 +6,7 @@
     });
     
     function mostraOcultaElemento(elemento){
-        $('.' + elemento).toggle();
+        $('.' + elemento).toggleClass('sumir');
         if ($('#' + elemento).hasClass('btn_adicionar')){
             $('#' + elemento).addClass('btn_remover');
             $('#' + elemento).removeClass('btn_adicionar');

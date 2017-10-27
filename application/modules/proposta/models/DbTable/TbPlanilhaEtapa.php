@@ -43,6 +43,9 @@ class Proposta_Model_DbTable_TbPlanilhaEtapa extends MinC_Db_Table_Abstract
                 array($this->_name),
                 array('idplanilhaetapa as codetapa', 'descricao as Etapa'),
                 $this->_schema)
+            ->where('stEstado = ?', 1)
+            ->where('tpCusto = ?', 'P')
+            ->where('idplanilhaetapa <> ?', 9) # assessoria juridica
         ;
 
         return $db->fetchAll($sql);

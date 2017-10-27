@@ -61,13 +61,13 @@ if (count($this->readequacoes) > 0):
                             <td align="center"><?php echo Data::tratarDataZend($r->dtSolicitacao, 'brasileira'); ?></td>
                         </tr>
                         <tr class="destacar">
-                            <td colspan="2" align="center"><b>Dados da Solicitação</b></td>
+                            <td colspan="2" align="center"><b>Dados da Solicita&ccedil;&atilde;o</b></td>
                         </tr>
                         <tr>
                             <td colspan="2"><?php echo $r->dsSolicitacao; ?></td>
                         </tr>
                         <tr class="destacar">
-                            <td colspan="2" align="center"><b>Justificativa da Solicitação</b></td>
+                            <td colspan="2" align="center"><b>Justificativa da Solicita&ccedil;&atilde;o</b></td>
                         </tr>
                         <tr>
                             <td colspan="2"><?php echo $r->dsJustificativa; ?></td>
@@ -99,13 +99,13 @@ if (count($this->readequacoes) > 0):
                     ?>
                     <table class="tabela">
                         <tr>
-                            <td align="right" class="destacar bold w150">Parecer Favorável?</td>
-                            <td><?php echo (isset($parecer->ParecerFavoravel) && ($parecer->ParecerFavoravel == 2)) ? 'Sim' : 'Não'; ?></td>
+                            <td align="right" class="destacar bold w150">Parecer Favor&aacute;vel?</td>
+                            <td><?php echo (isset($parecer->ParecerFavoravel) && ($parecer->ParecerFavoravel == 2)) ? 'Sim' : 'N&atilde;o'; ?></td>
                             <td align="right" class="destacar bold w150">Dt. Parecer</td>
                             <td><?php echo (isset($parecer->DtParecer) && !empty($parecer->DtParecer)) ? Data::tratarDataZend($parecer->DtParecer, 'Brasileira') : ''; ?></td>
                         </tr>
                         <tr>
-                            <td colspan="4" class="destacar bold w150">Descriçao do Parecer - <?php echo $parecer->tpAvaliador; ?></td>
+                            <td colspan="4" class="destacar bold w150">Descri&ccedil;&atilde;o do Parecer - <?php echo $parecer->tpAvaliador; ?></td>
                         </tr>
                         <tr>
                             <td colspan="4"><?php echo (isset($parecer->ResumoParecer) && !empty($parecer->ResumoParecer)) ? $parecer->ResumoParecer : ''; ?></td>
