@@ -24,7 +24,8 @@
                                 'action' => 'analisar-comprovacao',
                                 'idPronac' => $valor->IdPRONAC,
                                 /* 'idPlanilhaAprovacao' => $key, */
-                                'idPlanilhaItem' => $valor->idPlanilhaItens
+                                'idPlanilhaItem' => $valor->idPlanilhaItens,
+                                'stItemAvaliado' => $this->stItemAvaliado ? $this->stItemAvaliado : null
                             )
                         );
                     ?>

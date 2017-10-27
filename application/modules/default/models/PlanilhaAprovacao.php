@@ -2297,14 +2297,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
 
         $select->where('IdPRONAC = ?', $idpronac);
 
-        if($uf){
+        if ($uf) {
             $select->where('Uf = ?', $uf);
         }
 
-        if($idMunicipio){
+        if ($idMunicipio) {
             $select->where('cdCidade = ?', $idMunicipio);
         }
-        if($tpCusto){
+        if ($tpCusto) {
             $select->where('tpCusto = ?', $tpCusto);
         }
 
@@ -2317,7 +2317,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         return $this->fetchAll($select);
     }
 
-	public function vwComprovacaoProjetoRecusada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto = null)
+    public function vwComprovacaoProjetoRecusada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto = null)
     {
         $select = $this->select()->distinct();
         $select->setIntegrityCheck(false);
@@ -2329,14 +2329,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
 
         $select->where('IdPRONAC = ?', $idpronac);
 
-        if($uf){
+        if ($uf) {
             $select->where('Uf = ?', $uf);
         }
 
-        if($idMunicipio){
+        if ($idMunicipio) {
             $select->where('cdCidade = ?', $idMunicipio);
         }
-        if($tpCusto){
+        if ($tpCusto) {
             $select->where('tpCusto = ?', $tpCusto);
         }
 
@@ -2349,7 +2349,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         return $this->fetchAll($select);
     }
 
-	public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idpronac, $idPlanilhaItem)
+    public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idpronac, $idPlanilhaItem, $stItemAvaliado = null)
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -2365,6 +2365,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
             ],
             $this->_schema
         );
+
+        if ($stItemAvaliado) {
+            $select->where('stItemAvaliado = ?', $stItemAvaliado);
+        }
 
         $select->where('IdPRONAC = ?', $idpronac);
         $select->where('idPlanilhaItem = ?', $idPlanilhaItem);

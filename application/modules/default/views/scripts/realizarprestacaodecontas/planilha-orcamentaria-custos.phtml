@@ -10,13 +10,13 @@
           </ul>
         </div>
         <div id="test_2_<?php echo $id ?>" class="col s12">
-            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->aguardandoAnalise])?>
+            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->aguardandoAnalise, 'stItemAvaliado' => 4])?>
         </div>
         <div id="test_3_<?php echo $id ?>" class="col s12">
-            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->avaliadas])?>
+            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->avaliadas, 'stItemAvaliado' => 1])?>
         </div>
         <div id="test_4_<?php echo $id ?>" class="col s12">
-            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->recusadas])?>
+            <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->recusadas, 'stItemAvaliado' => 3])?>
         </div>
         <div id="test_1_<?php echo $id ?>" class="col s12">
             <?php echo $this->partial('realizarprestacaodecontas/planilha-orcamentaria-tabela.phtml', ['dados' => $this->todos])?>

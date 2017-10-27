@@ -2686,6 +2686,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $municipio = $this->getRequest()->getParam('idmunicipio');
         $idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
         $codigoProduto = $this->getRequest()->getParam('produto');
+        $stItemAvaliado = $this->getRequest()->getParam('stItemAvaliado');
 
 
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
@@ -2710,7 +2711,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->tipoComprovante = $this->tipoDocumento;
 
             $comprovantes = $planilhaAprovacaoModel
-                ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idPronac, $idPlanilhaItem)
+                ->vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idPronac, $idPlanilhaItem, $stItemAvaliado)
                 ;
         }
 
@@ -2718,7 +2719,6 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->idPlanilhaItem = $idPlanilhaItem;
         $this->view->idPlanilhaAprovacao = $idPlanilhaAprovacao;
         $this->view->projeto = $projeto[0];
-/* var_dump($this->view->projeto);die; */
         $this->view->comprovantesPagamento = $comprovantes;
     }
 
