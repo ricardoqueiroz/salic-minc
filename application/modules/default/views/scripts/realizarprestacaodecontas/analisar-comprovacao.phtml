@@ -26,7 +26,7 @@ function mascara($mask,$str){
 <div id="titulo">
     <div>
         Consultar item
-        <span class="voltar" style="float:right;"><a href="<?php //echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, 'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao, 'idPlanilhaItem' => $this->projeto->idPlanilhaItens, 'idRelatorio' => $this->idRelatorio ), '', true); ?>?itemAvaliadoFilter=<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('itemAvaliadoFilter'); ?>" title="Ir para p&aacute;gina anterior">Voltar</a></span>
+        <span class="voltar" style="float:right;"><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, /*'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao,*/ 'idPlanilhaItem' => $this->projeto->idPlanilhaItens, 'idRelatorio' => $this->idRelatorio ), '', true); ?>?itemAvaliadoFilter=<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('itemAvaliadoFilter'); ?>" title="Ir para p&aacute;gina anterior">Voltar</a></span>
     </div>
 </div>
 <div id="conteudo">
