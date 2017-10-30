@@ -2202,6 +2202,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
             $this->_schema
         );
         $select->where('IdPRONAC = ?', $idpronac);
+        /* echo $select; */
 
         return $this->fetchAll($select);
     }
@@ -2287,6 +2288,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
 
 	public function vwComprovacaoProjetoAvaliada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto=null)
     {
+        /* var_dump($idpronac, $uf, $idPlanilhaEtapa, $codigoProduto, $idMunicipio, $tpCusto);die; */
         $select = $this->select()->distinct();
         $select->setIntegrityCheck(false);
         $select->from(
@@ -2306,6 +2308,14 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         }
         if ($tpCusto) {
             $select->where('tpCusto = ?', $tpCusto);
+        }
+
+        if ($codigoProduto || $codigoProduto == 0) {
+            $select->where('cdProduto = ?', $codigoProduto);
+        }
+
+        if ($idPlanilhaEtapa) {
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
         }
 
         $select->order('tpCusto desc');
@@ -2338,6 +2348,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         }
         if ($tpCusto) {
             $select->where('tpCusto = ?', $tpCusto);
+        }
+        if ($idPlanilhaEtapa) {
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
         }
 
         $select->order('tpCusto desc');

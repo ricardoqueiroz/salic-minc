@@ -2141,9 +2141,9 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
 
                 if ($val->tpCusto == 'P') {
                     $arrayP[($val->descEtapa)][$val->uf.' - ' . $val->cidade] = array(
-                        'idPlanilhaEtapa' => $val->idPlanilhaEtapa,
+                        'cdEtapa' => $val->cdEtapa,
                         'uf' => $val->uf,
-                        'codigo' => $val->Codigo,
+                        'cdProduto' => $val->cdProduto,
                         'idMunicipio' => $val->idMunicipio
                     );
                 }
@@ -3909,27 +3909,27 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->idPronac = $this->getRequest()->getParam('idPronac');
         $this->view->itemAvaliadoFilter = $this->getRequest()->getParam('itemAvaliadoFilter');
         $this->view->idRelatorio = $this->getRequest()->getParam('relatorio');
-        $this->view->uf = $this->getRequest()->getParam('uf');
-        $this->view->idMunicipio = $this->getRequest()->getParam('idmunicipio');
-        $this->view->idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
-        $this->view->codigoProduto = $this->getRequest()->getParam('produto');
+        $uf = $this->getRequest()->getParam('uf');
+        $municipio = $this->getRequest()->getParam('idmunicipio');
+        $etapa = $this->getRequest()->getParam('idplanilhaetapa');
+        $codigoProduto = $this->getRequest()->getParam('produto');
 
         $dao = new PlanilhaAprovacao();
 
         $resposta = $dao->vwComprovacaoFinanceiraProjeto(
             $this->view->idPronac,
-            $this->view->uf,
-            $this->view->idPlanilhaEtapa,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
-            $this->view->idMunicipio,
+            $uf,
+            $etapa,
+            $codigoProduto,
+            $municipio,
             'P'
         );
 
         $respostaAguardandoAnalise = $dao->vwComprovacaoProjetoSemAnalise(
             $this->view->idPronac,
             $uf,
-            $this->view->idPlanilhaEtapa,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $etapa,
+            $codigoProduto,
             $municipio,
             'P'
         );
@@ -3937,8 +3937,8 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $avaliadas = $dao->vwComprovacaoProjetoAvaliada(
             $this->view->idPronac,
             $uf,
-            $this->view->idPlanilhaEtapa,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $etapa,
+            $codigoProduto,
             $municipio,
             'P'
         );
@@ -3946,12 +3946,11 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $recusadas = $dao->vwComprovacaoProjetoRecusada(
             $this->view->idPronac,
             $uf,
-            $this->view->idPlanilhaEtapa,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $etapa,
+            $codigoProduto,
             $municipio,
             'P'
         );
-
 
         $this->view->todos = $resposta;
         $this->view->aguardandoAnalise = $respostaAguardandoAnalise;
