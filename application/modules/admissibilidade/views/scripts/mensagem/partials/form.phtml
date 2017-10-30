@@ -3,9 +3,7 @@
     <input name="IdPRONAC" type="hidden" value="<?php echo $this->idPronac; ?>"/>
     <div class="row">
         <div class="input-field col s12">
-            <select data-ajax-render="/admissibilidade/mensagem/usuarios"
-                    data-ajax-target="select[name=idDestinatario]"
-                    name="idDestinatarioUnidade" <?php if (isset($this->arrConfig['idDestinatarioUnidade']) && $this->arrConfig['idDestinatarioUnidade']['disabled']) echo 'disabled="disabled"' ?>>
+            <select name="idDestinatarioUnidade" <?php if (isset($this->arrConfig['idDestinatarioUnidade']) && $this->arrConfig['idDestinatarioUnidade']['disabled']) echo 'disabled="disabled"' ?>>
                 <option value="" disabled selected>Selecione...</option>
                 <!--                        <optgroup label="--><?php //echo $key ?><!--">-->
                 <?php foreach ($this->arrUnidades as $values): ?>
@@ -19,7 +17,7 @@
         </div>
     </div>
     <?php if (!isset($this->arrConfig['idDestinatario']) || $this->arrConfig['idDestinatario']['show'] === true): ?>
-        <div class="row" >
+        <div class="row" style="display: none">
             <div class="input-field col s12">
                 <select name="idDestinatario" <?php if (isset($this->arrConfig['idDestinatario']) && $this->arrConfig['idDestinatario']['disabled']) echo 'disabled="disabled"' ?>>
                     <option value="" disabled selected>Selecione...</option>
@@ -54,7 +52,8 @@
         <?php if (isset($this->arrConfig['dsResposta']) && $this->arrConfig['dsResposta']['disabled']): ?>
             <div class="row">
                 <div class="input-field col s12">
-                    <label for="dsResposta" class="active">Resposta</label>
+                    <label for="dsResp
+VOLTARosta" class="active">Resposta</label>
                 </div>
                 <div class="col s12">
                     <?php echo ($this->dataForm['dsResposta'])? $this->dataForm['dsResposta'] : '<br />Sem resposta at&eacute; o momento.'; ?>
@@ -88,4 +87,19 @@
             $(this).editorRico({altura: 200});
         });
     });
+
+    (function ($) {
+        $(document).ready(function ($) {
+            $('select[name=idDestinatarioUnidade]').on('change', function() {
+                var objOptions = {strUrl: '/admissibilidade/mensagem/usuarios', strTarget: 'select[name=idDestinatario]'};
+                $(this).ajaxRenderSelect(objOptions, function(result){
+                    if ( result.length === 0) {
+                        $('select[name=idDestinatario]').closest('.row').fadeOut('slow');
+                    } else {
+                        $('select[name=idDestinatario]').closest('.row').fadeIn('slow');
+                    }
+                });
+            });
+        });
+    }($3));
 </script>

@@ -21,33 +21,7 @@
         // Adicionando evento ao select que renderiza outro.
         //@todo criar um plugin especifico para o select.
         elmBody.on('change', 'select[data-ajax-render]', function () {
-            var elm = $(this),
-                strUrl = elm.attr('data-ajax-render'),
-                objTarget = $(elm.attr('data-ajax-target')),
-                strVal = elm.val(),
-                strValChecked = '';
-            var strHtml = '';
-            $3.ajax({
-                method: "POST",
-                url: strUrl,
-                data: {id: strVal}
-            }).done(function (result) {
-                json = $3.parseJSON(result);
-                strHtml = '<option value="" selected>Selecione...</option>';
-                $3.each(json, function(key, value){
-                    strHtml += '<optgroup label="' + key + '">';
-                    $3.each(value, function(key2, value2){
-                        if (strValChecked && strValChecked == key2) {
-                            strHtml += '<option value="' + key2 + '" selected="selected">' + value2 + '</option>';
-                        } else {
-                            strHtml += '<option value="' + key2 + '">' + value2 + '</option>';
-                        }
-                    });
-                    strHtml += '</optgroup>';
-                });
-                objTarget.html(strHtml);
-                objTarget.material_select();
-            });
+            $(this).ajaxRenderSelect();
         });
 
         // Adicionando evento de renderizar automaticamente o ajax no elemento.
@@ -70,6 +44,67 @@
         $('.container').fadeIn(1500);
         $('#container-progress').fadeOut('slow');
     });
+
+    /**
+     *
+     * @param callback - Funcao callback onde e executado apos terminar o ajax.
+     * @see ajaxFormSubmit
+     */
+    $.fn.ajaxRenderSelect = function(objOption, callback) {
+        var objDefaults = {elm: $(this), strUrl: '', strTarget: ''},
+            objSettings = $.extend({}, objDefaults, objOption);
+        return $.ajaxRenderSelect(objSettings, callback);
+    };
+
+    $.ajaxRenderSelect = function(objOption, callback){
+        var objDefaults = {elm: '', strUrl: '', strTarget: ''},
+            objSettings = $.extend({}, objDefaults, objOption),
+            elm = objSettings.elm,
+            strValChecked = '',
+            strHtml = '';
+
+       if (typeof elm == 'object') {
+            if (objSettings.strUrl.length == 0 && typeof elm.attr('data-ajax-render') != 'undefined') {
+                objSettings.strUrl = elm.attr('data-ajax-render');
+            }
+                if (objSettings.strTarget.length == 0 && typeof elm.attr('data-ajax-target') != 'undefined') {
+                objSettings.strTarget = elm.attr('data-ajax-target');
+            }
+        } else {
+            console.info('Precisa passar o elemento ou o selector do formulario como parametro!');
+            return false;
+        }
+
+        var strVal = elm.val(),
+            objTarget = $(objSettings.strTarget);
+
+        return $.ajax({
+            method: "POST",
+            url: objSettings.strUrl,
+            data: {id: strVal}
+        }).done(function (result) {
+            // console.log(result);
+            // json = $3.parseJSON(result);
+            strHtml = '<option value="" selected>Selecione...</option>';
+            $.each(result, function(key, value){
+                strHtml += '<optgroup label="' + key + '">';
+                $3.each(value, function(key2, value2){
+                    if (strValChecked && strValChecked == key2) {
+                        strHtml += '<option value="' + key2 + '" selected="selected">' + value2 + '</option>';
+                    } else {
+                        strHtml += '<option value="' + key2 + '">' + value2 + '</option>';
+                    }
+                });
+                strHtml += '</optgroup>';
+            });
+            objTarget.html(strHtml);
+            objTarget.material_select();
+
+            if (typeof callback == 'function') {
+                callback.call(this, result);
+            }
+        });
+    };
 
     /**
      * Cria uma div modal, executa um ajax renderizando o retorno dentro da modal e no final abre a modal com o conteudo renderizado.

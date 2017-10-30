@@ -315,7 +315,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
 //            $this->view->title = "Perguntas: {$this->arrProjeto['NomeProjeto']} ({$this->arrProjeto['IdPRONAC']})";
             $arrConfig['idDestinatario'] = array('show' => true);
 //            if (in_array($this->arrProjeto['Situacao'], array('B02', 'B03'))) {
-                $arrConfig['idDestinatario'] = array('show' => false);
+//                $arrConfig['idDestinatario'] = array('show' => false);
 //            }
         }
 
@@ -342,11 +342,28 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
 
     public function usuariosAction()
     {
+        $cnic = 400;
+
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
-        $vw = new vwUsuariosOrgaosGrupos();
+
         $intId = $this->getRequest()->getParam('id', null);
-        $arrUsuarios = $vw->carregarUsuariosPorUnidade($intId);
+
+        $arrUsuarios = [];
+
+        if ($intId == $cnic) {
+            $tbTitulacaoConselheiro = new tbTitulacaoConselheiro();
+            $conselheiros = $tbTitulacaoConselheiro->buscarConselheirosTitularesTbUsuarios()->toArray();
+
+            foreach ($conselheiros as $arrValue) {
+                $arrUsuarios['CNIC'][$arrValue['id']] = utf8_encode($arrValue['nome']);
+            }
+        } else {
+//            $vw = new vwUsuariosOrgaosGrupos();
+//            $arrUsuarios = $vw->carregarUsuariosPorUnidade($intId);
+        }
+
+
         $this->_helper->json($arrUsuarios);
     }
 }
