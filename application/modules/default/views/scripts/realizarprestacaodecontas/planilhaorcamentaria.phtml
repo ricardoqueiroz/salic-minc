@@ -187,6 +187,7 @@
                                                                                 <button class="waves-effect waves-light btn btn-flat btnToggleCustos"  
                                                                                     uf="<?php echo $tabelaItem['uf']; unset($tabelaItem['uf']) ?>" 
                                                                                     idmunicipio="<?php echo $tabelaItem['idMunicipio']; ?>" 
+                                                                                    produto="<?php echo $tabelaItem['cdProduto']; ?>" 
                                                                                     id="<?php echo $id; ?>" 
                                                                                 >
                                                                                     <i class="material-icons left">chevron_right</i><?php echo $titulo ?>
@@ -414,6 +415,7 @@
 
             url = '/realizarprestacaodecontas/planilha-orcamentaria-custos/idPronac/'+ idPronac
                 +'/uf/' + btn.attr('uf')
+                +'/produto/' + btn.attr('produto')
                 + '/idmunicipio/' + btn.attr('idmunicipio');
 
             btnAjax(url, this);

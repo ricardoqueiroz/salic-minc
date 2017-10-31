@@ -2135,6 +2135,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                         'uf' => $val->uf,
                         'idPlanilhaEtapa' => $val->idPlanilhaEtapa,
                         'codigo' => $val->Codigo,
+                        'cdProduto' => $val->cdProduto,
                     );
                     $arrayA[($val->descEtapa)][$val->uf.' '.($val->cidade)]['uf'] = $val->uf;
                 }
@@ -3853,14 +3854,15 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->idPronac = $this->getRequest()->getParam('idPronac');
         $municipio = $this->getRequest()->getParam('idmunicipio');
         $uf = $this->getRequest()->getParam('uf');
-
+        $codigoProduto  = $this->getRequest()->getParam('produto');
+        $codigoProduto  = $codigoProduto ? $this->getRequest()->getParam('produto') : 0;
         $dao = new PlanilhaAprovacao();
 
         $resposta = $dao->vwComprovacaoFinanceiraProjeto(
             $this->view->idPronac,
             $uf,
             null,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $codigoProduto,
             $municipio,
             'A'
         );
@@ -3869,7 +3871,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->idPronac,
             $uf,
             null,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $codigoProduto,
             $municipio,
             'A'
         );
@@ -3878,7 +3880,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->idPronac,
             $uf,
             null,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $codigoProduto,
             $municipio,
             'A'
         );
@@ -3887,11 +3889,10 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
             $this->view->idPronac,
             $uf,
             null,
-            $this->view->codigoProduto != 0 ? $this->view->codigoProduto :  null,
+            $codigoProduto,
             $municipio,
             'A'
         );
-
 
         $this->view->todos = $resposta;
         $this->view->aguardandoAnalise = $respostaAguardandoAnalise;
