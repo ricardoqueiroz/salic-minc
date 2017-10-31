@@ -52,8 +52,7 @@
         <?php if (isset($this->arrConfig['dsResposta']) && $this->arrConfig['dsResposta']['disabled']): ?>
             <div class="row">
                 <div class="input-field col s12">
-                    <label for="dsResp
-VOLTARosta" class="active">Resposta</label>
+                    <label for="dsResposta" class="active">Resposta</label>
                 </div>
                 <div class="col s12">
                     <?php echo ($this->dataForm['dsResposta'])? $this->dataForm['dsResposta'] : '<br />Sem resposta at&eacute; o momento.'; ?>
@@ -94,9 +93,9 @@ VOLTARosta" class="active">Resposta</label>
                 var objOptions = {strUrl: '/admissibilidade/mensagem/usuarios', strTarget: 'select[name=idDestinatario]'};
                 $(this).ajaxRenderSelect(objOptions, function(result){
                     if ( result.length === 0) {
-                        $('select[name=idDestinatario]').closest('.row').fadeOut('slow');
+                        $('select[name=idDestinatario]').closest('.row').fadeOut('fast');
                     } else {
-                        $('select[name=idDestinatario]').closest('.row').fadeIn('slow');
+                        $('select[name=idDestinatario]').closest('.row').fadeIn('fast');
                     }
                 });
             });
