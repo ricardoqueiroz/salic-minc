@@ -257,6 +257,7 @@ function validaAgenteNovo()
     }
     else
     {
+        $("#nome").removeAttr("disabled");
         $("#logradouro").removeAttr("disabled");
         $("#tipoLogradouro").removeAttr("disabled");
         $("#bairro").removeAttr("disabled");

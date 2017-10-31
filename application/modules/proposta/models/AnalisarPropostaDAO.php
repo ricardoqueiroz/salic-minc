@@ -351,20 +351,27 @@ class Proposta_Model_AnalisarPropostaDAO extends MinC_Db_Model
 
     public static function buscarHistorico($idPreProjeto)
     {
+
         $sql = "
-            SELECT * FROM
-            (
-                SELECT idProjeto,idTecnico,usu_Nome, convert(varchar(30),DtAvaliacao, 120 ) as DtAvaliacao, Avaliacao, convert(varchar(30),dtResposta, 120 ) as dtResposta, dsResposta
-                FROM SAC.dbo.tbAvaliacaoProposta p
-                INNER JOIN tabelas.dbo.Usuarios u on (p.idTecnico = u.usu_codigo)
-                WHERE ConformidadeOK < 9
-                UNION ALL
-                SELECT idProjeto,0,'Proponente' as Tecnico, convert(varchar(30),DtMovimentacao, 120 ) as DtMovimentacao,'Proposta Cultural ENVIADA ao Minist&eacute;rio da Cultura para Conformidade Visual' as Avaliacao, '' as dtResposta, '' as dsResposta
-                FROM SAC.dbo.tbMovimentacao
-                WHERE Movimentacao=96
-            ) as slctPrincipal
+        SELECT 'Proposta' as tipo,idProjeto,idTecnico,usu_Nome, convert(varchar(30),DtAvaliacao, 120 ) as DtAvaliacao, Avaliacao
+            FROM       SAC.dbo.tbAvaliacaoProposta p
+              INNER JOIN tabelas.dbo.Usuarios        u on (p.idTecnico = u.usu_codigo)
+            WHERE    ConformidadeOK < 9
+                     AND idProjeto = {$idPreProjeto}
+            UNION ALL
+            SELECT 'Proposta' as tipo,idProjeto,0,'Proponente' as Tecnico, convert(varchar(30),DtMovimentacao, 120 ) as DtMovimentacao,
+                                          'Proposta Cultural ENVIADA ao Minist&eacute;rio da Cultura para Conformidade Visual' as Avaliacao
+            FROM SAC.dbo.tbMovimentacao
+            WHERE Movimentacao=96
+                  AND idProjeto = {$idPreProjeto}
+            UNION ALL
+            SELECT 'Projeto' as tipo,a.idPronac,idTecnico,d.usu_Nome, convert(varchar(30),DtAvaliacao, 120 ) as DtAvaliacao, dsAvaliacao
+            FROM       SAC.dbo.tbAvaliarAdequacaoProjeto a
+              INNER JOIN sac.dbo.Projetos                  b on (a.idPronac  = b.IdPRONAC)
+              INNER JOIN sac.dbo.PreProjeto                c on (b.idProjeto = c.idPreProjeto)
+              INNER JOIN tabelas.dbo.Usuarios              d on (a.idTecnico = d.usu_codigo)
             WHERE idProjeto = {$idPreProjeto}
-            ORDER BY convert(varchar(30),DtAvaliacao, 120 ) ASC
+            ORDER BY 5 ASC
         ";
 
         $db = Zend_Db_Table::getDefaultAdapter();

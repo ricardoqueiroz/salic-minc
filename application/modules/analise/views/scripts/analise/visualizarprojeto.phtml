@@ -932,6 +932,7 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
                     <td>
                         <table class="bordered striped responsive-table">
                             <tr class="destacar">
+                                <td class="center-align"><b>#</b></td>
                                 <td align="left"><b>Data</b></td>
                                 <td align="left"><b>Avalia&ccedil;&atilde;o</b></td>
                             </tr>
@@ -939,14 +940,20 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
                             if (is_array($this->itensHistorico) and count($this->itensHistorico) > 0)
                                 foreach ($this->itensHistorico as $historico) { ?>
                                     <tr>
-                                        <td align="left"
-                                            nowrap><?php echo ConverteData($historico->DtAvaliacao, 25) ?></td>
+                                        <td class="center-align" nowrap>
+                                            <span class="s"><?php echo $historico->tipo ?></span>
+                                        </td>
+                                        <td align="left" nowrap>
+                                            <?php echo ConverteData($historico->DtAvaliacao, 25) ?>
+                                        </td>
                                         <td align="left"><?php echo $historico->Avaliacao ?></td>
                                     </tr>
                                     <?php if ($historico->dtResposta != "" && strlen(strip_tags($historico->dsResposta)) > 1): ?>
                                         <tr>
-                                            <td align="left"
-                                                nowrap><?php echo ConverteData($historico->dtResposta, 25) ?></td>
+                                            <td align="left" nowrap>
+                                                <span class="s"><?php echo $historico->tipo ?></span>
+                                            </td>
+                                            <td align="left" nowrap><?php echo ConverteData($historico->dtResposta, 25) ?></td>
                                             <td align="left"><?php echo strip_tags($historico->dsResposta) ?></td>
                                         </tr>
                                     <?php endif; ?>

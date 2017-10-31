@@ -444,6 +444,8 @@
     }
 
     function filtroCNPJ() {
+        var proponente = 144;
+
         document.getElementById('0').checked = false;
         document.getElementById('1').checked = true;
 
@@ -453,9 +455,10 @@
             mascara(document.formCadAgentes.cpf, format_cnpj);
         };
         document.getElementById('cpf').focus();
-        <?php if($this->modulo != "movimentacaobancaria"): ?>
-        $('#cadDirigente').show(); // mostra a aba com os dirigentes
-        <?php endif; ?>
+
+        if($("#visao").val() == proponente) {
+            $('#cadDirigente').show(); // mostra a aba com os dirigentes
+        }
     }
 
     function buscaragente(cpf) {
@@ -559,6 +562,7 @@
                     // Preenche os dados
                     $('#idPessoa').val(data.dados.idPessoa);
                     $('#nome').val(data.dados.nome);
+                    $('#nome').attr('disabled', 'disabled');
                     $('#cep').val(format_cep(data.dados.cep));
                     $('#erroCpf').html("");
                     //$('#RESPONSAVEL_CARGO').focus();
@@ -587,6 +591,7 @@
 
         if (cep.length != 10) {
             $3('#erroCep').html("CEP inv&aacute;lido");
+            limparEndereco();
             return false;
         }
 
@@ -670,16 +675,27 @@
             } else {
 
                 $3('#erroCep').html("CEP inv&aacute;lido ou n&atilde;o encontrado!");
-                elmLogradouro.removeAttr("disabled").val('');
-                elmTipoLogradouro.removeAttr("disabled").val('');
-                elmBairro.removeAttr("disabled").val('');
-                elmCidade.removeAttr("disabled").val(0);
-                elmUF.removeAttr("disabled").val(0);
+                limparEndereco();
             }
         });
 
 
     } // fecha funcao buscar_cep()
+
+    function limparEndereco() {
+
+        var elmLogradouro = $3("#logradouro");
+        var elmTipoLogradouro = $3("#tipoLogradouro");
+        var elmBairro = $3("#bairro");
+        var elmCidade = $3("#cidade");
+        var elmUF = $3("#uf");
+
+        elmLogradouro.removeAttr("disabled").val('');
+        elmTipoLogradouro.removeAttr("disabled").val('');
+        elmBairro.removeAttr("disabled").val('');
+        elmCidade.removeAttr("disabled").val(0);
+        elmUF.removeAttr("disabled").val(0);
+    }
 
     $(document).ready(function () {
         $3('select').material_select();

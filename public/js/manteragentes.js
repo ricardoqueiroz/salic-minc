@@ -20,7 +20,7 @@ function exibirMsgErro(campo, msg)
     {
         //alert(campo+", "+msg);
         document.getElementById(msg).innerHTML = '*';
-        campo.style.borderColor = '#ffa8a8';
+        campo.style.borderColor = '#e42424';
         return true;
     }
     else
@@ -737,28 +737,34 @@ function adicionar_endereco_agente(validacao)
     if (validacao && (cep == 0 || cep == null || cep == ' ' || cep == '' ))
     {
         alertar("Dados obrigatórios não informados:\nPor favor, informe um CEP!", "cep");
+        exibirMsgErro('cep','erroCep');
     }
 	
     else if (validacao && (cidade == 0 || cidade == null || cidade == ' ' ))
     {
         alertar("Dados obrigatórios não informados:\nPor favor, selecione uma cidade!", "Cidade");
+        exibirMsgErro('cidade','erroCidade');
     }
         
     else if (validacao && (tipoEndereco == 0 || tipoEndereco == null || tipoEndereco == ' ' ))
     {
         alertar("Dados obrigatórios não informados:\nPor favor, selecione o tipo de endereço!", "tipoEndereco");
+        exibirMsgErro('tipoEndereco','erroTipoEndereco');
     }
 
     else if (validacao && (tipoLogradouro == 0 || tipoLogradouro == null || tipoLogradouro == ' ' ))
     {
         alertar("Dados obrigatórios não informados:\nPor favor, selecione o tipo de logradouro!", "tipoLogradouro");
+        exibirMsgErro('tipoLogradouro','erroTipoLogradouro');
     }
 
     else if (validacao && (numero == '' || numero == null)){
         alertar("Dados obrigatórios não informados:\nPor favor, preencha o campo número!", "numero");
+        exibirMsgErro('numero','erroNumero');
     }
     else if (validacao && (bairro == ' ' || bairro == '' || bairro == null)){
         alertar("Dados obrigatórios não informados:\nPor favor, preencha o campo bairro!", "bairro");
+        exibirMsgErro('bairro','erroBairro');
     }
     else if(validacao)
     {

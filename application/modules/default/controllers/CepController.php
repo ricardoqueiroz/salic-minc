@@ -98,6 +98,7 @@ class CepController extends MinC_Controller_Action_Abstract
             }
             $resultado['status'] = true;
             $resultado['tipoLogradouro'] = utf8_encode($resultado['tipo_logradouro']);
+            $resultado['tipo_logradouro'] = utf8_encode($resultado['tipo_logradouro']);
             $resultado['cidade'] = utf8_encode($resultado['cidade']);
             $resultado['logradouro'] = utf8_encode($resultado['logradouro']);
             $resultado['dscidademunicipios'] = utf8_encode($resultado['dscidademunicipios']);

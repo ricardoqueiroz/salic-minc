@@ -2772,11 +2772,11 @@ class Projetos extends MinC_Db_Table_Abstract
      * @param string $ProvidenciaTomada
      * @return integer (quantidade de registros alterados)
      */
-    public function alterarSituacao($idPronac = null, $pronac = null, $situacao, $ProvidenciaTomada = null)
+    public function alterarSituacao($idPronac = null, $pronac = null, $situacao, $ProvidenciaTomada = null, $idUsuario = null)
     {
         // pega logon para gravar alteracao da situacao
         $auth = Zend_Auth::getInstance();
-        $Logon = $auth->getIdentity()->usu_codigo;
+        $Logon = empty($idUsuario) ? $auth->getIdentity()->usu_codigo : $idUsuario;
 
         // grava no hist?rico a situacao atual do projeto caso a trigger HISTORICO_INSERT esteja desabilitada
         $HistoricoInsert = new HistoricoInsert();
@@ -4841,11 +4841,12 @@ class Projetos extends MinC_Db_Table_Abstract
                     'DtAnalise' => 'CONVERT(CHAR(10), DtAnalise, 103)',
                     'situacao',
                     'idOrgao' => 'Orgao',
-                    'DtSolicitacao' => new Zend_Db_Expr('(select top 1 DtSolicitacao from tbDiligencia dili1 where dili1.idPronac = projeto.idPronac and dili1.idProduto = distribuirParecer.idProduto order by dili1.DtSolicitacao desc)'),
-                    'DtResposta' => new Zend_Db_Expr('(select top 1 DtResposta from tbDiligencia dili2 where dili2.idPronac = projeto.idPronac and dili2.idProduto = distribuirParecer.idProduto order by dili2.DtSolicitacao desc)'),
-                    'stEnviado' => new Zend_Db_Expr('(select top 1 stEnviado from tbDiligencia dili3 where dili3.idPronac = projeto.idPronac and dili3.idProduto = distribuirParecer.idProduto order by dili3.DtSolicitacao desc)'),
-                    'tempoFimDiligencia' => new Zend_Db_Expr("(select top 1 CASE WHEN stProrrogacao = 'N' THEN 20 ELSE 40 END AS tempoFimDiligencia from tbDiligencia dili4 where dili4.idPronac = projeto.idPronac and dili4.idProduto = distribuirParecer.idProduto order by dili4.DtSolicitacao desc)"),
-                )
+                    'DtSolicitacao' => new Zend_Db_Expr('(select top 1 DtSolicitacao from sac.dbo.tbDiligencia dili1 where dili1.idPronac = projeto.idPronac and dili1.idProduto = distribuirParecer.idProduto order by dili1.DtSolicitacao desc)'),
+                    'DtResposta' => new Zend_Db_Expr('(select top 1 DtResposta from sac.dbo.tbDiligencia dili2 where dili2.idPronac = projeto.idPronac and dili2.idProduto = distribuirParecer.idProduto order by dili2.DtSolicitacao desc)'),
+                    'stEnviado' => new Zend_Db_Expr('(select top 1 stEnviado from sac.dbo.tbDiligencia dili3 where dili3.idPronac = projeto.idPronac and dili3.idProduto = distribuirParecer.idProduto order by dili3.DtSolicitacao desc)'),
+                    'tempoFimDiligencia' => new Zend_Db_Expr("(select top 1 CASE WHEN stProrrogacao = 'N' THEN 20 ELSE 40 END AS tempoFimDiligencia from sac.dbo.tbDiligencia dili4 where dili4.idPronac = projeto.idPronac and dili4.idProduto = distribuirParecer.idProduto order by dili4.DtSolicitacao desc)"),
+                ),
+                $this->_schema
             )
             ->joinInner(
                 array('distribuirParecer' => 'tbDistribuirParecer'),
@@ -4860,12 +4861,14 @@ class Projetos extends MinC_Db_Table_Abstract
                     'DtDevolucao',
                     'DtEnvio' => 'CONVERT(CHAR(10), DtEnvio, 103)',
                     'idAgenteParecerista',
-                )
+                ),
+                $this->_schema
             )
             ->joinLeft(
                 array('produto' => 'Produto'),
                 'distribuirParecer.idProduto = produto.Codigo',
-                array('dsProduto' => 'Descricao')
+                array('dsProduto' => 'Descricao'),
+                $this->_schema
             )
             ->where('distribuirParecer.DtDistribuicao is not null')
             ->where('distribuirParecer.DtDevolucao is NULL')

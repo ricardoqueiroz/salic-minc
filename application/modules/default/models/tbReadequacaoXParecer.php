@@ -26,9 +26,9 @@ class tbReadequacaoXParecer extends MinC_Db_Table_Abstract
                 new Zend_Db_Expr("b.IdParecer, b.ParecerFavoravel, b.ResumoParecer, b.DtParecer, c.usu_nome AS Avaliador"),
                 new Zend_Db_Expr("
                     CASE WHEN b.idTipoAgente = 1
-                        THEN 'T�cnico / Parecerista'
+                        THEN 'T&eacute;cnico / Parecerista'
                     WHEN b.idTipoAgente = 6
-                        THEN 'Componente da Comiss�o'
+                        THEN 'Componente da Comiss&atilde;o'
                     END AS tpAvaliador
                 ")
             )
