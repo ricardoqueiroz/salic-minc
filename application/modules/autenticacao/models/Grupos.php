@@ -60,4 +60,8 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
     const COORDENADOR_DO_PRONAC = 137;
     const COORDENADOR_DE_CONVENIO = 142;
 
+    const PROPONENTE = 1111;
+
+    const DIRETOR_DEPARTAMENTO = 148;
+    const DIRETOR_DEPARTAMENTO_POLITICAS_AUDIOVISUAIS = 151;
 }
