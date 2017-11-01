@@ -4827,7 +4827,7 @@ class Projetos extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function buscaProjetosProdutosParaAnalise($where)
+    public function buscaProjetosProdutosParaAnalise($where,  $order = array(), $start = 0, $limit = null, $search = null)
     {
         $select = $this
             ->select()
@@ -4874,16 +4874,30 @@ class Projetos extends MinC_Db_Table_Abstract
             ->where('distribuirParecer.DtDevolucao is NULL')
             ->where('distribuirParecer.stEstado = ?', 0)
             ->where('distribuirParecer.TipoAnalise in (?)', array(1, 3))
-            ->where('Situacao in (?)', array('B11', 'B14'))
-            ->order('projeto.IdPRONAC')
-            ->order('distribuirParecer.stPrincipal DESC')
-            ->order('produto.Descricao');
+            ->where('Situacao in (?)', array('B11', 'B14'));
 
         foreach ($where as $key => $val) {
             $select->where($key, $val);
         }
 
-        /* echo $select;die; */
+//        if (!empty($search['value'])) {
+//            $select->where('PRONAC = ?', $search['value']);
+//        }
+
+        if(!empty($order)) {
+            $select->order($order);
+        }else {
+            $select->order('projeto.IdPRONAC');
+            $select->order('distribuirParecer.stPrincipal DESC');
+            $select->order('produto.Descricao');
+        }
+
+        if (!is_null($start) && !is_null($limit)) {
+            $start = (int)$start;
+            $limit = (int)$limit;
+            $select->limitPage($start, $limit);
+        }
+
         return $this->fetchAll($select);
     }
 
@@ -7714,6 +7728,7 @@ class Projetos extends MinC_Db_Table_Abstract
         foreach ($where as $key => $val) {
             $select->where($key, $val);
         }
+        echo $select; die;
 
         /* echo $select;die; */
         return $this->fetchAll($select);

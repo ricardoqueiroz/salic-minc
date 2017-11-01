@@ -31,7 +31,7 @@
     <div class="row" >
         <div class="col s12">
             <h3 class="left">An&aacute;lise do Produto </h3>
-            <a class="btn right" href="javascript:voltar();" title="P&aacute;gina Anterior">Voltar</a>
+            <a class="btn right" href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>#produto_<?= $this->projeto->idProduto?>" title="P&aacute;gina Anterior">Voltar</a>
         </div>
     </div>
     <div id="dialog-valor" class="sumir" title="Valor Inv&aacute;lido">
@@ -99,7 +99,6 @@
         <!-- FIM MODAL -->
     </div>
 </div>
-<!-- ========== FIM CONTE&UACUTE;DO ========== -->
 
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>

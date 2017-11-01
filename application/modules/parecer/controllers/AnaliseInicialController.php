@@ -104,12 +104,12 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
             )
         );
 
-        $d = $projeto->buscaprojetosparaanalise(
-            array(
-                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
-                'distribuirParecer.idOrgao = ?' => $idOrgao,
-            )
-        );
+//        $d = $projeto->buscaprojetosparaanalise(
+//            array(
+//                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
+//                'distribuirParecer.idOrgao = ?' => $idOrgao,
+//            )
+//        );
 
         $this->idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
         $objTbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
@@ -130,7 +130,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->situacao = $situacao;
         $this->view->buscar = $paginator;
 //        $this->view->buscar = $resp;
-        $this->view->d = $d;
+//        $this->view->d = $d;
     }
 
 
@@ -336,5 +336,71 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         }
 
         $this->_helper->json($produtoAux);
+    }
+
+    public function listarProdutosPorProjetoAjaxAction()
+    {
+        $start = $this->getRequest()->getParam('start');
+        $length = $this->getRequest()->getParam('length');
+        $draw = (int)$this->getRequest()->getParam('draw');
+        $search = $this->getRequest()->getParam('search');
+        $order = $this->getRequest()->getParam('order');
+        $columns = $this->getRequest()->getParam('columns');
+        $order = ($order[0]['dir'] != 1) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("IdPRONAC DESC");
+
+        $this->validarPerfis();
+
+        $params = $this->_request->getParams();
+
+        $auth = Zend_Auth::getInstance();
+        $idusuario = $auth->getIdentity()->usu_codigo;
+
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $idOrgao = $GrupoAtivo->codOrgao;
+
+        $UsuarioDAO = new Autenticacao_Model_Usuario();
+        $agente = $UsuarioDAO->getIdUsuario($idusuario);
+        $idAgenteParecerista = $agente['idagente'];
+
+        if (empty($idAgenteParecerista)) {
+            $this->_helper->json(array(
+                "data" => 0,
+                'recordsTotal' => 0,
+                'draw' => 0,
+                'recordsFiltered' => 0));
+            die;
+        }
+
+        $where = array (
+            'idAgenteParecerista = ?' => $idAgenteParecerista,
+            'idOrgao = ?' => $idOrgao,
+        );
+
+        $vwParecerista = new Parecer_Model_DbTable_vwPainelParecerista();
+
+
+        $projetos = $vwParecerista->listar($where, $order, $start, $length, $search);
+        $recordsTotal = 0;
+        $recordsFiltered = 0;
+        $aux = array();
+        if (!empty($projetos)) {
+            foreach ($projetos as $key => $projeto) {
+                $projeto->NomeProjeto = utf8_encode($projeto->NomeProjeto);
+                $projeto->dsProduto = utf8_encode($projeto->dsProduto);
+                $projeto->DtDistribuicao = Data::tratarDataZend($projeto->DtDistribuicao, 'Brasileira');
+
+                $aux[$key] = $projeto;
+            }
+
+            $recordsFiltered = count($vwParecerista->listarTotal($where, $order, $start, $length, $search));
+            $recordsTotal = count($vwParecerista->listarTotal($where));
+        }
+
+        $this->_helper->json(array(
+            "data" => !empty($aux) ? $aux : 0,
+            'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
+            'draw' => $draw,
+            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0)
+        );
     }
 }
