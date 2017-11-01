@@ -3,35 +3,49 @@
         border: solid 1px #c9c9c9 !important;
     }
 </style>
-<div class="modal-content">
-    <h4>Homologar</h4>
-    <div>
-        <ul class="collapsible popout" data-collapsible="expandable">
-            <?php echo $this->partial('/homologacao/partials/visualizar.phtml', ['arrValue' => $this->arrValue]); ?>
-            <?php echo $this->partial('/homologacao/partials/visualizarParecerHomologacao.phtml', ['arrValue' => $this->arrValue]); ?>
-            <li>
-                <div class="row">
-                    <div class="input-field col s12">
-                        <br />
-                        <textarea id="dsResposta" class="materialize-textarea editor" name="dsResposta" <?php if (isset($this->arrConfig['dsResposta']) && $this->arrConfig['dsResposta']['disabled']) echo 'disabled="disabled"' ?>><?php if (isset($this->dataForm['dsResposta'])) echo $this->dataForm['dsResposta']; ?>  </textarea>
-                        <br />
-<!--                        <label for="dsResposta" class="active">Resposta</label>-->
-                        <br />
+<form id="form-mensagem" class="materialize" data-ajax-form="true" method="post" action="<?php echo $this->urlAction ?>">
+    <div class="modal-content">
+        <h4>Homologar</h4>
+        <div>
+            <div class="row">
+                <div class="col s12"></div>
+            </div>
+            <ul class="collapsible popout" data-collapsible="expandable">
+                <li>
+                    <div class="row">
+                        <div class="switch">
+                            <label>
+                                Desfavoravel
+                                <input name="stDecisao" type="checkbox">
+                                <span class="lever"></span>
+                                Favoravel
+                            </label>
+                        </div>
                     </div>
-                </div>
-            </li>
-        </ul>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <br />
+                            <textarea id="dsHomologacao" class="materialize-textarea editor" name="dsHomologacao"><?php if (isset($this->dataForm['dsHomologacao'])) echo $this->dataForm['dsHomologacao']; ?>  </textarea>
+                            <br />
+                            <label for="dsHomologacao" class="active">Parecer Tecnico</label>
+                            <br />
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
-<div class="modal-footer">
-    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat green-text">Fechar</a>
-</div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect btn-flat green white-text">Salvar</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat orange-text">Fechar</a>
+    </div>
+</form>
 <script>
+//    tinymce.remove();
     $3('.collapsible').collapsible();
     $(document).ready(function ($) {
         $('textarea.editor:first').editorRico({altura: 200});
     });
-    setTimeout(function(){
-        tinymce.remove();
-    }, 400);
+//    setTimeout(function(){
+//    }, 400);
 </script>

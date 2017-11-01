@@ -70,7 +70,27 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     public function homologarAction()
     {
         $this->_helper->layout->disableLayout();
-        self::prepareData($this->getRequest()->getParam('id'));
+
+        if ($this->getRequest()->isPost()) {
+            $this->_helper->viewRenderer->setNoRender(true);
+            $mapper = new Projeto_Model_TbHomologacao();
+//            $this->_helper->json(array('status' => $mapper->responder($this->getRequest()->getPost()), 'msg' => $mapper->getMessages(), 'redirect' => $strUrl));
+        } else {
+            self::prepareData($this->getRequest()->getParam('id'));
+            $this->prepareForm(array(
+                'idDestinatario' => array('disabled' => true),
+                'idDestinatarioUnidade' => array('disabled' => true),
+                'dsMensagem' => array('disabled' => true),
+            ), '', $strActionBack);
+            if ($this->arrProjeto) {
+                $this->arrBreadCrumb[] = array('url' => '/admissibilidade/enquadramento/listar', 'title' => 'Enquadramentos', 'description' => 'Ir para a tela de enquadramentos');
+                $arrBreadCrumb[] = array('url' => '', 'title' => "Perguntas: {$this->arrProjeto['AnoProjeto']}{$this->arrProjeto['Sequencial']} - {$this->arrProjeto['NomeProjeto']}", 'description' => 'Ir para a tela de perguntas');
+            } else {
+                $this->arrBreadCrumb[] = array('url' => '/admissibilidade/mensagem/index', 'title' => 'Perguntas', 'description' => 'Ir para a tela de perguntas');
+            }
+            $this->arrBreadCrumb[] = array('url' => '', 'title' => 'Responder pergunta', 'description' => 'Tela atual');
+            $this->view->arrBreadCrumb = $this->arrBreadCrumb;
+        }
     }
 
     public function parecerAction()
@@ -78,7 +98,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
         $this->_helper->layout->disableLayout();
     }
 
-    public function prepareData($intIdPronac)
+    private function prepareData($intIdPronac)
     {
         # PARTE 1
         $dbTablePainelHomologacao = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
