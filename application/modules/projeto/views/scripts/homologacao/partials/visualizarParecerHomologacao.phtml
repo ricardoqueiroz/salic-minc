@@ -1,0 +1,21 @@
+<li>
+    <div class="collapsible-header green white-text">Parecer de Homologacao</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td>Decisao</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <?= ($this->arrValue['parecerHomologacao']['stDecisao'] == 0)? 'Desfavoravel' : 'Faravel' ?>
+                </td>
+                <td>
+                    <p><?= $this->arrValue['parecerHomologacao']['dsHomologacao'] ?></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>

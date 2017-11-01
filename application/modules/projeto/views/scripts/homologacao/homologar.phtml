@@ -1,0 +1,37 @@
+<style>
+    .bordered-all td {
+        border: solid 1px #c9c9c9 !important;
+    }
+</style>
+<div class="modal-content">
+    <h4>Homologar</h4>
+    <div>
+        <ul class="collapsible popout" data-collapsible="expandable">
+            <?php echo $this->partial('/homologacao/partials/visualizar.phtml', ['arrValue' => $this->arrValue]); ?>
+            <?php echo $this->partial('/homologacao/partials/visualizarParecerHomologacao.phtml', ['arrValue' => $this->arrValue]); ?>
+            <li>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <br />
+                        <textarea id="dsResposta" class="materialize-textarea editor" name="dsResposta" <?php if (isset($this->arrConfig['dsResposta']) && $this->arrConfig['dsResposta']['disabled']) echo 'disabled="disabled"' ?>><?php if (isset($this->dataForm['dsResposta'])) echo $this->dataForm['dsResposta']; ?>  </textarea>
+                        <br />
+<!--                        <label for="dsResposta" class="active">Resposta</label>-->
+                        <br />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal-footer">
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat green-text">Fechar</a>
+</div>
+<script>
+    $3('.collapsible').collapsible();
+    $(document).ready(function ($) {
+        $('textarea.editor:first').editorRico({altura: 200});
+    });
+    setTimeout(function(){
+        tinymce.remove();
+    }, 400);
+</script>

@@ -1,0 +1,119 @@
+<li>
+    <div class="collapsible-header green white-text">Parecer Tecnico do Projeto</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td>PRONAC</td>
+                <td><?= $this->arrValue['Pronac'] ?></td>
+                <td colspan="2"><?= $this->arrValue['enquadramentoProjeto']['NomeProjeto'] ?></td>
+            </tr>
+            <tr>
+                <td>Proponente</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['CNPJCPF'] ?></td>
+                <td colspan="2"><?= $this->arrValue['enquadramentoProjeto']['Proponente'] ?></td>
+            </tr>
+            <tr>
+                <td>Area: <?= $this->arrValue['enquadramentoProjeto']['Area'] ?></td>
+                <td colspan="3">Segmento: <?= $this->arrValue['enquadramentoProjeto']['Segmento'] ?></td>
+            </tr>
+            <tr>
+                <td>UF:</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['UfProjeto'] ?></td>
+                <td>Periodo de execucao: <?= $this->arrValue['enquadramentoProjeto']['DtInicioExecucao'] ?>
+                    a <?= $this->arrValue['enquadramentoProjeto']['DtFimExecucao'] ?></td>
+                <td>Enquadramento: <?= $this->arrValue['enquadramentoProjeto']['Enquadramento'] ?></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Resumo do Projeto</div>
+    <div class="collapsible-body">
+        <p><?= $this->arrValue['enquadramentoProjeto']['ResumoProjeto'] ?></p>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Memoria de calculo</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td colspan="2">Proponente</td>
+                <td colspan="2">Homologado</td>
+            </tr>
+            <tr>
+                <td>Vl.Solicitado</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['VlSolicitado'] ?></td>
+                <td>Custo do Projeto</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['CustoProjeto'] ?></td>
+            </tr>
+            <tr>
+                <td>Vl.Outras Fontes</td>
+                <td> <?= $this->arrValue['enquadramentoProjeto']['VlOutrasFontes'] ?></td>
+                <td>Vl.Outras Fontes</td>
+                <td> <?= $this->arrValue['enquadramentoProjeto']['VlOutrasFontesAprovado'] ?></td>
+            </tr>
+            <tr>
+                <td>Vl.Projeto</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['VlProjeto'] ?></td>
+                <td>Custo Total</td>
+                <td><?= $this->arrValue['enquadramentoProjeto']['CustoTotal'] ?></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Avaliacao de Tecnica</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td>Posicionamento Tecnico</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <?= ($this->arrValue['parecer']['ParecerFavoravel'] == 1)? 'Desfavoravel' : 'Faravel' ?>
+                </td>
+                <td>
+                    <p>
+                        <?= $this->arrValue['parecer']['ResumoParecer'] ?>
+                    </p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Acoes relevantes para o sucesso do projeto</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <p><?= $this->arrValue['acaoProjeto']['dsAcaoAlcanceProduto'] ?></p>
+        </table>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Apreciacao do Comissionario Relator</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td>Posicionamento do Comissario</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <?= ($this->arrValue['aparicaoComissario']['ParecerFavoravel'] == 1)? 'Desfavoravel' : 'Faravel' ?>
+                </td>
+                <td>
+                    <p><?= $this->arrValue['aparicaoComissario']['ResumoParecer'] ?></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
