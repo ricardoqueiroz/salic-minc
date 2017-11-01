@@ -1,5 +1,5 @@
 <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)){ ?>
-    <form id="formConsolidacao" action="<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'consolidacaoprojeto')); ?>" method="post">
+    <form id="formConsolidacao" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'consolidacaoprojeto')); ?>" method="post">
         <input type="hidden" name="idPronacP" 	 value="<?php echo $_GET['idPronac']; ?>" />
         <input type="hidden" name="AnoProjeto" 	 value="<?php echo $this->projeto->AnoProjeto; ?>" />
         <input type="hidden" name="Sequencial" 	 value="<?php echo $this->projeto->Sequencial; ?>" />

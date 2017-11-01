@@ -139,7 +139,7 @@ class Parecer_AnaliseInicialDocumentoAssinaturaController implements MinC_Assina
         $totalDivulgacao = 0;
         
         if ($somaValorProjeto > 0 && $stPrincipal == "1") {
-            $analisarprojetoparecerController = new AnalisarprojetoparecerController();
+            $analisarprojetoparecerController = new Parecer_AnalisarprojetoparecerController();
             $totalDivulgacao = $analisarprojetoparecerController->validaRegra20Porcento($idPronac);
         }
         

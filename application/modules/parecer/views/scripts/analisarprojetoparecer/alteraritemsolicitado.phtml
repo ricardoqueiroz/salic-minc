@@ -6,7 +6,7 @@ header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 ?>
 
-<form method="POST" id="formSalvarItem" action="<?php echo $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'salvaritem')); ?>">
+<form method="POST" id="formSalvarItem" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'salvaritem')); ?>">
     <table class="tabela">
         <input type="hidden" name="idPlanilhaProjeto" id="idPlanilhaProjeto" value="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"/>
         <input type="hidden" name="idPronac" value="<?php echo $this->projeto->IdPRONAC; ?>"/>

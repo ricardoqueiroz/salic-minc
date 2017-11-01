@@ -1,7 +1,7 @@
 <?php
-$indexHref = $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true);
-$gerarpdfHref = $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'gerarpdfhistorico'));
-$gerarxlsHref = $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'gerarxlshistorico'));
+$indexHref = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true);
+$gerarpdfHref = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'gerarpdfhistorico'));
+$gerarxlsHref = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'gerarxlshistorico'));
 ?>
 
 <!-- ========== IN�CIO BREADCRUMB (LINKS TOPO) ========== -->
@@ -9,7 +9,7 @@ $gerarxlsHref = $this->url(array('controller' => 'Analisarprojetoparecer', 'acti
     <ul>
     <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
     <li class="second">An&aacutelise T&eacute;cnica Inicial</li>
-    <li class="second"><a href="<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
+    <li class="second"><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
     <li class="last">Hist&oacute;rico</li>
     </ul>
 </div>

@@ -142,17 +142,17 @@
                                 <td class="center-align">
                                     <?php if ($verificarIN2017): ?>
                                         <?php if (!$isProjetoJaAssinado): ?>
-                                            <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
+                                            <a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
                                         <?php else: ?>
                                             <?php if ($d->idAgenteParecerista == $this->idAgenteParecerista): ?>
-                                                <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
+                                                <a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
                                             <?php else: ?>
                                                 <?php echo $d->dsProduto; ?>
                                             <?php endif; ?>
                                         <?php endif; ?>
 
                                     <?php else: ?>
-                                        <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
+                                        <a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>"> <?php echo $d->dsProduto; ?></a>
                                     <?php endif; ?>
                                 </td>
                                 <td class="center-align"><?php if ($d->stPrincipal == 1): ?><img
@@ -174,7 +174,7 @@
                                 <td class="center-align"><?php echo $d->tempoFimDiligencia; ?></td>
                                 <td class="center-align">
                                     <a class="btn waves-effect waves-light cyan tooltipped small"
-                                       href="<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'historico', 'idPronac' => $d->IdPRONAC, 'stPrincipal' => $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>"
+                                       href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'historico', 'idPronac' => $d->IdPRONAC, 'stPrincipal' => $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>"
                                        data-tooltip="Hist&oacute;rico">
                                         <i class="material-icons white-text">history</i>
                                     </a>
@@ -266,7 +266,7 @@
                                             <a class="btn waves-effect waves-light tooltipped small btn cyan"
                                                href="<?php echo $this->url(
                                                        array(
-                                                           'module' => 'default',
+                                                           'module' => 'parecer',
                                                            'controller' => 'analisarprojetoparecer',
                                                            'action' => 'devolver-parecer'
                                                        )) . $parametrosAssinatura ?>"
@@ -280,7 +280,7 @@
                                     <?php elseif (!$verificarIN2017): ?>
                                         <img id="img_encaminhar_parecer834782" style="cursor:pointer; "
                                              title="Declarar impedimento" src="/public/img/table_multiple.png"
-                                             onclick="redirecionar('<?php echo $this->url(array('module' => 'default', 'controller' => 'analisarprojetoparecer', 'action' => 'devolver-parecer')) ?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto; ?>&situacao=<?php echo $d->situacao; ?>&idD=<?php echo $d->idDistribuirParecer; ?>')">
+                                             onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'devolver-parecer')) ?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto; ?>&situacao=<?php echo $d->situacao; ?>&idD=<?php echo $d->idDistribuirParecer; ?>')">
                                     <?php endif; ?>
                                 </td>
                             </tr>

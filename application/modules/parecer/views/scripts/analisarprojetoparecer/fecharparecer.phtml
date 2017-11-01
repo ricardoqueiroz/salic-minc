@@ -8,11 +8,11 @@
         var texto = CKEDITOR.instances['justificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
 
         if (texto.length <= 11){
-            alertar('O campo justificativa deve ter no m&iacute;nimo 11 caracteres!');
+            alertar('O campo justificativa deve ter no m\xEDnimo 11 caracteres!');
             return false;
         } else {
             
-            $("#modal").html('Declarar impedimento?');
+            $("#modal").html('Deseja concluir an\xE1lise e devolver para o Coordenador?');
             $("#modal").dialog({
                 title : 'Alerta',
                 resizable: false,
@@ -45,9 +45,9 @@
 <div id="total">
     <div id="breadcrumb">
         <ul>
-          <li><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
-	  <li><a href="<?php echo $this->url(array('module' => 'parecer','controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
-	  <li class="last">Declarar impedimento</li>
+        <li><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
+<li><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
+			<li class="last">Concluir Parecer</li>
         </ul>
     </div>
     <!-- ========== FIM BREADCRUMB (LINKS TOPO)========== -->
@@ -57,7 +57,7 @@
     <!-- ==========INA� CIO TA� TULO========== -->
 
     <div id="titulo">
-        <div>Declarar impedimento <span class="voltar"><a href="javascript:voltar();">Voltar</a></span></div>
+        <div>Concluir An&aacute;lise e devolver para o Coordenador <span class="voltar"><a href="javascript:voltar();">Voltar</a></span></div>
 
     </div>
 
@@ -88,7 +88,7 @@
 	        </table>
             <table class="tabela">
                 <tr>
-                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="window.location=('<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>');" /></td>                </tr>
+                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="window.location=('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'produto')); ?>');" /></td>                </tr>
             </table>
         <?php } else { ?>
         <table class="tabela">
@@ -104,7 +104,7 @@
             </tr>
         </table>
     
-        <form id="form" name="form" method="post" action="<?php echo $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'devolver-parecer'), '', true); ?>">
+        <form id="form" name="form" method="post" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer'), '', true); ?>">
                 <table class="tabela">
                     <tr>
                         <th>Observa&ccedil;&atilde;o</th>
@@ -130,7 +130,7 @@
 
         <div class="msgALERT">
 			<div class="float_right"></div>
-			<div>O acerto dos custos administrativos s&aacute;o maiores que 15% do valor total do projeto.<br /> Favor ajustar <?php echo $this->formatarReal($this->verifica15porcento); ?>.</div>
+			<div>O acerto dos custos administrativos s&atilde;o maiores que 15% do valor total do projeto.<br /> Favor ajustar <?php echo $this->formatarReal($this->verifica15porcento); ?>.</div>
 		</div>
 		<table class="tabela">
             <tr>
@@ -146,7 +146,7 @@
         </table>
         <table class="tabela">
                 <tr>
-                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="redirecionar('<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'index'), '', true); ?>');" /></td>
+                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true); ?>');" /></td>
                 </tr>
             </table>
         <?php } ?>

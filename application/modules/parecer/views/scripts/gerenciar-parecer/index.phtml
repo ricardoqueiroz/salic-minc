@@ -107,7 +107,7 @@
                     <td align="right" nowrap><?php echo $this->formatarReal($dp->Valor); ?></td>
                     <?php if ($this->tipoFiltro != 'analisado_superintendencia'): ?>
                       <td>
-                          <a href="<?php echo $this->url(array('module' => 'default', 'controller'=> 'Analisarprojetoparecer','action' =>'produto'));?>?idPronac=<?php echo $dp->IdPRONAC; ?>&idProduto=<?php echo $dp->idProduto; ?>&stPrincipal=<?php echo $dp->stPrincipal;?>"><?php echo $dp->Produto; ?></a>
+                          <a href="<?php echo $this->url(array('module' => 'parecer', 'controller'=> 'Analisarprojetoparecer','action' =>'produto'));?>?idPronac=<?php echo $dp->IdPRONAC; ?>&idProduto=<?php echo $dp->idProduto; ?>&stPrincipal=<?php echo $dp->stPrincipal;?>"><?php echo $dp->Produto; ?></a>
                       </td>
                     <?php endif; ?>
                     <td class="center-align">

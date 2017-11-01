@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col s12" >
         <div id="divAnaliseConteudo" >
-            <form name="formAnaliseConteudo" id="formAnaliseConteudo" action="<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'analisedeconteudo')); ?>" method="post">
+            <form name="formAnaliseConteudo" id="formAnaliseConteudo" action="<?php echo $this->url(array('module' =>'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'analisedeconteudo')); ?>" method="post">
                 <input type="hidden" id="stAcao" name="stAcao" value="0"/>
                 <input type="hidden" name="idPRONAC" value="<?php echo $this->projeto->IdPRONAC; ?>"/>
                 <input type="hidden" name="idProduto" value="<?php echo $this->projeto->idProduto; ?>"/>

@@ -1,6 +1,6 @@
 <?php
 
-class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
+class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
 {
     /**
      * @var integer (vari¿vel com o id do usu¿rio logado)
@@ -203,11 +203,11 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
                 $ProjetosProdutos['projetos'][$cont]['PRONAC'] = "&nbsp;";
                 $ProjetosProdutos['projetos'][$cont]['Nome do Projeto'] = "&nbsp;";
             } else {
-                $ProjetosProdutos['projetos'][$cont]['PRONAC'] = "<a target='_blank'  href='" . $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'index')) . "?idPronac=" . $val->IdPRONAC . "' >" . $val->PRONAC . "</a>";
+                $ProjetosProdutos['projetos'][$cont]['PRONAC'] = "<a target='_blank'  href='" . $this->url(array('module' => 'default','controller' => 'consultardadosprojeto', 'action' => 'index')) . "?idPronac=" . $val->IdPRONAC . "' >" . $val->PRONAC . "</a>";
                 $ProjetosProdutos['projetos'][$cont]['Nome do Projeto'] = $val->NomeProjeto;
             }
 
-            $ProjetosProdutos['projetos'][$cont]['Produto'] = "<a href='" . $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'produto')) . "?nrRelatorio=" . $nrRelatorio . "&idPronac=" . $val->IdPRONAC . "&idProduto=" . $val->idProduto . "&stPrincipal=" . $val->stPrincipal . "' >" . $val->dsProduto . "</a>";
+            $ProjetosProdutos['projetos'][$cont]['Produto'] = "<a href='" . $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'produto')) . "?nrRelatorio=" . $nrRelatorio . "&idPronac=" . $val->IdPRONAC . "&idProduto=" . $val->idProduto . "&stPrincipal=" . $val->stPrincipal . "' >" . $val->dsProduto . "</a>";
 
 
             if ($val->stPrincipal == 1) {
@@ -236,8 +236,8 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
             } else {
                 $ProjetosProdutos['projetos'][$cont]['Tempo da Dilig&ecirc;ncia'] = '&nbsp;';
             }
-            $ProjetosProdutos['projetos'][$cont]['Historico'] = "<p style='text-align: center;'><a href='" . $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'historico')) . "?idPronac=" . $val->IdPRONAC . "&idProduto=" . $val->idProduto . "&stPrincipal=" . $val->stPrincipal . "' ><img src='/NovoSalic/public/img/edit_ico.gif'/></a></p>";
-            $ProjetosProdutos['projetos'][$cont]['Conclus&atilde;o'] = "<p style='text-align: center;'><a href='" . $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'fecharparecer')) . "?idPronac=" . $val->IdPRONAC . "&tipoanalise=" . $val->TipoAnalise . "&idProduto=" . $val->idProduto . "' ><img src='/NovoSalic/public/img/save.gif'/></a></p>";
+            $ProjetosProdutos['projetos'][$cont]['Historico'] = "<p style='text-align: center;'><a href='" . $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'historico')) . "?idPronac=" . $val->IdPRONAC . "&idProduto=" . $val->idProduto . "&stPrincipal=" . $val->stPrincipal . "' ><img src='/NovoSalic/public/img/edit_ico.gif'/></a></p>";
+            $ProjetosProdutos['projetos'][$cont]['Conclus&atilde;o'] = "<p style='text-align: center;'><a href='" . $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'fecharparecer')) . "?idPronac=" . $val->IdPRONAC . "&tipoanalise=" . $val->TipoAnalise . "&idProduto=" . $val->idProduto . "' ><img src='/NovoSalic/public/img/save.gif'/></a></p>";
             $AntIdPronac = $val->IdPRONAC;
             $AntIdProduto = $val->idProduto;
             $AntStPrincipal = $val->stPrincipal;
@@ -715,9 +715,9 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
                     $where['idProduto = ?'] = $idProduto;
                     $analisedeConteudoDAO->update($dados, $where);
                     
-                    parent::message("Altera&ccedil;&atilde;o realizada com sucesso!", "Analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "CONFIRM");
+                    parent::message("Altera&ccedil;&atilde;o realizada com sucesso!", "parecer/analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "CONFIRM");
                 } catch (Exception $e) {
-                    parent::message($e->getMessage(), "Analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "ERROR");
+                    parent::message($e->getMessage(), "parecer/analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "ERROR");
                 }
                 break;
 
@@ -763,10 +763,10 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
 
                     $analisedeConteudoDAO = new Analisedeconteudo();
                     $resp = $analisedeConteudoDAO->insert($dados);
-                    parent::message("Altera&ccedil;&atilde;o realizada com sucesso!", "Analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "CONFIRM");
+                    parent::message("Altera&ccedil;&atilde;o realizada com sucesso!", "parecer/analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "CONFIRM");
 
                 } catch (Exception $e) {
-                    parent::message($e->getMessage(), "Analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "ERROR");
+                    parent::message($e->getMessage(), "parecer/analisarprojetoparecer/produto/?idPronac={$idPronac}&idProduto={$idProduto}&stPrincipal={$stPrincipal}&idD={$idD}", "ERROR");
                 }
                 break;
         }
@@ -1177,9 +1177,9 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
                     }
                 }
                 
-                parent::message("Projeto consolidado com sucesso.", "Analisarprojetoparecer/produto?idPronac=" . $idPronac . "&idProduto=" . $idProduto . "&stPrincipal=" . $stPrincipal, "CONFIRM");
+                parent::message("Projeto consolidado com sucesso.", "parecer/analisarprojetoparecer/produto?idPronac=" . $idPronac . "&idProduto=" . $idProduto . "&stPrincipal=" . $stPrincipal, "CONFIRM");
             } catch (Exception $e) {
-                parent::message("Error: " . $e->getMessage(), "Analisarprojetoparecer/produto?idPronac=" . $idPronac . "&idProduto=" . $idProduto . "&stPrincipal=" . $stPrincipal, "ERROR");
+                parent::message("Error: " . $e->getMessage(), "parecer/analisarprojetoparecer/produto?idPronac=" . $idPronac . "&idProduto=" . $idProduto . "&stPrincipal=" . $stPrincipal, "ERROR");
             }
         }
     }

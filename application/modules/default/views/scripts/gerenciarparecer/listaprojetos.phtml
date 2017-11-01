@@ -168,7 +168,7 @@ $filtros = array(
                 <td><?php echo $dp->Segmento; ?></td>
                 <td align="right" nowrap><?php echo $this->formatarReal($dp->Valor); ?></td>
                 <td>
-                    <a href="<?php echo $this->url(array('controller'=> 'Analisarprojetoparecer','action' =>'produto'));?>?idPronac=<?php echo $dp->IdPRONAC; ?>&idProduto=<?php echo $dp->idProduto; ?>&stPrincipal=<?php echo $dp->stPrincipal;?>"><?php echo $dp->Produto; ?></a>
+                    <a href="<?php echo $this->url(array('module' => 'parecer', 'controller'=> 'Analisarprojetoparecer','action' =>'produto'));?>?idPronac=<?php echo $dp->IdPRONAC; ?>&idProduto=<?php echo $dp->idProduto; ?>&stPrincipal=<?php echo $dp->stPrincipal;?>"><?php echo $dp->Produto; ?></a>
                 </td>
                 <td align="center">
                     <?php if ($dp->stPrincipal == 1) { ?><img title="Produto Principal" src="<?php echo $this->baseUrl();?>/public/img/passed.gif" /><?php } ?>

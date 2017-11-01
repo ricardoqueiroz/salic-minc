@@ -1,5 +1,5 @@
 <?php 
-   $linkProjetosProdutos = $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'projetosprodutos'));
+   $linkProjetosProdutos = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'projetosprodutos'));
 
     /* INICIO DA GUIA DE LINKS */
     $controller = 'Analisarprojetoparecer';
@@ -185,10 +185,10 @@
         <tr>
             <td><?php echo $contador; ?></td>
             <td align="center">
-                <a target="_blank" href="<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'index'),'',true); ?>?idPronac=<?php echo $d->IdPRONAC?>"><?php if($d->PRONAC != $rp) { echo $d->PRONAC; }else { echo ''; } ?></a>
+                <a target="_blank" href="<?php echo $this->url(array('module' => 'default',  'controller' => 'consultardadosprojeto', 'action' => 'index'),'',true); ?>?idPronac=<?php echo $d->IdPRONAC?>"><?php if($d->PRONAC != $rp) { echo $d->PRONAC; }else { echo ''; } ?></a>
             </td>
             <td><?php if($d->PRONAC != $rp) { echo $d->NomeProjeto; }else { echo ''; } ?></td>
-            <td><a href="<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a></td>
+            <td><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'produto')); ?>?idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>&idD=<?php echo $d->idDistribuirParecer; ?>" > <?php echo $d->dsProduto; ?></a></td>
 	    </td>       
             <td align="center"><?php if($d->stPrincipal == 1): ?><img src="<?php echo $this->baseUrl(); ?>/public/img/ok_16x16.png" width="20px" style="cursor: pointer;" title="Produto principal" alt="Produto principal" /><?php endif;?></td>
             <td align="center"><?php echo Data::tratarDataZend($d->DtDistribuicao, 'Brasileira'); ?></td>
@@ -196,7 +196,7 @@
 	    <td align="center"><img src="<?php echo $this->baseUrl(); ?>/public/img/<?php echo $diligenciado; ?>" title="<?php echo $Titlediligenciado; ?>" width="30px" onclick="window.open('<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&tpDiligencia=124')" style="cursor: pointer;" alt="Diligencia" /></td>	    
             <td align="center"><?php echo $d->tempoFimDiligencia; ?></td>
             <td align="center">
-	      <img src="<?php echo $this->baseUrl(); ?>/public/img/edit_ico.gif" style="cursor: pointer;" title="Histrico" alt="Histrico" onclick="redirecionar('<?php echo $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'historico', 'idPronac'=> $d->IdPRONAC, 'stPrincipal'=> $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>')" />
+	      <img src="<?php echo $this->baseUrl(); ?>/public/img/edit_ico.gif" style="cursor: pointer;" title="Histrico" alt="Histrico" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'historico', 'idPronac'=> $d->IdPRONAC, 'stPrincipal'=> $d->stPrincipal, 'idProduto' => $d->idProduto)); ?>')" />
             </td>
             <td align="center">
 <?php if(
@@ -217,6 +217,7 @@
                 <a class="btn waves-effect waves-light tooltipped small cyan"
                    href="<?php echo $this->url(
                                       array(
+                                      'module' => 'parecer',
                                       'controller' => 'analisarprojetoparecer',
                                       'action' => 'fecharparecer',
 				      'idPronac'=> $d->IdPRONAC,
@@ -247,12 +248,12 @@
                 </a>
 		<?php endif; ?>
 		<?php elseif(!$this->verificarIN2017($d->IdPRONAC)): ?>
-                <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif" onclick="redirecionar('<?php echo $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'fecharparecer', 'idPronac'=> $d->IdPRONAC, 'idD'=> $d->idDistribuirParecer, 'idProduto' => $d->idProduto, 'stPrincipal' => $d->stPrincipal)); ?>')" style="cursor: pointer;" title="Concluir An&aacute;lise" alt="Concluir An&aacute;lise" />
+                <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'fecharparecer', 'idPronac'=> $d->IdPRONAC, 'idD'=> $d->idDistribuirParecer, 'idProduto' => $d->idProduto, 'stPrincipal' => $d->stPrincipal)); ?>')" style="cursor: pointer;" title="Concluir An&aacute;lise" alt="Concluir An&aacute;lise" />
 		<?php endif; ?>
 <?php endif; ?>
             </td>
             <td align="center">
-	      <img id="img_encaminhar_parecer834782" style="cursor:pointer; " title="Declarar impedimento" src="/public/img/table_multiple.png" onclick="redirecionar('<?php echo $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'devolver-parecer'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&idD=<?php echo $d->idDistribuirParecer; ?>')">
+	      <img id="img_encaminhar_parecer834782" style="cursor:pointer; " title="Declarar impedimento" src="/public/img/table_multiple.png" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'devolver-parecer'))?>?idPronac=<?php echo $d->IdPRONAC ?>&idProduto=<?php echo $d->idProduto ;?>&situacao=<?php echo $d->situacao ;?>&idD=<?php echo $d->idDistribuirParecer; ?>')">
 	    </td>             
         </tr>
         <?php

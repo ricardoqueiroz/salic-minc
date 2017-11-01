@@ -1,8 +1,8 @@
 <?php
-$linkProjetosProdutos = $this->url(array('controller' => 'Analisarprojetoparecer', 'action' => 'projetosprodutos'));
+$linkProjetosProdutos = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'projetosprodutos'));
 
 $links = array();
-$links[] = array('Projetos/Produtos para An�lise' => array());
+$links[] = array('Projetos/Produtos para An&aacute;lise' => array());
 gerarBreadCrumb($links);
 ?>
 
@@ -64,7 +64,7 @@ gerarBreadCrumb($links);
 			        	break;
 			        case 2:
 			        	$diligenciado = "notice2.png";
-			        	$Titlediligenciado = "Diligencia n�o respondida";
+			        	$Titlediligenciado = "Diligencia n&atilde;o respondida";
 			        	break;
 			        case 3:
 			        	$diligenciado = "notice3.png";
@@ -82,6 +82,7 @@ gerarBreadCrumb($links);
 				</td>
 				<td><?php if($d->PRONAC != $rp){echo $d->NomeProjeto;}else{echo '';} ?></td>
 				<td><a href="<?php echo $this->url(array(
+				    'module' => 'parecer',
 					'controller' => 'Analisarprojetoparecer',
 					'action' => 'produto'
 					)); ?>?nrRelatorio=<?php echo '1'; ?>&idPronac=<?php echo $d->IdPRONAC; ?>&idProduto=<?php echo $d->idProduto; ?>&stPrincipal=<?php echo $d->stPrincipal; ?>" > <?php echo $d->dsProduto; ?></a></td>

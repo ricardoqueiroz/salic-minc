@@ -1,6 +1,6 @@
 <?php
-    $hrefAnalisedeconteudo = $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'analisedeconteudo'));
-    $hrefAlteraritemsolicitado = $this->url(array('controller' => 'analisarprojetoparecer', 'action' => 'alteraritemsolicitado'));
+    $hrefAnalisedeconteudo = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'analisedeconteudo'));
+    $hrefAlteraritemsolicitado = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'alteraritemsolicitado'));
 
     /* INICIO DA GUIA DE LINKS */
     $controller = 'analisarprojetoparecer';
@@ -118,5 +118,5 @@
 <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/tinymce/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/jquery/plugins/editorRico.js"></script>
 
-<script type="text/javascript" src="/public/scripts/default/analisarprojetoparecer/produto.js"></script>
+<script type="text/javascript" src="/public/scripts/parecer/analisarprojetoparecer/produto.js"></script>
 <script type="text/javascript">APPescolherArt_18(); APPescolherArt_26(); APPescolherLei_8313(); APPescolherArtigo3();</script>

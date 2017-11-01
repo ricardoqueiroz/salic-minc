@@ -1,4 +1,4 @@
-<form action="<?php echo $this->url(array('module'=> 'default','controller' => 'Analisarprojetoparecer', 'action'=>'projetosprodutos')); ?>" method="post" name="frmPaginacao" id="frmPaginacao<?php echo $this->nrRelatorio;?>">
+<form action="<?php echo $this->url(array('module'=> 'parecer','controller' => 'analisarprojetoparecer', 'action'=>'projetosprodutos')); ?>" method="post" name="frmPaginacao" id="frmPaginacao<?php echo $this->nrRelatorio;?>">
     <?php foreach($this->parametrosBusca as $name=>$value):?>
         <?php if(!is_array($value)): ?>
     <input type="hidden" name="<?php echo $name?>" id="<?php echo $name?>" value="<?php echo $value?>"/>
@@ -48,7 +48,7 @@
         $("#pag").val(pag);
         var array = $(form).serialize();
         $('#div_relatorio'+nrRelatorio).html('<table class="tabelaRelatorio" cellspacing="1" style="margin: 0;margin-left: 52px; width: 90%;  padding: 0px;"><tr><th>Carregando...</th><tr></table>');
-        $.post("<?php echo $this->baseUrl(); ?>/Analisarprojetoparecer/projetosprodutos",array,function(data){
+        $.post("<?php echo $this->baseUrl(); ?>/parecer/analisarprojetoparecer/projetosprodutos",array,function(data){
             $('#div_relatorio'+nrRelatorio).html(data);
         });
     }
