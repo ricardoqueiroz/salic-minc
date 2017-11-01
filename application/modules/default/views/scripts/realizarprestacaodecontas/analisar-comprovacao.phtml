@@ -25,7 +25,20 @@ function mascara($mask,$str){
 </div>
 <div id="titulo">
     <div>
-        Consultar item
+        Consultar item:
+        <?php switch($this->stItemAvaliado):case 4:  ?>
+            <strong>Aguardando Analise</strong>
+            <?php break;  ?>
+        <?php case 1:  ?>
+            <strong>Avaliado</strong>
+            <?php break;  ?>
+        <?php case 3:  ?>
+            <strong>Impugnados</strong>
+            <?php break;  ?>
+        <?php default:  ?>
+            <strong>Todos</strong>
+            <?php break;  ?>
+        <?php endswitch;  ?>
         <span class="voltar" style="float:right;"><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, /*'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao,*/ 'idPlanilhaItem' => $this->projeto->idPlanilhaItens, 'idRelatorio' => $this->idRelatorio ), '', true); ?>?itemAvaliadoFilter=<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('itemAvaliadoFilter'); ?>" title="Ir para p&aacute;gina anterior">Voltar</a></span>
     </div>
 </div>
@@ -282,6 +295,7 @@ function mascara($mask,$str){
                     </tr>
                     <tr>
                         <td colspan="6">
+                            <input type="hidden" value="<?php echo $this->stItemAvaliado; ?>" name="stItemAvaliado">
                             <input type="submit" class="btn_salvar" value="" style="margin: 0px 480px;">
                         </td>
                     </tr>

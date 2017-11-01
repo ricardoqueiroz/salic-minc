@@ -2681,14 +2681,11 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
     {
         $idPronac = $this->_request->getParam("idPronac");
         $idPlanilhaItem = $this->_request->getParam("idPlanilhaItem");
-        /* $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao"); */
-
         $uf = $this->getRequest()->getParam('uf');
         $municipio = $this->getRequest()->getParam('idmunicipio');
         $idPlanilhaEtapa = $this->getRequest()->getParam('idplanilhaetapa');
         $codigoProduto = $this->getRequest()->getParam('produto');
         $stItemAvaliado = $this->getRequest()->getParam('stItemAvaliado');
-
 
         $planilhaAprovacaoModel = new PlanilhaAprovacao();
 
@@ -2721,6 +2718,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
         $this->view->idPlanilhaAprovacao = $idPlanilhaAprovacao;
         $this->view->projeto = $projeto[0];
         $this->view->comprovantesPagamento = $comprovantes;
+        $this->view->stItemAvaliado = $stItemAvaliado;
     }
 
     /**
@@ -2759,12 +2757,9 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
     public function validaritemAction()
     {
         $auth = Zend_Auth::getInstance();
-
         $idPronac = $this->_request->getParam("idPronac");
         $idPlanilhaItem = $this->_request->getParam("idPlanilhaItem");
-        /* $idPlanilhaAprovacao = $this->_request->getParam("idPlanilhaAprovacao"); */
-        /* var_dump($this->getRequest()->getParam('comprovantePagamento'));die; */
-
+        $stItemAvaliado = $this->_request->getParam("stItemAvaliado");
         $redirector = $this->_helper->getHelper('Redirector');
         $redirector
             ->setExit(false)
@@ -2776,6 +2771,7 @@ class RealizarPrestacaoDeContasController extends MinC_Controller_Action_Abstrac
                     'idPronac' => $idPronac,
                     'idPlanilhaAprovacao' => $idPlanilhaAprovacao,
                     'idPlanilhaItem' => $idPlanilhaItem,
+                    'stItemAvaliado' => $stItemAvaliado,
                 )
             );
 
