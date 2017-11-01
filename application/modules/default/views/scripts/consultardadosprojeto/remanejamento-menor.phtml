@@ -236,7 +236,7 @@
                 idPlanilhaAprovacaoPai = $(this).attr('idPlanilhaAprovacaoPai'),
                 itemClicado = $(this);
                 
-            //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
+           //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
             $('.modalObrigatorios').each(function(){
                 $(this).css('border-color', '#CCCCCC');
                 $(this).val('');
@@ -346,7 +346,8 @@
                                     }
                                     
                                     if(parseInt($('#TotalCalculado').html().replace(/[^\d]/g, "")) > parseInt(valorMaximoValidacao)){
-                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que '+data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao+'.<br/>';
+                                        var valorMaximoFormatado = moeda.formatar(data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao/100);
+                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que R$ '+ valorMaximoFormatado +'.<br/>';
                                         erros++;
                                     }
 
@@ -440,9 +441,9 @@
                                                     itemClicado.parent().parent().find('.textJustificativa').html(Justificativa);
                                                     atualizarDiferencaDeValores();
                                                     atualizaDadosGrupos();
-<?php //if (!isset($this->idReadequacao)) { ?>
-                                                        window.location.reload();    
-<?php //} ?>
+
+                                                    window.location.reload();    
+
                                                     
                                                 }
                                                 
