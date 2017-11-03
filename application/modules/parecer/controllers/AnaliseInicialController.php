@@ -350,8 +350,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
         $this->validarPerfis();
 
-        $params = $this->_request->getParams();
-
         $auth = Zend_Auth::getInstance();
         $idusuario = $auth->getIdentity()->usu_codigo;
 
@@ -392,8 +390,8 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $aux[$key] = $projeto;
             }
 
-            $recordsFiltered = count($vwParecerista->listarTotal($where, $order, $start, $length, $search));
-            $recordsTotal = count($vwParecerista->listarTotal($where));
+            $recordsFiltered = $vwParecerista->listarTotal($where, $order, $start, $length, $search);
+            $recordsTotal = $vwParecerista->listarTotal($where);
         }
 
         $this->_helper->json(array(

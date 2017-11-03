@@ -4,13 +4,58 @@
         array('An&aacute;lise t&eacute;cnica inicial' => array())
     );
     ?>
+    <div class="row">
+        <div class="col s10">
+            <?php gerarBreadCrumb($links); ?>
+        </div>
+    </div>
     <div class="content padding20 clearfix">
-        <?php if ($this->qtdRegistro != 0){ ?>
-        <div class="row">
-            <div class="col s10">
-                <?php gerarBreadCrumb($links); ?>
+        <div class="">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <div  id="propostasCadastradas">
+                        <table class="bordered striped conteudoImprimivel" id="tabelaAnaliseFinal">
+                            <thead>
+                                <tr>
+                                    <th>Pronac</th>
+                                    <th>Nome do Projeto</th>
+                                    <th>Produto</th>
+                                    <th>Produto Principal</th>
+                                    <th>Data de Recebimento</th>
+                                    <th>Qtde. Dias</th>
+                                    <th class="center-align">Dilig&ecirc;ncia</th>
+                                    <th class="center-align">Hist&oacute;rico</th>
+                                    <th class="center-align">Impedimento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col s10">
+                <div class="row">
+                    <div class="col s2">
+                        <span class="btn small white-text green"><i class="material-icons">warning</i></span> A diligenciar
+                    </div>
+                    <div class="col s2">
+                        <span class="btn small white-text yellow"><i class="material-icons">warning</i></span> Diligenciado
+                    </div>
+                    <div class="col s3">
+                        <span class="btn small white-text blue"><i class="material-icons">warning</i></span> Dilig&ecirc;ncia respondida
+                    </div>
+                    <div class="col s3">
+                        <span class="btn small white-text orange"><i class="material-icons">warning</i></span> Dilig&ecirc;ncia n&atilde;o respondida
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <?php if ($this->qtdRegistro != 0){ ?>
         <div class="row">
             <div class="col s12">
 
@@ -248,31 +293,6 @@
     </div>
     </div>
 
-    <div class="content">
-        <div class="row">
-            <div class="col s12 m12 l12">
-                <div  id="propostasCadastradas">
-                    <table class="bordered striped conteudoImprimivel" id="tabelaAnaliseFinal">
-                        <thead>
-                            <tr>
-                                <th>Pronac</th>
-                                <th>Nome do Projeto</th>
-                                <th>Produto</th>
-                                <th>Produto Principal</th>
-                                <th>Data de Recebimento</th>
-                                <th>Qtde. Dias</th>
-                                <th>Dilig&ecirc;ncia</th>
-                                <th>Hist&oacute;rico</th>
-                                <th>Impedimento</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- ========== PAGINACAO========== -->
 <?php if ($this->qtdRegistro > 5) {
@@ -360,7 +380,8 @@
                     "serverSide": true,
                     "bFilter": false,
                     "aoColumnDefs": [
-                        {'bSortable': false, 'aTargets': [3]}
+                        {'bSortable': false, 'aTargets': [3]},
+                        {"className": "dt-center", "targets": [3,4,5,6,7,8]}
                     ],
                     "order": [[ 0, 'desc' ], [ 1, 'asc' ]],
                     "columns": [
@@ -368,7 +389,7 @@
                             data: null,
                             "name": "IdPRONAC",
                             render: function (data, type, row) {
-                                return '<a class="btn waves-effect waves-darrk white black-text small" href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaincentivofiscal', 'action' => 'identificacaodaproposta')); ?>/idPreProjeto/' + data.IdPRONAC + '">'
+                                return '<a class="" target="_blank" href="/default/consultardadosprojeto/index?idPronac=' + data.IdPRONAC + '">'
                                     + data.PRONAC + '</a>'
                             }
                         },
@@ -379,7 +400,13 @@
                         },
                         {
                             "name": "dsProduto",
-                            "data": "dsProduto"
+                            "data": "dsProduto",
+                            data: null,
+                            "name": "dsProduto",
+                            render: function (data, type, row) {
+                                return '<a class="" href="/parecer/analisarprojetoparecer/produto?idPronac=' + data.IdPRONAC + '&idProduto=' + data.idProduto + '&stPrincipal=' + data.stPrincipal + '&idD=' + data.idDistribuirParecer + '">'
+                                    + data.dsProduto + '</a>'
+                            }
 
                         },
                         {
