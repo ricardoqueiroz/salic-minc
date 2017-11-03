@@ -11,6 +11,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
     protected $_schema = 'SAC';
     protected $_banco = 'SAC';
 
+    const TIPO_PLANILHA_APROVADA = 3;
+    const TIPO_PLANILHA_REMANEJADA = 5;
+    const TIPO_PLANILHA_COMPLEMENTACAO_REDUCAO = 6;
+    
     public function somarPlanilhaAprovacao($idpronac, $elaboracao=null, $tpPlanilha=null, $where=array()) {
         $somar = $this->select();
         $somar->from(array('PAP' => $this->_name), array(
@@ -2030,7 +2034,8 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $select = $db->select();
-
+        $select->setIntegrityCheck(false);
+        
         $cols = [
             'cppa.idComprovantePagamento',
             'cppa.stItemAvaliado',
@@ -2312,6 +2317,73 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         $select->where('IdPRONAC = ?', $idpronac);
         $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
 
+    public function countPlanilhaRemanejamento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array($this->_name),
+            array(
+                'total' => New Zend_Db_Expr('count(idPlanilhaAprovacao)'),
+            ),
+            $this->_schema
+        );
+        
+        $select->where('idPronac = ?', $idPronac);
+        $select->where( 'tpPlanilha = ?', 'RP');
+        $select->where( 'stAtivo = ?', 'N');
+        
+        return $this->fetchAll($select);
+    }
+
+    public function visualizarPlanilhaEmRemanejamento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array('v' => 'vwVisualizarPlanilhaEmRemanejamento'),
+            array(
+                'v.idPronac',
+                'v.PRONAC',
+                'v.NomeProjeto',
+                'v.idProduto',
+                'v.idPlanilhaAprovacao',
+                'v.idPlanilhaAprovacaoPai',
+                'v.Produto',
+                'v.idEtapa',
+                'v.Etapa',
+                'v.tpGrupo',
+                'v.Item',
+                'v.idFonte',
+                'v.FonteRecurso',
+                'v.Unidade',
+                'v.Quantidade',
+                'v.Ocorrencia',
+                'v.vlUnitario',
+                'v.vlAprovado',
+                'v.vlComprovado',
+                'v.QtdeDias',
+                'v.UF',
+                'v.Municipio',
+                'v.dsJustificativa',
+                'v.idAgente',
+                'v.stAtivo',
+                'v.idReadequacao'
+            ),
+            $this->_schema
+        );
+
+        $select->where("v.idPronac = ?", $idPronac);
+        $select->order("v.FonteRecurso");
+        $select->order("v.Produto");
+        $select->order("convert(varchar(10), v.idEtapa) + ' - ' + v.Etapa");
+        $select->order("v.UF");
+        $select->order("v.Municipio");
+
+        $select->setIntegrityCheck(false);
+        
         return $this->fetchAll($select);
     }
 }

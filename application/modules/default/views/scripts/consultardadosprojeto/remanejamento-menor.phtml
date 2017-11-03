@@ -106,7 +106,7 @@
         
         $('#finalizarRemanejamento').click(function(){
             $("#alerta").dialog("destroy");
-            $("#alerta").html('Deseja realmente finalizar o remanejamento?<br /><br />Ap&oacute;s a confirma&ccedil;&atilde;o, voc&ecirc; n&atilde;o ter&aacute; mais acesso a essa funcionalidade.');
+            $("#alerta").html('Deseja realmente finalizar o remanejamento?<br /><br />');
             $("#alerta").dialog({
                 resizable: false,
                 title: 'Alerta!',
@@ -153,6 +153,7 @@
                         itemClicado.parent().parent().find('.textJustificativa').html('');
                         atualizarDiferencaDeValores();
                         atualizaDadosGrupos();
+                        window.location.reload();
                     } else {
                         //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
                         $("#modalItem").dialog('close');
@@ -191,6 +192,9 @@
                         $(this).dialog('close');
                     },
                     'Sim' : function(){
+                        $(".ui-dialog-buttonpane").html('<br/>');                            
+                        $("#alerta").html("Aguarde, reintegrando a planilha...");
+                        
                         $.ajax({
                             type: 'POST',
                             url: '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'remanejamento-reintegrar-planilha'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
@@ -232,7 +236,7 @@
                 idPlanilhaAprovacaoPai = $(this).attr('idPlanilhaAprovacaoPai'),
                 itemClicado = $(this);
                 
-            //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
+           //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
             $('.modalObrigatorios').each(function(){
                 $(this).css('border-color', '#CCCCCC');
                 $(this).val('');
@@ -248,7 +252,7 @@
                 url: '<?php echo $this->url(array('controller' => 'consultardadosprojeto', 'action' => 'remanejamento-alterar-item'), '', true); ?>?idPronac=<?php echo $this->idPronac; ?>',
                 data: {
                   idPlanilha: idPlanilhaAprovacao,
-                  idPlanilhaAprovacaoPai: idPlanilhaAprovacaoPai
+                    idPlanilhaAprovacaoPai: idPlanilhaAprovacaoPai
                 },
                 success: function(data){
                     
@@ -267,8 +271,8 @@
                         $('#campoDiasSolicitado').html(data.dadosPlanilhaAtiva.QtdeDias);
                         $('#campoTotalSolicitado').html(data.dadosPlanilhaAtiva.TotalSolicitado);
                         
-                        $('#campoValorMinimo').html(data.dadosPlanilhaAtiva.ValorMinimoProItem);
-                        $('#campoValorMaximo').html(data.dadosPlanilhaAtiva.ValorMaximoProItem);
+                        $('#campoValorMinimo').html(data.dadosPlanilhaOriginal.ValorMinimoProItem);
+                        $('#campoValorMaximo').html(data.dadosPlanilhaOriginal.ValorMaximoProItem);
                         $('#campoValorComprovado').html(data.valoresDoItem.vlComprovadoDoItem);
 
                         //$('#modalUnidade').val(data.dadosPlanilhaEditavel.idUnidade);
@@ -280,10 +284,10 @@
                         $('#TotalCalculado').html(data.dadosPlanilhaEditavel.TotalSolicitado);
                         
                         $('#campoIdPlanilha').attr('idPlanilha', idPlanilhaAprovacao);
-			$('#campoIdPlanilha').attr('idPlanilhaAprovacaoPai', idPlanilhaAprovacaoPai);
+                        $('#campoIdPlanilha').attr('idPlanilhaAprovacaoPai', idPlanilhaAprovacaoPai);
 
-                        var valorMinimoValidacao = data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao,
-                            valorMaximoValidacao = data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao,
+                        var valorMinimoValidacao = data.dadosPlanilhaOriginal.ValorMinimoProItemValidacao,
+                            valorMaximoValidacao = data.dadosPlanilhaOriginal.ValorMaximoProItemValidacao,
                             vlComprovadoDoItemValidacao = data.valoresDoItem.vlComprovadoDoItemValidacao,
                             valorParaMsgErro = data.dadosPlanilhaAtiva.TotalSolicitado,
                             mensagem = '';
@@ -325,6 +329,7 @@
                                     }
 
                                     var TotalCalculadoComponente = $('#TotalCalculado').html().replace(/[^\d]/g, "");
+                                    
                                     if(parseInt(TotalCalculadoComponente) < parseInt(vlComprovadoDoItemValidacao)){
                                         //$('#TotalCalculado').css('color','red');
                                         mensagem += '- O valor total do item n&atilde;o pode ser menor do que o valor comprovado de '+data.valoresDoItem.vlComprovadoDoItem+'.<br/>';
@@ -336,12 +341,13 @@
                                         erros++;
                                         var vlComp = parseInt(vlComprovadoDoItemValidacao+'00');
                                         if(vlComp < data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao){
-                                            mensagem += '- O valor total do item n&atilde;o pode ser menor que '+data.dadosPlanilhaAtiva.ValorMinimoProItem+'.<br/>';
+                                            mensagem += '- O valor total do item n&atilde;o pode ser menor que '+data.dadosPlanilhaAtiva.ValorMinimoProItemValidacao+'.<br/>';
                                         }
                                     }
                                     
-                                    if(parseInt(TotalCalculadoComponente).toFixed(2) > parseInt(valorMaximoValidacao)){
-                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que '+data.dadosPlanilhaAtiva.ValorMaximoProItem+'.<br/>';
+                                    if(parseInt($('#TotalCalculado').html().replace(/[^\d]/g, "")) > parseInt(valorMaximoValidacao)){
+                                        var valorMaximoFormatado = moeda.formatar(data.dadosPlanilhaAtiva.ValorMaximoProItemValidacao/100);
+                                        mensagem += '- O valor total do item n&atilde;o pode ser maior que R$ '+ valorMaximoFormatado +'.<br/>';
                                         erros++;
                                     }
 
@@ -435,6 +441,10 @@
                                                     itemClicado.parent().parent().find('.textJustificativa').html(Justificativa);
                                                     atualizarDiferencaDeValores();
                                                     atualizaDadosGrupos();
+
+                                                    window.location.reload();    
+
+                                                    
                                                 }
                                                 
                                                 //ABRE O MODAL DE CONFIRMA��O DA A��O REALIZADA
@@ -570,7 +580,7 @@
                 <?php /****** FIM VALOR ENTRE AS PLANILHAS ATIVA E REMANEJADA ******/ ?>
             </td>
             <td class="centro">
-                <img idPronac="<?php echo $this->idPronac; ?>" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Planilha" id="reintegrar-planilha" style="cursor: pointer">
+                <img idPronac="<?php echo $this->idPronac; ?>" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Planilha" id="reintegrar-planilha" style="cursor: pointer; display:<?php if (isset($this->idReadequacao)) { echo 'inline-block'; } else { echo 'none'; } ?>">
             </td>
         </tr>
     </table>
@@ -802,7 +812,7 @@
             <td id="campoDiasSolicitado" class="direita camposModal">&nbsp;</td>
             <td id="campoTotalSolicitado" class="direita camposModal">&nbsp;</td>
             <td class="centro">
-                <img idPlanilha="" idPlanilhaAprovacaoPai="" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Item" class="reintegrar" id="campoIdPlanilha" style="cursor: pointer">
+                <img idPlanilha="" idPlanilhaAprovacaoPai="" src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" title="Reintegrar Item" class="reintegrar" id="campoIdPlanilha" style="cursor: pointer; display:<?php if (isset($this->idReadequacao)) { echo 'inline-block'; } else { echo 'none'; } ?>">
             </td>
         </tr>
     </table>

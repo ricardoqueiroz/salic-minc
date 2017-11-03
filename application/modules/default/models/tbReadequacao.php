@@ -16,7 +16,11 @@ class tbReadequacao extends MinC_Db_Table_Abstract
     protected $_name = "tbReadequacao";
     protected $_primary = "idReadequacao";
 
-
+    const TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL = 1;
+    const PERCENTUAL_REMANEJAMENTO = 50;
+    const ST_ESTADO_EM_ANDAMENTO = 1;
+    const ST_ESTADO_FINALIZADO = 0;
+    
     /**
      * @param array $dados
      * @param integer $where
@@ -964,5 +968,31 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         } catch (Exception $objException) {
             throw new Exception($objException->getMessage(), 0, $objException);
         }
+    }
+
+    public function existeRemanejamento50EmAndamento($idPronac)
+    {
+        $tbReadequacao = new tbReadequacao();
+
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            'a.idReadequacao'            
+        );
+
+        $select->where('a.idPronac = ?', $idPronac);
+        $select->where('a.idTipoReadequacao=?', tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL);
+        $select->where('a.stAtendimento=?', 'D');
+        $select->where('a.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
+        $select->where('a.siEncaminhamento=?', 11);
+        
+        $remanejamentos = $this->fetchAll($select);
+        
+        if (count($remanejamentos) > 0) {
+            return true;
+        } else {
+            return false;
+        }        
     }
 }
