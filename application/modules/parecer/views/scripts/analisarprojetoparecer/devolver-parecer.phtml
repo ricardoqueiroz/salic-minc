@@ -1,11 +1,22 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        CKEDITOR.replace('justificativa', {toolbar: []});
-    });
+        $("#justificativa").editorRico({
+            altura: 200,
+            maxchar: 1000,
+            isLimitarCarateres : true,
+            toolbar: "undo redo"
+        });
 
+    });
     function devolver() {
-        var texto = CKEDITOR.instances['justificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, '');
+//        var texto = CKEDITOR.instances['justificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, '');
+
+
+
+        var elJustificativa = tinyMCE.get('justificativa');
+        
+        texto = elJustificativa.getContent();
 
         if (texto.length <= 11) {
             alertar('O campo justificativa deve ter no m&iacute;nimo 11 caracteres!');
@@ -27,7 +38,8 @@
                     'Sim': function () {
                         $('#txtDevolver').html('Aguarde...');
                         $(this).dialog('close');
-                        $('#justificativa').val(CKEDITOR.instances['justificativa'].getData());
+                        elJustificativa.setContent(texto);
+//                        $('#justificativa').val(texto);
                         $('#form').submit();
                         return false;
                     }
