@@ -2316,7 +2316,9 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
 
         $select->where('IdPRONAC = ?', $idpronac);
         $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
-
+        return $this->fetchAll($select);
+    }
+    
     public function countPlanilhaRemanejamento($idPronac)
     {
         $select = $this->select();
