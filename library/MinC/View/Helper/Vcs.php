@@ -22,14 +22,14 @@ class MinC_View_Helper_Vcs extends Zend_View_Helper_Abstract
     }
 
     /**
-     * Retorna a vers�o do projeto, seja branch ou tag
+     * Retorna a versao do projeto, seja branch ou tag
      */
     private function getGitFullVersion() {
         exec("git describe --tags --abbrev=0", $tagNumber);
         exec("git rev-parse --abbrev-ref HEAD", $branchName);
         exec("git rev-parse --short HEAD", $commit);
         
-        return "Branch|Tag: " . array_pop($branchName) . " - revis&atilde;o: <a class=\"tooltipped\" data-position=\"top\" data-delay=\"50\" data-tooltip=\"Ir para o changelog\" target=\"_blank\" href='http://git.cultura.gov.br/sistemas/novo-salic/blob/master/CHANGELOG'>" . array_pop($tagNumber) . "</a> / <a  class=\"tooltipped\" data-position=\"top\" data-delay=\"50\" data-tooltip=\"Ir para os arquivos alterados\"  target=\"_blank\" href='http://git.cultura.gov.br/sistemas/novo-salic/commit/" . current($commit) . "'>" . current($commit) . "</a>";
+        return "Branch|Tag: " . array_pop($branchName) . " - revis&atilde;o: <a class=\"tooltipped\" data-position=\"top\" data-delay=\"50\" data-tooltip=\"Ir para o changelog\" target=\"_blank\" href='https://github.com/culturagovbr/salic-minc/releases'>" . array_pop($tagNumber) . "</a> / <a  class=\"tooltipped\" data-position=\"top\" data-delay=\"50\" data-tooltip=\"Ir para os arquivos alterados\"  target=\"_blank\" href='https://github.com/culturagovbr/salic-minc/commit/" . current($commit) . "'>" . current($commit) . "</a>";
     }
 
     /**

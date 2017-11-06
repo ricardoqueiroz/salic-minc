@@ -3,10 +3,10 @@
         <?= $this->partial('/mensagem/partials/menu.phtml', $this); ?>
 
         <div class="col s10 m12 l10">
-            <h5>Responder solicita&ccedil;&atilde;o</h5>
+            <h4>Responder solicita&ccedil;&atilde;o</h4>
             <?= $this->partial('/mensagem/partials/form.phtml', $this->arrPartial); ?>
 
-            <h5>Encaminhar para o outro t&eacute;cnico</h5>
+            <h4>Encaminhar para o outro t&eacute;cnico</h4>
             <form method="post" data-ajax-form="true"
                   action="<?= $this->arrPartial['arrConfig']['actionredistribuirSolicitacao']; ?>">
                 <input name="idSolicitacao" type="hidden"

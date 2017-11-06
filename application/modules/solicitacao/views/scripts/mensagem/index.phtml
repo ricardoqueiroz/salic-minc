@@ -1,9 +1,15 @@
 <?php
-if (isset($this->proposta->idPreProjeto))
-    $params = "/idPreProjeto/" . $this->proposta->idPreProjeto;
+$params = '';
+if (isset($this->idPreProjeto))
+    $params = "/idPreProjeto/" . $this->idPreProjeto;
 
-if (isset($this->projeto->IdPRONAC))
-    $params = "/idPronac/" . $this->projeto->IdPRONAC;
+if (isset($this->idPronac))
+    $params = "/idPronac/" . $this->idPronac;
+
+if($this->listarTudo == true) {
+    $params .= "/listarTudo/1";
+}
+
 ?>
 
 <div class="container-fluid">
@@ -15,31 +21,50 @@ if (isset($this->projeto->IdPRONAC))
         <?php endif; ?>
 
         <div class="col s12 m12 l10">
-            <h5>
+            <h4>
                 Solicita&ccedil;&otilde;es
-                <?= ($this->proposta) ? '('.$this->proposta->NomeProjeto.')' : ''; ?>
-                <?= ($this->projeto) ? '('.$this->projeto->NomeProjeto.')' : ''; ?>
-            </h5>
+            </h4>
+            <?php if($this->idPronac) :  ?>
+                <div class="row">
+                    <div class="col s12">
+                        <b>Pronac: </b><?= $this->projeto->AnoProjeto . $this->projeto->Sequencial; ?><br>
+                    </div>
+                    <div class="col s12">
+                        <b>Título: </b><?= $this->projeto->NomeProjeto; ?>
+                    </div>
+                </div>
+            <?php elseif($this->idPreProjeto) : ?>
+                <div class="row">
+                    <div class="col s12">
+                        <b>Nº Proposta: </b><?= $this->proposta->idPreProjeto; ?><br>
+                    </div>
+                    <div class="col s12">
+                        <b>Título: </b><?= $this->proposta->NomeProjeto; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div id="container-list" class="container" style="width: 100%"
                  data-ajax-render='/solicitacao/mensagem/listar<?= $params; ?>'>
             </div>
 
             <?php if (isset($this->projeto->IdPRONAC) || $this->proposta->idPreProjeto): ?>
+                <?php if ($this->ehProponente) : ?>
+                    <div class="center-align padding20">
+                        <a id="btn_enviar"
+                           href="<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>"
+                           class="btn waves-effect waves-light bt_rascunho">Nova</a>
+                    </div>
 
-                <div class="center-align padding20">
-                    <a id="btn_enviar"
-                       href="<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>"
-                       class="btn waves-effect waves-light bt_rascunho">Nova</a>
-                </div>
-
-                <div class="fixed-action-btn animated bounceInUp">
-                    <a href="javascript:$3.redirect('<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>');"
-                       class="btn-floating btn-large tooltipped waves-effect waves-light" data-position="left"
-                       data-delay="50"
-                       data-tooltip="Escrever uma solicita&ccedil;&atilde;o">
-                        <i class="large material-icons">create</i>
-                    </a>
-                </div>
+                    <div class="fixed-action-btn animated bounceInUp">
+                        <a href="javascript:$3.redirect('<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>');"
+                           class="btn-floating btn-large tooltipped waves-effect waves-light" data-position="left"
+                           data-delay="50"
+                           data-tooltip="Escrever uma solicita&ccedil;&atilde;o">
+                            <i class="large material-icons">create</i>
+                        </a>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
     </div>

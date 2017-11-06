@@ -7,7 +7,15 @@
         <?php endif; ?>
 
         <div class="card col s10 m12 l10">
-            <h5>Enviar nova solicita&ccedil;&atilde;o Proponente</h5>
+
+            <h4>Enviar nova solicita&ccedil;&atilde;o Proponente</h4>
+
+            <?php if ($this->arrPartial['dataForm']['idSolicitacao'] && $this->arrPartial['ehProponente']) : ?>
+                <div class="msgALERT">
+                    <div>Solicitação salva como rascunho!</div>
+                </div>
+            <?php endif; ?>
+
             <?= $this->partial('/mensagem/partials/form.phtml', $this->arrPartial); ?>
         </div>
     </div>

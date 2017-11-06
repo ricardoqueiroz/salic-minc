@@ -11,6 +11,7 @@
                 <?php endif; ?>
                 <th data-field="" class="mensagem-situacao left-align">Situa&ccedil;&atilde;o</th>
                 <th data-field="id" class="mensagem-data center-align">Data</th>
+                <th class="center-align">#</th>
             </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                     <td>
                         <?php if (!empty($arrValue['Pronac'])) : ?>
                             <a class="waves-effect waves-teal btn small white"
+                               target="_blank"
                                href="<?= $this->url($arrayLinkProjeto, null, true); ?>"
                             ><?= $arrValue['Pronac']; ?></a>
 
@@ -62,7 +64,7 @@
                     </td>
                     <td>
                         <a href="<?php echo $this->url($arrayUrl, null, true); ?>">
-                            <?= $arrValue['dsSolicitacao']; ?>
+                            <?= substr(strip_tags($arrValue['dsSolicitacao']), 0 , 150); ?> ...
                         </a>
                     </td>
                     <?php if (!$this->ehProponente) : ?>
@@ -78,6 +80,14 @@
                         </a>
                     </td>
                     <td class="center-align"><?= date('d/m/Y', strtotime($arrValue['dtSolicitacao'])); ?></td>
+
+                    <td>
+                        <a class="btn blue small white-text tooltipped"
+                           data-tooltip="Responder solicita&ccedil;&atilde;o"
+                           href="<?php echo $this->url($arrayUrl, null, true); ?>">
+                            <i class="material-icons">visibility</i>
+                        </a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

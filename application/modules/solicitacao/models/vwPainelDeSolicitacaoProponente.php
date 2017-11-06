@@ -47,7 +47,7 @@ class Solicitacao_Model_vwPainelDeSolicitacaoProponente extends MinC_Db_Table_Ab
         return $db->fetchOne($select);
     }
 
-    public function buscar($where=array(), $order=array(), $tamanho=-1, $inicio=-1)
+    public function buscar($where=array(), $order=array('dtSolicitacao DESC'), $tamanho= 300, $inicio=-1)
     {
         $slct = $this->select();
         $slct->setIntegrityCheck(false);

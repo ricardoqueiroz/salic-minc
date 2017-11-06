@@ -14,6 +14,7 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
 
     public function indexAction()
     {
+        $this->view->listarTudo = $this->getRequest()->getParam('listarTudo', null);
     }
 
     /**
@@ -59,8 +60,8 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
         $this->_helper->layout->disableLayout();
         $idPronac = $this->getRequest()->getParam('idPronac', null);
         $idPreProjeto = $this->getRequest()->getParam('idPreProjeto', null);
+        $listarTudo = $this->getRequest()->getParam('listarTudo', null);
         $this->view->ehTecnico = false;
-
         $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
 
         $where = [];
@@ -77,9 +78,10 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
             $where["(idAgente = {$this->idAgente} OR idSolicitante = {$this->idUsuario})"] = '';
         }
 
+        # funcionarios do minc
         if (isset($this->usuario['usu_codigo'])) {
 
-            if (isset($this->grupoAtivo->codOrgao)) {
+            if(empty($listarTudo)) {
 
                 $grupos = new Autenticacao_Model_Grupos();
                 $tecnicos = $grupos->buscarTecnicosPorOrgao($this->grupoAtivo->codOrgao)->toArray();
@@ -89,14 +91,9 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
                 }
 
                 $where['idOrgao = ?'] = $this->grupoAtivo->codOrgao;
-
+                $where['siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
             }
 
-            if (isset($this->grupoAtivo->codOrgao)) {
-                $where['idOrgao = ?'] = $this->grupoAtivo->codOrgao;
-            }
-
-            $where['siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
         }
 
         $solicitacoes = $vwSolicitacoes->buscar($where);
@@ -275,8 +272,11 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
                 $mapperSolicitacao = new Solicitacao_Model_TbSolicitacaoMapper();
                 $idSolicitacao = $mapperSolicitacao->salvar($arrayForm);
 
-                if ($idSolicitacao) {
+                if ($arrayForm['siEncaminhamento'] == 1 && $idSolicitacao) {
                     $strUrl = '/solicitacao/mensagem/visualizar/id/' . $idSolicitacao . $strParams;
+                    $status = true;
+                } else {
+                    $strUrl = '/solicitacao/mensagem/solicitar' . $strParams;
                     $status = true;
                 }
 
