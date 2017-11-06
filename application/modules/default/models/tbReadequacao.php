@@ -40,8 +40,8 @@ class tbReadequacao extends MinC_Db_Table_Abstract
     const TIPO_READEQUACAO_SALDO_APLICACAO = 22;
     
     const PERCENTUAL_REMANEJAMENTO = 50;
-    const ST_ESTADO_EM_ANDAMENTO = 1;
-    const ST_ESTADO_FINALIZADO = 0;
+    const ST_ESTADO_EM_ANDAMENTO = 0;
+    const ST_ESTADO_FINALIZADO = 1;
     
     /**
      * @param array $dados

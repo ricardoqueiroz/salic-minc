@@ -3100,7 +3100,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosReadequacao['dsJustificativa'] = utf8_decode('Readequação até 50%');
                 $dadosReadequacao['stAtendimento'] = 'D';
                 $dadosReadequacao['siEncaminhamento'] = 11;
-                $dadosReadequacao['stEstado'] = 1;
+                $dadosReadequacao['stEstado'] = tbReadequacao::ST_ESTADO_EM_ANDAMENTO;
                 $idReadequacao = $tbReadequacao->inserir($dadosReadequacao);
                 
                 $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
@@ -3134,7 +3134,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                     $planilhaRP['nrFonteRecurso'] = $value['nrFonteRecurso'];
                     $planilhaRP['idUFDespesa'] = $value['idUFDespesa'];
                     $planilhaRP['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                    $planilhaRP['dsJustificativa'] = null;
+                    $planilhaRP['dsJustificativa'] = $value['dsJustificativa'];
                     $planilhaRP['idAgente'] = 0;
                     $planilhaRP['idPlanilhaAprovacaoPai'] = (!empty($value['idPlanilhaAprovacaoPai'])) ? $value['idPlanilhaAprovacaoPai'] : $value['idPlanilhaAprovacao'];
                     $planilhaRP['idReadequacao'] = $idReadequacao;
