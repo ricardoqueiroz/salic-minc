@@ -26,7 +26,6 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract {
         // verifica as permissoes
         $PermissoesGrupo = array();
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::PROPONENTE;
-        $PermissoesGrupo[] = Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO_POLITICAS_AUDIOVISUAIS;
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO;
 
         // pega o idAgente do usuário logado
@@ -1899,7 +1898,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract {
      */
     public function painelAction()
     {
-        if($this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO && $this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO && $this->idPerfil != Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO_POLITICAS_AUDIOVISUAIS && $this->idPerfil != Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO){
+        if($this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO && $this->idPerfil != Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO && $this->idPerfil != Autenticacao_Model_Grupos::DIRETOR_DEPARTAMENTO){
             parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal", "ALERT");
         }
 
