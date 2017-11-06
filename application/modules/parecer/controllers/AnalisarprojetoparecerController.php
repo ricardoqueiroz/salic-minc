@@ -1251,7 +1251,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
 
         $projetos = new Projetos();
 
-        $dadosProjetoProduto = $projetos->dadosFechar($this->getIdUsuario, $idPronac, $idDistribuirParecer);
+        $dadosProjetoProduto = $projetos->dadosFechar($idusuario, $idPronac, $idDistribuirParecer);
 
         $this->view->dados = $dadosProjetoProduto;
         $this->view->idpronac = $idPronac;

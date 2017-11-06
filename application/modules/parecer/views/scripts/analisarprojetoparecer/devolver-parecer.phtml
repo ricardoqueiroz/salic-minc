@@ -1,30 +1,30 @@
 <script type="text/javascript">
 
-    $(document).ready(function() {
-        CKEDITOR.replace( 'justificativa', { toolbar: [] } );
+    $(document).ready(function () {
+        CKEDITOR.replace('justificativa', {toolbar: []});
     });
 
-    function devolver(){
-        var texto = CKEDITOR.instances['justificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+    function devolver() {
+        var texto = CKEDITOR.instances['justificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g, '');
 
-        if (texto.length <= 11){
+        if (texto.length <= 11) {
             alertar('O campo justificativa deve ter no m&iacute;nimo 11 caracteres!');
             return false;
         } else {
-            
+
             $("#modal").html('Declarar impedimento?');
             $("#modal").dialog({
-                title : 'Alerta',
+                title: 'Alerta',
                 resizable: false,
-                width:350,
-                height:180,
+                width: 350,
+                height: 180,
                 modal: true,
-                autoOpen:false,
-                buttons : {
-                    'N\u00e3o' : function(){
+                autoOpen: false,
+                buttons: {
+                    'N\u00e3o': function () {
                         $(this).dialog('close');
                     },
-                    'Sim' : function(){
+                    'Sim': function () {
                         $('#txtDevolver').html('Aguarde...');
                         $(this).dialog('close');
                         $('#justificativa').val(CKEDITOR.instances['justificativa'].getData());
@@ -34,129 +34,127 @@
                 }
             });
             $("#modal").dialog('open');
-            
-           
         }
     }
 </script>
 
-<!-- ========== INA� CIO BREADCRUMB (LINKS TOPO) ========== -->
 <div id="modal"></div>
 <div id="total">
     <div id="breadcrumb">
         <ul>
-          <li><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
-	  <li><a href="<?php echo $this->url(array('module' => 'parecer','controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
-	  <li class="last">Declarar impedimento</li>
+            <li><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>"
+                   title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
+            <li>
+                <a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>"
+                   title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
+            <li class="last">Declarar impedimento</li>
         </ul>
     </div>
-    <!-- ========== FIM BREADCRUMB (LINKS TOPO)========== -->
-
-
-
-    <!-- ==========INA� CIO TA� TULO========== -->
 
     <div id="titulo">
         <div>Declarar impedimento <span class="voltar"><a href="javascript:voltar();">Voltar</a></span></div>
 
     </div>
 
-    <!-- ========== FIM TA� TULO ========== -->
-
-    <!-- ========== INA� CIO CONTEAšDO ==========-->
-
     <div id="conteudo">
-    <div id="confirma"></div>
-		<?php if($this->verifica15porcento == 0) { ?>
-    
-        <?php if ($this->totaldivulgacao != "true") { ?>
-            <div class="msgERROR">
-                <div class="float_right"></div>
-                <div>Aten&ccedil;&atilde;o! Custo de Divulga&ccedil;&atilde;o/Comercializa&ccedil;&atilde;o superior a 20% do valor total do projeto. Favor readequar os custos em <b><?php echo $this->formatarReal($this->valorRetirar); ?></b> para finalizar sua an&aacute;lise. <br> Favor verificar em todos os produtos que possuem esta etapa!</div>
-            </div>
-            <table class="tabela">
-	            <tr>
-	                <th width="100"><span><b>Pronac</b></span></th>
-	                <th width="350"><span><b>Nome do Projeto</b></span></th>
-	                <th><span><b>Produto</b></span></th>
-	            </tr>
-	            <tr>
-	                <td align="center"><?php echo $this->dados[0]->PRONAC; ?></td>
-	                <td align="center"><?php echo $this->dados[0]->NomeProjeto; ?></td>
-	                <td align="center"><?php echo $this->dados[0]->Produto; ?></td>
-	            </tr>
-	        </table>
-            <table class="tabela">
-                <tr>
-                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="window.location=('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'produto')); ?>');" /></td>                </tr>
-            </table>
-        <?php } else { ?>
-        <table class="tabela">
-            <tr>
-                <th width="100" align="left">Pronac</th>
-                <th width="350" align="left">Nome do Projeto</th>
-                <th align="left">Produto</th>
-            </tr>
-            <tr>
-                <td><?php echo $this->dados[0]->PRONAC; ?></td>
-                <td><?php echo $this->dados[0]->NomeProjeto; ?></td>
-                <td><?php echo $this->dados[0]->Produto; ?></td>
-            </tr>
-        </table>
-    
-        <form id="form" name="form" method="post" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'devolver-parecer'), '', true); ?>">
+        <div id="confirma"></div>
+        <?php if ($this->verifica15porcento == 0) { ?>
+
+            <?php if ($this->totaldivulgacao != "true") { ?>
+                <div class="msgERROR">
+                    <div class="float_right"></div>
+                    <div>Aten&ccedil;&atilde;o! Custo de Divulga&ccedil;&atilde;o/Comercializa&ccedil;&atilde;o superior
+                        a 20% do valor total do projeto. Favor readequar os custos em
+                        <b><?php echo $this->formatarReal($this->valorRetirar); ?></b> para finalizar sua an&aacute;lise.
+                        <br> Favor verificar em todos os produtos que possuem esta etapa!
+                    </div>
+                </div>
                 <table class="tabela">
                     <tr>
-                        <th>Observa&ccedil;&atilde;o</th>
+                        <th width="100"><span><b>Pronac</b></span></th>
+                        <th width="350"><span><b>Nome do Projeto</b></span></th>
+                        <th><span><b>Produto</b></span></th>
                     </tr>
                     <tr>
-                        <td>
-                            <textarea name="justificativa" id="justificativa" class="textarea_simples" rows="10" cols="170"></textarea>
+                        <td align="center"><?php echo $this->dados[0]->PRONAC; ?></td>
+                        <td align="center"><?php echo $this->dados[0]->NomeProjeto; ?></td>
+                        <td align="center"><?php echo $this->dados[0]->Produto; ?></td>
+                    </tr>
+                </table>
+                <table class="tabela">
+                    <tr>
+                        <td align="center"><input type="button" class="btn_voltar" style="width: 85px;"
+                                                  onclick="window.location=('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'produto')); ?>');"/>
                         </td>
                     </tr>
                 </table>
-                <input type="hidden" name="idProduto" value="<?php echo $this->dados[0]->idProduto; ?>"/>
-                <input type="hidden" name="idD" value="<?php echo $this->dados[0]->idDistribuirParecer; ?>"/>
-                <input type="hidden" id="idPronac" name="idPronac" value="<?php echo $this->dados[0]->IdPRONAC; ?>"/>
-                        
-                        
-                <div class="tabela" style="text-align: center;" id="txtDevolver">
-                    <input type="button" id="btnDevolver" class="btn_enviar" style="width: 85px;" onclick="devolver();" />
-                </div>
-        </form>
-        <?php } ?>
-        
+            <?php } else { ?>
+                <table class="tabela">
+                    <tr>
+                        <th width="100" align="left">Pronac</th>
+                        <th width="350" align="left">Nome do Projeto</th>
+                        <th align="left">Produto</th>
+                    </tr>
+                    <tr>
+                        <td><?php echo $this->dados[0]->PRONAC; ?></td>
+                        <td><?php echo $this->dados[0]->NomeProjeto; ?></td>
+                        <td><?php echo $this->dados[0]->Produto; ?></td>
+                    </tr>
+                </table>
+
+                <form id="form" name="form" method="post"
+                      action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'devolver-parecer'), '', true); ?>">
+                    <table class="tabela">
+                        <tr>
+                            <th>Observa&ccedil;&atilde;o</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <textarea name="justificativa" id="justificativa" class="textarea_simples" rows="10"
+                                          cols="170"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="idProduto" value="<?php echo $this->dados[0]->idProduto; ?>"/>
+                    <input type="hidden" name="idD" value="<?php echo $this->dados[0]->idDistribuirParecer; ?>"/>
+                    <input type="hidden" id="idPronac" name="idPronac"
+                           value="<?php echo $this->dados[0]->IdPRONAC; ?>"/>
+
+
+                    <div class="tabela" style="text-align: center;" id="txtDevolver">
+                        <input type="button" id="btnDevolver" class="btn_enviar" style="width: 85px;"
+                               onclick="devolver();"/>
+                    </div>
+                </form>
+            <?php } ?>
+
         <?php } else { ?>
 
-        <div class="msgALERT">
-			<div class="float_right"></div>
-			<div>O acerto dos custos administrativos s&aacute;o maiores que 15% do valor total do projeto.<br /> Favor ajustar <?php echo $this->formatarReal($this->verifica15porcento); ?>.</div>
-		</div>
-		<table class="tabela">
-            <tr>
-                <th width="100"><span><b>Pronac</b></span></th>
-                <th width="350"><span><b>Nome do Projeto</b></span></th>
-                <th><span><b>Produto</b></span></th>
-            </tr>
-            <tr>
-                <td align="center"><?php echo $this->dados[0]->PRONAC; ?></td>
-                <td align="center"><?php echo $this->dados[0]->NomeProjeto; ?></td>
-                <td align="center"><?php echo $this->dados[0]->Produto; ?></td>
-            </tr>
-        </table>
-        <table class="tabela">
+            <div class="msgALERT">
+                <div class="float_right"></div>
+                <div>O acerto dos custos administrativos s&atilde;o maiores que 15% do valor total do projeto.<br/>
+                    Favor ajustar <?php echo $this->formatarReal($this->verifica15porcento); ?>.
+                </div>
+            </div>
+            <table class="tabela">
                 <tr>
-                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;" onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true); ?>');" /></td>
+                    <th width="100"><span><b>Pronac</b></span></th>
+                    <th width="350"><span><b>Nome do Projeto</b></span></th>
+                    <th><span><b>Produto</b></span></th>
+                </tr>
+                <tr>
+                    <td align="center"><?php echo $this->dados[0]->PRONAC; ?></td>
+                    <td align="center"><?php echo $this->dados[0]->NomeProjeto; ?></td>
+                    <td align="center"><?php echo $this->dados[0]->Produto; ?></td>
+                </tr>
+            </table>
+            <table class="tabela">
+                <tr>
+                    <td align="center"><input type="button" class="btn_voltar" style="width: 85px;"
+                                              onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'index'), '', true); ?>');"/>
+                    </td>
                 </tr>
             </table>
         <?php } ?>
-        
     </div>
-    <!-- ========== FIM CONTEAšDO ========== -->
-
-    <!-- ========== INA� CIO RODAPA‰ DO CONTEAšDO ========== // -->
-
-    <div id="rodapeConteudo" ><span></span></div>
-    <!-- ========== FIM RODAP� DO CONTE�DO ========== -->
-    <br clear="all" />
 </div>
