@@ -3107,7 +3107,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosReadequacao['dsJustificativa'] = utf8_decode('Readequação até 50%');
                 $dadosReadequacao['stAtendimento'] = 'D';
                 $dadosReadequacao['siEncaminhamento'] = 11;
-                $dadosReadequacao['stEstado'] = 1;
+                $dadosReadequacao['stEstado'] = tbReadequacao::ST_ESTADO_EM_ANDAMENTO;
                 $idReadequacao = $tbReadequacao->inserir($dadosReadequacao);
                 
                 $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
