@@ -3141,7 +3141,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                     $planilhaRP['nrFonteRecurso'] = $value['nrFonteRecurso'];
                     $planilhaRP['idUFDespesa'] = $value['idUFDespesa'];
                     $planilhaRP['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                    $planilhaRP['dsJustificativa'] = null;
+                    $planilhaRP['dsJustificativa'] = $value['dsJustificativa'];
                     $planilhaRP['idAgente'] = 0;
                     $planilhaRP['idPlanilhaAprovacaoPai'] = (!empty($value['idPlanilhaAprovacaoPai'])) ? $value['idPlanilhaAprovacaoPai'] : $value['idPlanilhaAprovacao'];
                     $planilhaRP['idReadequacao'] = $idReadequacao;
