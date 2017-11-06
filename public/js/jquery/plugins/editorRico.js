@@ -10,6 +10,7 @@ jQuery.fn.editorRico = function (options) {
     var isDesabilitarEdicao = (typeof  options.isDesabilitarEdicao !== 'undefined') ? options.isDesabilitarEdicao : false;
     var idElemento = $(this).attr('id');
     var altura = (options.altura) ? options.altura : 500;
+    var toolbar = (typeof options.toolbar !== 'undefined') ? options.toolbar : "bold,italic,underline,color,forecolor backcolor,fontsizeselect";
 
     var metodos = {
         elemento: {},
@@ -34,7 +35,7 @@ jQuery.fn.editorRico = function (options) {
         paste_as_text: true,
         selector: '#' + idElemento,
         height: altura,
-        toolbar: "bold,italic,underline,color,forecolor backcolor,fontsizeselect",
+        toolbar: toolbar,
         menubar: "",
         readonly: isDesabilitarEdicao,
         mode: "specific_textareas",
