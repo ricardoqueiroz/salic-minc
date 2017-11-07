@@ -1,7 +1,7 @@
 <div class="container-fluid white">
     <div class="row">
-        <?php if ($this->idPreProjeto && $this->ehProponente) : ?>
-            <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto)); ?>
+        <?php if ($this->arrPartial['dataForm']['idProjeto'] && $this->ehProponente) : ?>
+            <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->arrPartial['dataForm']['idProjeto'] )); ?>
         <?php else: ?>
             <?= $this->partial('/mensagem/partials/menu.phtml', $this); ?>
         <?php endif; ?>

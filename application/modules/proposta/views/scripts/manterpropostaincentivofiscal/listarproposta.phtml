@@ -178,8 +178,12 @@
                             }
                         },
                         {
+                            data: null,
                             "name": "nomeprojeto",
-                            "data": "nomeprojeto"
+                            render: function (data, type, row) {
+                                return '<a class="" href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaincentivofiscal', 'action' => 'identificacaodaproposta')); ?>/idPreProjeto/' + data.idpreprojeto + '">'
+                                    + data.nomeprojeto + '</a>'
+                            }
 
                         },
                         {

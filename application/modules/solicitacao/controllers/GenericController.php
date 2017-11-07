@@ -43,7 +43,6 @@ abstract class Solicitacao_GenericController extends MinC_Controller_Action_Abst
             }
         }
 
-
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
 
         $arrAuth = array_change_key_case((array)$auth->getIdentity());
@@ -89,8 +88,6 @@ abstract class Solicitacao_GenericController extends MinC_Controller_Action_Abst
             }
 
             $this->ehProponente = true;
-
-
         }
 
         $this->usuario = $arrAuth;

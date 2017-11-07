@@ -59,7 +59,8 @@ form .browser-default {
     padding: .5rem .75rem;
     font-size: 1rem;
     line-height: 1.25;
-    color: #495057;
+    /*color: #495057;*/
+    color: #141517;
     background-color: #fff;
     background-image: none;
     background-clip: padding-box;

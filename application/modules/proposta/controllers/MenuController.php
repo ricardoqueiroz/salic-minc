@@ -1,15 +1,8 @@
 <?php
 
-
 class Proposta_MenuController extends Proposta_GenericController
 {
 
-    /**
-     * Reescreve o metodo init()
-     * @access public
-     * @param void
-     * @return void
-     */
     public function init()
     {
         parent::init();

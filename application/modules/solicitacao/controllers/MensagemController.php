@@ -15,6 +15,7 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
     public function indexAction()
     {
         $this->view->listarTudo = $this->getRequest()->getParam('listarTudo', null);
+        $this->view->existeSolicitacaoEnviadaNaoRespondida = self::verificarSolicitacaoEnviadaNaoRespondida($this->idPreProjeto, $this->idPronac);
     }
 
     /**
@@ -447,5 +448,26 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
         }
 
         $this->_helper->json(array('status' => true, 'msg' => $resultado));
+    }
+
+    public function verificarSolicitacaoEnviadaNaoRespondida($idPreProjeto = null, $idPronac = null)
+    {
+        $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
+        $where = [
+            'dtResposta IS NULL' => '',
+            'siEncaminhamento' => Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC
+        ];
+
+        if($idPreProjeto) {
+            $where['idProjeto'] = $idPreProjeto;
+        }
+
+        if($idPronac) {
+            $where['idPronac'] = $idPronac;
+        }
+
+        return $vwSolicitacoes->findBy($where);
+
+
     }
 }

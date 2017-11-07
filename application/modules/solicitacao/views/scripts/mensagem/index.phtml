@@ -48,15 +48,22 @@ if($this->listarTudo == true) {
                  data-ajax-render='/solicitacao/mensagem/listar<?= $params; ?>'>
             </div>
 
-            <?php if (isset($this->projeto->IdPRONAC) || $this->proposta->idPreProjeto): ?>
+            <?php if(!empty($this->existeSolicitacaoEnviadaNaoRespondida)) : ?>
+                <div class="center-align padding20">
+                    <a href="javascript:void(0)"
+                       onload="(function(e){ alert(e); })(event)"
+                       class="btn disabled">Nova Solicita&ccedil;&atilde;o</a>
+                </div>
+                <div class="message"><span>Você já possui uma solicitação aguardando resposta!</span></div>
+            <?php elseif (isset($this->projeto->IdPRONAC) || $this->proposta->idPreProjeto): ?>
                 <?php if ($this->ehProponente) : ?>
                     <div class="center-align padding20">
                         <a id="btn_enviar"
                            href="<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>"
-                           class="btn waves-effect waves-light bt_rascunho">Nova</a>
+                           class="btn waves-effect waves-light bt_rascunho">Nova Solicita&ccedil;&atilde;o</a>
                     </div>
 
-                    <div class="fixed-action-btn animated bounceInUp">
+                    <div class="fixed-action-btn animated bounceInUp pulse">
                         <a href="javascript:$3.redirect('<?= $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'solicitar', 'idPronac' => $this->projeto->IdPRONAC, 'idPreProjeto' => $this->proposta->idPreProjeto)); ?>');"
                            class="btn-floating btn-large tooltipped waves-effect waves-light" data-position="left"
                            data-delay="50"
