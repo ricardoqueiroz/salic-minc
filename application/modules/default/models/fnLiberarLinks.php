@@ -117,7 +117,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
        $PercentualCaptado = $db->fetchRow($PercentualCaptado);
 
        $PercentualCaptado = ($PercentualCaptado->dado) ? $PercentualCaptado->dado : 0;
-
+       
        # Verificar se há diligência para responder
         $vDiligencia = $db->select()
            ->from('tbDiligencia',
@@ -311,7 +311,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
                     $this->_schema)
                 ->where('a.idPronac = ?', $idPronac)
                 ->where('b.idTipoReadequacao = ?', 1)
-                ->where('a.siEncaminhamento == ?', 11)
+                ->where('a.siEncaminhamento = ?', 11)
                 ->where('a.stEstado = ?', tbReadequacao::ST_ESTADO_EM_ANDAMENTO);
             
             $readequacao50Ativa = $db->fetchAll($readequacao50Ativa);
@@ -326,7 +326,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
                     $this->_schema)
                 ->where('a.idPronac = ?', $idPronac)
                 ->where('b.idTipoReadequacao = ?', 2)
-                ->where('a.siEncaminhamento == <>', 15)
+                ->where('a.siEncaminhamento <> ?', 15)
                 ->where('a.stEstado = ?', tbReadequacao::ST_ESTADO_EM_ANDAMENTO);
             
             $remanejamentoEmAnalise = $db->fetchAll($remanejamentoEmAnalise);
@@ -334,9 +334,9 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             if(
                 $PercentualCaptado > 20 &&
                 $contaLiberada == 'S' &&
-                $dataAtualBanco >= $dadosProjeto->DtFinalExecucao &&
-                !$readequacao50Ativa &&
-                !$remanejamentoEmAnalise
+                $dataAtualBanco <= $dadosProjeto->DtFinalExecucao &&
+                !empty($readequacao50Ativa) &&
+                !empty($remanejamentoEmAnalise)
             ) {
                 $ReadequacaoPlanilha = 1;
             } else {
@@ -436,9 +436,9 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             if(
                 $PercentualCaptado > 20 &&
                 $contaLiberada == 'S' &&
-                $dataAtualBanco >= $dadosProjeto->DtFinalExecucao &&
-                !$readequacao50Ativa &&
-                !$remanejamentoEmAnalise
+                $dataAtualBanco <= $dadosProjeto->DtFinalExecucao &&
+                !empty($readequacao50Ativa) &&
+                !empty($remanejamentoEmAnalise)
             ) {
                 $ReadequacaoPlanilha = 1;
             } else {
