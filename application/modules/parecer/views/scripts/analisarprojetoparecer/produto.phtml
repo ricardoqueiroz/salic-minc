@@ -2,20 +2,18 @@
     $hrefAnalisedeconteudo = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'analisedeconteudo'));
     $hrefAlteraritemsolicitado = $this->url(array('module' => 'parecer', 'controller' => 'Analisarprojetoparecer', 'action' => 'alteraritemsolicitado'));
 
-    /* INICIO DA GUIA DE LINKS */
     $controller = 'analisarprojetoparecer';
     $links = array();
     $links[] = array('Projetos/Produtos para An&aacute;lise' => array('module' => 'parecer' , 'controller' => 'analise-inicial', 'action' => 'index'));
     $links[] = array('An&aacute;lise do Produto' => array());
 
-    /* FIM DA GUIA DE LINKS */
 ?>
-<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/ckeditor/_samples/sample.js"></script>
-<link type="text/css" rel="stylesheet" href="<?php echo $this->baseUrl(); ?>/public/js/ckeditor/_samples/sample.css" />
-
 <div class="container-fluid">
-    <!-- ========== INICIO BREADCRUMB (LINKS TOPO) ========== -->
+    <div id="dialog-valor" class="sumir" title="Valor Inv&aacute;lido">
+        <div class="msgERROR">
+            <div>Valor de remanejamento maior que o permitido! M&aacute;ximo : <span id="valorpossivelApresentacao"></span></div>
+        </div>
+    </div>
     <div class="row" >
         <div class="col s12">
             <div id="breadcrumb">
@@ -28,77 +26,65 @@
             </div>
         </div>
     </div>
+
     <div class="row" >
         <div class="col s12">
             <h3 class="left">An&aacute;lise do Produto </h3>
             <a class="btn right" href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>#produto_<?= $this->projeto->idProduto?>" title="P&aacute;gina Anterior">Voltar</a>
         </div>
     </div>
-    <div id="dialog-valor" class="sumir" title="Valor Inv&aacute;lido">
-        <div class="msgERROR">
-            <div>Valor de remanejamento maior que o permitido! M&aacute;ximo : <span id="valorpossivelApresentacao"></span></div>
-        </div>
-    </div>
-    <div class="row" >
+
+    <div class="row">
         <div class="col s12">
-            <h4>An&aacute;lise de Conte&uacute;do do Projeto Nr: <?php echo $this->projeto->PRONAC; ?> - <?php echo $this->projeto->NomeProjeto; ?></h4>
-            <h5>Produto
-                <?php if ($this->projeto->stPrincipal): ?>
-                    Principal
-                <?php else:  ?>
-                    Secundario
-                <?php endif;  ?>
+            <h4>Projeto: <?= $this->projeto->PRONAC; ?> - <?= $this->projeto->NomeProjeto; ?></h4>
+            <h5>Produto <?= ($this->projeto->stPrincipal) ? 'Principal' : 'Secund&aacute;rio'; ?>
                : <?php echo $this->projeto->dsProduto; ?>
             </h5>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
-          <ul class="tabs">
-            <li class="tab col s3"><a class="active" href="#test1">An&aacute;lise de conte&uacute;do</a></li>
-            <li class="tab col s3"><a href="#test2">An&aacute;lise de custos</a></li>
-                <li
-                    class="tab col s3
-                            <?php if(!(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA))): ?>
-                                disabled text-gray grey lighten-2
-                            <?php endif; ?>
-                ">
-                    <a href="#test3">Dados dos Produtos Secund&aacute;rios</a></li>
-                <li class="tab col s3
-                            <?php if(!(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0))): ?>
-                                disabled grey lighten-2
-                            <?php endif; ?>
-                ">
-                    <a href="#test4">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
+            <ul class="tabs tabs-fixed-width">
+                <li class="tab">
+                    <a href="#tab_analise_conteudo">An&aacute;lise de conte&uacute;do</a>
                 </li>
-          </ul>
+                <li class="tab">
+                    <a href="#tab_analise_custo">An&aacute;lise de custos</a>
+                </li>
+                <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                    <li class="tab">
+                        <a href="#tab_produtos_secundarios">Dados dos Produtos Secund&aacute;rios</a>
+                    </li>
+                <?php endif; ?>
+                <li class="tab <?= !(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)) ? 'disabled' : ''; ?>">
+                    <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
+                </li>
+            </ul>
         </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div id="test1" class="col s12">
-                <?php echo $this->partial('produto/analise-conteudo.phtml', 'parecer', $this); ?>
+        <div id="tab_analise_conteudo" class="col s12">
+            <?php echo $this->partial('produto/analise-conteudo.phtml', 'parecer', $this); ?>
+        </div>
+
+        <div id="tab_analise_custo" class="col s12">
+            <?php echo $this->partial('produto/analise-custo.phtml', 'parecer', $this); ?>
+        </div>
+        <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+            <div id="tab_produtos_secundarios" class="col s12">
+               <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
             </div>
-            <div id="test2" class="col s12">
-                <?php echo $this->partial('produto/analise-custo.phtml', 'parecer', $this); ?>
-            </div>
-            <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                <div id="test3" class="col s12">
-                    <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
-                </div>
-            <?php endif; ?>
+        <?php endif; ?>
+        <div id="tab_consolidacao" class="col s12">
             <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)): ?>
-                <div id="test4" class="col s12">
-                    <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
-               </div>
+                <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>
-        <!-- MODAL -->
-        <div id="alteraritemsolicitado" link="<?php echo $hrefAlteraritemsolicitado; ?>" style="display: none;"></div>
-        <div id="confirmacao" style="display: none;"></div>
-        <!-- FIM MODAL -->
     </div>
 </div>
+
+<!-- MODAL -->
+<div id="alteraritemsolicitado" link="<?php echo $hrefAlteraritemsolicitado; ?>" style="display: none;"></div>
+<div id="confirmacao" style="display: none;"></div>
+<!-- FIM MODAL -->
 
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>
@@ -113,9 +99,6 @@
 <input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>" />
 <input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?php echo $this->vlSolicitado;?>" />
 <input type="hidden" name="idProduto" id="idProduto" value="<?php echo $this->projeto->idProduto; ?>" />
-
-<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/tinymce/js/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/public/js/jquery/plugins/editorRico.js"></script>
 
 <script type="text/javascript" src="/public/scripts/parecer/analisarprojetoparecer/produto.js"></script>
 <script type="text/javascript">APPescolherArt_18(); APPescolherArt_26(); APPescolherLei_8313(); APPescolherArtigo3();</script>

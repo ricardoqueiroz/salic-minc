@@ -45,7 +45,6 @@ form select.browser-default {
     /*width: 100%;*/
 }
 
-
 form label {
     display: inline-block;
     margin-bottom: .5rem;
@@ -88,6 +87,10 @@ form small {
     line-height: 1.5;
 }
 
+form label small {
+    color: #212529;
+}
+
 form span.spanError,
 form span.error {
     color: #f44336;
@@ -105,7 +108,6 @@ form input[type="radio"] {
 }
 
 form .row {
-    margin-bottom: 5px;
 }
 form .select-wrapper input.select-dropdown {
     margin-bottom: 5px;
@@ -336,6 +338,37 @@ x - Botões
     text-indent: -2000px;
 }
 
+
+/*--------------------------------------------------------------
+x - TABS
+--------------------------------------------------------------*/
+.tabs .tab a {
+    background: #fff;
+    color: #212121;
+}
+
+.tabs .tab a:hover,
+.tabs .tab a.active {
+    background-color: #c8e6c9;
+    color: #212121;
+}
+
+.tabs .tab.disabled a,
+.tabs .tab.disabled a:hover {
+    color: #868484;
+    background-color: #e0e0e0;
+}
+
+.tabs .indicator {
+    background-color: #4caf50;
+}
+
+@media screen and (max-width: 768px) {
+    .tabs .tab {
+        width: 100%;
+        float: left;
+    }
+}
 /*--------------------------------------------------------------
 x - FORMULÁRIOS
 --------------------------------------------------------------*/
