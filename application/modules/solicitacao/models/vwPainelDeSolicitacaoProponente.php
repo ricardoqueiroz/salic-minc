@@ -77,6 +77,7 @@ class Solicitacao_Model_vwPainelDeSolicitacaoProponente extends MinC_Db_Table_Ab
             }
             $slct->limit($tamanho, $tmpInicio);
         }
+
         return $this->fetchAll($slct);
     }
 

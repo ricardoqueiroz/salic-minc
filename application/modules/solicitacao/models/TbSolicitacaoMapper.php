@@ -30,7 +30,9 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
         $where['idSolicitante = ?'] = $this->_idUsuario;
         $where['stEstado = ?'] = 1;
 
-        return $this->findBy($where);
+        $vwSolicitacao = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
+        return $vwSolicitacao->buscar($where)->current()->toArray();
+
     }
 
     public function isValid($model)
