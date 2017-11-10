@@ -56,9 +56,11 @@
                         <a href="#tab_produtos_secundarios">Dados dos Produtos Secund&aacute;rios</a>
                     </li>
                 <?php endif; ?>
-                <li class="tab <?= !(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)) ? 'disabled' : ''; ?>">
-                    <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
-                </li>
+                <?php if($this->stPrincipal == 1) : ?>
+                    <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
+                        <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
         <div id="tab_analise_conteudo" class="col s12">
@@ -73,11 +75,14 @@
                <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
             </div>
         <?php endif; ?>
-        <div id="tab_consolidacao" class="col s12">
-            <?php if(($this->stPrincipal == 1) && ($this->produtosSecundariosEmAnalise == 0)): ?>
-                <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
-            <?php endif; ?>
-        </div>
+
+        <?php if($this->stPrincipal == 1) : ?>
+            <div id="tab_consolidacao" class="col s12">
+                <?php if($this->produtosSecundariosEmAnalise == 0) : ?>
+                    <?php echo $this->partial('produto/consolidacao.phtml', 'parecer', $this); ?>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
