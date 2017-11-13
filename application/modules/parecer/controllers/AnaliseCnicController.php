@@ -24,7 +24,34 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
     
     public function gerenciarAssinaturasAction()
     {
-        $this->redirect("/areadetrabalho");
+        $url = Zend_Controller_Front::getInstance()->getRequest()->getServer('HTTP_REFERER');
+        $url_get_idpronac = preg_split('/\/([0-9]{6,7})/', $url, -1, PREG_SPLIT_DELIM_CAPTURE);
+        
+        if (is_numeric($url_get_idpronac[1])) {
+            $idPronac = $url_get_idpronac[1];
+        } else {
+            $url_get_iddocumentoassinatura = preg_split('/\=([0-9]*)\&/', $url, -1, PREG_SPLIT_DELIM_CAPTURE);
+            if (is_numeric($url_get_iddocumentoassinatura[1])) {
+                $idDocumentoAssinatura = $url_get_iddocumentoassinatura[1];
+                $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();                
+                
+                $result = $objModelDocumentoAssinatura->find(
+                    array(
+                        'idDocumentoAssinatura = ?', $idDocumentoAssinatura
+                    )
+                );
+                if (count($result) > 0) {
+                    $idPronac = $result[0]['IdPRONAC'];
+                    print $idPronac;
+                }
+            }
+        }
+        
+        if ($idPronac) {
+            $this->redirect("/parecer/analise-cnic/emitirparecer/idpronac/$idPronac");
+        } else {
+                $this->redirect("/areadetrabalho");
+        }        
     }
 
     public function encaminharAssinaturaAction()
@@ -143,12 +170,13 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
         //CASO O COMPONENTE QUEIRA SALVAR O SEU PARECER - FIM
 
         if (isset($_POST['idpronac'])) {
+            $this->fecharAssinatura($idPronac);
+            
             $this->readequarProjetoAprovadoNaCNIC();
         }        
         
         //FINALIZAR ANALISE - JUSTIFICATIVA DE PLENARIA - INICIO
         if (isset($_POST['justificativaenvioplenaria'])) {
-
             /**** CODIGO DE READEQUACAO ****/
             //SE O PROJETO FOR DE READEQUACAO e a DECISAO FOR DE APROVACAO - INATIVA A ANTIGA PLANILHA 'CO' e ATIVA A 'CO' READEQUADA
             if ($this->bln_readequacao == "true") {
@@ -156,8 +184,7 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
                 // encerra
             }
             /**** FIM CODIGO DE READEQUACAO ****/
-            
-            // revisar variáveis
+
             $this->incluirNaPauta($idPronac, $ConsultaReuniaoAberta);
             
         } // fecha if
@@ -248,7 +275,7 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
     private function incluirNaPauta($idPronac, $ConsultaReuniaoAberta) {
         $post = Zend_Registry::get('post');
 
-        $codSituacao = ($this->bln_readequacao == "false") ? 'D03' : 'D02';
+        $codSituacao = ($this->bln_readequacao == "false") ? 'D50' : 'D02';
         $stEnvioPlenaria = isset($post->stEnvioPlenaria) ? 'S' : 'N';
         $justificativa = $post->justificativaenvioplenaria;
         $TipoAprovacao = $post->decisao;
@@ -277,12 +304,9 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
                 );
                 
                 $tblPauta->inserir($dados);
-                $dadosprojeto = array(
-                    'Situacao' => $situacao,
-                    'DtSituacao' => $dtsituacao,
-                    'ProvidenciaTomada' => $providencia
-                    );
-                $tblProjetos->alterar($dadosprojeto, 'IdPRONAC = ' . $idPronac);
+                
+                $ProvidenciaTomada = 'Projeto apreciado pela Comissão Nacional de Incentivo à Cultura - ';
+                $tblProjetos->alterarSituacao($idPronac, '', $situacao, $ProvidenciaTomada);
                 parent::message("Projeto cadastrado na Pauta com sucesso!", "areadetrabalho/index", "CONFIRM");
                 $this->_helper->viewRenderer->setNoRender(TRUE);
             } else {
@@ -811,5 +835,36 @@ class Parecer_AnaliseCnicController extends MinC_Controller_Action_Abstract impl
             $this->_helper->viewRenderer->setNoRender(TRUE);
         }
     }
-    
+
+    private function fecharAssinatura($idPronac)
+    {
+        $idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_CNIC;
+        
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $idPerfilDoAssinante = $GrupoAtivo->codGrupo;
+        $idOrgaoDoAssinante = $GrupoAtivo->codOrgao;
+        
+        try {
+            $tbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
+            $objAtoAdministrativo = $tbAtoAdministrativo->obterAtoAdministrativoAtual($idTipoDoAtoAdministrativo, $idPerfilDoAssinante, $idOrgaoDoAssinante);
+            if (count($objAtoAdministrativo) > 0) { 
+                $idAtoAdministrativo = $objAtoAdministrativo['idAtoAdministrativo'];
+                
+                $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+                $data = array(
+                    'cdSituacao' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_FECHADO_PARA_ASSINATURA
+                );
+                $where = array(
+                    'IdPRONAC = ?' => $idPronac,
+                    'idTipoDoAtoAdministrativo = ?' => $idTipoDoAtoAdministrativo,
+                    'idAtoDeGestao = ?' => $idAtoAdministrativo,
+                    'cdSituacao = ?' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA,
+                    'stEstado = ?' => Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO
+                );
+                $objModelDocumentoAssinatura->update($data, $where);
+            }
+        } catch (Zend_Exception $ex) {
+            parent::message("Erro ao concluir " . $ex->getMessage(), "parecer/analise-cnic/emitirparecer/$idPronac", "ERROR");
+        }
+    }
 }

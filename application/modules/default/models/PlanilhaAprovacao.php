@@ -11,6 +11,10 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
     protected $_schema = 'SAC';
     protected $_banco = 'SAC';
 
+    const TIPO_PLANILHA_APROVADA = 3;
+    const TIPO_PLANILHA_REMANEJADA = 5;
+    const TIPO_PLANILHA_COMPLEMENTACAO_REDUCAO = 6;
+    
     public function somarPlanilhaAprovacao($idpronac, $elaboracao=null, $tpPlanilha=null, $where=array()) {
         $somar = $this->select();
         $somar->from(array('PAP' => $this->_name), array(
@@ -33,7 +37,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         foreach ($where as $coluna => $valor) {
             $somar->where($coluna, $valor);
         }
-        
+
         //$somar->where('aa.tpAnalise = ?', $tpPlanilha); //(condigo antigo) retirado pois nao estava atualizando os custos adminitrativos
         return $this->fetchRow($somar);
     }
@@ -60,7 +64,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         foreach ($where as $coluna => $valor) {
             $somar->where($coluna, $valor);
         }
-        
+
         return $this->fetchRow($somar);
     }
 
@@ -79,7 +83,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         if ($outras) {
             $somar->where('FonteRecurso <> ?', $outras);
         }
-        
+
         return $this->fetchRow($somar);
     }
 
@@ -666,7 +670,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         $selectFinal->setIntegrityCheck(false);
         $selectFinal->from($select, array("vlComprovado","valor"));
         $selectFinal->where('vlComprovado>valor');
-        
+
         return $this->fetchAll($selectFinal);
     }
 
@@ -883,7 +887,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         );
 
         $select->where('pa.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
-         /* echo $select;die; */ 
+         /* echo $select;die; */
         return $db->fetchAll($select);
     }
 
@@ -1198,7 +1202,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         foreach ($where as $chave => $valor) {
             $select->where($chave, $valor);
         }
-        
+
         return $this->fetchAll($select);
     }
 
@@ -1307,7 +1311,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
                 'CID.Descricao'
                 )
         );
-        
+
         return $this->fetchAll($select);
     }
 
@@ -1828,7 +1832,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
      * @param null $itemAvaliadoFilter
      * @return Zend_Db_Table_Rowset_Abstract
      */
-	public function buscarItensPagamentoCustoProduto($idpronac, $itemAvaliadoFilter = null, $uf = null, 
+	public function buscarItensPagamentoCustoProduto($idpronac, $itemAvaliadoFilter = null, $uf = null,
 		$idPlanilhaEtapa = null, $codigoProduto = null, $idMunicicpio = null)
     {
         $select = $this->select()->distinct();
@@ -2030,7 +2034,8 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $select = $db->select();
-
+        $select->setIntegrityCheck(false);
+        
         $cols = [
             'cppa.idComprovantePagamento',
             'cppa.stItemAvaliado',
@@ -2110,8 +2115,279 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract {
         $select->where('pAprovacao.IdPRONAC = ?', $idpronac);
         $select->where('pAprovacao.idPlanilhaItem = ?', $idPlanilhaItem);
         $select->where('cppa.stItemAvaliado is not null');
-        /* echo $select;die; */ 
+        /* echo $select;die; */
 
         return $db->fetchAll($select);
+    }
+
+    public function buscarItensPagamentoDadosView($idpronac, $itemAvaliadoFilter = null)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoProdutoEtapaUFCidade'),
+            [
+                '*', 'Etapa as descEtapa', 'Uf as uf',
+                'Cidade as cidade', 'cdEtapa  as idPlanilhaEtapa',
+                'cdProduto as Codigo', 'idMunicipio as  idMunicipio'
+            ],
+            $this->_schema
+        );
+        $select->where('IdPRONAC = ?', $idpronac);
+        /* echo $select; */
+
+        return $this->fetchAll($select);
+    }
+
+    public function vwComprovacaoFinanceiraProjeto($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, 
+        $idMunicipio = null, $tpCusto = null, $idPlanilhaItem = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoFinanceiraProjeto'),
+            ['*', 'Pronac as PRONAC', 'Item as NomeItem'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        if($idPlanilhaEtapa){
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        if($tpCusto){
+            $select->where('tpCusto = ?', $tpCusto);
+        }
+
+        if($idPlanilhaItem){
+            $select->where('idPlanilhaItens = ?', $idPlanilhaItem);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+
+	public function vwComprovacaoProjetoSemAnalise($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto=null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoSemAnalise'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if($uf){
+            $select->where('Uf = ?', $uf);
+        }
+
+        if($idMunicipio){
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+
+        if($idPlanilhaEtapa){
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
+        }
+        if($tpCusto){
+            $select->where('tpCusto = ?', $tpCusto);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+	public function vwComprovacaoProjetoAvaliada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto=null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoAvaliada'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if ($uf) {
+            $select->where('Uf = ?', $uf);
+        }
+
+        if ($idMunicipio) {
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+        if ($tpCusto) {
+            $select->where('tpCusto = ?', $tpCusto);
+        }
+
+        if ($codigoProduto || $codigoProduto == 0) {
+            $select->where('cdProduto = ?', $codigoProduto);
+        }
+
+        if ($idPlanilhaEtapa) {
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+
+        return $this->fetchAll($select);
+    }
+
+    public function vwComprovacaoProjetoRecusada($idpronac, $uf = null, $idPlanilhaEtapa = null, $codigoProduto = null, $idMunicipio = null, $tpCusto = null)
+    {
+        $select = $this->select()->distinct();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoProjetoRecusada'),
+            ['*'],
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?', $idpronac);
+
+        if ($uf) {
+            $select->where('Uf = ?', $uf);
+        }
+
+        if ($idMunicipio) {
+            $select->where('cdCidade = ?', $idMunicipio);
+        }
+        if ($tpCusto) {
+            $select->where('tpCusto = ?', $tpCusto);
+        }
+        if ($idPlanilhaEtapa) {
+            $select->where('cdEtapa = ?', $idPlanilhaEtapa);
+        }
+
+        $select->order('tpCusto desc');
+        $select->order('Produto');
+        $select->order('cdEtapa');
+        $select->order('Uf');
+        $select->order('Cidade');
+        /* echo $select;die; */
+        return $this->fetchAll($select);
+    }
+
+    public function vwComprovacaoFinanceiraProjetoPorItemOrcamentario($idpronac, $idPlanilhaItem, $stItemAvaliado = null)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('vwComprovacaoFinanceiraProjetoPorItemOrcamentario'),
+            [
+                '*',
+                'nmFornecedor as Descricao',
+                'nrCNPJCPF as CNPJCPF',
+                'dtPagamento as dtEmissao' ,
+                'dsJustificativaProponente as dsJustificativa',
+                'dsOcorrenciaDoTecnico as ocorrencia'
+            ],
+            $this->_schema
+        );
+
+        if ($stItemAvaliado) {
+            $select->where('stItemAvaliado = ?', $stItemAvaliado);
+        }
+
+        $select->where('IdPRONAC = ?', $idpronac);
+        $select->where('idPlanilhaItem = ?', $idPlanilhaItem);
+
+        return $this->fetchAll($select);
+    }
+        
+    public function countPlanilhaRemanejamento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array($this->_name),
+            array(
+                'total' => New Zend_Db_Expr('count(idPlanilhaAprovacao)'),
+            ),
+            $this->_schema
+        );
+        
+        $select->where('idPronac = ?', $idPronac);
+        $select->where( 'tpPlanilha = ?', 'RP');
+        $select->where( 'stAtivo = ?', 'N');
+        
+        return $this->fetchAll($select);
+    }
+
+    public function visualizarPlanilhaEmRemanejamento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        
+        $select->from(
+            array('v' => 'vwVisualizarPlanilhaEmRemanejamento'),
+            array(
+                'v.idPronac',
+                'v.PRONAC',
+                'v.NomeProjeto',
+                'v.idProduto',
+                'v.idPlanilhaAprovacao',
+                'v.idPlanilhaAprovacaoPai',
+                'v.Produto',
+                'v.idEtapa',
+                'v.Etapa',
+                'v.tpGrupo',
+                'v.Item',
+                'v.idFonte',
+                'v.FonteRecurso',
+                'v.Unidade',
+                'v.Quantidade',
+                'v.Ocorrencia',
+                'v.vlUnitario',
+                'v.vlAprovado',
+                'v.vlComprovado',
+                'v.QtdeDias',
+                'v.UF',
+                'v.Municipio',
+                'v.dsJustificativa',
+                'v.idAgente',
+                'v.stAtivo',
+                'v.idReadequacao'
+            ),
+            $this->_schema
+        );
+
+        $select->where("v.idPronac = ?", $idPronac);
+        $select->order("v.FonteRecurso");
+        $select->order("v.Produto DESC");
+        $select->order("convert(varchar(10), v.idEtapa) + ' - ' + v.Etapa");
+        $select->order("v.UF");
+        $select->order("v.Municipio");
+        $select->order("v.Item");
+
+        $select->setIntegrityCheck(false);
+        
+        return $this->fetchAll($select);
     }
 }

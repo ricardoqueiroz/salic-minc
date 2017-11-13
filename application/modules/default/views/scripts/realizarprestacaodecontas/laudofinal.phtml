@@ -3,7 +3,7 @@
         <div class="col s2">
             <?php echo $this->partial("realizarprestacaodecontas/inc/menu.inc.php", $this); ?>
         </div>
-        <div class="col s10">
+        <div class="col s10" id="pagina">
             <style>
                 .tabela p { font: 12px/14pt "Trebuchet MS",Georgia,"Times New Roman",Times,serif; }
             </style>
@@ -134,10 +134,8 @@
         <li class="last">Laudo final de presta&ccedil;&atilde;o de contas</li>
     </ul>
 </div>
-
 <h5 class="left">Laudo final de presta&ccedil;&atilde;o de contas</h5>
 <a class="btn right" href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria'),'',true) , "?idPronac={$this->idPronac}"; ?>" title="Ir para p&aacute;gina anterior">Voltar</a>
-
 <div>
     <form id="formLaudoFinal" method="post" target="_blank">
         <input type="hidden" name="idPronac" id="idPronac" value="<?php echo $this->idPronac;?>" />

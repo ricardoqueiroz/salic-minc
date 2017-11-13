@@ -41,7 +41,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
         $Analise = 0;
         $Execucao = 0;
         $PrestacaoDeContas = 0;
-        $Readequacao_20 = 0;
+        $Readequacao_50 = 0;
         $SolicitarProrrogacao = 0;
         $Marcas = 0;
         $ReadequacaoPlanilha = 0;
@@ -279,7 +279,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             $SolicitarProrrogacao = 1;
             $Marcas = 1;
 
-            /* ===== CHECAR SE EXISTE READEQUAÇÃO DE 20% ===== */
+            /* ===== CHECAR SE EXISTE READEQUAÇÃO DE 50% ===== */
             $vReadequacao = $db->select()
                 ->from(array('a' => 'tbReadequacao'),
                     array(new Zend_Db_Expr('TOP 1 idPronac')),
@@ -289,12 +289,15 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
                     array(''),
                     $this->_schema)
                 ->where('a.idPronac = ?', $idPronac)
-                ->where('b.idTipoReadequacao = ?', 1);
+                ->where('b.idTipoReadequacao = ?', 2)
+                ->where('a.siEncaminhamento = ?', 15)
+                ->where('a.stEstado = ?', 1);
+            
             $vReadequacao = $db->fetchAll($vReadequacao);
             if(!$vReadequacao->idPronac){
-                $Readequacao_20 = 1;
+                $Readequacao_50 = 1;
             } else {
-                $Readequacao_20 = 0;
+                $Readequacao_50 = 0;
             }
 
             /* ===== CHECAR SE EXISTE READEQUAÇÃO DE PLANILHA ORÇAMENTÁRIA @todo melhoras as variaveis ===== */
@@ -341,7 +344,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             $relatorioCumprimentoEnvio = $db->fetchRow($relatorioCumprimentoEnvio);
 
             if($relatorioCumprimentoEnvio->idCumprimentoObjeto) {
-                $Readequacao_20 = 0;
+                $Readequacao_50 = 0;
                 $Readequacao = 0;
                 $ComprovacaoFinanceira = 0;
                 $RelatorioTrimestral = 0;
@@ -369,7 +372,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             $Marcas = 0;
             $SolicitarProrrogacao = 0;
             $Readequacao = 0;
-            $Readequacao_20 = 0;
+            $Readequacao_50 = 0;
             $ComprovacaoFinanceira = 1;
             $RelatorioTrimestral = 0;
             $RelatorioFinal = 1;
@@ -378,7 +381,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
 
             $situacoesPlanilha = array('E13', 'E15', 'E23', 'E74', 'E75');
             if(in_array($dadosProjeto->Situacao,$situacoesPlanilha)){
-               $Readequacao_20 = 1;
+               $Readequacao_50 = 1;
                $Readequacao = 1;
             }
 
@@ -399,7 +402,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
                     $ComprovacaoFinanceira = 1;
                 }
             } else {
-                /* ===== CHECAR SE EXISTE READEQUAÇAO DE 20% ===== */
+                /* ===== CHECAR SE EXISTE READEQUAÇAO DE 50% ===== */
                 $readequacaoFase5 = $db->select()
                     ->from(array('a' => 'tbReadequacao'),
                         array(new Zend_Db_Expr('TOP 1 a.idTipoReadequacao')),
@@ -409,12 +412,14 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
                         array(''),
                         $this->_schema)
                     ->where('a.idPronac = ?', $idPronac)
-                    ->where('b.idTipoReadequacao = ?', 1);
+                    ->where('b.idTipoReadequacao = ?', 2)
+                    ->where('a.siEncaminhamento = ?', 15)
+                    ->where('a.stEstado = ?', 1);                    
                 $readequacaoFase5 = $db->fetchRow($readequacaoFase5);
                 if (!$readequacaoFase5->idTipoReadequacao) {
-                    $Readequacao_20 = 1;
+                    $Readequacao_50 = 1;
                 } else {
-                    $Readequacao_20 = 0;
+                    $Readequacao_50 = 0;
                 }
             }
 
@@ -455,7 +460,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract {
             $Fase = 5;
         }
 
-        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_20 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha");
+        $permissao = array('links'=>"$Permissao - $Fase - $Diligencia - $Recursos - $Readequacao - $ComprovacaoFinanceira - $RelatorioTrimestral - $RelatorioFinal - $Analise - $Execucao - $PrestacaoDeContas - $Readequacao_50 - $Marcas - $SolicitarProrrogacao - $ReadequacaoPlanilha");
 
         return (object) $permissao;
     }

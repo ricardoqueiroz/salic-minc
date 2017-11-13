@@ -11,20 +11,35 @@ function mascara($mask,$str){
 ?>
 <script type="text/javascript" src="<?php echo $this->baseUrl();?>/public/js/tinymce/js/tinymce/tinymce.min.js"></script>
 <?php echo $this->partial("realizarprestacaodecontas/inc/menu.inc.php", $this); ?>
+<?php //var_dump( $this->projeto); ?>
+
 <div id="breadcrumb">
     <ul>
        <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para p&aacute;gina inicial">Início</a></li>
         <?php if ($this->grupoAtivo != 121) { //Tecnico de Acompanhamento ?>
             <li class=""><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'tecnicoprestacaocontas'));?>">Analisar presta&ccedil;&atilde;o de contas</a></li>
         <?php } ?>
-        <li class=""><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, 'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao, 'idPlanilhaItem' => $this->projeto->idPlanilhaItens), '', true); ?>">Planilha or&ccedil;amentária comprovada</a></li>
+        <li class=""><a href="<?php //echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, 'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao, 'idPlanilhaItem' => $this->projeto->idPlanilhaItens), '', true); ?>">Planilha or&ccedil;amentária comprovada</a></li>
         <li class="last">Analisar item</li>
     </ul>
 </div>
 <div id="titulo">
     <div>
-        Consultar item
-        <span class="voltar" style="float:right;"><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, 'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao, 'idPlanilhaItem' => $this->projeto->idPlanilhaItens, 'idRelatorio' => $this->idRelatorio ), '', true); ?>?itemAvaliadoFilter=<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('itemAvaliadoFilter'); ?>" title="Ir para p&aacute;gina anterior">Voltar</a></span>
+        Consultar item:
+        <?php switch($this->stItemAvaliado):case 4:  ?>
+            <strong>Aguardando Analise</strong>
+            <?php break;  ?>
+        <?php case 1:  ?>
+            <strong>Avaliado</strong>
+            <?php break;  ?>
+        <?php case 3:  ?>
+            <strong>Impugnados</strong>
+            <?php break;  ?>
+        <?php default:  ?>
+            <strong>Todos</strong>
+            <?php break;  ?>
+        <?php endswitch;  ?>
+        <span class="voltar" style="float:right;"><a href="<?php echo $this->url(array('controller' => 'realizarprestacaodecontas', 'action' => 'planilhaorcamentaria', 'idPronac' => $this->projeto->IdPRONAC, /*'idPlanilhaAprovacao' => $this->projeto->idPlanilhaAprovacao,*/ 'idPlanilhaItem' => $this->projeto->idPlanilhaItens, 'idRelatorio' => $this->idRelatorio ), '', true); ?>?itemAvaliadoFilter=<?php echo Zend_Controller_Front::getInstance()->getRequest()->getParam('itemAvaliadoFilter'); ?>" title="Ir para p&aacute;gina anterior">Voltar</a></span>
     </div>
 </div>
 <div id="conteudo">
@@ -146,7 +161,7 @@ function mascara($mask,$str){
             </tr>
             <tr>
                 <td class="destacar" align="right"><b>Produto:</b></td>
-                <td><?php echo $this->projeto->Produto;?></td>
+                <td><?php //var_dump($this->projeto) ?><?php echo $this->projeto->Produto;?></td>
                 <td class="destacar" align="right"><b>Etapa:</b></td>
                 <td><?php echo $this->projeto->Etapa;?></td>
                 <td class="destacar" align="right"><b>Item de Custo:</b></td>
@@ -207,7 +222,7 @@ function mascara($mask,$str){
                     </tr>
                     <tr>
                         <td class="destacar" align="right"><b>Comprovante</b></td>
-                        <td style="width: 175px;"><?php echo $this->tipoComprovante[$comprovante->tpDocumento];?></td>
+                        <td style="width: 175px;"><?php echo $comprovante->tpDocumento;?></td>
                         <td class="destacar" align="right"><b>Número</b></td>
                         <td><?php echo $comprovante->nrComprovante;?></td>
                         <td class="destacar" align="right"><b id="nmSerieTxt">S&eacute;rie</b></td>
@@ -219,11 +234,12 @@ function mascara($mask,$str){
                         <td class="destacar" align="right"><b>Forma de Pagamento</td>
                         <td>
                             <?php
-                                switch ($comprovante->tpFormaDePagamento) {
-                                    case 1: echo 'Cheque'; break;
-                                    case 2: echo 'Transferência Bancária'; break;
-                                    case 3: echo 'Saque/Dinheiro'; break;
-                                }
+                                echo $comprovante->tpFormaDePagamento;
+                                /* switch ($comprovante->tpFormaDePagamento) { */
+                                /*     case 1: echo 'Cheque'; break; */
+                                /*     case 2: echo 'Transferência Bancária'; break; */
+                                /*     case 3: echo 'Saque/Dinheiro'; break; */
+                                /* } */
                             ?>
                         </td>
                         <td class="destacar" align="right" style="width: 155px;"><b>N&ordm; Documento Pagamento</td>
@@ -279,6 +295,7 @@ function mascara($mask,$str){
                     </tr>
                     <tr>
                         <td colspan="6">
+                            <input type="hidden" value="<?php echo $this->stItemAvaliado; ?>" name="stItemAvaliado">
                             <input type="submit" class="btn_salvar" value="" style="margin: 0px 480px;">
                         </td>
                     </tr>
@@ -306,7 +323,6 @@ function mascara($mask,$str){
 <br clear="all" />
 
 <div id="rodapeConteudo" ><span></span></div>
-<!-- ========== FIM RODAPÉ DO CONTEÚDO ========== -->
 <br clear="all" />
 
 <style>

@@ -502,10 +502,8 @@ endif;
                                             <tr class="item" <?php echo $planilha['reducao'] == 1 ? "style='color : red;'" : 0; ?> id="scroll<?php echo $planilha['idPlanilhaAprovacao']; ?>">
                                                 <td><?php echo $item; ?></td>
                                                 <td>
-						  <?php if(array_key_exists($produto,$this->produtosFavoraveis) && !$this->VerificarIN2017($this->projeto->IdPRONAC)): ?>
+						  <?php if(array_key_exists($produto,$this->produtosFavoraveis)): ?>
                                                         <a <?php echo $planilha['nrFonteRecurso'] == 109 ? "class='linkplanilha' valor='".$planilha['idPlanilhaAprovacao']."' style='text-decoration: underline; cursor:pointer;'" : '' ?> idPlanilhaAprovacao ="<?php echo $planilha['idPlanilhaAprovacao']; ?>"  idProduto="<?php echo $planilha['idProduto']; ?>"  idEtapa="<?php echo $planilha['idEtapa']; ?>" idPlanilhaItem="<?php echo $planilha['idPlanilhaItem']; ?>" etapa="<?php echo $etapa; ?>"  name="<?php echo $planilha['idPlanilhaAprovacao']; ?>" ><?php echo $planilha['item']; ?></a>
-                                                    <?php else: ?>
-                                                        <?php echo $planilha['item']; ?>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td><?php echo $this->formatarReal($planilha['vlproponente']); ?></td>
