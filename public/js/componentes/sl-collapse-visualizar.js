@@ -10,7 +10,7 @@ Vue.component('sl-collapse-visualizar', {
                   </div>
                 </li>
             </ul>
-            <>
+            <div v-else>carregando...</div>
         </div>
     `,
     data: function() {
