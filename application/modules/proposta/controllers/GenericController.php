@@ -122,10 +122,11 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
         $this->idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
 
-        if (!empty($this->idPreProjeto)) {
+        self::buscarProposta();
 
-            $this->_proposta = $this->buscarProposta($this->idPreProjeto);
-            $this->_proponente = $this->buscarProponente($this->_proposta['idagente']);
+        if ($this->_proposta) {
+
+            $this->_proponente = self::buscarProponente($this->_proposta['idagente']);
 
             $this->view->idPreProjeto = $this->idPreProjeto;
             $this->view->proposta = $this->_proposta;
@@ -168,6 +169,7 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
             # VERIFICA SE A PROPOSTA ESTA COM O MINC
             $Movimentacao = new Proposta_Model_DbTable_TbMovimentacao();
+
             $rsStatusAtual = $Movimentacao->buscarStatusAtualProposta($this->idPreProjeto);
             $this->view->movimentacaoAtual = isset($rsStatusAtual['Movimentacao']) ? $rsStatusAtual['Movimentacao'] : '';
         }
@@ -188,17 +190,16 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         return false;
     }
 
-    private function buscarProposta($idPreProjeto)
+    private function buscarProposta()
     {
+        if ($this->idPreProjeto) {
+            $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
+            $proposta = $tblPreProjeto->buscar(array('idPreProjeto = ?' => $this->idPreProjeto))->current();
 
-        $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
-        $proposta = $tblPreProjeto->buscar(array('idPreProjeto = ?' => $idPreProjeto))->current();
-
-        if ($proposta) {
-            $proposta = array_change_key_case($proposta->toArray());
-            return $proposta;
+            if ($proposta) {
+                $this->_proposta = array_change_key_case($proposta->toArray());
+            }
         }
-        return false;
     }
 
     public function isEditarProposta($idPreProjeto)

@@ -1,0 +1,161 @@
+<div id="container" class="container-fluid">
+    <identificacao-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></identificacao-proposta>
+
+
+    <ul class="collapsible" data-collapsible="accordion">
+        <li>
+            <div class="collapsible-header"><i class="material-icons">filter_drama</i>Hist&oacute;rico</div>
+            <div class="collapsible-body">
+                <historico-avaliacoes idpreprojeto="<?= $this->idPreProjeto; ?>"></historico-avaliacoes>
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<script type="text/x-template" id="identificacao-da-proposta">
+    <div class="dados-basicos">
+       <fieldset>
+           <legend>Identifica&ccedil;&atilde;o</legend>
+            <div class="row">
+                <div class="col s12 l3 m3">
+                    <b>Nº da proposta</b><br>
+                    {{ proposta.idpreprojeto }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>Pronac</b><br>
+                   {{ proposta.pronac }}
+               </div>
+               <div class="col s12 l3 m6">
+                   <b>Nome Projeto</b><br>
+                   {{ proposta.nomeprojeto }}
+               </div>
+           </div>
+       </fieldset>
+       <fieldset>
+           <legend>Informa&ccedil;&otilde;es complementares</legend>
+           <div class="row">
+               <div class="col s12 l3 m3">
+                   <b>Mecanismo</b><br>
+                   {{ proposta.mecanismo }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>In&iacute;cio Execu&ccedil;&atilde;o</b><br>
+                   {{ proposta.dtiniciodeexecucaoform }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>Final Execu&ccedil;&atilde;o</b><br>
+                   {{ proposta.dtfinaldeexecucaoform }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>Dt. Fixa</b><br>
+                   {{ proposta.stdatafixa}}
+               </div>
+           </div>
+           <div class="divider"></div>
+           <div class="row">
+               <div class="col s12 l3 m3">
+                   <b>Ag&ecirc;ncia banc&aacute;ria</b><br>
+                   {{ proposta.agenciabancaria }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>É proposta audiovisual</b><br>
+                   {{ proposta.areaabrangencia }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>Prorroga&ccedil;&atilde;o autom&aacute;tica</b><br>
+                   {{ proposta.tpprorrogacao }}
+               </div>
+               <div class="col s12 l3 m3">
+                   <b>Tipo de execu&ccedil;&atilde;o</b><br>
+                   {{ proposta.stproposta }}
+               </div>
+           </div>
+       </fieldset>
+        <fieldset>
+            <legend>Tombamento</legend>
+            <div class="row">
+                <div class="col s12 l4 m4">
+                    <b>Nº Ato</b><br>
+                    {{ proposta.nratotombamento }}
+                </div>
+                <div class="col s12 l4 m4">
+                    <b>Dt. Ato</b><br>
+                    {{ proposta.dtatotombamentoform }}
+                </div>
+                <div class="col s12 l4 m4">
+                    <b>Esfera</b><br>
+                    {{ proposta.esferatombamento }}
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</script>
+
+<script type="text/x-template" id="historico-avaliacoes">
+    <div class="historico">
+        <div class="row">
+            <div class="col s12 l3 m3">
+                <b>Nº da proposta</b><br>
+                {{ proposta.idpreprojeto }}
+            </div>
+            <div class="col s12 l3 m3">
+                <b>Pronac</b><br>
+                {{ proposta.pronac }}
+            </div>
+            <div class="col s12 l3 m6">
+                <b>Nome Projeto</b><br>
+                {{ proposta.nomeprojeto }}
+            </div>
+        </div>
+    </div>
+</script>
+
+<script src="/public/js/vue.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    Vue.component('identificacao-proposta', {
+        template: '#identificacao-da-proposta',
+        data: function() {
+            return {
+                proposta:[]
+            }
+        },
+        props: ['idpreprojeto'],
+        mounted: function() {
+            vue = this;
+            $3.ajax({
+                url: '/proposta/visualizar/identificacao/idPreProjeto/' + vue.idpreprojeto
+            }).done( function(data) {
+                vue.proposta = data.data;
+            });
+        },
+        methods: {}
+    });
+
+    Vue.component('historico-avaliacoes', {
+        template: '#historico-avaliacoes',
+        data: function() {
+            return {
+                historico:[]
+            }
+        },
+        props: ['idpreprojeto'],
+        mounted: function() {},
+        methods: {
+            carregar_historico: function () {
+                vue = this;
+                $3.ajax({
+                    url: '/proposta/visualizar/historico-avaliacoes/idPreProjeto/' + vue.idpreprojeto
+                }).done( function(data) {
+                    vue.historico = data;
+                });
+            }
+        }
+    });
+
+
+    new Vue({
+        el: '#container'
+    })
+</script>
