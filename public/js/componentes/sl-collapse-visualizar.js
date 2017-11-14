@@ -2,7 +2,7 @@ Vue.component('sl-collapse-visualizar', {
     template:`
         <div>
             <h4>{{pronac}} - {{nome}}</h4>
-            <ul v-if="dados" class="collapsible" data-collapsible="accordion">
+            <ul v-show="dados" class="collapsible" data-collapsible="accordion">
                 <li v-for="dado in dados">
                   <div class="collapsible-header">{{dado.title}}</div>
                   <div class="collapsible-body">
@@ -10,7 +10,7 @@ Vue.component('sl-collapse-visualizar', {
                   </div>
                 </li>
             </ul>
-            <div v-else>carregando...</div>
+            <div v-show="!dados">carregando...</div>
         </div>
     `,
     data: function() {
