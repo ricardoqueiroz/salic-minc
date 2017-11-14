@@ -8,14 +8,12 @@
 </div>
 <script type="text/javascript">
     $3('.pre-visualizar').on('click',
-
         function(event) {
             event.preventDefault();
-            $3(".modal-content").empty().load('/consultardadosprojeto/consultar-ajax?idPronac=' + $3(this).data().idpronac)
+            $3(".modal-content").empty().load('/prestacao-contas/visualizar-projeto?idPronac=' + $3(this).data().idpronac)
             $3('#abrirModal').modal();
             $3('#abrirModal').modal('open');
         }
-
     );
 </script>
 <style>
