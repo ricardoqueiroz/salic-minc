@@ -5,6 +5,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
     public function init()
     {
         parent::init();
+
     }
 
     public function indexAction()
@@ -19,17 +20,18 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $dados = $this->_proposta;
 
             if(is_array($dados)) {
-                $dados['stdatafixa'] = ($dados['stdatafixa']) ? 'Sim' : 'Não';
-                $dados['areaabrangencia'] = ($dados['areaabrangencia']) ? 'Sim' : 'Não';
-                $dados['tpprorrogacao'] = ($dados['tpprorrogacao']) ? 'Sim' : 'Não';
-                $dados['stproposta'] = ($dados['stproposta']) ? 'Sim' : 'Não';
+                $dados['stdatafixa'] = ($dados['stdatafixa']) ? 'Sim' : 'N&atilde;o';
+                $dados['areaabrangencia'] = ($dados['areaabrangencia']) ? 'Sim' : 'N&atilde;o';
+                $dados['tpprorrogacao'] = ($dados['tpprorrogacao']) ? 'Sim' : 'N&atilde;o';
+                $dados['stproposta'] = ($dados['stproposta']) ? 'Sim' : 'N&atilde;o';
             }
 
             $dados = array_map('utf8_encode', $dados);
+            $dados = array_map('html_entity_decode', $dados);
 
-            $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+            $this->_helper->json(array('success' => 'true', 'msg' => '','data' => $dados));
         } catch (Exception $e) {
-            $this->_helper->json(array('msg' => $e->getMessage(), 'success' => 'false'));
+            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
         }
     }
 
@@ -37,9 +39,24 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
         $this->_helper->layout->disableLayout();
 
-        $dados = Proposta_Model_AnalisarPropostaDAO::buscarHistorico($this->idPreProjeto);
-        xd($dados);
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+        try {
+            $dados = Proposta_Model_AnalisarPropostaDAO::buscarHistorico($this->idPreProjeto);
+            $json = [];
+            $newArray = [];
+            foreach ($dados as $key => $dado) {
+                $newArray[$key]['tipo'] = $dado['tipo'];
+                $newArray[$key]['Avaliacao'] = $dado['Avaliacao'];
+
+            }
+
+            $json['lines'] =  $newArray;
+            $json['cols'] = ['#', 'Avalia&ccedil;&atilde;o'];
+            $json['title'] = 'Hist&oacute;rico de avalia&ccedil;&otilde;es';
+
+            $this->_helper->json(array('success' => 'true', 'msg' => '','data' => $json));
+        } catch (Exception $e) {
+            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
+        }
     }
 
     public function proponenteAction($idAgente)
