@@ -19,7 +19,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         try {
             $dados = $this->_proposta;
 
-            if(is_array($dados)) {
+            if (is_array($dados)) {
                 $dados['stdatafixa'] = ($dados['stdatafixa']) ? 'Sim' : 'N&atilde;o';
                 $dados['areaabrangencia'] = ($dados['areaabrangencia']) ? 'Sim' : 'N&atilde;o';
                 $dados['tpprorrogacao'] = ($dados['tpprorrogacao']) ? 'Sim' : 'N&atilde;o';
@@ -29,7 +29,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $dados = array_map('utf8_encode', $dados);
             $dados = array_map('html_entity_decode', $dados);
 
-            $this->_helper->json(array('success' => 'true', 'msg' => '','data' => $dados));
+            $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $dados));
         } catch (Exception $e) {
             $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
         }
@@ -44,26 +44,52 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $json = [];
             $newArray = [];
             foreach ($dados as $key => $dado) {
-                $newArray[$key]['tipo'] = $dado['tipo'];
-                $newArray[$key]['Avaliacao'] = $dado['Avaliacao'];
-
+                $newArray[$key]['tipo'] = $dado->tipo;
+                $newArray[$key]['Avaliacao'] = $dado->Avaliacao;
             }
 
-            $json['lines'] =  $newArray;
+            $json['lines'] = $newArray;
             $json['cols'] = ['#', 'Avalia&ccedil;&atilde;o'];
             $json['title'] = 'Hist&oacute;rico de avalia&ccedil;&otilde;es';
 
-            $this->_helper->json(array('success' => 'true', 'msg' => '','data' => $json));
+            $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $json));
         } catch (Exception $e) {
             $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
         }
     }
 
-    public function proponenteAction($idAgente)
+    public function dadosProponenteAction()
     {
         $this->_helper->layout->disableLayout();
 
+        $idAgente = $this->_request->getParam('idagente');
+
         $dados = [];
+        $matriz = [];
+
+        $tbAgentes = new Agente_Model_DbTable_Agentes();
+        $dados['identificacao'] = array_change_key_case(array_map('utf8_encode', $tbAgentes->buscarAgenteENome(['a.idAgente = ?' => $idAgente])->current()->toArray()));
+
+        $tbEndereco = new Agente_Model_DbTable_EnderecoNacional();
+        $matriz['enderecos'] = $tbEndereco->buscarEnderecos($idAgente)->toArray();
+
+        $tbInternet = new Agente_Model_DbTable_Internet();
+        $matriz['emails'] = $tbInternet->buscarEmails($idAgente)->toArray();
+
+        $tbTelefones = new Agente_Model_DbTable_Telefones();
+        $matriz['telefones'] = $tbTelefones->buscarFones($idAgente)->toArray();
+
+
+        $matriz['dirigentes'] = [];
+        if (strlen($dados['proponente']['CNPJCPF']) > 11) {
+            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('a.idAgente = ?' => $idAgente))->toArray();
+        }
+
+        foreach ($matriz as $key => $array) {
+            foreach ($array as $key2 => $dado) {
+                $dados[$key][$key2] = array_change_key_case(array_map('utf8_encode', $dado));
+            }
+        }
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }

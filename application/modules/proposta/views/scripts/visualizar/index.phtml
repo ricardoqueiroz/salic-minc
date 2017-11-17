@@ -1,6 +1,5 @@
-
-<div id="container" class="container-fluid">
-    <salic-identificacao-proposta idpreprojeto="<?= $this->idPreProjeto; ?>" ></salic-identificacao-proposta>
+<div id="container" class="container">
+    <salic-identificacao-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-identificacao-proposta>
 
     <ul class="collapsible" data-collapsible="accordion">
         <li>
@@ -9,8 +8,14 @@
                 <salic-historico-avaliacoes idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-historico-avaliacoes>
             </div>
         </li>
+        <li>
+            <div class="collapsible-header"><i class="material-icons">alert</i>Proponente</div>
+            <div class="collapsible-body">
+<!--                <salic-dados-proponente idpreprojeto="--><?//= $this->idPreProjeto; ?><!--"-->
+<!--                                        idagente="--><?//= $this->proposta['idagente']; ?><!--"></salic-dados-proponente>-->
+            </div>
+        </li>
     </ul>
-
 </div>
 
 <script type="text/x-template" id="identificacao-da-proposta">
@@ -92,28 +97,198 @@
     </div>
 </script>
 
+<script src="/public/js/vue.js" type="text/javascript"></script>
+<script type="text/javascript" src="/public/js/componentes/salic-table-easy.js"></script>
+
 <script type="text/x-template" id="historico-avaliacoes">
     <div class="historico">
         <div class="row">
-            <sl-table-visualizar v-bind:dados="dados"></sl-table-visualizar>
+            <salic-table-easy v-bind:dados="dado"></salic-table-easy>
         </div>
     </div>
 </script>
 
-<script src="/public/js/vue.js" type="text/javascript"></script>
-<script type="text/javascript" src="/public/js/componentes/sl-table-visualizar.js" ></script>
+<script type="text/x-template" id="dados-proponente">
+    <div id="proponente">
+        <div class="section">
+            <h5>Endere&ccedil;o</h5>
+            <table class="bordered striped responsive-table">
+                <tr class="destacar">
+                    <td width="10%" nowrap class="centro"><b>Tipo de Endere&ccedil;o</b></td>
+                    <td width="10%" nowrap class="centro"><b>Tipo do Logradouro</b></td>
+                    <td width="20%" class="centro"><b>Logradouro</b></td>
+                    <td class="centro"><b>N&uacute;mero</b></td>
+                    <td class="centro"><b>Complemento</b></td>
+                    <td class="centro"><b>Bairro</b></td>
+                    <td class="centro"><b>Cidade</b></td>
+                    <td class="centro"><b>UF</b></td>
+                    <td class="centro"><b>CEP</b></td>
+                </tr>
+                <tr v-for="endereco in proponente.enderecos">
+                    <td>{{ endereco.tipoendereco }}</td>
+                    <td>{{ endereco.dstipologradouro }}</td>
+                    <td>{{ endereco.logradouro }}</td>
+                    <td>{{ endereco.numero }}</td>
+                    <td>{{ endereco.complemento }}</td>
+                    <td>{{ endereco.bairro }}</td>
+                    <td>{{ endereco.municipio }}</td>
+                    <td>{{ endereco.uf }}</td>
+                    <td>{{ endereco.cep }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h5>Telefones</h5>
+            <table class="bordered striped responsive-table">
+                <tr class="destacar">
+                    <td width="10%"><b>Tipo</b></td>
+                    <td><b>UF</b></td>
+                    <td><b>DDD</b></td>
+                    <td><b>N&uacute;mero</b></td>
+                    <td><b>Divulgar</b></td>
+                </tr>
+                <tr v-for="telefone in proponente.telefones">
+                    <td>{{ telefone.dstelefone }}</td>
+                    <td>{{ telefone.ufsigla }}</td>
+                    <td>{{ telefone.ddd }}</td>
+                    <td>{{ telefone.numero }}</td>
+                    <td>{{ telefone.divulgar }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h5>E-mail</h5>
+            <table class="bordered striped responsive-table">
+                <tr class="destacar">
+                    <td width="10%"><b>Tipo</b></td>
+                    <td><b>E-mail</b></td>
+                    <td><b>Posso divulgar?</b></td>
+                </tr>
+                <tr v-for="email in proponente.emails">
+                    <td nowrap>{{ email.tipo }}</td>
+                    <td nowrap>{{ email.descricao }}</td>
+                    <td>{{ email.divulgar }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h5>Natureza</h5>
+            <table class="bordered striped responsive-table">
+                <tr class="destacar">
+                    <td width="10%"><b>Direito</b></td>
+                    <td><b>Esfera</b></td>
+                    <td><b>Poder</b></td>
+                    <td><b>Administra&ccedil;&atilde;o</b></td>
+                </tr>
+                <tr>
+                    <?php if (!empty($this->itensGeral[0]->direito)) { ?>
+                        <td nowrap><?php echo $this->itensGeral[0]->direito ?></td>
+                        <td><?php echo $this->itensGeral[0]->esfera ?></td>
+                        <td><?php echo $this->itensGeral[0]->poder ?></td>
+                        <td><?php echo $this->itensGeral[0]->Admins ?></td>
+                    <?php } else { ?>
+                        <td colspan="4" align="center">Natureza n&atilde;o informada</td>
+                    <?php } ?>
+                </tr>
+            </table>
+        </div>
+
+        <div>
+            <h5>Dirigente</h5>
+            <table class="bordered striped responsive-table">
+                <?php if ($this->dirigentes && count($this->dirigentes) > 0) { ?>
+                    <tr class="destacar">
+                        <td width="20%" align="center"><b>CPF</b></td>
+                        <td align="center"><b>Nome</b></td>
+                    </tr>
+                    <?php foreach ($this->dirigentes as $tbdirigentes): ?>
+                        <?php
+                        $cpfCnpjDirigente = $tbdirigentes['CNPJCPFDirigente'];
+                        $nomeDirigente = $tbdirigentes['NomeDirigente'];
+
+                        if ($cpfCnpjDirigente != '00000000000000'): ?>
+                            <tr>
+                                <td align="center"><?php echo empty($cpfCnpjDirigente) ? '<em>Dados n&atilde;o informados!</em>' : aplicaMascara($cpfCnpjDirigente, "999.999.999-99"); ?>
+                                <td align="left"><?php echo $nomeDirigente; ?></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <table class='bordered striped responsive-table'>
+                                        <tr class="destacar">
+                                            <td class="centro" colspan="4">Mandatos</td>
+                                        </tr>
+                                        <?php if (count($this->mandatos[$nomeDirigente]) > 0):
+                                            foreach ($this->mandatos[$nomeDirigente] as $mandato): ?>
+                                                <tr>
+                                                    <td>
+                                                        <b>Tipo de documento</b><br>
+                                                        <?php echo $mandato->Descricao; ?>
+                                                    </td>
+                                                    <td>
+                                                        <b>N&ordm; do documento</b><br>
+                                                        <?php echo $mandato->dsNumeroDocumento; ?>
+                                                    </td>
+                                                    <td>
+                                                        <b>Per&iacute;odo de vig&ecirc;ncia</b><br>
+                                                        <?php echo date('d/m/Y', strtotime($mandato->dtInicioMandato)) . ' &agrave; ' . date('d/m/Y', strtotime($mandato->dtFimMandato)); ?>
+                                                    </td>
+                                                    <td>
+                                                        <b>Arquivo</b><br>
+                                                        <a href="<?php echo $this->url(array('controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $mandato->idArquivo; ?>"><?php echo $mandato->nmArquivo ?></a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td class="centro" colspan="4"><em>N&atilde;o
+                                                        existem mandatos cadastrados!</em></td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </table>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php } else { ?>
+                    <tr>
+                        <td colspan="2" align="center"><em>N&atilde;o existem Dirigentes
+                                cadastrados!</em></td>
+                    </tr>
+                <?php } ?>
+            </table>
+        </div>
+
+        <div>
+            <h5>Usu&aacute;rio SalicWEB</h5>
+            <table class="bordered striped responsive-table">
+                <tr>
+                    <?php if (is_array($this->itensGeral) and !empty($this->itensGeral[0]->nomeUsuario)) { ?>
+                        <td width="10%" class="esquerda"><b>CPF</b></td>
+                        <td class="esquerda"><?php echo aplicaMascara($this->itensGeral[0]->Cpf, "999.999.999-99") ?></td>
+                        <td width="10%" class="esquerda"><b>Nome</b></td>
+                        <td class="esquerda"><?php echo $this->itensGeral[0]->nomeUsuario ?></td>
+                    <?php } ?>
+                </tr>
+            </table>
+        </div>
+    </div>
+</script>
 
 <script type="text/javascript">
 
     Vue.component('salic-identificacao-proposta', {
         template: '#identificacao-da-proposta',
-        data: function() {
+        data: function () {
             return {
-                proposta:[]
+                proposta: []
             }
         },
         props: ['idpreprojeto', 'dados'],
-        mounted: function() {
+        mounted: function () {
 //            if(this.dados) {
 //                this.proposta = this.dados;
 //            }else {
@@ -122,12 +297,11 @@
         },
         methods: {
             buscar_dados: function () {
-               let vue = this;
+                let vue = this;
                 $3.ajax({
                     url: '/proposta/visualizar/identificacao/idPreProjeto/' + vue.idpreprojeto
-                }).done( function(data) {
+                }).done(function (data) {
                     vue.proposta = data.data;
-                    console.info(vue.proposta);
                 });
             }
         }
@@ -136,13 +310,13 @@
 
     Vue.component('salic-historico-avaliacoes', {
         template: '#historico-avaliacoes',
-        data: function() {
+        data: function () {
             return {
-                dados:[]
+                dado: []
             }
         },
         props: ['idpreprojeto'],
-        mounted: function() {
+        mounted: function () {
             this.carregar_historico();
         },
         methods: {
@@ -150,12 +324,24 @@
                 let vue = this;
                 $3.ajax({
                     url: '/proposta/visualizar/historico-avaliacoes/idPreProjeto/' + vue.idpreprojeto
-                }).done( function(data) {
-                    vue.dados = data.data;
+                }).done(function (data) {
+                    vue.dado = data.data;
+                    vue.dado = {
+                        "lines": [
+                                {"tipo": "Projeto", "Avaliacao": 'aaaaa'},
+                                {"tipo": "Proposta", "Avaliacao": "Proposta Cultural ENVIADA ao Minist&eacute;rio da Cultura para Conformidade Visual"},
+                                {"tipo": "Proposta", "Avaliacao": "<p>Proposta admitida.<\/p>"},
+                                {"tipo": "Projeto", "Avaliacao": "<p>Ajustar.<\/p>"}
+                            ],
+                        "cols": ["#", "Avalia&ccedil;&atilde;o"],
+                        "title": "Hist&oacute;rico de avalia&ccedil;&otilde;es"
+                    }
                 });
             }
         }
     });
+
+
 
 
     new Vue({
