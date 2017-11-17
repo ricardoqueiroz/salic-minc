@@ -1,16 +1,14 @@
-Vue.component('sl-table-visualizar', {
+Vue.component('salic-table-easy', {
     template:`
     <div>
         <table class="bordered">
             <thead>
-                <th v-for="cab in dados.cols">
-                    {{cab}} 
+                <th v-html="cab" v-for="cab in table.cols">
                 </th>
             </thead>
             <tbody>
-                <tr v-for="dado in dados.lines">
-                    <td v-for="d in dado">
-                        {{d}}
+                <tr v-for="dado in table.lines">
+                    <td v-html="d" v-for="d in dado">
                     </td>
                 </tr>
             </tbody>
@@ -19,14 +17,11 @@ Vue.component('sl-table-visualizar', {
     `,
     data: function() {
         return {
-            dados:[]
+            table:[]
         }
     },
     props: ['dados'],
     mounted: function() {
-    },
-    methods: {
-        alerta: function() {
-        }
+        this.table = this.dados;
     }
 });

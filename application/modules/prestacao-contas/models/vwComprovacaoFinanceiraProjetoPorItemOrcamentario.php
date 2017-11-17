@@ -9,7 +9,7 @@ class PrestacaoContas_Model_vwComprovacaoFinanceiraProjetoPorItemOrcamentario ex
     public function consolidacaoPorProduto($idPronac) {
         $cols ="
             CASE WHEN cdProduto = 0
-                THEN 'Administração do Projeto'
+                THEN 'Administra&ccedil;&atilde;o do Projeto'
                 ELSE b.Descricao END
             AS dsProduto,
                 COUNT(*) AS qtComprovantes,
