@@ -1,4 +1,4 @@
-<div id="container" class="container">
+<div id="container" class="container-fluid">
     <salic-identificacao-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-identificacao-proposta>
 
     <ul class="collapsible" data-collapsible="accordion">
@@ -11,8 +11,8 @@
         <li>
             <div class="collapsible-header"><i class="material-icons">alert</i>Proponente</div>
             <div class="collapsible-body">
-<!--                <salic-dados-proponente idpreprojeto="--><?//= $this->idPreProjeto; ?><!--"-->
-<!--                                        idagente="--><?//= $this->proposta['idagente']; ?><!--"></salic-dados-proponente>-->
+                <salic-dados-proponente idpreprojeto="<?= $this->idPreProjeto; ?>"
+                                        idagente="<?= $this->proposta['idagente']; ?>"></salic-dados-proponente>
             </div>
         </li>
     </ul>
@@ -20,7 +20,7 @@
 
 <script type="text/x-template" id="identificacao-da-proposta">
     <div class="dados-basicos">
-        <div class="section">
+        <div class="card">
             <h5>Identifica&ccedil;&atilde;o</h5>
             <div class="row">
                 <div class="col s12 l3 m3">
@@ -111,6 +111,24 @@
 <script type="text/x-template" id="dados-proponente">
     <div id="proponente">
         <div class="section">
+            <h5>Identifica&ccedil;&atilde;o</h5>
+
+            <div class="row">
+                <div class="col s12 l4 m4">
+                    <b>CNPJ/CPF</b><br>
+                    {{ identificacao.cnpjcpf }}
+                </div>
+                <div class="col s12 l4 m4">
+                    <b>Nome Proponente</b><br>
+                    {{ identificacao.descricao }}
+                </div>
+                <div class="col s12 l4 m4">
+                    <b>Tipo de Pessoa</b><br>
+                    {{ identificacao.tipopessoa }}
+                </div>
+            </div>
+        </div>
+        <div class="section">
             <h5>Endere&ccedil;o</h5>
             <table class="bordered striped responsive-table">
                 <tr class="destacar">
@@ -176,7 +194,7 @@
 
         <div>
             <h5>Natureza</h5>
-            <table class="bordered striped responsive-table">
+            <table v-if="proponente.natureza && proponente.natureza.length" class="bordered striped responsive-table">
                 <tr class="destacar">
                     <td width="10%"><b>Direito</b></td>
                     <td><b>Esfera</b></td>
@@ -184,82 +202,28 @@
                     <td><b>Administra&ccedil;&atilde;o</b></td>
                 </tr>
                 <tr>
-                    <?php if (!empty($this->itensGeral[0]->direito)) { ?>
-                        <td nowrap><?php echo $this->itensGeral[0]->direito ?></td>
-                        <td><?php echo $this->itensGeral[0]->esfera ?></td>
-                        <td><?php echo $this->itensGeral[0]->poder ?></td>
-                        <td><?php echo $this->itensGeral[0]->Admins ?></td>
-                    <?php } else { ?>
-                        <td colspan="4" align="center">Natureza n&atilde;o informada</td>
-                    <?php } ?>
+                    <td>{{ proponente.natureza.direito }}</td>
+                    <td>{{ proponente.natureza.esfera }}</td>
+                    <td>{{ proponente.natureza.poder }}</td>
+                    <td>{{ proponente.natureza.Admins }}</td>
                 </tr>
             </table>
+            <div v-else>Natureza n&atilde;o informada</div>
         </div>
 
         <div>
             <h5>Dirigente</h5>
-            <table class="bordered striped responsive-table">
-                <?php if ($this->dirigentes && count($this->dirigentes) > 0) { ?>
-                    <tr class="destacar">
-                        <td width="20%" align="center"><b>CPF</b></td>
-                        <td align="center"><b>Nome</b></td>
-                    </tr>
-                    <?php foreach ($this->dirigentes as $tbdirigentes): ?>
-                        <?php
-                        $cpfCnpjDirigente = $tbdirigentes['CNPJCPFDirigente'];
-                        $nomeDirigente = $tbdirigentes['NomeDirigente'];
-
-                        if ($cpfCnpjDirigente != '00000000000000'): ?>
-                            <tr>
-                                <td align="center"><?php echo empty($cpfCnpjDirigente) ? '<em>Dados n&atilde;o informados!</em>' : aplicaMascara($cpfCnpjDirigente, "999.999.999-99"); ?>
-                                <td align="left"><?php echo $nomeDirigente; ?></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <table class='bordered striped responsive-table'>
-                                        <tr class="destacar">
-                                            <td class="centro" colspan="4">Mandatos</td>
-                                        </tr>
-                                        <?php if (count($this->mandatos[$nomeDirigente]) > 0):
-                                            foreach ($this->mandatos[$nomeDirigente] as $mandato): ?>
-                                                <tr>
-                                                    <td>
-                                                        <b>Tipo de documento</b><br>
-                                                        <?php echo $mandato->Descricao; ?>
-                                                    </td>
-                                                    <td>
-                                                        <b>N&ordm; do documento</b><br>
-                                                        <?php echo $mandato->dsNumeroDocumento; ?>
-                                                    </td>
-                                                    <td>
-                                                        <b>Per&iacute;odo de vig&ecirc;ncia</b><br>
-                                                        <?php echo date('d/m/Y', strtotime($mandato->dtInicioMandato)) . ' &agrave; ' . date('d/m/Y', strtotime($mandato->dtFimMandato)); ?>
-                                                    </td>
-                                                    <td>
-                                                        <b>Arquivo</b><br>
-                                                        <a href="<?php echo $this->url(array('controller' => 'upload', 'action' => 'abrir')); ?>?id=<?php echo $mandato->idArquivo; ?>"><?php echo $mandato->nmArquivo ?></a>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td class="centro" colspan="4"><em>N&atilde;o
-                                                        existem mandatos cadastrados!</em></td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </table>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="2" align="center"><em>N&atilde;o existem Dirigentes
-                                cadastrados!</em></td>
-                    </tr>
-                <?php } ?>
+            <table v-if="proponente.dirigentes && proponente.dirigentes.length" class="bordered striped responsive-table">
+                <tr class="destacar">
+                    <td width="20%" align="center"><b>CPF</b></td>
+                    <td align="center"><b>Nome</b></td>
+                </tr>
+                <tr v-for="dirigente in proponente.dirigentes">
+                    <td align="center">{{ dirigente.cpfcnpjdirigente }}</td>
+                    <td align="left">{{ dirigente.nomedirigente }}</td>
+                </tr>
             </table>
+            <div v-else>N&atilde;o existem dirigentes cadastrados!</div>
         </div>
 
         <div>
@@ -289,11 +253,12 @@
         },
         props: ['idpreprojeto', 'dados'],
         mounted: function () {
-//            if(this.dados) {
-//                this.proposta = this.dados;
-//            }else {
-            this.buscar_dados();
-//            }
+
+            if(this.dados) {
+                this.proposta = this.dados;
+            }else {
+                this.buscar_dados();
+            }
         },
         methods: {
             buscar_dados: function () {
@@ -326,22 +291,36 @@
                     url: '/proposta/visualizar/historico-avaliacoes/idPreProjeto/' + vue.idpreprojeto
                 }).done(function (data) {
                     vue.dado = data.data;
-                    vue.dado = {
-                        "lines": [
-                                {"tipo": "Projeto", "Avaliacao": 'aaaaa'},
-                                {"tipo": "Proposta", "Avaliacao": "Proposta Cultural ENVIADA ao Minist&eacute;rio da Cultura para Conformidade Visual"},
-                                {"tipo": "Proposta", "Avaliacao": "<p>Proposta admitida.<\/p>"},
-                                {"tipo": "Projeto", "Avaliacao": "<p>Ajustar.<\/p>"}
-                            ],
-                        "cols": ["#", "Avalia&ccedil;&atilde;o"],
-                        "title": "Hist&oacute;rico de avalia&ccedil;&otilde;es"
-                    }
                 });
             }
         }
     });
 
+    Vue.component('salic-dados-proponente', {
+        template: '#dados-proponente',
+        data: function() {
+            return {
+                proponente: [],
+                identificacao: []
+            }
+        },
+        props: ['idpreprojeto', 'idagente'],
+        mounted: function() {
+            this.buscar_dados();
+        },
+        methods: {
+            buscar_dados: function () {
+                let vue = this;
+                $3.ajax({
+                    url: '/proposta/visualizar/dados-proponente/idpreprojeto/' + vue.idpreprojeto + '/idagente/' + vue.idagente
+                }).done( function(data) {
+                    vue.proponente = data.data;
+                    vue.identificacao = vue.proponente.identificacao;
 
+                });
+            }
+        }
+    });
 
 
     new Vue({

@@ -70,6 +70,9 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $tbAgentes = new Agente_Model_DbTable_Agentes();
         $dados['identificacao'] = array_change_key_case(array_map('utf8_encode', $tbAgentes->buscarAgenteENome(['a.idAgente = ?' => $idAgente])->current()->toArray()));
 
+        $tbNatureza = new Agente_Model_DbTable_Natureza();
+        $dados['natureza'] = array_change_key_case(array_map('utf8_encode', $tbNatureza->findBy(['idAgente = ?' => $idAgente])));
+
         $tbEndereco = new Agente_Model_DbTable_EnderecoNacional();
         $matriz['enderecos'] = $tbEndereco->buscarEnderecos($idAgente)->toArray();
 
@@ -78,7 +81,6 @@ class Proposta_VisualizarController extends Proposta_GenericController
 
         $tbTelefones = new Agente_Model_DbTable_Telefones();
         $matriz['telefones'] = $tbTelefones->buscarFones($idAgente)->toArray();
-
 
         $matriz['dirigentes'] = [];
         if (strlen($dados['proponente']['CNPJCPF']) > 11) {
