@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @deprecated utilizar natureza do modulo agentes 'Agente_Model_DbTable_Natureza'
+ */
 class Natureza extends MinC_Db_Table_Abstract
 {
     //protected $_name = 'AGENTE.dbo.Natureza';
