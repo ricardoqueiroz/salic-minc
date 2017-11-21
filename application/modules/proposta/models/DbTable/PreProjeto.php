@@ -313,6 +313,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function consultaTodosProjetos($idAgente, $idResponsavel, $arrBusca)
     {
@@ -381,6 +382,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function consultaprojetos($idagente)
     {
@@ -401,6 +403,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function inserirProposta($dados)
     {
@@ -425,6 +428,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function alterarDados($dados, $where)
     {
@@ -448,6 +452,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function listaUF()
     {
@@ -467,6 +472,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function buscaIdAgente($CNPJCPF) {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -485,6 +491,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function inserirAgentes($dadosAgentes) {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -499,6 +506,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function inserirNomes($dadosNomes) {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -513,6 +521,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function inserirEnderecoNacional($dadosEnderecoNacional) {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -527,6 +536,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo mover para o lugar correto
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function inserirVisao($dadosVisao) {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -540,6 +550,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function editarproposta($idPreProjeto)
     {
@@ -689,6 +700,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      *
      * @todo deletar depois, pois e so usar o findAll da abscract
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function buscarAgentePreProjeto($consulta = array())
     {
@@ -1044,12 +1056,75 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
         return $this->fetchAll($slct);
     }
 
+    public function buscarIdentificacaoProposta($where=array())
+    {
+        $slct = $this->select();
+        $slct->setIntegrityCheck(false);
+        $slct->from(
+            array('pp' => $this->_name),
+            array('pp.idPreProjeto,
+                       pp.idAgente,
+                       pp.NomeProjeto,
+                       pp.Mecanismo,
+                       pp.AgenciaBancaria,
+                       pp.dtInicioDeExecucao,
+                       pp.dtFinalDeExecucao,
+                       pp.areaAbrangencia,
+                       pp.idUsuario,
+                       pp.tpProrrogacao,
+                       pp.stDataFixa,
+                       pp.stProposta,
+                       pp.NrAtoTombamento,
+                       pp.DtAtoTombamento,
+                       pp.EsferaTombamento,
+                       CAST(pp.ResumoDoProjeto as TEXT) as ResumoDoProjeto'),
+            $this->_schema
+        );
+
+        $slct->joinInner(
+            array('ag' => 'agentes'), 'ag.idAgente= pp.idAgente',
+            array('ag.CNPJCPF'),
+            $this->getSchema('agentes')
+        );
+
+        $slct->joinInner(
+            array('n' => 'nomes'), 'n.idAgente= pp.idAgente',
+            array('n.Descricao as NomeAgente'),
+            $this->getSchema('agentes')
+        );
+
+        $slct->joinLeft(
+            array('ver' => 'verificacao'), 'ver.idVerificacao = pp.stProposta',
+            array('ver.Descricao as TipoExecucao'),
+            $this->_schema
+        );
+
+        $slct->joinLeft(
+            array('pr' => 'Projetos'), 'pp.idPreProjeto = pr.idProjeto',
+            array(
+                '(pr.AnoProjeto + pr.Sequencial) as PRONAC',
+                'pr.idPronac'
+            ),
+            $this->_schema
+        );
+
+        foreach ($where as $coluna => $valor) {
+            $slct->where($coluna, $valor);
+        }
+
+        $slct->order('pp.idpreprojeto');
+        $slct->order('pp.nomeprojeto');
+
+        return $this->fetchAll($slct);
+    }
+
     /**
      * buscarPropProjVinculados
      *
      * @param  mixed $idAgenteProponente
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function buscarPropProjVinculados($idAgenteProponente){
 
@@ -1146,6 +1221,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function gerenciarResponsaveisPendentes($siVinculo, $idAgente = null)
     {
@@ -1185,6 +1261,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      *
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function gerenciarResponsaveisVinculados($siVinculo, $idAgente = null)
     {
@@ -1217,6 +1294,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @author wouerner <wouerner@gmail.com>
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function listarPropostasResultado($idAgente, $idResponsavel, $idAgenteCombo)
     {
@@ -1364,6 +1442,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @param bool $dados
      * @access public
      * @return void
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function relatorioPropostas2($where=array(), $having=array(), $order=array(), $tamanho=-1, $inicio=-1, $count = false, $dados = null)
     {
@@ -2027,6 +2106,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @param int $tamanho - numero de registros que deve retornar
      * @param int $inicio - offset
      * @return Zend_Db_Table_Rowset_Abstract
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function buscarVisual($idUsuario = null, $order=array(), $tamanho=-1, $inicio=-1)
     {
@@ -2107,6 +2187,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @param int $tamanho - numero de registros que deve retornar
      * @param int $inicio - offset
      * @return Zend_Db_Table_Rowset_Abstract
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function buscarDocumental($idUsuario = null, $order=array(), $tamanho=-1, $inicio=-1)
     {
@@ -2201,6 +2282,7 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
      * @access public
      * @return void
      * @todo padrao ORM
+     * @deprecated não utilizado no sistema, verificar e remover
      */
     public function transformarPropostaEmProjeto($idPreProjeto, $cnpjcpf, $idOrgao, $idUsuario, $nrProcesso)
     {
@@ -2918,6 +3000,12 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
         return $db->fetchAll($sql);
     }
 
+    /**
+     * @param $idPreProjeto
+     * @return mixed
+     * @throws Exception
+     * @deprecated não utilizado no sistema, verificar e remover
+     */
     public function listarEtapasProdutos($idPreProjeto)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
@@ -3037,6 +3125,11 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
         return $db->fetchAll($select);
     }
 
+    /**
+     * @param $idPreProjeto
+     * @return array
+     * @deprecated não utilizado no sistema, verificar e remover
+     */
     public function buscarEtapasProdutos($idPreProjeto)
     {
         $db = Zend_Db_Table::getDefaultAdapter();
