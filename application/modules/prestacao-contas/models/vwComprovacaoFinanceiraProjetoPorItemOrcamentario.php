@@ -418,4 +418,39 @@ class PrestacaoContas_Model_vwComprovacaoFinanceiraProjetoPorItemOrcamentario ex
 
         return $this->fetchAll($select);
     }
+
+    public function itensOrcamentariosImpugnados($idPronac) {
+        $cols =[
+            'IdPRONAC',
+            'Pronac',
+            'NomeProjeto',
+            'Produto',
+            'Etapa',
+            'Item',
+            'stItemAvaliado',
+            'Documento',
+            'nrComprovante',
+            'tpFormaDePagamento',
+            'nrDocumentoDePagamento',
+            'dsJustificativa',
+            'vlComprovado'
+        ];
+
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            'vwItemOrcamentarioImpugnado',
+            $cols,
+            $this->_schema
+        );
+
+        $select->where('IdPRONAC = ?',$idPronac);
+
+        $select->order('Produto');
+        $select->order('Etapa');
+        $select->order('Item');
+
+        return $this->fetchAll($select);
+    }
+
 }
