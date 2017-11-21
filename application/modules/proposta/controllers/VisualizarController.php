@@ -17,14 +17,11 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->layout->disableLayout();
 
         try {
-            $dados = $this->_proposta;
 
-            if (is_array($dados)) {
-                $dados['stdatafixa'] = ($dados['stdatafixa']) ? 'Sim' : 'N&atilde;o';
-                $dados['areaabrangencia'] = ($dados['areaabrangencia']) ? 'Sim' : 'N&atilde;o';
-                $dados['tpprorrogacao'] = ($dados['tpprorrogacao']) ? 'Sim' : 'N&atilde;o';
-                $dados['stproposta'] = ($dados['stproposta']) ? 'Sim' : 'N&atilde;o';
-            }
+            $idPreProjeto = $this->_request->getParam('idPreProjeto');
+
+            $tbProposta = new Proposta_Model_DbTable_PreProjeto();
+            $dados = $tbProposta->buscarIdentificacaoProposta(['pp.idPreProjeto = ?'=> $idPreProjeto ])->current()->toArray();
 
             $dados = array_map('utf8_encode', $dados);
             $dados = array_map('html_entity_decode', $dados);
@@ -83,8 +80,9 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $matriz['telefones'] = $tbTelefones->buscarFones($idAgente)->toArray();
 
         $matriz['dirigentes'] = [];
-        if (strlen($dados['proponente']['CNPJCPF']) > 11) {
-            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('a.idAgente = ?' => $idAgente))->toArray();
+
+        if (strlen($dados['identificacao']['cnpjcpf']) > 11) {
+            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('v.idVinculoPrincipal = ?' => $idAgente, 'n.Status = ?'=>0), array('n.Descricao ASC'))->toArray();
         }
 
         foreach ($matriz as $key => $array) {
@@ -92,6 +90,23 @@ class Proposta_VisualizarController extends Proposta_GenericController
                 $dados[$key][$key2] = array_change_key_case(array_map('utf8_encode', $dado));
             }
         }
+
+        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+    }
+
+    public function dadosUsuarioAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $idUsuario = $this->_request->getParam('idusuario');
+
+        $dados = [];
+
+        $tbSgcAcesso = new Autenticacao_Model_Sgcacesso();
+        $this->debugMode = true;
+        $dados = $tbSgcAcesso->buscarUsuario(['IdUsuario = ?' => $idUsuario])->current()->toArray();
+
+        $dados = array_map('utf8_encode', $dados);
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
