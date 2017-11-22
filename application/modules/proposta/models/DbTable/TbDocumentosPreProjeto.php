@@ -63,6 +63,51 @@ class Proposta_Model_DbTable_TbDocumentosPreProjeto  extends MinC_Db_Table_Abstr
     }
 
     /**
+     * Metodo sem binario do arquivo
+     *
+     * @param array $where
+     * @param array $order
+     * @param int $tamanho
+     * @param int $inicio
+     * @return array
+     *
+     */
+    public function buscarDadosDocumentos($where=array(), $order=array(), $tamanho=-1, $inicio=-1) {
+        $slct = $this->select();
+        $slct->setIntegrityCheck(false);
+        $slct->from(
+            array("a"=>$this->_name),
+            array("CodigoDocumento", new Zend_Db_Expr('(2) as tpDoc'), 'idprojeto as Codigo',
+                'Data', 'NoArquivo', 'TaArquivo', 'idDocumentosPreProjetos'),
+            $this->_schema
+        );
+        $slct->joinInner(
+            array("b"=> "documentosexigidos"), "a.codigodocumento = b.codigo",
+            array("Descricao"), $this->getSchema('sac')
+        );
+
+        //adiciona quantos filtros foram enviados
+        foreach ($where as $coluna => $valor) {
+            $slct->where($coluna, $valor);
+        }
+
+        //adicionando linha order ao select
+        $slct->order($order);
+
+        // paginacao
+        if ($tamanho > -1) {
+            $tmpInicio = 0;
+            if ($inicio > -1) {
+                $tmpInicio = $inicio;
+            }
+            $slct->limit($tamanho, $tmpInicio);
+        }
+
+        $result = $this->fetchAll($slct);
+        return $result ? $result->toArray() : array();
+    }
+
+    /**
      * Retorna registros do banco de dados
      * @param array $where - array com dados where no formato "nome_coluna_1"=>"valor_1","nome_coluna_2"=>"valor_2"
      * @param array $order - array com orders no formado "coluna_1 desc","coluna_2"...
