@@ -21,7 +21,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
             $tbProposta = new Proposta_Model_DbTable_PreProjeto();
-            $dados = $tbProposta->buscarIdentificacaoProposta(['pp.idPreProjeto = ?'=> $idPreProjeto ])->current()->toArray();
+            $dados = $tbProposta->buscarIdentificacaoProposta(['pp.idPreProjeto = ?' => $idPreProjeto])->current()->toArray();
 
             $dados = array_map('utf8_encode', $dados);
             $dados = array_map('html_entity_decode', $dados);
@@ -40,13 +40,16 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $dados = Proposta_Model_AnalisarPropostaDAO::buscarHistorico($this->idPreProjeto);
             $json = [];
             $newArray = [];
+
             foreach ($dados as $key => $dado) {
                 $newArray[$key]['tipo'] = $dado->tipo;
+                $objDateTime = new DateTime($dado->DtAvaliacao);
+                $newArray[$key]['DtAvaliacao'] = $objDateTime->format('d/m/Y H:i:s');
                 $newArray[$key]['Avaliacao'] = $dado->Avaliacao;
             }
 
             $json['lines'] = $newArray;
-            $json['cols'] = ['#', 'Avalia&ccedil;&atilde;o'];
+            $json['cols'] = ['#', 'Data', 'Avalia&ccedil;&atilde;o'];
             $json['title'] = 'Hist&oacute;rico de avalia&ccedil;&otilde;es';
 
             $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $json));
@@ -82,7 +85,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $matriz['dirigentes'] = [];
 
         if (strlen($dados['identificacao']['cnpjcpf']) > 11) {
-            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('v.idVinculoPrincipal = ?' => $idAgente, 'n.Status = ?'=>0), array('n.Descricao ASC'))->toArray();
+            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('v.idVinculoPrincipal = ?' => $idAgente, 'n.Status = ?' => 0), array('n.Descricao ASC'))->toArray();
         }
 
         foreach ($matriz as $key => $array) {
@@ -111,13 +114,48 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function documentosAnexadosAction($idPreProjeto)
+    public function documentosAnexadosAction()
     {
         $this->_helper->layout->disableLayout();
 
-        $dados = [];
+        $idAgente = $this->_request->getParam('idagente');
+        $idPreProjeto = $this->_request->getParam('idpreprojeto');
 
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+        $documentos = [];
+
+        $tbl = new Proposta_Model_DbTable_TbDocumentosPreProjeto();
+        $documentos['proposta'] = $tbl->buscarDadosDocumentos(array("idProjeto = ?" => $idPreProjeto));
+
+        $tbA = new Proposta_Model_DbTable_TbDocumentosAgentes();
+        $documentos['proponente'] = $tbA->buscarDadosDocumentos(array("idAgente = ?" => $idAgente))->toArray();
+
+        $arrayTipos = array(1, 2, 3);
+
+        foreach ($documentos as $key => $array) {
+            foreach ($array as $key2 => $dado) {
+
+                $id = isset($dado['idDocumentosPreProjetos']) ? $dado['idDocumentosPreProjetos'] : $dado['idDocumentosAgentes'];
+
+                $dado['url'] = '';
+
+                if (in_array($dado['tpDoc'], $arrayTipos)) {
+
+                    $dado['url'] = $this->_helper->url->url(
+                            [
+                                'module' => 'admissibilidade',
+                                'controller' => 'admissibilidade',
+                                'action' => 'abrir-documentos-anexados-admissibilidade'
+                            ],
+                            false,
+                            true
+                        ) . "?id=" . $id . "&tipo=" . $dado['tpDoc'];
+                }
+
+                $documentos[$key][$key2] = array_map('utf8_encode', $dado);
+            }
+        }
+
+        $this->_helper->json(array('data' => $documentos, 'success' => 'true'));
     }
 
     public function localDeRealizacaoAction()
