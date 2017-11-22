@@ -822,7 +822,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     $request->getParam('nrDocumentoDePagamento'),
                     $request->getParam('dsJustificativa')
                 );
-            
                 if($_FILES['arquivo']['name'] != '') {
                     $comprovantePagamentoModel->atualizar(4, true);
                 } else {
@@ -1950,8 +1949,8 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
 
         $comprovantePagamentoModel = new ComprovantePagamento();
-        $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovante($idComprovantePagamento);
-        $comprovantePagamento = (object)$comprovantesDePagamento[0];
+        $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovante($idComprovantePagamento, Zend_DB::FETCH_OBJ);
+        $comprovantePagamento = (object) $comprovantesDePagamento[0];
 
         $this->view->idComprovantePagamento = $idComprovantePagamento;
         $this->view->vlComprovado = number_format($comprovantePagamento->vlComprovacao, 2, ',', '.');
@@ -1963,7 +1962,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         	Mascara::addMaskCNPJ($fornecedor->CNPJCPF) : Mascara::addMaskCPF($fornecedor->CNPJCPF);
         $this->view->Descricao = $fornecedor->Descricao;
         
-        $dataEmissao = new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao));
+        $dataEmissao = $comprovantePagamento->dtEmissao ? new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao)) : new DateTime();
         $this->view->tpDocumento = $comprovantePagamento->tpDocumento;
         $this->view->nrComprovante = $comprovantePagamento->nrComprovante;
         $this->view->nrSerie = $comprovantePagamento->nrSerie;

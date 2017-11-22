@@ -40,16 +40,26 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
 
         $consolidacaoPorProduto = $itens->consolidacaoPorProduto($idPronac);
         $itensAux = [];
+        $totalAux = [];
         $json = [];
         foreach($consolidacaoPorProduto as $k => $item){
             $itensAux[$k]['dsProduto'] = utf8_encode($item->dsProduto);
             $itensAux[$k]['qtComprovantes'] = $item->qtComprovantes;
             $itensAux[$k]['vlComprovado'] = number_format($item->vlComprovado, 2, ',', '.');
             $itensAux[$k]['PercComprovado'] = number_format($item->PercComprovado, 2, ',', '.');
+            $totalAux['qtComprovantes'] += $item->qtComprovantes;
+            $totalAux['vlComprovado'] += $item->vlComprovado;
         }
+
         $json['consolidacaoPorProduto']['lines'] =  $itensAux;
-        $json['consolidacaoPorProduto']['cols'] = ['Produto', 'Qtd. Comprovantes', 'Valor Comprovado', '% Comprovado'];
+        $json['consolidacaoPorProduto']['cols'] = [
+            'dsProduto' => ['name'=> 'Produto', 'class' => ''],
+            'qtComprovantes' => ['name'=> 'Qtd. Comprovantes', 'class' => 'right-align'],
+            'vlComprovado' => ['name'=> 'Valor Comprovado', 'class' => 'right-align'],
+            'PercComprovado' => ['name'=> '% Comprovado', 'class' => 'right-align']
+        ];
         $json['consolidacaoPorProduto']['title'] = 'COMPROVAÇÃO CONSOLIDADA POR PRODUTO';
+        $json['consolidacaoPorProduto']['tfoot'] = $totalAux;
 
         $consolidadoPorEtapa = $itens->consolidadoPorEtapa($idPronac);
         $itensAux = [];
@@ -60,8 +70,16 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
             $itensAux[$k]['PercComprovado'] = number_format($item->PercComprovado, 2, ',', '.');
         }
         $json['consolidadoPorEtapa']['lines'] = $itensAux;
-        $json['consolidadoPorEtapa']['cols'] = ['Descricao', 'Qtd. Comprovantes', 'Valor Comprovado', '% Comprovado'];
+        $json['consolidadoPorEtapa']['cols'] = [
+            'Descricao' => [ 'name'=> 'Descrição', 'class' => 'left-align'], 
+            'qtComprovantes' => [ 'name'=> 'Qtd. Comprovantes', 'class' => 'right-align'], 
+            'vlComprovado' => [ 'name'=> 'Valor Comprovado', 'class' => 'right-align'], 
+            'PercComprovado'=> [ 'name'=> '% Comprovado', 'class' => 'right-align']
+        ];
         $json['consolidadoPorEtapa']['title'] = 'COMPROVAÇÃO CONSOLIDADA POR ETAPA';
+        $json['consolidadoPorEtapa']['tfoot'] = $totalAux;
+
+        /* $this->_helper->json($json); */
 
         $maioresItensComprovados = $itens->maioresItensComprovados($idPronac);
         $itensAux = [];
@@ -73,7 +91,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         }
         $json['maioresItensComprovados']['lines'] = $itensAux;
         $json['maioresItensComprovados']['cols'] = ['Produto', 'Qtd. Comprovantes', 'Valor Comprovado', '% Comprovado'];
-        $json['maioresItensComprovados']['title'] = 'COMPROVAÇÃO CONSOLIDADA POR PRODUTO';
+        $json['maioresItensComprovados']['title'] = 'MAIORES ITENS ORÇAMENTARIOS COMPROVADOS';
 
         $comprovacaoConsolidadaUfMunicipio = $itens->comprovacaoConsolidadaUfMunicipio($idPronac);
         $itensAux = [];
@@ -100,7 +118,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         }
         $json['maioresComprovacaoTipoDocumento']['lines']= $itensAux;
         $json['maioresComprovacaoTipoDocumento']['cols'] = ['Tipo Documento', 'Num. Comprovante', 'Fonecedor', 'Qtd. Comprovantes', 'Valor Comprovado', '% Comprovado'];
-        $json['maioresComprovacaoTipoDocumento']['title'] = 'MAIORES ITENS ORCÇAMENTÁRIOS COMPROVADO';
+        $json['maioresComprovacaoTipoDocumento']['title'] = 'MAIORES COMPROVAÇÕES POR TIPO DE DOCUMENTOS COMPROBATÓRIOS';
 
         $comprovacaoTipoDocumentoPagamento = $itens->comprovacaoTipoDocumentoPagamento($idPronac);
         $itensAux = [];
@@ -116,6 +134,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         $json['comprovacaoTipoDocumentoPagamento']['cols'] = ['Tipo Documento', 'Num. Comprovante', 'Fonecedor', 'Qtd. Comprovantes', 'Valor Comprovado', '% Comprovado'];
         $json['comprovacaoTipoDocumentoPagamento']['title'] = 'MAIORES COMPROVAÇÕES POR TIPO DE DOCUMENTOS DE PAGAMENTO';
 
+        //incluir na tela
         $maioresFornecedoresProjeto = $itens->maioresFornecedoresProjeto($idPronac);
         $itensAux = [];
         foreach($maioresFornecedoresProjeto as $k => $item){
@@ -127,9 +146,10 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         }
         $json['maioresFornecedoresProjeto']['lines'] = $itensAux;
         $json['maioresFornecedoresProjeto']['cols'] = ['CNPJ/CPF', 'Fornecedor', 'Valor Comprovado', '% Comprovado'];
-        $json['maioresFornecedoresProjeto']['title'] = 'MAIORES POR FORNECEDORES DO PROJETO CULTURAL';
+        $json['maioresFornecedoresProjeto']['title'] = 'MAIORES FORNECEDORES DO PROJETO';
 
         $fornecedorItemProjeto = $itens->fornecedorItemProjeto($idPronac);
+        $itensAux = [];
         foreach($fornecedorItemProjeto as $k => $item){
             $itensAux[$k]['nrCNPJCPF'] = utf8_encode($item->nrCNPJCPF);
             $itensAux[$k]['nmFornecedor'] = utf8_encode($item->nmFornecedor);
@@ -140,7 +160,42 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
 
         $json['maioresFornecedoresProjeto']['lines'] = $itensAux;
         $json['maioresFornecedoresProjeto']['cols'] = ['CNPJ/CPF', 'Fornecedor', 'Item', 'Valor Comprovado', '% Comprovado'];
-        $json['maioresFornecedoresProjeto']['title'] = 'PROPONENTE FORNECEDOR DE ITEM PARA O PROJETO CULTURAL';
+        $json['maioresFornecedoresProjeto']['title'] = 'PROPONENTE FORNECEDOR DE ITEM PARA O PROJETO';
+
+
+        //impugnados
+        //itensOrcamentariosImpugnados
+        $itensOrcamentariosImpugnados = $itens->itensOrcamentariosImpugnados($idPronac);
+        $itensAux = [];
+        foreach ($itensOrcamentariosImpugnados as $k => $item) {
+            $itensAux[$k]['NomeProjeto'] = utf8_encode($item->NomeProjeto);
+            $itensAux[$k]['Produto'] = utf8_encode($item->Produto);
+            $itensAux[$k]['Etapa'] = utf8_encode($item->Etapa);
+            $itensAux[$k]['Item'] = utf8_encode($item->Item);
+            $itensAux[$k]['Documento'] = utf8_encode($item->Documento);
+            $itensAux[$k]['nrComprovante'] = utf8_encode($item->nrComprovante);
+            $itensAux[$k]['tpFormaDePagamento'] = utf8_encode($item->tpFormaDePagamento);
+            $itensAux[$k]['nrDocumentoDePagamento'] = utf8_encode($item->nrDocumentoDePagamento);
+            $itensAux[$k]['Documento'] = utf8_encode($item->Documento);
+            $itensAux[$k]['dsJustificativa'] = utf8_encode($item->dsJustificativa);
+            $itensAux[$k]['vlComprovado'] = number_format($item->vlComprovado, 2, ',', '.');
+        }
+
+        $json['itensOrcamentariosImpugnados']['lines'] = $itensAux;
+        $json['itensOrcamentariosImpugnados']['cols'] = [
+            'Projeto',
+            'Produto',
+            'Etapa',
+            'Item',
+            'Documento',
+            '# Comprovante',
+            'Forma de Pagamento',
+            '# Documento de Pagamento',
+            'Justificativa',
+            'Valor Comprovado'
+        ];
+        $json['itensOrcamentariosImpugnados']['title'] = 'ITENS ORÇAMENTÁRIOS IMPUGNADOS NA AVALIAÇÃO FINANCEIRA';
+        /* var_dump($json['itensOrcamentariosImpugnados']);die; */
 
         $this->_helper->json($json);
     }
