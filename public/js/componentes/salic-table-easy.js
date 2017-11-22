@@ -3,7 +3,7 @@ Vue.component(
     {
         template:`
             <table class="">
-                <template v-if="(dados.lines.length > 0)">
+                <template v-if="(dados.lines && dados.lines.length > 0)">
                     <thead v-show="thead">
                         <th v-for="cab in dados.cols">
                             <template v-if="(typeof cab == 'object')">

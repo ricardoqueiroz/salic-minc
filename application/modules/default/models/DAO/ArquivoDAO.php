@@ -59,8 +59,9 @@ class ArquivoDAO extends Zend_Db_Table
      */
     public static function deletar($idArquivo)
     {
-        Zend_Registry::get('db')->exec("delete from BDCORPORATIVO.scCorp.tbArquivoImagem WHERE idArquivo = {$idArquivo}");
-        Zend_Registry::get('db')->exec("delete from BDCORPORATIVO.scCorp.tbArquivo WHERE idArquivo = {$idArquivo}");
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->exec("delete from BDCORPORATIVO.scCorp.tbArquivoImagem WHERE idArquivo = {$idArquivo}");
+        $db->exec("delete from BDCORPORATIVO.scCorp.tbArquivo WHERE idArquivo = {$idArquivo}");
     }
 
     /**

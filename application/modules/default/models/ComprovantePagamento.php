@@ -348,7 +348,7 @@ class ComprovantePagamento extends MinC_Db_Table_Abstract
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function pesquisarComprovante($idComprovante)
+    public function pesquisarComprovante($idComprovante, $fetchMode = Zend_DB::FETCH_ASSOC)
     {
         $select = "SELECT
                     comp.tpDocumento,
@@ -412,7 +412,7 @@ class ComprovantePagamento extends MinC_Db_Table_Abstract
                 WHERE
                     cpxpa.idComprovantePagamento = ?";
         $db = $this->getAdapter();
-        $db->setFetchMode(Zend_DB::FETCH_ASSOC);
+        $db->setFetchMode($fetchMode);
         $statement = $this->getAdapter()->query($select, array($idComprovante));
         return $statement->fetchAll();
     }
