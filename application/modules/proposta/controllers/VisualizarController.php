@@ -158,17 +158,26 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $documentos, 'success' => 'true'));
     }
 
-    public function localDeRealizacaoAction()
+    public function localRealizacaoDeslocamentoAction()
     {
         $this->_helper->layout->disableLayout();
 
+        $idPreProjeto = $this->_request->getParam('idpreprojeto');
+
         $arrBusca = array();
-        $arrBusca['idprojeto'] = $this->idPreProjeto;
+        $arrBusca['idprojeto'] = $idPreProjeto;
         $arrBusca['stabrangencia'] = 1;
         $tblAbrangencia = new Proposta_Model_DbTable_Abrangencia();
-        $rsAbrangencia = $tblAbrangencia->buscar($arrBusca);
+        $dados['localizacoes'] = $tblAbrangencia->buscar($arrBusca);
 
-        $dados = [];
+        $tblDeslocamento = new Proposta_Model_DbTable_TbDeslocamento();
+        $dados['deslocamentos'] = $tblDeslocamento->buscarDeslocamentosGeral(array('idProjeto' => $idPreProjeto));
+
+        foreach ($dados as $key => $array) {
+            foreach ($array as $key2 => $dado) {
+                $dados[$key][$key2] = array_map('utf8_encode', $dado);
+            }
+        }
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
