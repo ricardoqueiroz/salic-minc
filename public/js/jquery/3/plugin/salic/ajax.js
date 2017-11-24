@@ -192,6 +192,9 @@
                                 window.location.href = result.redirect;
                             }
                         }, 500);
+                        if (typeof result.close != 'undefined' && result.close != '0') {
+                            elmForm.closest('.modal').modal('close');
+                        }
                         booReturn = true;
                     } else {
                         if (typeof result.msg != 'string') {

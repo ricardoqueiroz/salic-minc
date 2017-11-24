@@ -1,5 +1,5 @@
 <li>
-    <div class="collapsible-header green white-text">Parecer Tecnico do Projeto</div>
+    <div class="collapsible-header green white-text active">Parecer T&eacute;cnico do Projeto</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
@@ -14,13 +14,13 @@
                 <td colspan="2"><?= $this->arrValue['enquadramentoProjeto']['Proponente'] ?></td>
             </tr>
             <tr>
-                <td>Area: <?= $this->arrValue['enquadramentoProjeto']['Area'] ?></td>
+                <td>&Aacute;rea: <?= $this->arrValue['enquadramentoProjeto']['Area'] ?></td>
                 <td colspan="3">Segmento: <?= $this->arrValue['enquadramentoProjeto']['Segmento'] ?></td>
             </tr>
             <tr>
                 <td>UF:</td>
                 <td><?= $this->arrValue['enquadramentoProjeto']['UfProjeto'] ?></td>
-                <td>Periodo de execucao: <?= $this->arrValue['enquadramentoProjeto']['DtInicioExecucao'] ?>
+                <td>Per&iacute;odo de execu&ccedil;&atilde;o: <?= $this->arrValue['enquadramentoProjeto']['DtInicioExecucao'] ?>
                     a <?= $this->arrValue['enquadramentoProjeto']['DtFimExecucao'] ?></td>
                 <td>Enquadramento: <?= $this->arrValue['enquadramentoProjeto']['Enquadramento'] ?></td>
             </tr>
@@ -35,7 +35,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Memoria de calculo</div>
+    <div class="collapsible-header green white-text">Memoria de c&aacute;lculo</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
@@ -66,17 +66,17 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Avaliacao de Tecnica</div>
+    <div class="collapsible-header green white-text">Avalia&ccedil;&atilde;o de T&eacute;cnica</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
             <tr>
-                <td>Posicionamento Tecnico</td>
+                <td>Posicionamento T&eacute;cnico</td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <?= ($this->arrValue['parecer']['ParecerFavoravel'] == 1)? 'Desfavoravel' : 'Faravel' ?>
+                    <?= ($this->arrValue['parecer']['ParecerFavoravel'] == 1)? 'Desfavor&aacute;vel' : 'Far&aacute;vel' ?>
                 </td>
                 <td>
                     <p>
@@ -89,7 +89,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Acoes relevantes para o sucesso do projeto</div>
+    <div class="collapsible-header green white-text">A&ccedil;&otilde;es relevantes para o sucesso do projeto</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <p><?= $this->arrValue['acaoProjeto']['dsAcaoAlcanceProduto'] ?></p>
@@ -97,20 +97,41 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Apreciacao do Comissionario Relator</div>
+    <div class="collapsible-header green white-text">Aprecia&ccedil;&atilde;o do Comission&aacute;rio Relator</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
             <tr>
-                <td>Posicionamento do Comissario</td>
+                <td>Posicionamento do Comiss&aacute;rio</td>
                 <td></td>
             </tr>
             <tr>
                 <td>
-                    <?= ($this->arrValue['aparicaoComissario']['ParecerFavoravel'] == 1)? 'Desfavoravel' : 'Faravel' ?>
+                    <?= ($this->arrValue['aparicaoComissario']['ParecerFavoravel'] == 1)? 'Desfavor&aacute;vel' : 'Far&aacute;vel' ?>
                 </td>
                 <td>
                     <p><?= $this->arrValue['aparicaoComissario']['ResumoParecer'] ?></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>
+<li>
+    <div class="collapsible-header green white-text">Parecer de Homologa&ccedil;&atilde;o</div>
+    <div class="collapsible-body">
+        <table class="responsive-table bordered-all" style="width: 100%;">
+            <tbody>
+            <tr>
+                <td>Decis&atilde;o</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <?= ($this->arrValue['parecerHomologacao']['stDecisao'] == 0)? 'Desfavor&aacute;vel' : 'Far&aacute;vel' ?>
+                </td>
+                <td>
+                    <p><?= $this->arrValue['parecerHomologacao']['dsHomologacao'] ?></p>
                 </td>
             </tr>
             </tbody>

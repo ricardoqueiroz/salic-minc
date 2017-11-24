@@ -6,9 +6,8 @@
 <div class="modal-content">
     <h4>Visualizar</h4>
     <div>
-        <ul class="collapsible popout" data-collapsible="expandable">
+        <ul class="collapsible popout" data-collapsible="accordion" >
             <?php echo $this->partial('/homologacao/partials/visualizar.phtml', ['arrValue' => $this->arrValue]); ?>
-            <?php echo $this->partial('/homologacao/partials/visualizarParecerHomologacao.phtml', ['arrValue' => $this->arrValue]); ?>
         </ul>
     </div>
 </div>

@@ -42,18 +42,19 @@
                             href="javascript:void(0);"
                             class="btn small waves-effect waves-light tooltipped" data-position="top"
                             data-delay="50" data-tooltip="Homologar projeto"><i class="material-icons">assignment_turned_in</i></a>
-                        <a href="javascript:$3.redirect('<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?>');"
+                        <a href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaanalista', 'idPronac' => $this->idPronac, 'situacao' => 'D25', 'tpDiligencia' => '181', 'idProduto' => ''), null, true); ?>" target="_blank"
                             class="btn small waves-effect waves-light tooltipped" data-position="top"
                             data-delay="50" data-tooltip="Dilig&ecirc;nciar"><i class="material-icons">done</i></a>
 <!--                        <a href="javascript:$3.redirect('--><?php //echo $this->url(arr76ay('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'responder', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?><!--');"-->
 <!--                            class="btn small waves-effect waves-light tooltipped" data-position="top"-->
 <!--                            data-delay="50" data-tooltip="Gerar documento"><i class="material-icons">insert_drive_file</i></a>-->
-                        <a href="javascript:$3.redirect('<?php echo $this->url(array('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'responder', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?>');"
+                        <a data-ajax-modal="<?php echo $this->url(array('module' => 'projeto', 'controller' => 'homologacao', 'action' => 'encaminhar', 'id' => $arrValue['IdPRONAC']), null, true); ?>"
                             class="btn small waves-effect waves-light tooltipped" data-position="top"
                             data-delay="50" data-tooltip="Gerar documento e encaminhar"><i class="material-icons">redo</i></a>
                     </td>
-                </tr>//?idPronac=203042&idProduto=62&situacao=B11&tpDiligencia=124
+                </tr>
             <?php endforeach; ?>
+<!--                                                                                                                                                        /?idPronac=203042&idProduto=62&situacao=B11&tpDiligencia=124-->
             </tbody>
         </table>
     </div>

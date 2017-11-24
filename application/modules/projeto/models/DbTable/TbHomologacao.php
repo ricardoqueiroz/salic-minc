@@ -2,9 +2,11 @@
 
 class Projeto_Model_DbTable_TbHomologacao extends MinC_Db_Table_Abstract
 {
-     protected $_schema = 'sac';
-     protected $_name = 'tbHomologacao';
-     protected $_primary = 'idHomologacao';
+    protected $_schema = 'sac';
+    protected $_name = 'tbHomologacao';
+    protected $_primary = 'idHomologacao';
+//    const K_TPHOMOLOGACAO_
+
     //
     // public function alterarOrgao($orgao, $idPronac) {
     //     $this->update(
