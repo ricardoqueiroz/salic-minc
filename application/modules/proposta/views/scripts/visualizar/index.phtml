@@ -23,10 +23,10 @@
             </div>
         </li>
         <li>
-            <div class="collapsible-header"><i class="material-icons">equalizer</i>Plano Distribui&ccedil;&atilde;o
+            <div id="plano-distribuicao" class="collapsible-header"><i class="material-icons">equalizer</i>Plano Distribui&ccedil;&atilde;o
             </div>
             <div class="collapsible-body padding20">
-                <div id="plano-distribuicao"></div>
+                <div id="html-plano-distribuicao"></div>
             </div>
         </li>
         <li>
@@ -35,6 +35,14 @@
             <div class="collapsible-body padding20">
                 <salic-local-realizacao-deslocamento
                     idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-local-realizacao-deslocamento>
+            </div>
+        </li>
+
+        <li>
+            <div id="planilha-orcamentaria" class="collapsible-header"><i class="material-icons">attach_money</i>Planilha or&ccedil;ament&aacute;ria
+            </div>
+            <div class="collapsible-body padding20">
+                <div id="planilhaOrcamentariaMontada"></div>
             </div>
         </li>
     </ul>
@@ -114,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div v-if="proposta.NrAtoTombamento && proposta.NrAtoTombamento.length > 1" class="card">
             <div class="card-content">
                 <h5>Tombamento</h5>
                 <div class="row">
@@ -172,7 +180,7 @@
         <div class="card">
             <div class="card-content">
                 <h5>Endere&ccedil;o</h5>
-                <table class="bordered striped responsive-table">
+                <table class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Tipo de Endere&ccedil;o</th>
@@ -206,7 +214,7 @@
         <div class="card">
             <div class="card-content">
                 <h5>Telefones</h5>
-                <table class="bordered striped responsive-table">
+                <table class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Tipo</th>
@@ -232,7 +240,7 @@
         <div class="card">
             <div class="card-content">
                 <h5>E-mail</h5>
-                <table class="bordered striped responsive-table">
+                <table class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Tipo</th>
@@ -255,7 +263,7 @@
             <div class="card-content">
                 <h5>Natureza</h5>
                 <table v-if="proponente.natureza && proponente.natureza.length"
-                       class="bordered striped responsive-table">
+                       class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Direito</th>
@@ -281,7 +289,7 @@
             <div class="card-content">
                 <h5>Dirigentes</h5>
                 <table v-if="proponente.dirigentes && proponente.dirigentes.length"
-                       class="bordered striped responsive-table">
+                       class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th width="20%">CPF</th>
@@ -324,12 +332,12 @@
         <div class="card">
             <div class="card-content">
                 <h5>Documentos da Proposta</h5>
-                <table v-if="documentos.proposta" class="bordered striped responsive-table">
+                <table v-if="documentos.proposta" class="bordered responsive-table">
                     <thead>
                     <tr>
-                        <td>Documento</td>
-                        <td>Data envio</td>
-                        <td>Arquivo</td>
+                        <th>Documento</th>
+                        <th>Data envio</th>
+                        <th>Arquivo</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -349,12 +357,12 @@
         <div class="card">
             <div class="card-content">
                 <h5>Documentos do Proponente</h5>
-                <table class="bordered striped responsive-table">
+                <table class="bordered responsive-table">
                     <thead>
                     <tr>
-                        <td>Documento</td>
-                        <td>Data envio</td>
-                        <td>Arquivo</td>
+                        <th>Documento</th>
+                        <th>Data envio</th>
+                        <th>Arquivo</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -378,7 +386,7 @@
         <div class="card">
             <div class="card-content">
                 <h5>Local de Realiza&ccedil;&atilde;o</h5>
-                <table v-if="proposta.localizacoes" class="bordered striped responsive-table">
+                <table v-if="proposta.localizacoes" class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Pais</th>
@@ -401,7 +409,7 @@
         <div class="card">
             <div class="card-content">
                 <h5>Deslocamentos</h5>
-                <table v-if="proposta.deslocamentos" class="bordered striped responsive-table">
+                <table v-if="proposta.deslocamentos && proposta.deslocamentos.lenght > 1" class="bordered responsive-table">
                     <thead>
                     <tr>
                         <th>Pais de Origem</th>
@@ -688,18 +696,18 @@
 
     new Vue({
         el: '#container'
-    })
-</script>
+    });
 
-<script>
-    function carregaDados(url, divRetorno) {
-        $.ajax({
-            url: url,
-            success: function (data) {
-                $("#" + divRetorno).html(data);
-            },
-            type: 'post'
+
+    $3(document).ready(function ($) {
+        $("#plano-distribuicao").on('click', function () {
+            let idRetorno = 'plano-distribuicao';
+            jqAjaxLink('<?php echo $this->url(['module' => 'proposta', 'controller' => 'visualizar-plano-distribuicao', 'action' => 'visualizar', 'idPreProjeto' => $this->idPreProjeto]); ?>', '','html-plano-distribuicao');
         });
-    }
-    carregaDados('<?php echo $this->url(['module' => 'proposta', 'controller' => 'visualizar-plano-distribuicao', 'action' => 'visualizar', 'idPreProjeto' => $this->idPreProjeto]); ?>', 'plano-distribuicao');
+
+        $("#planilha-orcamentaria").on('click', function () {
+            jqAjaxLink('<?php echo $this->Url(array('module'=>'default','controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?= $this->idPreProjeto; ?>&tipoPlanilha=0', '', 'planilhaOrcamentariaMontada');
+        });
+
+    });
 </script>
