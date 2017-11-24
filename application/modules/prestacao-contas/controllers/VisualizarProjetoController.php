@@ -181,7 +181,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
             $itensAux[$k]['nmFornecedor'] = utf8_encode($item->nmFornecedor);
             $itensAux[$k]['qtComprovacoes'] = utf8_encode($item->qtComprovacoes);
             $itensAux[$k]['vlComprovado'] = number_format($item->vlComprovado, 2, ',', '.');
-            $itensAux[$k]['PercComprovado'] = utf8_encode($item->PercComprovado);
+            $itensAux[$k]['PercComprovado'] = number_format(utf8_encode($item->PercComprovado), 2, ',', '.');
             //totais
             $totalAux['qtComprovacoes'] += $item->qtComprovacoes;
             $totalAux['vlComprovado'] += $item->vlComprovado;
@@ -213,7 +213,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
             $itensAux[$k]['nmFornecedor'] = utf8_encode($item->nmFornecedor);
             $itensAux[$k]['qtComprovacoes'] = utf8_encode($item->qtComprovacoes);
             $itensAux[$k]['vlComprovado'] = number_format($item->vlComprovado, 2, ',', '.');
-            $itensAux[$k]['PercComprovado'] = utf8_encode($item->PercComprovado);
+            $itensAux[$k]['PercComprovado'] = number_format(utf8_encode($item->PercComprovado), 2, ',', '.');
             //totais
             $totalAux['qtComprovacoes'] += $item->qtComprovacoes;
             $totalAux['vlComprovado'] += $item->vlComprovado;
@@ -251,7 +251,13 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         }
 
         $json['fornecedorItemProjeto']['lines'] = $itensAux;
-        $json['fornecedorItemProjeto']['cols'] = ['CNPJ/CPF', 'Fornecedor', 'Item', 'Valor Comprovado', '% Comprovado'];
+        $json['fornecedorItemProjeto']['cols'] = [
+            'nrCNPJCPF' => ['name'=> 'CNPJ/CPF'],
+            'nmFornecedor' => ['name' => 'Fornecedor'],
+            'Etapa' => ['name' => 'Etapa'],
+            'vlComprovado' => ['name' => 'Valor Comprovado', 'class' => 'right-align'],
+            'PercComprovado' => ['name' => '% Comprovado', 'class' => 'right-align']
+        ];
         $json['fornecedorItemProjeto']['title'] = 'PROPONENTE FORNECEDOR DE ITEM PARA O PROJETO';
         $totalAux['vlComprovado'] = number_format($totalAux['vlComprovado'], 2, ',', '.');
         $json['fornecedorItemProjeto']['tfoot'] = $totalAux;
@@ -260,6 +266,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
         //itensOrcamentariosImpugnados
         $itensOrcamentariosImpugnados = $itens->itensOrcamentariosImpugnados($idPronac);
         $itensAux = [];
+        $totalAux = [];
         foreach ($itensOrcamentariosImpugnados as $k => $item) {
             $itensAux[$k]['NomeProjeto'] = utf8_encode($item->NomeProjeto);
             $itensAux[$k]['Produto'] = utf8_encode($item->Produto);
@@ -274,7 +281,6 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
             $itensAux[$k]['vlComprovado'] = number_format($item->vlComprovado, 2, ',', '.');
             //totais
             $totalAux['vlComprovado'] += $item->vlComprovado;
-            $totalAux['NomeProjeto'] = 'Total';
         }
 
         $json['itensOrcamentariosImpugnados']['lines'] = $itensAux;
@@ -291,6 +297,7 @@ class PrestacaoContas_VisualizarProjetoController extends  MinC_Controller_Actio
             'vlComprovado' => [ 'name' => 'Valor Comprovado', 'class' => 'right-align']
         ];
         $json['itensOrcamentariosImpugnados']['title'] = 'ITENS ORÇAMENTÁRIOS IMPUGNADOS NA AVALIAÇÃO FINANCEIRA';
+        $totalAux['NomeProjeto'] = 'Total';
         $totalAux['vlComprovado'] = number_format($totalAux['vlComprovado'], 2, ',', '.');
         $json['itensOrcamentariosImpugnados']['tfoot'] = $totalAux;
 
