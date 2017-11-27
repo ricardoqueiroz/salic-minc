@@ -292,7 +292,7 @@ abstract class MinC_Db_Table_Abstract extends Zend_Db_Table_Abstract
     /**
      *
      * @name findBy
-     * @param array $where
+     * @param mixed $where
      * @return array
      *
      * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>

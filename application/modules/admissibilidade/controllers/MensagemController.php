@@ -5,7 +5,6 @@
  * @package Modules/admissibilidade
  * @subpackage Controller
  *
- * @author Equipe RUP - Politec
  * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
  * @since 07/12/2016
  *
