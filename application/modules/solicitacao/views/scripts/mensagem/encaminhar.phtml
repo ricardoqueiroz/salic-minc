@@ -1,0 +1,22 @@
+<div class="modal-content">
+    <h4>Encaminhar pergunta</h4>
+    <?php echo $this->partial('/mensagem/partials/form.phtml', $this->arrPartial); ?>
+</div>
+<div class="modal-footer">
+    <a id="btn-enviar" style="margin-left: 15px;" class="modal-action waves-effect waves-green btn-flat green-text">Encaminhar</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-orange orange-text btn-flat">Cancelar</a>
+</div>
+<script>
+    $3(document).ready(function ($) {
+        $('#btn-enviar').on('click', function () {
+            var elmForm = $(this).closest('div.modal').find('form');
+            $(elmForm).ajaxFormSubmit(function (booStatus) {
+                if (booStatus) {
+                    $3('#modal').modal('close');
+                    var divRender = $('div[data-ajax-render]');
+                    $3.ajaxRender({strUrl: divRender.attr('data-ajax-render'), strTarget: '#' + divRender.attr('id')});
+                }
+            });
+        });
+    });
+</script>

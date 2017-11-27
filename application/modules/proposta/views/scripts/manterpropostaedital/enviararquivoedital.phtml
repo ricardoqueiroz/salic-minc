@@ -12,14 +12,14 @@ $edital='';
 ?>
 <div class="container-fluid">
     <div class="row">
-        <?php echo $this->partial("inc/menu.phtml", $this); ?>
+        <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto)); ?>
         <div class="content col s10 m12 l10 planilha-produtos">
             <div id="msgExclusaoArq" class="sumir">Deseja realmente efetuar a exclus&atilde;o?</div>
             <h4>Anexar Documentos</h4>
             <div id="">
                 <?php if( !$this->isEditarProjeto) : ?>
                     <form method="post" action="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaedital', 'action' => 'incluir-anexo')) ?>" id="formulario"  enctype="multipart/form-data">
-                        <input type="hidden" name="idPreProjeto" value="<?php echo $_GET['idPreProjeto'] ?>" >
+                        <input type="hidden" name="idPreProjeto" value="<?php echo $this->idPreProjeto; ?>" >
                         <input type="hidden" name="edital" value="<?php echo $edital ?>" />
                          <fieldset>
                             <legend>Novo Arquivo</legend>
@@ -88,7 +88,7 @@ $edital='';
                         <?php if ($this->isEditavel) : ?>
                             <td align="center">
                                 <button type="button" class="btn red white-text"
-                                    onclick="excluirAnexos(<?php echo $arquivosProposta['iddocumentospreprojetos']; ?>, <?php echo trim($_GET['idPreProjeto']); ?>, 'proposta');" >
+                                    onclick="excluirAnexos(<?php echo $arquivosProposta['iddocumentospreprojetos']; ?>, <?php echo trim($this->idPreProjeto); ?>, 'proposta');" >
                                     Excluir
                                 </button>
                             </td>
@@ -120,7 +120,7 @@ $edital='';
                                 <?php if ($this->isEditavel) : ?>
                                     <button type="button"
                                         class="btn red white-text"
-                                        onclick="excluirAnexos(<?php echo $arquivosProponente['idDocumentosAgentes']; ?>, <?php echo trim($_GET['idPreProjeto']); ?>, 'proponente');" />
+                                        onclick="excluirAnexos(<?php echo $arquivosProponente['idDocumentosAgentes']; ?>, <?php echo trim($this->idPreProjeto); ?>, 'proponente');" />
                                     excluir</button>
                                 <?php endif; ?>
                             </td>

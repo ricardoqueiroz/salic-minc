@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <div class="row">
+        <?php if ($this->idPreProjeto && $this->ehProponente) : ?>
+            <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto)); ?>
+        <?php else: ?>
+            <?= $this->partial('/mensagem/partials/menu.phtml', $this); ?>
+        <?php endif; ?>
+
+        <div class="card col s10 m12 l10">
+            <h5>Enviar nova solicita&ccedil;&atilde;o Proponente</h5>
+            <?= $this->partial('/mensagem/partials/form.phtml', $this->arrPartial); ?>
+        </div>
+    </div>
+</div>

@@ -91,11 +91,11 @@ a:hover {
 }
 
 select {
-	min-height: 30px;
+    min-height: 30px;
 }
 
 .sumir {
-    display:none;
+    display: none;
 }
 
 /*--------------------------------------------------------------
@@ -112,44 +112,48 @@ x - ALINHAMENTOS
 x - MENSAGENS
 --------------------------------------------------------------*/
 .msg, .msgALERT, .msgCONFIRM, .msgERROR, .carregando_ajax, .carregando {
-    background:#ffc;
-    border:1px solid #ccc;
+    background: #ffc;
+    border: 1px solid #ccc;
     /*padding:5px;*/
-    margin:10px 10px 20px;
-    font:bold 12px Verdana, Arial, Helvetica, sans-serif;
-    color:#f03;
-    text-align:left;
+    margin: 10px 10px 20px;
+    font: bold 12px Verdana, Arial, Helvetica, sans-serif;
+    color: #f03;
+    text-align: left;
     clear: both;
     padding: 12px;
 }
 
 .msgALERT, .msgCONFIRM, .msgERROR {
-    min-height:42px;
-}
-.msgALERT div, .msgCONFIRM div, .msgERROR div {
-    margin-left:40px;
-    font:normal 14px Arial, Helvetica, sans-serif;
-}
-.msgALERT a, .msgCONFIRM a, .msgERROR a {
-    color:navy;
-    font-weight:bold;
-}
-.msgALERT {
-    border:1px solid #fc0;
-    color:#000;
-    background:#ffc url(../img/msgALERT.png) 3px 3px no-repeat;
-}
-.msgCONFIRM {
-    border:1px solid #096;
-    color:#000;
-    background:#6c6 url(../img/msgCONFIRM.png) 3px 3px no-repeat;
-}
-.msgERROR {
-    border:1px solid #f00;
-    color:#000;
-    background:#f96 url(../img/msgERROR.png) 3px 3px no-repeat;
+    min-height: 42px;
 }
 
+.msgALERT div, .msgCONFIRM div, .msgERROR div {
+    margin-left: 40px;
+    font: normal 14px Arial, Helvetica, sans-serif;
+}
+
+.msgALERT a, .msgCONFIRM a, .msgERROR a {
+    color: navy;
+    font-weight: bold;
+}
+
+.msgALERT {
+    border: 1px solid #fc0;
+    color: #000;
+    background: #ffc url(../img/msgALERT.png) 3px 3px no-repeat;
+}
+
+.msgCONFIRM {
+    border: 1px solid #096;
+    color: #000;
+    background: #6c6 url(../img/msgCONFIRM.png) 3px 3px no-repeat;
+}
+
+.msgERROR {
+    border: 1px solid #f00;
+    color: #000;
+    background: #f96 url(../img/msgERROR.png) 3px 3px no-repeat;
+}
 
 /*--------------------------------------------------------------
 x - SANFONA
@@ -157,34 +161,37 @@ x - SANFONA
 /* ajustes para ativaCAo do highlight no menu 'sanfona' */
 .qmactive { background:url(../img/seta-menu-contexto-on.png) no-repeat !important; }
 #space_menu {
-    background:#f8f8f8;
-    height:480px;
+    background: #f8f8f8;
+    height: 480px;
 }
 
 /*--------------------------------------------------------------
 x - LOADER
 --------------------------------------------------------------*/
 .carregando {
-    text-align:center;
+    text-align: center;
 }
+
 .carregando_ajax {
-    background:#ffc url(../img/ajax.gif) 5px center no-repeat;
-    vertical-align:bottom;
+    background: #ffc url(../img/ajax.gif) 5px center no-repeat;
+    vertical-align: bottom;
 }
+
 .carregando_ajax .txt_ajax {
-    margin-left:90px;
+    margin-left: 90px;
 }
 
 .loader {
-    background:url(../img/ajax.gif) no-repeat center;
-    padding:5px 0 50px;
-    height:1px;
+    background: url(../img/ajax.gif) no-repeat center;
+    padding: 5px 0 50px;
+    height: 1px;
 }
+
 .tag_pre {
-    overflow-x:auto;
-    white-space:-moz-pre-wrap !important;
-    white-space:-o-pre-wrap;
-    white-space:pre-wrap;
+    overflow-x: auto;
+    white-space: -moz-pre-wrap !important;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
     word-wrap: break-word;
 }
 
@@ -367,10 +374,147 @@ header #navglobal ul li a.home {
     padding: 2px;
 }
 
+header .menu-apoio {
+    margin-right: 30px;
+}
+
 header#navglobal ul li a.home span {
     visibility: hidden;
 }
 
+header .btn-notificacao a {
+    position: relative;
+    padding: 0;
+}
+
+header .btn-notificacao .btn-floating {
+    border-radius: 10%;
+    color: #fff;
+    cursor: pointer;
+    height: 15px !important;
+    width: 15px !important;
+    line-height: 16px;
+    position: absolute;
+    left: 13px;
+    top: 10px;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 1;
+    font-size: 9px !important;
+}
+
+header .btn-notificacao a.dropdown-button i {
+    margin-right: 5px;
+}
+
+header #header_notificacoes {
+    position: absolute;
+    left: -370px;
+    top: 50px !important;
+    width: 400px !important;
+    max-height: 350px;
+    min-height: 250px;
+    z-index: 999;
+    background: #fff;
+    border-color: #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    overflow: visible;
+    border-radius: 5px;
+}
+
+header #header_notificacoes:before {
+    content: "";
+    display: block;
+    position: absolute;
+    right: 10px;
+    top: -8px;
+    width: 0;
+    border-width: 0 8px 8px 8px;
+    border-style: solid;
+    border-color: #f3f3f3 transparent;
+    z-index: 999;
+}
+
+header #header_notificacoes .card-panel {
+    background-color: transparent;
+    padding: 0;
+}
+
+header #header_notificacoes .mensagem-heading {
+    display: block;
+    padding: 5px 10px 10px 10px;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 500;
+    color: #292929;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+header #header_notificacoes .mensagem-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+}
+
+header #header_notificacoes .mensagem-footer a,
+header #header_notificacoes .mensagem-content a,
+header #header_notificacoes .mensagem-content {
+    font-size: 14px;
+    line-height: 18px;
+    color: #212121
+}
+
+header #header_notificacoes .mensagem-content .not-read a {
+    background-color: #e6e6e6;
+}
+
+header #header_notificacoes .mensagem-content {
+    max-height: 400px;
+    margin-bottom: 38px;
+    /*overflow-y: scroll;*/
+}
+
+header #header_notificacoes .mensagem-content {
+
+}
+
+header #header_notificacoes .mensagem-content a {
+    padding: 15px 10px;
+    margin: 0;
+    border-bottom: 1px solid #e2e2e2;
+    background-color: #f5f5f5;
+}
+
+header #header_notificacoes .mensagem-content a:hover,
+header #header_notificacoes .mensagem-content a:focus,
+header #header_notificacoes .mensagem-content a:active {
+    background-color: #eee;
+}
+
+/*header #header_notificacoes .mensagem-content span {*/
+/*color: #2A2A2A;*/
+/*}*/
+
+/*header #header_notificacoes a.mensagem-title {*/
+/*!*font-weight: bold;*!*/
+/*}*/
+
+header #header_notificacoes .mensagem-date {
+    font-size: 10px;
+    color: #8a8a8a;
+    float: right;
+}
+
+header #header_notificacoes .mensagem-footer a {
+    color: #4c4c4c;
+    padding: 10px 0;
+}
 
 /*--------------------------------------------------------------
 x - CONTAINER
@@ -392,7 +536,6 @@ x - CONTAINER
 .site-content {
     min-height: 500px;
 }
-
 
 /*--------------------------------------------------------------
 x - Container-fluid
@@ -483,6 +626,7 @@ x - Container-fluid
     background: transparent;
     border: 1px solid #ddd;
 }
+
 /*--------------------------------------------------------------
 x - BREADCRUMB
 --------------------------------------------------------------*/
@@ -572,7 +716,6 @@ x - TITULO
     background: url(../img/voltar.png) no-repeat;
     padding-left: 17px;
 }
-
 
 /*--------------------------------------------------------------
 x - SIDEBAR - #menuContainer -  - Menu lateral
@@ -2379,3 +2522,185 @@ table.tabela td.destacar span,
 input#stEnvioPlenaria {
     display: none;
 }
+
+
+
+
+table.highlight > tbody > tr:hover, table.striped > tbody > tr:nth-child(odd) {
+    background-color: #f2f2f2
+}
+
+table, td, th {
+    border: none
+}
+
+table {
+    width: 100%;
+    display: table
+}
+
+table.striped > tbody > tr > td {
+    border-radius: 0
+}
+
+table.highlight > tbody > tr {
+    transition: background-color .25s ease
+}
+
+td, th {
+    padding: 15px 5px;
+    display: table-cell;
+    text-align: left;
+    vertical-align: middle;
+    border-radius: 2px
+}
+
+@media only screen and (max-width: 992px) {
+    table.responsive-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        display: block;
+        position: relative
+    }
+
+    table.responsive-table td, table.responsive-table th {
+        margin: 0;
+        vertical-align: top
+    }
+
+    table.responsive-table thead {
+        display: block;
+        float: left;
+        border: 0;
+        border-right: 1px solid #d0d0d0
+    }
+
+    table.responsive-table thead tr {
+        display: block;
+        padding: 0 10px 0 0
+    }
+
+    table.responsive-table thead tr th::before {
+        content: "\00a0"
+    }
+
+    table.responsive-table tbody {
+        display: block;
+        width: auto;
+        position: relative;
+        overflow-x: auto;
+        white-space: nowrap
+    }
+
+    table.responsive-table tbody tr {
+        display: inline-block;
+        vertical-align: top
+    }
+
+    table.responsive-table th {
+        display: block;
+        text-align: right
+    }
+
+    table.responsive-table td {
+        display: block;
+        min-height: 1.25em;
+        text-align: left
+    }
+
+    table.responsive-table tr {
+        padding: 0 10px
+    }
+
+    table.responsive-table.bordered th {
+        border-bottom: 0;
+        border-left: 0
+    }
+
+    table.responsive-table.bordered td {
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0
+    }
+
+    table.responsive-table.bordered tr {
+        border: 0
+    }
+
+    table.responsive-table.bordered tbody tr {
+        border-right: 1px solid #d0d0d0
+    }
+}
+
+.table-responsive {
+    overflow-x: auto;
+    min-height: .01%;
+}
+
+.table-bordered,
+.table-bordered > tbody > tr > td,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > td,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > thead > tr > th {
+    border: 1px solid #ddd;
+}
+
+.solicitacoes {
+
+}
+
+
+.mensagens {
+    padding-right: 1rem
+}
+
+.mensagens table td,
+.mensagens table th {
+    padding: 6px;
+}
+
+.mensagens table > tbody > tr.unread {
+    font-weight: 700
+}
+
+.mensagens table > tbody > tr.read {
+    background: #f5f5f5
+}
+
+.mensagens table > tbody > tr a {
+    color: inherit;
+    text-decoration: none !important;
+}
+
+.mensagens table > tbody > tr > td,
+.mensagens table > tbody > tr > th {
+    padding: 10px
+}
+
+.mensagens table > tbody > tr .mail-check label {
+    padding-left: 20px;
+    margin-right: 0;
+    height: 17px;
+    line-height: 17px
+}
+
+.mensagens table > tbody > tr .mail-contact {
+    width: 25%
+}
+
+.mensagens table > tbody > tr .mail-subject {
+    width: 75%
+}
+
+.mensagens table > tbody > tr .mail-date {
+    text-align: right;
+    white-space: nowrap
+}
+
+.mail-compose .cke {
+    margin-bottom: 1rem
+}
+

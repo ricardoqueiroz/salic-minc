@@ -81,4 +81,6 @@ class Arquivo extends MinC_Db_Table_Abstract {
         return $db->fetchAll($sql);
     }
 
+
+
 }

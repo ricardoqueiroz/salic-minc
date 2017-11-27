@@ -56,14 +56,11 @@ class CepController extends MinC_Controller_Action_Abstract
 
             $buscarCEP = $_end . ":" . $_complemento . ":" . $_bairro . ":" . $_cod_cidade . ":" . $_cidade . ":" . $_uf . ";";
 
-
-
         } // fecha if
         else // caso nao ache o cep
         {
             $buscarCEP = "";
         }
-
 
         $this->view->cep = $buscarCEP;
     }

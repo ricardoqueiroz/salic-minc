@@ -21,11 +21,6 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
     private $bln_readequacao = "false";
     private $idPreProjeto   = 0;
 
-    const TIPO_PLANILHA_APROVADA = 3;
-    const TIPO_PLANILHA_REMANEJADA = 5;
-    const TIPO_PLANILHA_COMPLEMENTACAO_REDUCAO = 6;
-    const PERCENTUAL_REMANEJAMENTO = 50;
-    
     /**
      * Reescreve o metodo init()
      * @access public
@@ -133,10 +128,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $cpf = $proj->buscarProponenteProjeto($idPronac);
             $cpf = $cpf->CgcCpf;
             $idUsuarioLogado = $auth->getIdentity()->IdUsuario;
-
+            
             $links = new fnLiberarLinks();
-            // @TODO REMOVER FUTURAMENTE ESSA FUNÇÃO
-            //$linksXpermissao = $links->liberarLinks(2, $cpf, $idUsuarioLogado, $idPronac);
             $linksXpermissao = $links->links(2, $cpf, $idUsuarioLogado, $idPronac);
 
             $linksGeral = str_replace(' ', '', explode('-', $linksXpermissao->links));
@@ -153,7 +146,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 'Analise' => $linksGeral[8],
                 'Execucao' => $linksGeral[9],
                 'PrestacaoContas' => $linksGeral[10],
-                'Readequacao_20' => $linksGeral[11],
+                'Readequacao_50' => $linksGeral[11],
                 'Marcas' => $linksGeral[12],
                 'SolicitarProrrogacao' => $linksGeral[13],
                 'ReadequacaoPlanilha' => $linksGeral[14]
@@ -202,9 +195,11 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
      */
     public function indexAction()
     {
-        if (isset($_REQUEST['idPronac'])) {
+        $params = $this->getRequest()->getParams();
 
-            $idPronac = $_GET['idPronac'];
+        if (isset($params['idPronac'])) {
+
+            $idPronac = $params['idPronac'];
             if (strlen($idPronac) > 7) {
                 $idPronac = Seguranca::dencrypt($idPronac);
             }
@@ -461,8 +456,10 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
 
         $this->_helper->layout->disableLayout();
 
-        if (isset($_REQUEST['idPronac'])) {
-        	$idPronac = $_REQUEST['idPronac'];
+        $params = $this->getRequest()->getParams();
+
+        if (isset($params['idPronac'])) {
+        	$idPronac = $params['idPronac'];
 			if (strlen($idPronac) > 7) {
 				$idPronac = Seguranca::dencrypt($idPronac);
 			}
@@ -487,7 +484,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
     public function planilhapdfAction() {
         $this->_helper->layout->disableLayout();
 
-        $this->view->idPreProjeto = $_REQUEST['idPreProjeto'];
+        $this->view->idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
     }
 
     public function faseDoProjeto($idPronac){
@@ -659,9 +656,12 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
 
     public function dadosProponenteAction() {
         $this->_helper->layout->disableLayout(); // Desabilita o Zend Layout
-        if (isset($_REQUEST['idPronac'])) {
 
-            $idPronac = $_GET['idPronac'];
+        $params = $this->getRequest()->getParams();
+
+        if (isset($params['idPronac'])) {
+
+            $idPronac = $params['idPronac'];
             if (strlen($idPronac) > 7) {
                 $idPronac = Seguranca::dencrypt($idPronac);
             }
@@ -2281,6 +2281,10 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
 
     public function remanejamentoMenorAction()
     {
+        if (!$this->blnProponente) {
+            parent::message("Sem permiss&atilde;o para remanejar o projeto!", "listarprojetos/listarprojetos", "ERROR");
+        }
+        
         //REMANEJAMENTO MENOR OU IGUAL A 50%
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
@@ -2290,32 +2294,43 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         $projetos = new Projetos();
         $DadosProjeto = $projetos->buscarProjetoXProponente(array('idPronac = ?' => $idPronac))->current();
         $this->view->DadosProjeto = $DadosProjeto;
+        
+        $readequacao = new tbReadequacao();
+        $existeRemanejamento50EmAndamento = $readequacao->existeRemanejamento50EmAndamento($idPronac);
+        
+        if ($existeRemanejamento50EmAndamento) {
+            $tbPlanilhaAprovacao = new PlanilhaAprovacao();
+            $planilhaOrcamentaria = $tbPlanilhaAprovacao->visualizarPlanilhaEmRemanejamento($idPronac);
 
-        // verificar se j� existe planilha de remanejamento de 50%
-        $sql = "SELECT COUNT(*) FROM sac.dbo.tbPlanilhaAprovacao WHERE idPronac = " . $idPronac . " AND tpPlanilha = 'RP'";
-        $db = Zend_Db_Table::getDefaultAdapter();
-        $db->setFetchMode(Zend_DB :: FETCH_OBJ);
-        $countTpPlanilhaRemanej = $db->fetchOne($sql);
-        
-        // seleciona planilha ativa
-        $spSelecionarPlanilhaOrcamentariaAtiva = new spSelecionarPlanilhaOrcamentariaAtiva();
-        $tpPlanilhaAtiva = $spSelecionarPlanilhaOrcamentariaAtiva->exec($idPronac);
-        
-        $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
-        if ($countTpPlanilhaRemanej == 0) {
-            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPronac, $tpPlanilhaAtiva);
-        } else {
-            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPronac, self::TIPO_PLANILHA_REMANEJADA);
+            $tbReadequacao = new tbReadequacao();
+            $readequacaoAtiva = $tbReadequacao->buscar(
+                array(
+                    'idPronac = ?' => $idPronac,
+                    'stEstado =?' => 1
+                )
+            );
+            if (count($readequacaoAtiva)>0) {
+                $this->view->idReadequacao = $readequacaoAtiva[0]['idReadequacao'];
+            }
+                
+        } else if (!$existeRemanejamento50EmAndamento) {
+            $db = Zend_Db_Table::getDefaultAdapter();
+            $db->setFetchMode(Zend_DB :: FETCH_OBJ);
+            $countTpPlanilhaRemanej = $db->fetchOne($sql);
+            
+            $spVisualizarPlanilhaOrcamentaria = new spVisualizarPlanilhaOrcamentaria();
+            $planilhaOrcamentaria = $spVisualizarPlanilhaOrcamentaria->exec($idPronac);
         }
         
-        $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, self::TIPO_PLANILHA_REMANEJADA);
+        $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, PlanilhaAprovacao::TIPO_PLANILHA_REMANEJADA);
+        
         $this->view->planilha = $planilha;
-        $this->view->tipoPlanilha = self::TIPO_PLANILHA_REMANEJADA;
+        $this->view->tipoPlanilha = PlanilhaAprovacao::TIPO_PLANILHA_REMANEJADA;
     }
 
     public function remanejamentoMenorFinalizarAction()
     {
-        //REMANEJAMENTO MENOR OU IGUAL A 20%
+        //REMANEJAMENTO MENOR OU IGUAL A 50%
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
@@ -2344,13 +2359,22 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         $where['a.idEtapa in (?)'] = array(5);
         $PlanilhaAtivaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
+        $tbReadequacao = new tbReadequacao();
+        $readequacaoAtiva = $tbReadequacao->buscar(
+            array(
+                'idPronac = ?' => $idPronac,
+                'stEstado =?' => 1
+            )
+        );
+        $idReadequacao = $readequacaoAtiva[0]['idReadequacao'];
 
         //ARRAY PARA BUSCAR VALOR TOTAL DA PLANILHA REMANEJADA
         $where = array();
         $where['a.IdPRONAC = ?'] = $idPronac;
         $where['a.tpPlanilha = ?'] = 'RP';
         $where['a.stAtivo = ?'] = 'N';
-
+        $where['a.idReadequacao = ?'] = $idReadequacao;
+        
         //PLANILHA ATIVA - GRUPO A
         $where['a.idEtapa in (?)'] = array(1,2);
         $PlanilhaRemanejadaGrupoA = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
@@ -2424,26 +2448,40 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $tblAgente = new Agente_Model_DbTable_Agentes();
             $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
 
-            $tbReadequacao = new tbReadequacao();
+            
             $dadosReadequacao = array();
             $dadosReadequacao['idPronac'] = $idPronac;
-            $dadosReadequacao['idTipoReadequacao'] = 1;
             $dadosReadequacao['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
             $dadosReadequacao['idSolicitante'] = $rsAgente->idAgente;
             $dadosReadequacao['dsJustificativa'] = utf8_decode('Readequação até 50%');
-            $dadosReadequacao['stAtendimento'] = 'D';
-            $dadosReadequacao['siEncaminhamento'] = 11;
-            $dadosReadequacao['stEstado'] = 1;
-            $idReadequacao = $tbReadequacao->inserir($dadosReadequacao);
-
-            if($idReadequacao > 0){
-                $d = array('stAtivo' => 'S');
-                $w = array('IdPRONAC = ?' => $idPronac, 'tpPlanilha = ?' => 'RP', 'stAtivo = ?' => 'N');
-                $update = $tbPlanilhaAprovacao->update($d, $w);
-
-                $d2 = array('stAtivo' => 'N');
-                $w2 = array('IdPRONAC = ?' => $idPronac, 'tpPlanilha != ?' => 'RP', 'stAtivo = ?' => 'S');
-                $tbPlanilhaAprovacao->update($d2, $w2);
+            $dadosReadequacao['stEstado'] = 0;
+            $update = $tbReadequacao->update(
+                $dadosReadequacao,
+                array(
+                    'idPronac=?' => $idPronac,
+                    'idTipoReadequacao=?' => tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                    'stAtendimento=?' => 'D',
+                    'siEncaminhamento=?' => 11,
+                    'stEstado=?' => 1,
+                    'idReadequacao=?' => $idReadequacao
+                )
+            );
+            
+            if($update > 0){
+                $dadosReadequacaoAnterior = array('stAtivo' => 'N');
+                $whereReadequacaoAnterior = array(
+                    'IdPRONAC = ?' => $idPronac,
+                    'stAtivo = ?' => 'S'
+                );
+                $update = $tbPlanilhaAprovacao->update($dadosReadequacaoAnterior, $whereReadequacaoAnterior);
+                
+                $dadosReadequacaoNova = array('stAtivo' => 'S');
+                $whereReadequacaoNova = array(
+                    'IdPRONAC = ?' => $idPronac,
+                    'stAtivo = ?' => 'N',
+                    'idReadequacao=?' => $idReadequacao
+                );
+                $tbPlanilhaAprovacao->update($dadosReadequacaoNova, $whereReadequacaoNova);
                 parent::message("O remanejamento foi finalizado com sucesso!", "consultardadosprojeto?idPronac=$id", "CONFIRM");
             } else {
                 parent::message("Ocorreu um erro durante o cadastro do remanejamento!", "consultardadosprojeto?idPronac=$id", "ERROR");
@@ -2458,7 +2496,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
+        
         try {
 
             $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
@@ -2484,14 +2522,30 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $where['a.idEtapa in (?)'] = array(5);
             $PlanilhaAtivaGrupoD = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
-
-            //ARRAY PARA BUSCAR VALOR TOTAL DA PLANILHA REMANEJADA
+            $tbReadequacao = new tbReadequacao();
+            $readequacaoAtiva = $tbReadequacao->buscar(
+                array(
+                    'idPronac = ?'=> $idPronac,
+                    'stEstado = ?'=> 1
+                )
+            );
+            
             $where = array();
             $where['a.IdPRONAC = ?'] = $idPronac;
-            $where['a.tpPlanilha = ?'] = 'RP';
-            $where['a.stAtivo = ?'] = 'N';
-            $PlanilhaRemanejada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
+            
+            //ARRAY PARA BUSCAR VALOR TOTAL DA PLANILHA REMANEJADA
+            if (count($readequacaoAtiva) > 0) {
+                $idReadequacao = $readequacaoAtiva[0]['idReadequacao'];
 
+                $where['a.tpPlanilha = ?'] = 'RP';
+                $where['a.stAtivo = ?'] = 'N';
+                $where['a.idReadequacao = ?'] = $idReadequacao;
+            } else if (count($readequacaoAtiva) == 0) { 
+                $where['a.stAtivo = ?'] = 'S';
+            }
+            
+            $PlanilhaRemanejada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
+            
             //PLANILHA ATIVA - GRUPO A
             $where['a.idEtapa in (?)'] = array(1,2);
             $PlanilhaRemanejadaGrupoA = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
@@ -2530,6 +2584,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $valorTotalGrupoASoma = 0;
                         
             $dadosPlanilha = array();
+            $dadosPlanilha['dadosPlanilhaAtivaA'] = $PlanilhaAtivaGrupoA->Total;
+            $dadosPlanilha['dadosPlanilhaRemanejadaA'] = $PlanilhaRemanejadaGrupoA->Total;
 
             if($PlanilhaAtivaGrupoA->Total == $PlanilhaRemanejadaGrupoA->Total){
                 $dadosPlanilha['GrupoA'] = utf8_encode('<span class="bold">R$ '.number_format($valorTotalGrupoA, 2, ',', '.')).'</span>';
@@ -2582,16 +2638,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosPlanilha['GrupoD'] = utf8_encode('<span class="bold">R$ '.number_format(0, 2, ',', '.')).'</span>';
             }
             
-            $this->_helper->json(array('resposta'=>true, 'dadosPlanilha'=>$dadosPlanilha
-            ));
-            /*
-            'valorTotalGrupoA' => $valorTotalGrupoA,
-            'planilhaRemanejadaAtotal' => $PlanilhaRemanejadaGrupoA->Total,
-            'planilhaRemanejadaBtotal' => $PlanilhaRemanejadaGrupoB->Total,
-            'planilhaRemanejadaCtotal' => $PlanilhaRemanejadaGrupoC->Total,
-            'planilhaRemanejadaDtotal' => $PlanilhaRemanejadaGrupoD->Total
-            */
-
+            $this->_helper->json(array('resposta'=>true, 'dadosPlanilha'=>$dadosPlanilha));
+            
         } catch (Zend_Exception $e) {
             $this->_helper->json(array('resposta'=>false));
         }
@@ -2617,11 +2665,25 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         //x($PlanilhaAtiva->Total);
 
         //BUSCAR VALOR TOTAL DA PLANILHA DE REMANEJADA
+        $tbReadequacao = new tbReadequacao();
+        $readequacaoAtiva = $tbReadequacao->buscar(
+            array(
+                'idPronac = ?'=> $idPronac,
+                'stEstado = ?'=> 1
+            )
+        );
+        
         $where = array();
         $where['a.IdPRONAC = ?'] = $idPronac;
         $where['a.tpPlanilha = ?'] = 'RP';
         $where['a.stAtivo = ?'] = 'N';
         $where['a.tpAcao != ?'] = 'E';
+
+        if (count($readequacaoAtiva) > 0) {
+            $idReadequacao = $readequacaoAtiva[0]['idReadequacao'];
+            $where['a.idReadequacao = ?'] = $idReadequacao;
+        }
+        
         $PlanilhaRemanejada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
         if($PlanilhaRemanejada->Total > 0){
@@ -2666,9 +2728,17 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         $planilhaAtiva = $tbPlanilhaAprovacao->buscar($where)->current();
         
         try {
-            /* DADOS DO ITEM PARA EDICAO DO REMANEJAMENTO */
+            $tbReadequacao = new tbReadequacao();
+            $readequacaoAtiva = $tbReadequacao->buscar(
+                array(
+                    'idPronac = ?' => $idPronac,
+                    'stEstado =?' => 1
+                )
+            );
+            
             $where = array();
             $where['idPlanilhaAprovacaoPai = ?'] = $idPlanilhaAprovacaoPai;
+            $where['idReadequacao = ?'] = $idReadequacao;            
             $where['tpPlanilha = ?'] = 'RP';
             $where['stAtivo = ?'] = 'N';
             $item = $tbPlanilhaAprovacao->buscar($where)->current();
@@ -2684,7 +2754,7 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             $dadosPlanilhaEditavel['ValorUnitario'] = utf8_encode('R$ '.number_format($planilhaAtiva->vlUnitario, 2, ',', '.'));
             $dadosPlanilhaEditavel['TotalSolicitado'] = utf8_encode('R$ '.number_format(($planilhaAtiva->qtItem*$planilhaAtiva->nrOcorrencia*$planilhaAtiva->vlUnitario), 2, ',', '.'));
             $dadosPlanilhaEditavel['Justificativa'] = '';
-
+            
             $x = $item->save();
             $this->_helper->json(array('resposta'=>true, 'dadosPlanilhaEditavel'=>$dadosPlanilhaEditavel));
 
@@ -2705,41 +2775,21 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         try {
             $del = $tbPlanilhaAprovacao->delete(array('IdPRONAC = ?'=>$idPronac, 'tpPlanilha = ?'=>'RP', 'stAtivo = ?'=>'N'));
             if($del > 0){
+                $tbReadequacao = new tbReadequacao();
+                $readequacaoAtiva = $tbReadequacao->delete(
+                    array(
+                        'idPronac=?' => $idPronac,
+                        'idTipoReadequacao=?' => tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                        'stEstado=?' => 1,
+                        'stAtendimento=?' => 'D',
+                        'siEncaminhamento=?' => 11
+                    )
+                );           
+                
                 $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-                $planilhaRP = array();
-                foreach ($planilhaAtiva as $value) {
-                    $planilhaRP['tpPlanilha'] = 'RP';
-                    $planilhaRP['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                    $planilhaRP['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                    $planilhaRP['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                    $planilhaRP['IdPRONAC'] = $value['IdPRONAC'];
-                    $planilhaRP['idProduto'] = $value['idProduto'];
-                    $planilhaRP['idEtapa'] = $value['idEtapa'];
-                    $planilhaRP['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                    $planilhaRP['dsItem'] = $value['dsItem'];
-                    $planilhaRP['idUnidade'] = $value['idUnidade'];
-                    $planilhaRP['qtItem'] = $value['qtItem'];
-                    $planilhaRP['nrOcorrencia'] = $value['nrOcorrencia'];
-                    $planilhaRP['vlUnitario'] = $value['vlUnitario'];
-                    $planilhaRP['qtDias'] = $value['qtDias'];
-                    $planilhaRP['tpDespesa'] = $value['tpDespesa'];
-                    $planilhaRP['tpPessoa'] = $value['tpPessoa'];
-                    $planilhaRP['nrContraPartida'] = $value['nrContraPartida'];
-                    $planilhaRP['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                    $planilhaRP['idUFDespesa'] = $value['idUFDespesa'];
-                    $planilhaRP['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                    $planilhaRP['dsJustificativa'] = null;
-                    $planilhaRP['idAgente'] = 0;
-                    $planilhaRP['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
-                    $planilhaRP['idReadequacao'] = $value['idReadequacao'];
-                    $planilhaRP['tpAcao'] = $value['tpAcao'];
-                    $planilhaRP['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                    $planilhaRP['stAtivo'] = 'N';
-                    $tbPlanilhaAprovacao->inserir($planilhaRP);
-                }
                 $this->_helper->json(array('resposta'=>true));
             } else {
-                $msg = utf8_encode('A planilha j� foi reintegrada.');
+                $msg = utf8_encode('A planilha j&aacute; foi reintegrada.');
                 $this->_helper->json(array('resposta'=>false, 'msg'=>$msg));
             }
 
@@ -2753,23 +2803,90 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         $this->_helper->layout->disableLayout();
         $idPlanilhaAprovacao = $this->_request->getParam("idPlanilha");
         $idPlanilhaAprovacaoPai = $this->_request->getParam("idPlanilhaAprovacaoPai");
-        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+
+        if (!$idPlanilhaAprovacao) {
+            $this->_helper->json(array('resposta'=>false, 'msg'=>'Informe o idPlanilhaAprovacao.'));
+        }
         
         /* DADOS DO ITEM ATIVO */
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
         $where = array();
 
         if (empty($idPlanilhaAprovacaoPai) || $idPlanilhaAprovacaoPai == '') {
             $where['idPlanilhaAprovacao = ?'] = $idPlanilhaAprovacao;
         } else {
-            $where['idPlanilhaAprovacao = ?'] = $idPlanilhaAprovacaoPai;
+            $where['idPlanilhaAprovacaoPai = ?'] = $idPlanilhaAprovacaoPai;
         }
         $planilhaAtiva = $tbPlanilhaAprovacao->buscarDadosAvaliacaoDeItemRemanejamento($where);
+
+        $idPlanilhaAprovacaoComprovado = (!empty($idPlanilhaAprovacaoPai)) ? array($idPlanilhaAprovacao,$idPlanilhaAprovacaoPai) : $idPlanilhaAprovacao;
+        
+        $tbCompPagxPlanAprov = new tbComprovantePagamentoxPlanilhaAprovacao();
+        $resComprovado = $tbCompPagxPlanAprov->buscarValorComprovadoDoItem($idPlanilhaAprovacaoComprovado);
+        
+        
+        /* DADOS ORIGINAIS PARA REFERÊNCIA DE MÍNIMO E MÁXIMO */
+        $idPronac = $planilhaAtiva[0]['idPRONAC'];
+        $idPlanilhaItem = $planilhaAtiva[0]['idPlanilhaItem'];
+
+        $where = array();
+        $where['tpPlanilha = ?'] = 'CO';
+        $where['IdPRONAC = ?'] = $idPronac;
+        $where['idPlanilhaItem = ?'] = $idPlanilhaItem;
+        
+        $planilhaOriginal = $tbPlanilhaAprovacao->buscar($where);
+
+        $dadosPlanilhaOriginal = array();
+        foreach ($planilhaOriginal as $registro) {
+            $vlTotalItem = $registro['qtItem']*$registro['nrOcorrencia']*$registro['vlUnitario'];
+            
+            //CALCULAR VALORES MINIMO E MAXIMO PARA VALIDACAO
+            $vlAtual = @number_format(($registro['qtItem']*$registro['nrOcorrencia']*$registro['vlUnitario']), 2, '', '');
+            $vlAtualPerc = $vlAtual* tbReadequacao::PERCENTUAL_REMANEJAMENTO/100;
+            
+            //VALOR M�NIMO E M�XIMO DO ITEM ORIGINAL
+            $vlAtualMin = (number_format($resComprovado->vlComprovado, 2, '', '') > round($vlAtual-$vlAtualPerc)) ? number_format($resComprovado->vlComprovado, 2, '', '') : round($vlAtual-$vlAtualPerc);
+            $vlAtualMax = round($vlAtual+$vlAtualPerc);
+                
+            if ($vlAtualMin > $vlTotalItem) {
+                $dadosPlanilhaOriginal['ValorMinimoProItem'] = utf8_encode('R$ '.number_format($vlAtualMin/100, 2, ',', '.'));
+            } else {
+                $dadosPlanilhaOriginal['ValorMinimoProItem'] = utf8_encode('R$ '.number_format( ( $vlAtual - ($vlAtual * tbReadequacao::PERCENTUAL_REMANEJAMENTO/100) ), 2, ',', '.'));
+            }
+            $dadosPlanilhaOriginal['ValorMaximoProItem'] = utf8_encode('R$ '.number_format( ( $vlAtual + ($vlAtual * tbReadequacao::PERCENTUAL_REMANEJAMENTO/100) )/100 , 2, ',', '.'));
+            $dadosPlanilhaOriginal['vlMinimoValidacao'] = utf8_encode($vlAtualMin);
+            $dadosPlanilhaOriginal['vlMaximoValidacao'] = utf8_encode($vlAtualMax);
+            $dadosPlanilhaOriginal['ValorMinimoProItemValidacao'] = utf8_encode($vlAtualMin);
+            $dadosPlanilhaOriginal['ValorMaximoProItemValidacao'] = utf8_encode($vlAtualMax);
+            
+            $dadosPlanilhaOriginal['idPlanilhaAprovacao'] = $registro['idPlanilhaAprovacao'];
+            $dadosPlanilhaOriginal['idPlanilhaItem'] = $registro['idPlanilhaItem'];
+            $dadosPlanilhaOriginal['Quantidade'] = $registro['qtItem'];
+            $dadosPlanilhaOriginal['Ocorrencia'] = $registro['nrOcorrencia'];
+            $dadosPlanilhaOriginal['ValorUnitario'] = utf8_encode('R$ '.number_format($registro['vlUnitario'], 2, ',', '.'));
+            $dadosPlanilhaOriginal['TotalSolicitado'] = utf8_encode('R$ '.number_format(($vlTotalItem), 2, ',', '.'));                
+        }
         
         /* DADOS DO ITEM PARA EDICAO DO REMANEJAMENTO */
+
+        $tbReadequacao = new tbReadequacao();
+        $readequacaoAtiva = $tbReadequacao->buscar(
+            array(
+                'idPronac = ?' => $idPronac,
+                'stEstado =?' => 1
+            )
+        );
+        
         $where = array();
         $where['idPlanilhaAprovacaoPai = ?'] = $idPlanilhaAprovacaoPai;
-        $where['tpPlanilha = ?'] = 'RP';
-        $where['stAtivo = ?'] = 'N';
+        
+        if (count($readequacaoAtiva)>0) {
+            $idReadequacao = $readequacaoAtiva[0]['idReadequacao'];
+            $where['idReadequacao = ?'] = $idReadequacao;
+        } else {
+            $where['stAtivo = ?'] = 'S';
+        }
+        
         $planilhaEditaval = $tbPlanilhaAprovacao->buscarDadosAvaliacaoDeItemRemanejamento($where);
         
         $dadosPlanilhaAtiva = array();
@@ -2785,14 +2902,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             );
 
             foreach ($planilhaAtiva as $registro) {
-                //CALCULAR VALORES MINIMO E MAXIMO PARA VALIDACAO
-                $vlAtual = @number_format(($registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario']), 2, '', '');
-                $vlAtualPerc = $vlAtual* self::PERCENTUAL_REMANEJAMENTO/100;
-
-                //VALOR M�NIMO E M�XIMO DO ITEM ORIGINAL
-                $vlAtualMin = round($vlAtual-$vlAtualPerc);
-                $vlAtualMax = round($vlAtual+$vlAtualPerc);
-
+                $vlTotalItem = $registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario'];
+                
                 $dadosPlanilhaAtiva['idPlanilhaAprovacao'] = $registro['idPlanilhaAprovacao'];
                 $dadosPlanilhaAtiva['idProduto'] = $registro['idProduto'];
                 $dadosPlanilhaAtiva['descProduto'] = utf8_encode($registro['descProduto']);
@@ -2806,13 +2917,10 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
                 $dadosPlanilhaAtiva['Ocorrencia'] = $registro['Ocorrencia'];
                 $dadosPlanilhaAtiva['ValorUnitario'] = utf8_encode('R$ '.number_format($registro['ValorUnitario'], 2, ',', '.'));
                 $dadosPlanilhaAtiva['QtdeDias'] = $registro['QtdeDias'];
-                $dadosPlanilhaAtiva['TotalSolicitado'] = utf8_encode('R$ '.number_format(($registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario']), 2, ',', '.'));
-                $dadosPlanilhaAtiva['ValorMinimoProItem'] = utf8_encode('R$ '.number_format( ( $registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario'] - (($registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario']) * self::PERCENTUAL_REMANEJAMENTO/100) ), 2, ',', '.'));
-                $dadosPlanilhaAtiva['ValorMaximoProItem'] = utf8_encode('R$ '.number_format( ( $registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario'] + (($registro['Quantidade']*$registro['Ocorrencia']*$registro['ValorUnitario']) * self::PERCENTUAL_REMANEJAMENTO/100) ), 2, ',', '.'));
-                $dadosPlanilhaAtiva['vlMinimoValidacao'] = utf8_encode($vlAtualMin);
-                $dadosPlanilhaAtiva['vlMaximoValidacao'] = utf8_encode($vlAtualMax);
-                $dadosPlanilhaAtiva['ValorMinimoProItemValidacao'] = utf8_encode(number_format(($vlAtualMin), 2, '', ''));
-                $dadosPlanilhaAtiva['ValorMaximoProItemValidacao'] = utf8_encode(number_format(($vlAtualMax), 2, '', ''));
+                $dadosPlanilhaAtiva['TotalSolicitado'] = utf8_encode('R$ '.number_format(($vlTotalItem), 2, ',', '.'));
+                $dadosPlanilhaAtiva['ValorMinimoProItemValidacao'] = utf8_encode($vlAtualMin);
+                $dadosPlanilhaAtiva['ValorMaximoProItemValidacao'] = utf8_encode($vlAtualMax);
+                
                 $dadosPlanilhaAtiva['Justificativa'] = utf8_encode($registro['Justificativa']);
             }
 
@@ -2840,13 +2948,16 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
             }
 
             $tbCompPagxPlanAprov = new tbComprovantePagamentoxPlanilhaAprovacao();
-            $res = $tbCompPagxPlanAprov->buscarValorComprovadoDoItem($idPlanilhaAprovacao);
+            if (!empty($idPlanilhaAprovacaoPai)) {
+                $idPlanilhaAprovacao = $idPlanilhaAprovacaoPai;
+            }
+            $res = $tbCompPagxPlanAprov->buscarValorComprovadoDoItem($idPlanilhaAprovacao);  // <<--- quando já foi remanejado, deve puxar idPlanilhaAprovacaoPai
             $valoresDoItem = array(
-                'vlComprovadoDoItem' => utf8_encode('R$ '.number_format($res->vlComprovado, 2, ',', '.')),
-                'vlComprovadoDoItemValidacao' => utf8_encode(number_format($res->vlComprovado, 2, '', ''))
+                'vlComprovadoDoItem' => utf8_encode('R$ '.number_format($resComprovado->vlComprovado, 2, ',', '.')),
+                'vlComprovadoDoItemValidacao' => utf8_encode(number_format($resComprovado->vlComprovado, 2, '', ''))
             );
 
-            $this->_helper->json(array('resposta'=>true, 'dadosPlanilhaAtiva'=>$dadosPlanilhaAtiva, 'dadosPlanilhaEditavel'=>$dadosPlanilhaEditavel, 'valoresDoItem'=>$valoresDoItem, 'dadosProjeto'=>$dadosProjeto));
+            $this->_helper->json(array('resposta'=>true, 'dadosPlanilhaAtiva'=>$dadosPlanilhaAtiva, 'dadosPlanilhaEditavel'=>$dadosPlanilhaEditavel, 'valoresDoItem'=>$valoresDoItem, 'dadosProjeto'=>$dadosProjeto, 'dadosPlanilhaOriginal' => $dadosPlanilhaOriginal));
 
         } else {
             $this->_helper->json(array('resposta'=>false));
@@ -2867,74 +2978,57 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
              $idAgente = $rsAgente[0]->idAgente;
         }
 
-        $ValorUnitario = str_replace('.', '', $_POST['ValorUnitario']);
+        $ValorUnitario = str_replace('.', '', $this->_request->getParam('ValorUnitario'));
         $ValorUnitario = str_replace(',', '.', $ValorUnitario);
-        $vlTotal = @number_format(($_POST['Quantidade']*$_POST['Ocorrencia']*$ValorUnitario), 2, '', '');
+        $vlTotal = @number_format(($this->_request->getParam('Quantidade')* $this->_request->getParam('Ocorrencia')*$ValorUnitario), 2, '', '');
         
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
+        
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $verificarPlanilhaRP = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP'));
+        $tbReadequacao = new tbReadequacao();
+        $existeRemanejamento50EmAndamento = $tbReadequacao->existeRemanejamento50EmAndamento($idPronac);
+        //print_r($existeRemanejamento50EmAndamento);die;
 
-        if(count($verificarPlanilhaRP)==0){
-            $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-            $planilhaRP = array();
-            foreach ($planilhaAtiva as $value) {
-                $planilhaRP['tpPlanilha'] = 'RP';
-                $planilhaRP['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                $planilhaRP['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                $planilhaRP['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                $planilhaRP['IdPRONAC'] = $value['IdPRONAC'];
-                $planilhaRP['idProduto'] = $value['idProduto'];
-                $planilhaRP['idEtapa'] = $value['idEtapa'];
-                $planilhaRP['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                $planilhaRP['dsItem'] = $value['dsItem'];
-                $planilhaRP['idUnidade'] = $value['idUnidade'];
-                $planilhaRP['qtItem'] = $value['qtItem'];
-                $planilhaRP['nrOcorrencia'] = $value['nrOcorrencia'];
-                $planilhaRP['vlUnitario'] = $value['vlUnitario'];
-                $planilhaRP['qtDias'] = $value['qtDias'];
-                $planilhaRP['tpDespesa'] = $value['tpDespesa'];
-                $planilhaRP['tpPessoa'] = $value['tpPessoa'];
-                $planilhaRP['nrContraPartida'] = $value['nrContraPartida'];
-                $planilhaRP['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                $planilhaRP['idUFDespesa'] = $value['idUFDespesa'];
-                $planilhaRP['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                $planilhaRP['dsJustificativa'] = null;
-                $planilhaRP['idAgente'] = 0;
-                $planilhaRP['idPlanilhaAprovacaoPai'] = (!empty($value['idPlanilhaAprovacaoPai']) ? $value['idPlanilhaAprovacaoPai'] : $value['idPlanilhaAprovacao']);
-                $planilhaRP['idReadequacao'] = $value['idReadequacao'];
-                $planilhaRP['tpAcao'] = $value['tpAcao'];
-                $planilhaRP['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                $planilhaRP['stAtivo'] = 'N';
-                $tbPlanilhaAprovacao->inserir($planilhaRP);
-            }
-        }
-
-        //BUSCA OS DADOS DO ITEM ORIGINAL PARA VALIDA��O DE VALORES
-        if (empty($idPlanilhaAprovacaoPai)) {
+        //BUSCA OS DADOS DO ITEM ORIGINAL PARA VALIDA��O DE VALORES           
+        if (!$existeRemanejamento50EmAndamento && !$idPlanilhaAprovacaoPai) {
             $valoresItem = $tbPlanilhaAprovacao->buscar(
                 array(
                     'IdPRONAC=?'=>$idPronac,
-                    'StAtivo=?'=>'S',
+                    'stAtivo=?'=>'S',
                     'idPlanilhaAprovacao=?'=> $idPlanilhaAprovacao
                 )
             )->current();
-        } else {
+        } else if ($existeRemanejamento50EmAndamento && $idPlanilhaAprovacaoPai) {
             $valoresItem = $tbPlanilhaAprovacao->buscar(
                 array(
                     'IdPRONAC=?'=>$idPronac,
-                    'StAtivo=?'=>'N',
+                    'stAtivo=?'=>'N',
+                    'idPlanilhaAprovacaoPai=?'=> $idPlanilhaAprovacaoPai
+                )
+            )->current();
+        } else if ($existeRemanejamento50EmAndamento && !$idPlanilhaAprovacaoPai) {
+            $valoresItem = $tbPlanilhaAprovacao->buscar(
+                array(
+                    'IdPRONAC=?'=>$idPronac,
+                    'stAtivo=?'=>'S',
+                    'idPlanilhaAprovacao=?'=> $idPlanilhaAprovacao
+                )
+            )->current();            
+        } else if (!$existeRemanejamento50EmAndamento && $idPlanilhaAprovacaoPai) {
+            $valoresItem = $tbPlanilhaAprovacao->buscar(
+                array(
+                    'IdPRONAC=?'=>$idPronac,
+                    'stAtivo=?'=>'S',
                     'idPlanilhaAprovacaoPai=?'=> $idPlanilhaAprovacaoPai
                 )
             )->current();
         }
         
         $vlAtual = @number_format(($valoresItem['qtItem']*$valoresItem['nrOcorrencia']*$valoresItem['vlUnitario']), 2, '', '');
-        $vlAtualPerc = $vlAtual* self::PERCENTUAL_REMANEJAMENTO /100;
+        $vlAtualPerc = $vlAtual* tbReadequacao::PERCENTUAL_REMANEJAMENTO /100;
         
         //VALOR M�NIMO E M�XIMO DO ITEM ORIGINAL
         $vlAtualMin = round($vlAtual-$vlAtualPerc);
@@ -2942,35 +3036,120 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract {
         
         //VERIFICA SE O VALOR TOTAL DOS DADOS INFORMADOR PELO PROPONENTE EST� ENTRE O M�NIMO E M�XIMO PERMITIDO
         if($vlTotal < $vlAtualMin || $vlTotal > $vlAtualMax){
-            $this->_helper->json(array('resposta'=>false, 'msg'=>'O valor total do item desejado ultrapassou a margem de ' . self::PERCENTUAL_REMANEJAMENTO . '.'));
+            $this->_helper->json(array('resposta'=>false, 'msg'=>'O valor total do item desejado ultrapassou a margem de ' . tbReadequacao::PERCENTUAL_REMANEJAMENTO . '.',
+            'qtItem' => $valoresItem['qtItem'],
+            'nrOcorrencia' => $valoresItem['nrOcorrencia'],
+            'vlUnitario' => $valoresItem['vlUnitario'],
+            'vlTotal' => $vlTotal,
+            'vlAtual' => $vlAtual,            
+            'vlAtualMin' => $vlAtualMin,
+            'vlAtualMax' => $vlAtualMax
+            ));
             $this->_helper->viewRenderer->setNoRender(TRUE);
         }
 
-        if (empty($idPlanilhaAprovacaoPai)) {
-            $resultIdPlanilhaAprovacaoPai = $tbPlanilhaAprovacao->getInfoIdPlanilhaPai($idPlanilhaAprovacao, 'RP');
-            
-            if (count($resultIdPlanilhaAprovacaoPai) > 0) {
-                if ($resultIdPlanilhaAprovacaoPai[0]['tpAcao'] == 'I' && $resultIdPlanilhaAprovacaoPai[0]['tpPlanilha'] == 'SR') {
-                    $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR', 'idPlanilhaAprovacao=?'=>$idPlanilhaAprovacao))->current();
-                } else {
-                    $idPlanilhaAprovacaoPai = $resultIdPlanilhaAprovacaoPai[0]['idPlanilhaAprovacaoPai'];
-                    $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP', 'idPlanilhaAprovacaoPai=?'=>$idPlanilhaAprovacaoPai))->current();
-                }
-            }     
-        } else {
-            $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP', 'idPlanilhaAprovacaoPai=?'=>$idPlanilhaAprovacaoPai))->current();
-        }
+        // verifica se existe readequacao ativa
+        $readequacaoAtiva = $tbReadequacao->buscarDadosReadequacoes(
+            array(
+                'a.idPronac=?' => $idPronac,
+                'a.idTipoReadequacao=?' => tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                'a.stEstado=?' => 1,
+                'a.stAtendimento=?' => 'D',
+                'a.siEncaminhamento=?' => 11
+            )
+        )->toArray();
         
-        $editarItem->qtItem = $_POST['Quantidade'];
-        $editarItem->nrOcorrencia = $_POST['Ocorrencia'];
-        $editarItem->vlUnitario = $ValorUnitario;
-        $editarItem->dsJustificativa = utf8_decode($_POST['Justificativa']); //
-        $editarItem->idAgente = $idAgente;
-//        $editarItem->idAgente = $auth->getIdentity()->IdUsuario;
-        $editarItem->save();
-
-        $this->_helper->json(array('resposta'=>true, 'msg'=>'Dados salvos com sucesso!'));
-        $this->_helper->viewRenderer->setNoRender(TRUE);
+        try {
+            if (empty($readequacaoAtiva)) {
+                // cria readequacao e copia planilhas
+                
+                $auth = Zend_Auth::getInstance();
+                $tblAgente = new Agente_Model_DbTable_Agentes();
+                $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
+                
+                $dadosReadequacao = array();
+                $dadosReadequacao['idPronac'] = $idPronac;
+                $dadosReadequacao['idTipoReadequacao'] = 1;
+                $dadosReadequacao['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
+                $dadosReadequacao['idSolicitante'] = $rsAgente->idAgente;
+                $dadosReadequacao['dsJustificativa'] = utf8_decode('Readequação até 50%');
+                $dadosReadequacao['stAtendimento'] = 'D';
+                $dadosReadequacao['siEncaminhamento'] = 11;
+                $dadosReadequacao['stEstado'] = 1;
+                $idReadequacao = $tbReadequacao->inserir($dadosReadequacao);
+                
+                $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+                $planilhaAtiva = $tbPlanilhaAprovacao->buscar(
+                    array(
+                        'IdPRONAC=?'=>$idPronac,
+                        'StAtivo=?'=>'S',
+                        'tpAcao!=? OR tpAcao IS NULL' => 'E'
+                    )
+                );
+                
+                $planilhaRP = array();
+                foreach ($planilhaAtiva as $value) {
+                    $planilhaRP['tpPlanilha'] = 'RP';
+                    $planilhaRP['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
+                    $planilhaRP['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
+                    $planilhaRP['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
+                    $planilhaRP['IdPRONAC'] = $value['IdPRONAC'];
+                    $planilhaRP['idProduto'] = $value['idProduto'];
+                    $planilhaRP['idEtapa'] = $value['idEtapa'];
+                    $planilhaRP['idPlanilhaItem'] = $value['idPlanilhaItem'];
+                    $planilhaRP['dsItem'] = $value['dsItem'];
+                    $planilhaRP['idUnidade'] = $value['idUnidade'];
+                    $planilhaRP['qtItem'] = $value['qtItem'];
+                    $planilhaRP['nrOcorrencia'] = $value['nrOcorrencia'];
+                    $planilhaRP['vlUnitario'] = $value['vlUnitario'];
+                    $planilhaRP['qtDias'] = $value['qtDias'];
+                    $planilhaRP['tpDespesa'] = $value['tpDespesa'];
+                    $planilhaRP['tpPessoa'] = $value['tpPessoa'];
+                    $planilhaRP['nrContraPartida'] = $value['nrContraPartida'];
+                    $planilhaRP['nrFonteRecurso'] = $value['nrFonteRecurso'];
+                    $planilhaRP['idUFDespesa'] = $value['idUFDespesa'];
+                    $planilhaRP['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
+                    $planilhaRP['dsJustificativa'] = null;
+                    $planilhaRP['idAgente'] = 0;
+                    $planilhaRP['idPlanilhaAprovacaoPai'] = (!empty($value['idPlanilhaAprovacaoPai'])) ? $value['idPlanilhaAprovacaoPai'] : $value['idPlanilhaAprovacao'];
+                    $planilhaRP['idReadequacao'] = $idReadequacao;
+                    $planilhaRP['tpAcao'] = ($value['tpAcao']) ? $value['tpAcao'] : 'N';
+                    $planilhaRP['idRecursoDecisao'] = $value['idRecursoDecisao'];
+                    $planilhaRP['stAtivo'] = 'N';
+                    $tbPlanilhaAprovacao->inserir($planilhaRP);
+                }
+            }
+            
+            if (empty($idPlanilhaAprovacaoPai)) {
+                $resultIdPlanilhaAprovacaoPai = $tbPlanilhaAprovacao->getInfoIdPlanilhaPai($idPlanilhaAprovacao, 'RP');
+                if (count($resultIdPlanilhaAprovacaoPai) > 0) {
+                    if ($resultIdPlanilhaAprovacaoPai[0]['tpAcao'] == 'I' && $resultIdPlanilhaAprovacaoPai[0]['tpPlanilha'] == 'SR') {
+                        $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR', 'idPlanilhaAprovacao=?'=>$idPlanilhaAprovacao, 'stAtivo=?' => 'N'))->current();
+                    } else {
+                        $idPlanilhaAprovacaoPai = $resultIdPlanilhaAprovacaoPai[0]['idPlanilhaAprovacaoPai'];
+                        $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP', 'idPlanilhaAprovacaoPai=?'=>$idPlanilhaAprovacaoPai, 'stAtivo=?' => 'N'))->current();
+                    }
+                } else {
+                    $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP', 'idPlanilhaAprovacao=?'=>$idPlanilhaAprovacaoPai, 'stAtivo=?' => 'N'))->current();
+                }
+            } else {
+                $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'RP', 'idPlanilhaAprovacaoPai=?'=>$idPlanilhaAprovacaoPai, 'stAtivo=?' => 'N'))->current();
+            }
+            
+            $editarItem->qtItem = $_POST['Quantidade'];
+            $editarItem->nrOcorrencia = $_POST['Ocorrencia'];
+            $editarItem->vlUnitario = $ValorUnitario;
+            $editarItem->dsJustificativa = utf8_decode($_POST['Justificativa']);
+            $editarItem->idAgente = $idAgente;
+            $editarItem->save();            
+            
+            
+            $this->_helper->json(array('resposta'=>true, 'msg'=>'Dados salvos com sucesso!'));
+            $this->_helper->viewRenderer->setNoRender(TRUE);
+        } catch (Zend_Exception $e) {
+            $this->_helper->json(array('resposta'=>$e));            
+            $this->_helper->viewRenderer->setNoRender(TRUE);
+        }
     }
 
     public function prestacaoDeContasAction()

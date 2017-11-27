@@ -1778,12 +1778,7 @@ public function analisePorParecerista($where){
 				  'Parecerista',
 				  'idOrgao',
 				  'FecharAnalise',
-				  'DtEnvioMincVinculada',
-				  'DtDistribuicao',
 				  'DtDevolucao',
-				  'TempoTotalAnalise',
-				  'TempoParecerista',
-				  'TempoDiligencia',
 				  'qtDiligenciaProduto',
 				  'Valor')
 			    );

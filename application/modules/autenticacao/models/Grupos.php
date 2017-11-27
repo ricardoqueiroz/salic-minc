@@ -2,7 +2,7 @@
 
 class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
 {
-    protected $_name = 'usuarios';
+    protected $_name = 'grupos';
     protected $_schema = 'tabelas';
     protected $_primary = 'gru_codigo';
 
@@ -44,6 +44,8 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
     const COMPONENTE_COMISSAO = 118;
     
     const COORDENADOR_ATENDIMENTO = 127;
+    const TECNICO_DE_ATENDIMENTO = 155;
+
     const TECNICO_PORTARIA = 128;
     const COORDENADOR_ABMISSIBILIDADE = 131;
 
@@ -60,4 +62,22 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
     const COORDENADOR_DO_PRONAC = 137;
     const COORDENADOR_DE_CONVENIO = 142;
 
+    //verificar se eh tecnico
+    public function buscarTecnicosPorOrgao($idOrgao)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('g' => $this->_name), ['gru_codigo', 'gru_nome'], $this->_schema
+        );
+
+        $select->joinInner(['u' => 'UsuariosXOrgaosXGrupos'], 'u.uog_grupo = g.gru_codigo', ['uog_orgao'], $this->_schema );
+
+        $select->where('g.gru_nome like ?', "Técnico%");
+        $select->where('g.gru_status = ?', 1);
+        $select->where('u.uog_orgao = ?', $idOrgao);
+        $select->group(['gru_codigo', 'gru_nome','uog_orgao']);
+
+        return $this->fetchAll($select);
+    }
 }

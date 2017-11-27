@@ -139,7 +139,7 @@
 <div class="container-fluid">
     <div class="row">
         <?php if(isset($_REQUEST['id'])) : ?>
-            <?php echo $this->partial("inc/menu.phtml", $this); // menu ?>
+            <?= $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->idPreProjeto)); ?>
         <?php endif; ?>
         <div class="col s10 m12 l10">
             <?php

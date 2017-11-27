@@ -917,8 +917,8 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
         $search = $this->getRequest()->getParam('search');
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
-        $order = ($order[0]['dir'] != 1) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("idpreprojeto DESC");
 
+        $order = ($order[0]['dir'] != 1) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : ["idpreprojeto desc"];
 
         $idAgente = ((int)$idAgente == 0) ? $this->idAgente : (int)$idAgente;
 
@@ -928,12 +928,12 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
                 'recordsTotal' => 0,
                 'draw' => 0,
                 'recordsFiltered' => 0));
-            die;
         }
 
         $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
 
         $rsPreProjeto = $tblPreProjeto->propostas($this->idAgente, $this->idResponsavel, $idAgente, array(), $order, $start, $length, $search);
+
         $Movimentacao = new Proposta_Model_DbTable_TbMovimentacao();
 
         $recordsTotal = 0;
@@ -957,7 +957,9 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
             "data" => !empty($aux) ? $aux : 0,
             'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
             'draw' => $draw,
-            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0));
+            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0,
+            'teste' =>[$this->idAgente, $this->idResponsavel, $idAgente, array(), $order, $start, $length, $search]
+        ));
     }
 
     /**

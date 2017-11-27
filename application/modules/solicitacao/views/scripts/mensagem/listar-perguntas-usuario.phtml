@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col s12">
+        <table class="bordered striped highlight">
+            <thead class=" green darken-1 white-text">
+            <tr>
+                <th>#</th>
+                <th data-field="id" class="center-align">Pronac</th>
+                <th data-field="id" class="center-align">Nome do Projeto</th>
+                <th data-field="id" class="center-align">&Aacute;rea Cultural</th>
+                <th data-field="id" class="center-align">Segmento Cultural</th>
+                <th data-field="id" class="center-align">Enquadramento</th>
+                <th data-field="teste" class="center-align">Remetente</th>
+                <th data-field="teste2" class="center-align">Destinat&aacuterio</th>
+                <th data-field="id" class="center-align">Dt.Mensagem</th>
+                <th data-field="id" class="center-align">Qtde Dias</th>
+                <th data-field="id" class="center-align">Vl.Solicitado</th>
+                <th data-field="teste3" class="center-align">A&ccedil;&atilde;o</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($this->arrResult as $int => $arrValue): ?>
+                <tr>
+                    <td class="center-align"><?php echo $int + 1; ?></td>
+                    <td class="center-align"><a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'consultardadosprojeto', 'action' => 'index')) . "?idPronac={$arrValue['IdPRONAC']}"; ?>" target="_blank"><u><?php echo $arrValue['PRONAC']; ?></u></a></td>
+                    <td class="center-align"><?php echo $arrValue['NomeProjeto']; ?></td>
+                    <td class="center-align"><?php echo $arrValue['Area']; ?></td>
+                    <td class="center-align"><?php echo $arrValue['Segmento']; ?></td>
+                    <td class="center-align"><?php echo $arrValue['Enquadramento']; ?></td>
+                    <td><?php echo $arrValue['remetenteUnidadeNome'] . ' / ' . $arrValue['usu_nome_remetente']; ?></td>
+                    <td><?php echo ($arrValue['usu_nome_destinatario']) ? $arrValue['destinatarioUnidadeNome'] . ' / ' . $arrValue['usu_nome_destinatario'] : $arrValue['destinatarioUnidadeNome']; ?></td>
+                    <td class="center-align"><?php echo $arrValue['dtMensagem']; ?></td>
+                    <td class="center-align" <?php if ($arrValue['QtdeDias'] > 9) echo 'style="color: red;"'; ?>><?php echo $arrValue['QtdeDias']; ?></td>
+                    <td class="right-align"><?php echo 'R$' . number_format($arrValue['VlSolicitado'], 2, ',', '.');; ?></td>
+                    <td class="center-align">
+                        <a
+                            data-ajax-modal="<?php echo $this->url(array('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'visualizar', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?>"
+                            href="javascript:void(0);"
+                            class="btn small waves-effect waves-light tooltipped" data-position="top" data-delay="50"
+                            data-tooltip="Visualizar">
+                            <i class="material-icons">zoom_in</i>
+                        </a>
+                        <?php if (empty($arrValue['dsResposta'])) : ?>
+                            <?php if ($this->usuOrgao == 91) : ?>
+                                <a data-ajax-modal="<?php echo $this->url(array('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'encaminhar', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac), null, true); ?>"
+                                   href="javascript:void(0);"
+                                   class="btn small waves-effect waves-light tooltipped" data-position="top"
+                                   data-delay="50" data-tooltip="Encaminhar">
+                                    <i class="material-icons">subdirectory_arrow_right</i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if ($this->usuCodigo == $arrValue['idDestinatario'] || (is_null($arrValue['idDestinatario']) && $this->usuOrgao == $arrValue['idDestinatarioUnidade'])): ?>
+                                <a href="javascript:$3.redirect('<?php echo $this->url(array('module' => 'admissibilidade', 'controller' => 'mensagem', 'action' => 'responder', 'id' => $arrValue['idMensagemProjeto'], 'idPronac' => $this->idPronac, 'actionBack' => 'perguntas-usuario'), null, true); ?>');"
+                                   class="btn small waves-effect waves-light tooltipped" data-position="top"
+                                   data-delay="50" data-tooltip="Responder"><i class="material-icons">insert_comment</i></a>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

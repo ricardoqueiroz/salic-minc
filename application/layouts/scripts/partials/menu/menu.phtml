@@ -127,6 +127,27 @@ $arrMenu['assinatura']['menu'][] = array(
     'label' => 'Gerir Atos Administrativos'
 );
 
+// ========== INICIO MENU ATENDIMENTO ==========
+$arrMenu['atendimento'] = array(
+    'id' => 'atendimento',
+    'label' => 'Atendimento',
+    'title' => 'Ir para Assinatura',
+    'menu' => array(),
+    'grupo' => [Autenticacao_Model_Grupos::TECNICO_DE_ATENDIMENTO]
+);
+
+$arrMenu['atendimento']['menu'][] = array(
+    'url' => $this->url(
+        array(
+            'module' => 'solicitacao',
+            'controller' => 'mensagem',
+            'action' => 'index'
+        ), '', true),
+    'title' => 'Ir para Solicita&ccedil;&otilde;es',
+    'label' => 'Solicita&ccedil;&otilde;es Proponente',
+    'grupo' => [Autenticacao_Model_Grupos::TECNICO_DE_ATENDIMENTO]
+);
+
 $arrMenu['acompanhamento'] = array(
     'id' => 'acompanhamento',
     'label' => 'Acompanhamento',
@@ -762,9 +783,10 @@ if (isset ($auth['cpf'])) {
             <ul class="left hide-on-med-and-down">
                 <?php echo $this->partialLoop('partials/menu/item.phtml', $arrMenu); ?>
             </ul>
-            <ul class="right">
+            <ul class="menu-apoio right">
                 <?php echo $this->partial('partials/menu/notificacao-mensagem.phtml') ?>
-<!--                <li><a class="white-text" href="sass.html"><i class="material-icons">home</i></a></li>-->
+                <?php echo $this->partial('partials/menu/notificacoes.phtml') ?>
+
 <!--                <li><a class="white-text" href="sass.html"><i class="material-icons">power_settings_new</i></a></li>-->
 <!--                <li><a class="white-text" href="mobile.html"><i class="material-icons">more_vert</i></a></li>-->
             </ul>

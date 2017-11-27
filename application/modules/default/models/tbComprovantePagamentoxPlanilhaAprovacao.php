@@ -556,9 +556,15 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
                 array('b' => 'tbComprovantePagamento'), "a.idComprovantePagamento = b.idComprovantePagamento",
                 array(), 'BDCORPORATIVO.scSAC'
         );
-        $select->where('a.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
+        if (is_array($idPlanilhaAprovacao)) {
+            $select->where('a.idPlanilhaAprovacao IN (?)', $idPlanilhaAprovacao);
+        } else {
+            $select->where('a.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
+        }
         return $this->fetchRow($select);
         
 	} // fecha m�todo buscarDados()
 
+    // TODO: usar dbo.fnVlComprovadoItem para valor comprovado
+    
 } // fecha class

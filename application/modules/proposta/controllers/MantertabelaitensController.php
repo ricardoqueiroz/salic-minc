@@ -268,6 +268,7 @@ class Proposta_MantertabelaitensController extends Proposta_GenericController
 
         $pag = 1;
         $get = Zend_Registry::get('get');
+        $params = $this->getRequest()->getParams();
 //        $this->view->idPreProjeto = $this->idPreProjeto;
 
         if (isset($get->pag)) $pag = $get->pag;
@@ -279,8 +280,8 @@ class Proposta_MantertabelaitensController extends Proposta_GenericController
         $where['sol.idAgente = ?'] = $auth->getIdentity()->IdUsuario;
         $where['sol.stEstado = ?'] = 1; // Atendido
 
-        if (isset($_POST['tipoFiltro']) || isset($_GET['tipoFiltro'])) {
-            $filtro = isset($_POST['tipoFiltro']) ? $_POST['tipoFiltro'] : $_GET['tipoFiltro'];
+        if (isset($params['tipoFiltro'])) {
+            $filtro = isset($params['tipoFiltro']) ? $params['tipoFiltro'] : '';
             $this->view->filtro = $filtro;
             switch ($filtro) {
                 case '':
@@ -331,6 +332,7 @@ class Proposta_MantertabelaitensController extends Proposta_GenericController
         $this->view->qtdRegistros = $total;
         $this->view->dados = $busca;
         $this->view->intTamPag = $this->intTamPag;
+        $this->view->tipoFiltro = $params['tipoFiltro'];
 
         $tbsolicitacao = $mantertbitens->solicitacoes($this->idUsuario);
         $this->view->solicitacao = $tbsolicitacao;
@@ -379,6 +381,7 @@ class Proposta_MantertabelaitensController extends Proposta_GenericController
 
         $pag = 1;
         $get = Zend_Registry::get('get');
+        $params = $this->getRequest()->getParams();
 //        $this->view->idPreProjeto = $get->idPreProjeto;
 
         if (isset($get->pag)) $pag = $get->pag;
@@ -390,8 +393,8 @@ class Proposta_MantertabelaitensController extends Proposta_GenericController
         $where['sol.idAgente = ?'] = $auth->getIdentity()->IdUsuario;
         $where['sol.stEstado = ?'] = 1; // Atendido
 
-        if (isset($_POST['tipoFiltro']) || isset($_GET['tipoFiltro'])) {
-            $filtro = isset($_POST['tipoFiltro']) ? $_POST['tipoFiltro'] : $_GET['tipoFiltro'];
+        if (isset($params['tipoFiltro'])) {
+            $filtro = isset($params['tipoFiltro']) ? $params['tipoFiltro'] : '';
             $this->view->filtro = $filtro;
             switch ($filtro) {
                 case '':
