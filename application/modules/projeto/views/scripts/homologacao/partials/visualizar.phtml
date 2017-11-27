@@ -29,13 +29,13 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Resumo do Projeto</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Resumo do Projeto</div>
     <div class="collapsible-body">
         <p><?= $this->arrValue['enquadramentoProjeto']['ResumoProjeto'] ?></p>
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Memoria de c&aacute;lculo</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Memoria de c&aacute;lculo</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
@@ -66,7 +66,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Avalia&ccedil;&atilde;o de T&eacute;cnica</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Avalia&ccedil;&atilde;o de T&eacute;cnica</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
@@ -89,7 +89,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">A&ccedil;&otilde;es relevantes para o sucesso do projeto</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">A&ccedil;&otilde;es relevantes para o sucesso do projeto</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <p><?= $this->arrValue['acaoProjeto']['dsAcaoAlcanceProduto'] ?></p>
@@ -97,7 +97,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Aprecia&ccedil;&atilde;o do Comission&aacute;rio Relator</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Aprecia&ccedil;&atilde;o do Comission&aacute;rio Relator</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
@@ -118,7 +118,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text">Parecer de Homologa&ccedil;&atilde;o</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Parecer de Homologa&ccedil;&atilde;o</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>

@@ -105,7 +105,22 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     public function encaminharAction()
     {
         $this->_helper->layout->disableLayout();
-        self::prepareData($this->getRequest()->getParam('id'));
+
+
+        if ($this->getRequest()->isPost()) {
+            $this->_helper->viewRenderer->setNoRender(true);
+//            $mapper = new Projeto_Model_TbHomologacaoMapper();
+            $arrPost = $this->getRequest()->getPost();
+//            echo '<pre>';
+//            var_dump($arrPost);
+//            exit;
+//            $arrPost['stDecisao'] = (isset($arrPost['stDecisao']))? 1 : 0;
+            $this->_helper->json(array('status' => true, 'msg' => '', 'close' => 1));
+//            $this->_helper->json(array('status' => $mapper->save($arrPost), 'msg' => $mapper->getMessages(), 'close' => 1));
+        } else {
+            self::prepareData($this->getRequest()->getParam('id'));
+            $this->view->urlAction = '/projeto/homologacao/encaminhar';
+        }
     }
 
     /**
