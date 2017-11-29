@@ -103,8 +103,6 @@ class Proposta_VisualizarController extends Proposta_GenericController
 
         $idUsuario = $this->_request->getParam('idusuario');
 
-        $dados = [];
-
         $tbSgcAcesso = new Autenticacao_Model_Sgcacesso();
         $this->debugMode = true;
         $dados = $tbSgcAcesso->buscarUsuario(['IdUsuario = ?' => $idUsuario])->current()->toArray();

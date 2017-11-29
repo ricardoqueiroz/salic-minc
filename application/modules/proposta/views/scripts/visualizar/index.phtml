@@ -1,55 +1,66 @@
 <div id="container" class="container-fluid" xmlns="http://www.w3.org/1999/html">
-    <salic-identificacao-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-identificacao-proposta>
-
-    <ul class="collapsible" data-collapsible="accordion">
-        <li>
-            <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico</div>
-            <div class="collapsible-body padding20">
-                <salic-historico-avaliacoes idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-historico-avaliacoes>
-            </div>
-        </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">person</i>Proponente</div>
-            <div class="collapsible-body padding20">
-                <salic-dados-proponente idagente="<?= $this->proposta['idagente']; ?>"></salic-dados-proponente>
-                <salic-dados-usuario idusuario="<?= $this->proposta['idusuario']; ?>"></salic-dados-usuario>
-            </div>
-        </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">attachment</i>Documentos anexados</div>
-            <div class="collapsible-body padding20">
-                <salic-documentos-anexados idagente="<?= $this->proposta['idagente']; ?>"
-                                           idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-documentos-anexados>
-            </div>
-        </li>
-        <li>
-            <div id="plano-distribuicao" class="collapsible-header"><i class="material-icons">equalizer</i>Plano Distribui&ccedil;&atilde;o
-            </div>
-            <div class="collapsible-body padding20">
-                <div id="html-plano-distribuicao"></div>
-            </div>
-        </li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons">place</i>Local de realiza&ccedil;&atilde;o/Deslocamento
-            </div>
-            <div class="collapsible-body padding20">
-                <salic-local-realizacao-deslocamento
-                    idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-local-realizacao-deslocamento>
-            </div>
-        </li>
-
-        <li>
-            <div id="planilha-orcamentaria" class="collapsible-header"><i class="material-icons">attach_money</i>Planilha or&ccedil;ament&aacute;ria
-            </div>
-            <div class="collapsible-body padding20">
-                <div id="planilhaOrcamentariaMontada"></div>
-            </div>
-        </li>
-    </ul>
+    <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>" ></salic-proposta>
 </div>
 
+<script type="text/x-template" id="proposta">
+    <div>
+        <salic-identificacao-proposta :idpreprojeto="<?= $this->idPreProjeto; ?>" :proposta="dados"></salic-identificacao-proposta>
+
+        <ul class="collapsible" data-collapsible="accordion">
+            <li>
+                <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico</div>
+                <div class="collapsible-body padding20">
+                    <salic-historico-avaliacoes idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-historico-avaliacoes>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">person</i>Proponente</div>
+                <div class="collapsible-body padding20">
+                    <salic-dados-proponente idagente="<?= $this->proposta['idagente']; ?>"></salic-dados-proponente>
+                    <salic-dados-usuario idusuario="<?= $this->proposta['idusuario']; ?>"></salic-dados-usuario>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">attachment</i>Documentos anexados</div>
+                <div class="collapsible-body padding20">
+                    <salic-documentos-anexados idagente="<?= $this->proposta['idagente']; ?>"
+                                               idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-documentos-anexados>
+                </div>
+            </li>
+            <li>
+                <div id="plano-distribuicao" class="collapsible-header"><i class="material-icons">equalizer</i>Plano Distribui&ccedil;&atilde;o
+                </div>
+                <div class="collapsible-body padding20">
+                    <div id="html-plano-distribuicao"></div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">place</i>Local de realiza&ccedil;&atilde;o/Deslocamento
+                </div>
+                <div class="collapsible-body padding20">
+                    <salic-local-realizacao-deslocamento
+                        idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-local-realizacao-deslocamento>
+                </div>
+            </li>
+            <li>
+                <div id="planilha-orcamentaria" class="collapsible-header"><i class="material-icons">attach_money</i>Planilha or&ccedil;ament&aacute;ria
+                </div>
+                <div class="collapsible-body padding20">
+                    <div id="planilhaOrcamentariaMontada"></div>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">attach_money</i>Ficha t&eacute;cnica</div>
+<!--                <div class="collapsible-body padding20" v-if="proposta">-->
+<!--                    <salic-texto-simples :texto="aaaa"></salic-texto-simples>-->
+<!--                </div>-->
+            </li>
+        </ul>
+    </div>
+</script>
+
 <script type="text/x-template" id="identificacao-da-proposta">
-    <div class="dados-basicos">
+    <div class="dados-basicos" v-if="proposta">
         <div class="card">
             <div class="card-content">
                 <h5>Identifica&ccedil;&atilde;o</h5>
@@ -143,7 +154,6 @@
         </div>
     </div>
 </script>
-
 
 <script type="text/x-template" id="historico-avaliacoes">
     <div class="historico">
@@ -327,6 +337,18 @@
     </div>
 </script>
 
+<script type="text/x-template" id="texto-simples">
+    <div class="card">
+        <div class="card-content">
+            <div class="row">
+                <div class="col s12 l12 m12">
+                    {{ texto }}
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
 <script type="text/x-template" id="documentos-anexados">
     <div>
         <div class="card">
@@ -445,22 +467,46 @@
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.4/numeral.min.js"></script>
 
 <script type="text/javascript">
+    Vue.component('salic-proposta', {
+        template: '#proposta',
+        data: function () {
+            return {
+                dados: {
+                    type: Object,
+                    default: function() {
+                        return {}
+                    }
+                }
+            }
+        },
+        props: ['idpreprojeto'],
+        mounted: function () {
+            this.buscar_dados();
+        },
+        methods: {
+            buscar_dados: function () {
+                let vue = this;
+                $3.ajax({
+                    url: '/proposta/visualizar/identificacao/idPreProjeto/' + vue.idpreprojeto
+                }).done(function (response) {
+                    vue.dados = response.data;
+                });
+            }
+        }
+    });
 
     Vue.component('salic-identificacao-proposta', {
         template: '#identificacao-da-proposta',
-        data: function () {
-            return {
-                proposta: []
+        props: {
+            idpreprojeto : null,
+            proposta: {
+                type: Object,
+                default: function() {
+                    return {}
+                }
             }
         },
-        props: ['idpreprojeto', 'dados'],
         mounted: function () {
-
-            if (this.dados) {
-                this.proposta = this.dados;
-            } else {
-                this.buscar_dados();
-            }
         },
         methods: {
             buscar_dados: function () {
@@ -691,6 +737,19 @@
 
                 return date;
             }
+        }
+    });
+
+    Vue.component('salic-texto-simples', {
+        template: '#texto-simples',
+        data: function () {
+            return {
+            }
+        },
+        props: ['texto'],
+        mounted: function () {
+        },
+        methods: {
         }
     });
 

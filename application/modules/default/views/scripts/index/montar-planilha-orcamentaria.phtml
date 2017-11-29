@@ -98,7 +98,7 @@
 <?php
 //MONTANDO A PLANILHA DO TIPO 0 = Planilha Orçamentária da Proposta
 if($this->tipoPlanilha == 0){ ?>
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalSolicitado = 0;
@@ -119,7 +119,7 @@ if($this->tipoPlanilha == 0){ ?>
                 ?>
                 <tr class='master' fonte="<?php echo $nrfonte; ?>">
                     <td class='master'>
-                        <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                        <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                     </td>
                 </tr>
                 <?php
@@ -143,13 +143,13 @@ if($this->tipoPlanilha == 0){ ?>
                         <?php if(strlen($cidade) > 3) : ?>
                             <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                                 <td>
-                                    <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                                    <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                                 </td>
                             </tr>
                             <?php endif; ?>
                         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                             <td>
-                                <table class="tabela">
+                                <table class="tabela bordered responsive-table">
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th>Item</th>
@@ -192,8 +192,8 @@ if($this->tipoPlanilha == 0){ ?>
                                     ?>
                                     <?php if(strlen($cidade) > 3) : ?>
                                         <tr>
-                                            <td colspan="6" class="black right-align" style="font-size: 14pt;">Total da UF</td>
-                                            <td class="black right-align" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
+                                            <td colspan="6" class="black-text right-align" style="font-size: 14pt;">Total da UF</td>
+                                            <td class="black-text right-align" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
                                             <td style="width: 20%;"></td>
                                         </tr>
                                     <?php endif; ?>
@@ -205,7 +205,7 @@ if($this->tipoPlanilha == 0){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <td colspan="6" class="orange-text" style="font-size: 14pt;">Total da Etapa</td>
                                     <td class="orange-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalEtapa, 2, ",", "."); ?></td>
@@ -220,7 +220,7 @@ if($this->tipoPlanilha == 0){ ?>
                 ?>
                 <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                     <td>
-                        <table class="tabela">
+                        <table class="tabela bordered responsive-table">
                             <tr>
                                 <td colspan="6" class="green-text" style="font-size: 14pt;">Total da <?php echo $produto; ?></td>
                                 <td class="green-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalProduto, 2, ",", "."); ?></td>
@@ -235,7 +235,7 @@ if($this->tipoPlanilha == 0){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                    <table class="tabela">
+                    <table class="tabela bordered responsive-table">
                         <tr>
                             <td colspan="6" class="red-text" style="font-size: 14pt;">Total do <?php echo $fonte; ?></td>
                             <td class="red-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($valorSolicitadoTotalIncentivo, 2, ",", "."); ?></td>
@@ -251,7 +251,7 @@ if($this->tipoPlanilha == 0){ ?>
     <?php if (is_array($this->planilha) && count($this->planilha) > 0): ?>
         <tr>
             <td>
-                <table class="tabela">
+                <table class="tabela bordered responsive-table">
                     <tr>
                         <td colspan="6" class="blue-text" style="font-size: 14pt;">Total do Projeto</td>
                         <td class="blue-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($TotalSolicitado, 2, ",", "."); ?></td>
@@ -270,7 +270,7 @@ if($this->tipoPlanilha == 0){ ?>
 <?php }
 //MONTANDO A PLANILHA DO TIPO 1 = Planilha Orçamentária do Proponente
 else if($this->tipoPlanilha == 1){ ?>
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalSolicitado = 0;
@@ -291,7 +291,7 @@ else if($this->tipoPlanilha == 1){ ?>
                 ?>
                 <tr class='master' fonte="<?php echo $nrfonte; ?>">
                     <td class='master'>
-                        <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                        <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                     </td>
                 </tr>
                 <?php
@@ -314,12 +314,12 @@ else if($this->tipoPlanilha == 1){ ?>
                         ?>
                         <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                             <td>
-                                <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                                <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                             </td>
                         </tr>
                         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                             <td>
-                                <table class="tabela">
+                                <table class="tabela bordered responsive-table">
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th>Item</th>
@@ -357,8 +357,8 @@ else if($this->tipoPlanilha == 1){ ?>
                                     $nrcidade++;
                                     ?>
                                     <tr>
-                                        <td colspan="6" class="black" style="font-size: 14pt;">Total da UF</td>
-                                        <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
+                                        <td colspan="6" class="black-text" style="font-size: 14pt;">Total da UF</td>
+                                        <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
                                         <td style="width: 20%;"></td>
                                     </tr>
                                 </table>
@@ -369,7 +369,7 @@ else if($this->tipoPlanilha == 1){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <td colspan="6" class="orange-text" style="font-size: 14pt;">Total da Etapa</td>
                                     <td class="orange-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalEtapa, 2, ",", "."); ?></td>
@@ -384,7 +384,7 @@ else if($this->tipoPlanilha == 1){ ?>
                 ?>
                 <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                     <td>
-                        <table class="tabela">
+                        <table class="tabela bordered responsive-table">
                             <tr>
                                 <td colspan="6" class="green-text" style="font-size: 14pt;">Total da <?php echo $produto; ?></td>
                                 <td class="green-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalProduto, 2, ",", "."); ?></td>
@@ -399,7 +399,7 @@ else if($this->tipoPlanilha == 1){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                    <table class="tabela">
+                    <table class="tabela bordered responsive-table">
                         <tr>
                             <td colspan="6" class="red-text" style="font-size: 14pt;">Total do <?php echo $fonte; ?></td>
                             <td class="red-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($valorSolicitadoTotalIncentivo, 2, ",", "."); ?></td>
@@ -415,7 +415,7 @@ else if($this->tipoPlanilha == 1){ ?>
     <?php if (is_array($this->planilha) && count($this->planilha) > 0): ?>
         <tr>
             <td>
-                <table class="tabela">
+                <table class="tabela bordered responsive-table">
                     <tr>
                         <td colspan="6" class="blue-text" style="font-size: 14pt;">Total do Projeto</td>
                         <td class="blue-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($TotalSolicitado, 2, ",", "."); ?></td>
@@ -435,7 +435,7 @@ else if($this->tipoPlanilha == 1){ ?>
 //MONTANDO A PLANILHA DO TIPO 2 = Planilha Orçamentária do Parecerista
 else if($this->tipoPlanilha == 2){ ?>
 
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalSolicitado = 0;
@@ -455,7 +455,7 @@ else if($this->tipoPlanilha == 2){ ?>
             ?>
             <tr class='master' fonte="<?php echo $nrfonte; ?>">
                 <td class='master'>
-                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                 </td>
             </tr>
             <?php
@@ -478,12 +478,12 @@ else if($this->tipoPlanilha == 2){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
-                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                         </td>
                     </tr>
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>Item</th>
@@ -543,10 +543,10 @@ else if($this->tipoPlanilha == 2){ ?>
                                 $nrcidade++;
                                 ?>
                                 <tr>
-                                    <td colspan="2" class="black" style="font-size: 14pt;">Total da UF</td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
+                                    <td colspan="2" class="black-text" style="font-size: 14pt;">Total da UF</td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="4"></td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSugeridoTotalUf, 2, ",", "."); ?></td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSugeridoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="2"></td>
                                 </tr>
                             </table>
@@ -557,7 +557,7 @@ else if($this->tipoPlanilha == 2){ ?>
                 ?>
                 <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>">
                     <td>
-                        <table class="tabela">
+                        <table class="tabela bordered responsive-table">
                             <tr>
                                 <td colspan="2" class="orange-text" style="width: 25%; font-size: 14pt;">Total da Etapa</td>
                                 <td class="orange-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalEtapa, 2, ",", "."); ?></td>
@@ -574,7 +574,7 @@ else if($this->tipoPlanilha == 2){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                    <table class="tabela">
+                    <table class="tabela bordered responsive-table">
                         <tr>
                             <td colspan="2" class="green-text" style="width: 25%; font-size: 14pt;">Total da <?php echo $produto; ?></td>
                             <td class="green-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalProduto, 2, ",", "."); ?></td>
@@ -590,7 +590,7 @@ else if($this->tipoPlanilha == 2){ ?>
         ?>
         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
             <td>
-                <table class="tabela">
+                <table class="tabela bordered responsive-table">
                     <tr>
                         <td colspan="2" class="red-text" style="width: 25%; font-size: 14pt;">Total do <?php echo $fonte; ?></td>
                         <td class="red-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($valorSolicitadoTotalIncentivo, 2, ",", "."); ?></td>
@@ -607,7 +607,7 @@ else if($this->tipoPlanilha == 2){ ?>
     <?php if(is_array($this->planilha) && count($this->planilha)>0): ?>
     <tr>
         <td>
-            <table class="tabela">
+            <table class="tabela bordered responsive-table">
                 <tr>
                     <td colspan="2" class="blue-text" style="width: 25%; font-size: 14pt;">Total do Projeto</td>
                     <td class="blue-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($TotalSolicitado, 2, ",", "."); ?></td>
@@ -631,7 +631,7 @@ else if($this->tipoPlanilha == 2){ ?>
 <?php }
 //MONTANDO A PLANILHA DO TIPO 3 = Planilha Orçamentária Aprovada Ativa
 else if($this->tipoPlanilha == 3){ ?>
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalSolicitado = 0;
@@ -655,7 +655,7 @@ else if($this->tipoPlanilha == 3){ ?>
             ?>
             <tr class='master' fonte="<?php echo $nrfonte; ?>">
                 <td class='master'>
-                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                 </td>
             </tr>
             <?php
@@ -682,12 +682,12 @@ else if($this->tipoPlanilha == 3){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
-                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                         </td>
                     </tr>
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>Item</th>
@@ -762,11 +762,11 @@ else if($this->tipoPlanilha == 3){ ?>
                                 $nrcidade++;
                                 ?>
                                 <tr>
-                                    <td colspan="2" class="black" style="font-size: 14pt;">Total da UF</td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSugeridoTotalUf, 2, ",", "."); ?></td>
+                                    <td colspan="2" class="black-text" style="font-size: 14pt;">Total da UF</td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalUf, 2, ",", "."); ?></td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSugeridoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="4"></td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
                             </table>
@@ -777,7 +777,7 @@ else if($this->tipoPlanilha == 3){ ?>
                 ?>
                 <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>">
                     <td>
-                        <table class="tabela">
+                        <table class="tabela bordered responsive-table">
                             <tr>
                                 <td colspan="2" class="orange-text" style="width: 18%; font-size: 14pt;" nowrap>Total da Etapa</td>
                                 <td class="orange-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalEtapa, 2, ",", "."); ?></td>
@@ -795,7 +795,7 @@ else if($this->tipoPlanilha == 3){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                    <table class="tabela">
+                    <table class="tabela bordered responsive-table">
                         <tr>
                             <td colspan="2" class="green-text" style="width: 18%; font-size: 14pt;">Total da <?php echo $produto; ?></td>
                             <td class="green-text" style="width: 1px; font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorSolicitadoTotalProduto, 2, ",", "."); ?></td>
@@ -812,7 +812,7 @@ else if($this->tipoPlanilha == 3){ ?>
         ?>
         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
             <td>
-                <table class="tabela">
+                <table class="tabela bordered responsive-table">
                     <tr>
                         <td colspan="2" class="red-text" style="width: 18%; font-size: 14pt;">Total do <?php echo $fonte; ?></td>
                         <td class="red-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($valorSolicitadoTotalIncentivo, 2, ",", "."); ?></td>
@@ -830,7 +830,7 @@ else if($this->tipoPlanilha == 3){ ?>
     <?php if(is_array($this->planilha) && count($this->planilha)>0): ?>
     <tr>
         <td>
-            <table class="tabela">
+            <table class="tabela bordered responsive-table">
                 <tr>
                     <td colspan="2" class="blue-text" style="width: 18%; font-size: 14pt;">Total do Projeto</td>
                     <td class="blue-text" style="width: 1px; font-size: 12pt; font-weight: 800;" align="right"><?php echo @number_format($TotalSolicitado, 2, ",", "."); ?></td>
@@ -852,7 +852,7 @@ else if($this->tipoPlanilha == 3){ ?>
 <?php }
 //MONTANDO A PLANILHA DO TIPO 6 = Readequação
 else if($this->tipoPlanilha == 5){ ?>
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalUnitario = 0;
@@ -874,7 +874,7 @@ else if($this->tipoPlanilha == 5){ ?>
             ?>
             <tr class='master' fonte="<?php echo $nrfonte; ?>">
                 <td class='master'>
-                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                 </td>
             </tr>
             <?php
@@ -899,12 +899,12 @@ else if($this->tipoPlanilha == 5){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
-                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                         </td>
                     </tr>
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>Item</th>
@@ -965,9 +965,9 @@ else if($this->tipoPlanilha == 5){ ?>
                                 $nrcidade++;
                                 ?>
                                 <tr>
-                                    <td colspan="6" class="black" style="font-size: 14pt;">Total da UF</td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorComprovadoTotalUf, 2, ",", "."); ?></td>
+                                    <td colspan="6" class="black-text" style="font-size: 14pt;">Total da UF</td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorComprovadoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
 
@@ -988,7 +988,7 @@ else if($this->tipoPlanilha == 5){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                  <table class="tabela">
+                  <table class="tabela bordered responsive-table">
 		    <tr>
 		      <th colspan="6"></th>
 		      <th>Valor Aprovado</th>
@@ -1009,7 +1009,7 @@ else if($this->tipoPlanilha == 5){ ?>
         ?>
         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
             <td>
-              <table class="tabela">
+              <table class="tabela bordered responsive-table">
 		<tr>
 		  <th colspan="6"></th>
 		  <th>Valor Aprovado</th>
@@ -1033,7 +1033,7 @@ else if($this->tipoPlanilha == 5){ ?>
     <?php if(is_array($this->planilha) && count($this->planilha)>0): ?>
     <tr>
         <td>
-          <table class="tabela">
+          <table class="tabela bordered responsive-table">
 		    <tr>
 		      <th colspan="6"></th>
 		      <th>Valor Aprovado</th>
@@ -1060,7 +1060,7 @@ else if($this->tipoPlanilha == 5){ ?>
 <?php }
 //MONTANDO A PLANILHA DO TIPO 6 = Readequação
 else if($this->tipoPlanilha == 6){ ?>
-<table class="tabela">
+<table class="tabela bordered responsive-table">
     <?php
     $nrfonte = 0;
     $TotalSolicitado = 0;
@@ -1084,7 +1084,7 @@ else if($this->tipoPlanilha == 6){ ?>
             ?>
             <tr class='master' fonte="<?php echo $nrfonte; ?>">
                 <td class='master'>
-                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
+                    <div  tipo="produto" aberto="true" fonte="<?php echo $nrfonte; ?>" produto ="<?php echo $nrproduto; ?>" class="icn_menos clickproduto" style="width:98%; margin-left:2%;"><span class="green-text del_link" style="font-size: 16pt; font-weight: 800;"><?php echo $produto; ?></span></div>
                 </td>
             </tr>
             <?php
@@ -1111,12 +1111,12 @@ else if($this->tipoPlanilha == 6){ ?>
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
-                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
+                            <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black-text del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                         </td>
                     </tr>
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
-                            <table class="tabela">
+                            <table class="tabela bordered responsive-table">
                                 <tr>
                                     <th>&nbsp;</th>
                                     <th>Item</th>
@@ -1155,16 +1155,16 @@ else if($this->tipoPlanilha == 6){ ?>
                                         $corLinha = '';
                                         switch ($planilha['tpAcao']) {
                                             case 'E':
-                                                $corLinha = 'red';
+                                                $corLinha = 'red-text';
                                                 if($this->idPerfil == 1111){
-                                                    $corLinha = 'silver';
+                                                    $corLinha = 'silver-text';
                                                 }
                                                 break;
                                             case 'I':
-                                                $corLinha = 'green';
+                                                $corLinha = 'green-text';
                                                 break;
                                             case 'A':
-                                                $corLinha = 'blue';
+                                                $corLinha = 'blue-text';
                                                 break;
                                             default:
                                                 $corLinha = '';
@@ -1236,8 +1236,8 @@ else if($this->tipoPlanilha == 6){ ?>
                                 $nrcidade++;
                                 ?>
                                 <tr>
-                                    <td colspan="6" class="black" style="font-size: 14pt;">Total da UF</td>
-                                    <td class="black" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
+                                    <td colspan="6" class="black-text" style="font-size: 14pt;">Total da UF</td>
+                                    <td class="black-text" style="font-size: 12pt; font-weight: 600;" align="right"><?php echo @number_format($valorAprovadoTotalUf, 2, ",", "."); ?></td>
                                     <td colspan="3"></td>
                                 </tr>
                             </table>
@@ -1248,7 +1248,7 @@ else if($this->tipoPlanilha == 6){ ?>
 		?>
                 <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>">
                     <td>
-                        <table class="tabela">
+                        <table class="tabela bordered responsive-table">
                             <tr>
                                 <td colspan="2" class="orange-text" style="width: 18%; font-size: 14pt;" nowrap>Total da Etapa</td>
                                 <td colspan="4">&nbsp;</td>
@@ -1263,7 +1263,7 @@ else if($this->tipoPlanilha == 6){ ?>
             ?>
             <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
                 <td>
-                    <table class="tabela">
+                    <table class="tabela bordered responsive-table">
                         <tr>
                             <td colspan="2" class="green-text" style="width: 18%; font-size: 14pt;">Total da <?php echo $produto; ?></td>
                             <td colspan="4">&nbsp;</td>
@@ -1278,7 +1278,7 @@ else if($this->tipoPlanilha == 6){ ?>
         ?>
         <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>"  fonte="<?php echo $nrfonte; ?>">
             <td>
-                <table class="tabela">
+                <table class="tabela bordered responsive-table">
                     <tr>
                         <td colspan="2" class="red-text" style="width: 18%; font-size: 14pt;">Total do <?php echo $fonte; ?></td>
                         <td colspan="4">&nbsp;</td>
