@@ -681,4 +681,24 @@ class Proposta_Model_DbTable_TbPlanilhaProposta extends MinC_Db_Table_Abstract
         }
         return $db->fetchRow($exec);
     }
+
+    public function buscarFontesDeRecursos($idPreProjeto)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('tpp'=>$this->_name),
+            array(
+                'Valor' => new Zend_Db_Expr('sum(tpp.Quantidade*tpp.Ocorrencia*tpp.ValorUnitario)')
+            ),
+            $this->_schema
+        );
+
+        $select->joinInner(array('ver' => 'Verificacao'), 'tpp.FonteRecurso = ver.idVerificacao', array('ver.Descricao'), $this->_schema);
+        $select->where('tpp.idProjeto = ?',$idPreProjeto);
+        $select->group(['ver.Descricao', 'tpp.idProjeto']);
+
+        $db = Zend_Db_Table::getDefaultAdapter();
+        return $db->fetchAll($select);
+    }
 }

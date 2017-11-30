@@ -35,6 +35,12 @@
                 </div>
             </li>
             <li>
+                <div class="collapsible-header"><i class="material-icons">history</i>Fonte de Recurso</div>
+                <div class="collapsible-body padding20">
+                    <salic-fontes-de-recursos idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-fontes-de-recursos>
+                </div>
+            </li>
+            <li>
                 <div class="collapsible-header"><i class="material-icons">place</i>Local de realiza&ccedil;&atilde;o/Deslocamento
                 </div>
                 <div class="collapsible-body padding20">
@@ -103,8 +109,6 @@
                     <salic-texto-simples :texto="dados.Justificativa"></salic-texto-simples>
                 </div>
             </li>
-
-
         </ul>
     </div>
 </script>
@@ -205,8 +209,8 @@
     </div>
 </script>
 
-<script type="text/x-template" id="historico-avaliacoes">
-    <div class="historico">
+<script type="text/x-template" id="tabela-simples">
+    <div class="tabelas">
         <div class="row">
             <salic-table-easy v-bind:dados="dado"></salic-table-easy>
         </div>
@@ -642,7 +646,7 @@
 
 
     Vue.component('salic-historico-avaliacoes', {
-        template: '#historico-avaliacoes',
+        template: '#tabela-simples',
         data: function () {
             return {
                 dado: []
@@ -801,6 +805,30 @@
         mounted: function () {
         },
         methods: {
+        }
+    });
+
+    Vue.component('salic-fontes-de-recursos', {
+        template: '#tabela-simples',
+        data: function () {
+            return {
+                dado: []
+            }
+        },
+        props: ['idpreprojeto'],
+        mounted: function () {
+            this.buscar_dados();
+        },
+        methods: {
+            buscar_dados: function () {
+                let vue = this;
+
+                $3.ajax({
+                    url: '/proposta/visualizar/fonte-de-recurso/idPreProjeto/' + vue.idpreprojeto
+                }).done(function (response) {
+                    vue.dado = response.data;
+                });
+            }
         }
     });
 

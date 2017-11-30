@@ -42,15 +42,18 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $newArray = [];
 
             foreach ($dados as $key => $dado) {
-                $newArray[$key]['tipo'] = $dado->tipo;
+                $newArray[$key]['Tipo'] = $dado->tipo;
                 $objDateTime = new DateTime($dado->DtAvaliacao);
                 $newArray[$key]['DtAvaliacao'] = $objDateTime->format('d/m/Y H:i:s');
                 $newArray[$key]['Avaliacao'] = $dado->Avaliacao;
             }
 
             $json['lines'] = $newArray;
-            $json['cols'] = ['#', 'Data', 'Avalia&ccedil;&atilde;o'];
-            $json['title'] = 'Hist&oacute;rico de avalia&ccedil;&otilde;es';
+            $json['cols'] = [
+                'Tipo' => ['name' => 'Tipo'],
+                'DtAvaliacao' =>['name' => 'Data'],
+                'Avaliacao' => ['name' => 'Avalia&ccedil;&atilde;o']
+            ];
 
             $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $json));
         } catch (Exception $e) {
@@ -248,14 +251,27 @@ class Proposta_VisualizarController extends Proposta_GenericController
     }
 
     public function fonteDeRecursoAction() {
+
         $this->_helper->layout->disableLayout();
         $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
-        $this->view->itensFonteRecurso = Proposta_Model_AnalisarPropostaDAO::buscarFonteDeRecurso($idPreProjeto);
-        $dados = [];
+        $tbPlanilhaProposta = new Proposta_Model_DbTable_TbPlanilhaProposta();
+        $dados = $tbPlanilhaProposta->buscarFontesDeRecursos($idPreProjeto);
 
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+        $json = [];
+        $newArray = [];
+
+        foreach ($dados as $key => $dado) {
+            $newArray[$key]['Descricao'] = utf8_encode($dado->Descricao);
+            $newArray[$key]['Valor'] = number_format($dado->Valor, 2, ',', '.');
+        }
+
+        $json['lines'] = $newArray;
+        $json['cols'] = [
+            'Descricao' => ['name' => 'Fonte Recurso'],
+            'Valor' =>['name' => 'Valor (R$)']
+        ];
+
+        $this->_helper->json(array('data' => $json, 'success' => 'true'));
     }
-
-
 }
