@@ -5,14 +5,18 @@ Vue.component(
             <table class="">
                 <template v-if="(dados.lines && dados.lines.length > 0)">
                     <thead v-show="thead">
-                        <th v-for="cab in dados.cols">
+                        <template v-for="cab in dados.cols">
                             <template v-if="(typeof cab == 'object')">
-                                {{cab.name}}
+                                <th :class="cab.class">
+                                    {{cab.name}}
+                                </th>
                             </template>
                             <template v-else>
-                                {{cab}}
+                                <th>
+                                    {{cab}}
+                                </th>
                             </template>
-                        </th>
+                        </template>
                     </thead>
                     <tbody>
                         <tr v-for="(dado, index) in dados.lines">

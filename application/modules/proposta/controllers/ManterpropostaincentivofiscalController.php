@@ -598,7 +598,7 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
                 $ValorTotalPlanilha = $planilhaproposta->somarPlanilhaProposta($idPreProjeto)->toArray();
 
                 # validar valor original e valor total atual da proposta
-                if ($ValorTotalPlanilha['soma'] > $projeto['solicitadoreal']) {
+                if (round($ValorTotalPlanilha['soma'], 2) > round($projeto['solicitadoreal'], 2)) {
                     $validacao->dsInconsistencia = 'O valor total do projeto n&atilde;o pode ultrapassar o valor anteriormente solicitado!';
                     $validacao->Observacao = false;
                     $validacao->Url = array('module' => 'proposta', 'controller' => 'manterorcamento', 'action' => 'produtoscadastrados', 'idPreProjeto' => $idPreProjeto);
