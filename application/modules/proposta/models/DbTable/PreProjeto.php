@@ -1063,21 +1063,31 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
         $slct->from(
             array('pp' => $this->_name),
             array('pp.idPreProjeto,
-                       pp.idAgente,
-                       pp.NomeProjeto,
-                       pp.Mecanismo,
-                       pp.AgenciaBancaria,
-                       pp.DtInicioDeExecucao,
-                       pp.DtFinalDeExecucao,
-                       pp.areaAbrangencia,
-                       pp.idUsuario,
-                       pp.tpProrrogacao,
-                       pp.stDataFixa,
-                       pp.stProposta,
-                       pp.NrAtoTombamento,
-                       pp.DtAtoTombamento,
-                       pp.EsferaTombamento,
-                       CAST(pp.ResumoDoProjeto as TEXT) as ResumoDoProjeto'),
+                   pp.idAgente,
+                   pp.NomeProjeto,
+                   pp.Mecanismo,
+                   pp.AgenciaBancaria,
+                   pp.DtInicioDeExecucao,
+                   pp.DtFinalDeExecucao,
+                   pp.areaAbrangencia,
+                   pp.idUsuario,
+                   pp.tpProrrogacao,
+                   pp.stDataFixa,
+                   pp.stProposta,
+                   pp.NrAtoTombamento,
+                   pp.DtAtoTombamento,
+                   pp.EsferaTombamento,
+                   CAST(pp.ResumoDoProjeto as TEXT) as ResumoDoProjeto,
+                   CAST(pp.Objetivos as TEXT) as Objetivos,
+                   CAST(pp.Justificativa as TEXT) as Justificativa,
+                   CAST(pp.Acessibilidade as TEXT) as Acessibilidade,
+                   CAST(pp.DemocratizacaoDeAcesso as TEXT) as DemocratizacaoDeAcesso,
+                   CAST(pp.EtapaDeTrabalho as TEXT) as EtapaDeTrabalho,
+                   CAST(pp.FichaTecnica as TEXT) as FichaTecnica,
+                   CAST(pp.Sinopse as TEXT) as Sinopse,
+                   CAST(pp.ImpactoAmbiental as TEXT) as ImpactoAmbiental,
+                   CAST(pp.EspecificacaoTecnica as TEXT) as EspecificacaoTecnica,
+                   CAST(pp.EstrategiadeExecucao as TEXT) as EstrategiadeExecucao'),
             $this->_schema
         );
 
@@ -1112,8 +1122,8 @@ class Proposta_Model_DbTable_PreProjeto extends MinC_Db_Table_Abstract
             $slct->where($coluna, $valor);
         }
 
-        $slct->order('pp.idpreprojeto');
-        $slct->order('pp.nomeprojeto');
+        $slct->order('pp.idPreProjeto');
+        $slct->order('pp.NomeProjeto');
 
         return $this->fetchAll($slct);
     }

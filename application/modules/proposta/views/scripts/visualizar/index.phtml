@@ -1,8 +1,8 @@
-<div id="container" class="container-fluid" xmlns="http://www.w3.org/1999/html">
-    <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>" ></salic-proposta>
+<div id="container" class="container-fluid">
+    <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-proposta>
 </div>
 
-<script type="text/x-template" id="proposta">
+<script type="text/x-template" id="propostas">
     <div>
         <salic-identificacao-proposta :idpreprojeto="<?= $this->idPreProjeto; ?>" :proposta="dados"></salic-identificacao-proposta>
 
@@ -50,11 +50,61 @@
                 </div>
             </li>
             <li>
-                <div class="collapsible-header"><i class="material-icons">attach_money</i>Ficha t&eacute;cnica</div>
-<!--                <div class="collapsible-body padding20" v-if="proposta">-->
-<!--                    <salic-texto-simples :texto="aaaa"></salic-texto-simples>-->
-<!--                </div>-->
+                <div class="collapsible-header"><i class="material-icons">subject</i>Ficha t&eacute;cnica</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.FichaTecnica"></salic-texto-simples>
+                </div>
             </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Resumo</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.ResumoDoProjeto"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Objetivos</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.Objetivos"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Etapa de Trabalho</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.EtapaDeTrabalho"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Acessibilidade</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.Acessibilidade"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Especifica&ccedil;&otilde;es t&eacute;cnicas do produto</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.Sinopse"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Sinopse de Obra</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.EspecificacaoTecnica"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Impacto Ambiental</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.ImpactoAmbiental"></salic-texto-simples>
+                </div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">subject</i>Justificativa</div>
+                <div class="collapsible-body padding20" v-if="dados">
+                    <salic-texto-simples :texto="dados.Justificativa"></salic-texto-simples>
+                </div>
+            </li>
+
+
         </ul>
     </div>
 </script>
@@ -342,7 +392,8 @@
         <div class="card-content">
             <div class="row">
                 <div class="col s12 l12 m12">
-                    {{ texto }}
+                    <div v-if="texto && texto.length > 1" v-html="texto"></div>
+                    <div v-else>Conteúdo n&atilde;o informado</div>
                 </div>
             </div>
         </div>
@@ -468,7 +519,7 @@
 
 <script type="text/javascript">
     Vue.component('salic-proposta', {
-        template: '#proposta',
+        template: '#propostas',
         data: function () {
             return {
                 dados: {
@@ -629,7 +680,7 @@
             buscar_dados: function () {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/dados-proponente/idagente/' + vue.idagente
+                    url: '/proposta/visualizar/dados-proponente/idAgente/' + vue.idagente
                 }).done(function (response) {
                     vue.proponente = response.data;
                     vue.identificacao = vue.proponente.identificacao;
@@ -672,7 +723,7 @@
             buscar_dados: function () {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/dados-usuario/idusuario/' + vue.idusuario
+                    url: '/proposta/visualizar/dados-usuario/idUsuario/' + vue.idusuario
                 }).done(function (response) {
                     vue.usuario = response.data;
                 });
@@ -696,7 +747,7 @@
                 let vue = this;
 
                 $3.ajax({
-                    url: '/proposta/visualizar/documentos-anexados/idpreprojeto/' + vue.idpreprojeto + '/idagente/' + vue.idagente
+                    url: '/proposta/visualizar/documentos-anexados/idPreProjeto/' + vue.idpreprojeto + '/idAgente/' + vue.idagente
                 }).done(function (response) {
                     vue.documentos = response.data;
                 });
@@ -726,7 +777,7 @@
                 let vue = this;
 
                 $3.ajax({
-                    url: '/proposta/visualizar/local-realizacao-deslocamento/idpreprojeto/' + vue.idpreprojeto
+                    url: '/proposta/visualizar/local-realizacao-deslocamento/idPreProjeto/' + vue.idpreprojeto
                 }).done(function (response) {
                     vue.proposta = response.data;
                 });

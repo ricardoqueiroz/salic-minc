@@ -89,9 +89,7 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
 
         /**
-         * Quando eh colabadordor do MinC (funcionarios e pareceristas)
-         * O cpf eh o usu_identificacao
-         *
+         * Quando eh colabadordor do MinC (funcionarios e pareceristas) o cpf eh usu_identificacao
          */
         $this->cpfLogado = isset($arrAuth['usu_identificacao']) ? $arrAuth['usu_identificacao'] : $arrAuth['cpf'];
 

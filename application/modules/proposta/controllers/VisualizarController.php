@@ -62,7 +62,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
         $this->_helper->layout->disableLayout();
 
-        $idAgente = $this->_request->getParam('idagente');
+        $idAgente = $this->_request->getParam('idAgente');
 
         $dados = [];
         $matriz = [];
@@ -101,7 +101,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
         $this->_helper->layout->disableLayout();
 
-        $idUsuario = $this->_request->getParam('idusuario');
+        $idUsuario = $this->_request->getParam('idUsuario');
 
         $tbSgcAcesso = new Autenticacao_Model_Sgcacesso();
         $this->debugMode = true;
@@ -116,8 +116,8 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
         $this->_helper->layout->disableLayout();
 
-        $idAgente = $this->_request->getParam('idagente');
-        $idPreProjeto = $this->_request->getParam('idpreprojeto');
+        $idAgente = $this->_request->getParam('idAgente');
+        $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
         $documentos = [];
 
@@ -160,7 +160,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
         $this->_helper->layout->disableLayout();
 
-        $idPreProjeto = $this->_request->getParam('idpreprojeto');
+        $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
         $arrBusca = array();
         $arrBusca['idprojeto'] = $idPreProjeto;
@@ -235,8 +235,6 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->view->planosDistribuicao = $rsPlanoDistribuicao;
         $this->abrangencias = $rsAbrangencia;
 
-        //@todo enviar montado
-
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
@@ -248,4 +246,16 @@ class Proposta_VisualizarController extends Proposta_GenericController
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
+
+    public function fonteDeRecursoAction() {
+        $this->_helper->layout->disableLayout();
+        $idPreProjeto = $this->_request->getParam('idPreProjeto');
+
+        $this->view->itensFonteRecurso = Proposta_Model_AnalisarPropostaDAO::buscarFonteDeRecurso($idPreProjeto);
+        $dados = [];
+
+        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+    }
+
+
 }
