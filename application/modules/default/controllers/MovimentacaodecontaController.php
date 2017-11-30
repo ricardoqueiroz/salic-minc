@@ -1642,6 +1642,7 @@ class MovimentacaodecontaController extends MinC_Controller_Action_Abstract
                         $this->tbTmpDepositoIdentificado = new tbTmpDepositoIdentificado();
                         // verifica se existe algum dado na tabela
                         $buscar = $this->tbDepositoIdentificadoCaptacao->buscar()->toArray();
+
                         if (count($buscar) > 0) {
                             throw new Exception('Aguarde um momento, pois, j&aacute; existe um arquivo sendo processado!');
                         }
