@@ -28,7 +28,7 @@ Vue.component('salic-proposta-fontes-de-recursos', {
                 let vue = this;
 
                 $3.ajax({
-                    url: '/proposta/visualizar/fonte-de-recurso/idPreProjeto/' + id
+                    url: '/proposta/visualizar/obter-fonte-de-recurso/idPreProjeto/' + id
                 }).done(function (response) {
                     vue.dado = response.data;
                 });

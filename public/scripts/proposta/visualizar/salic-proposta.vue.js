@@ -130,7 +130,7 @@ Vue.component('salic-proposta', {
         buscar_dados: function () {
             let vue = this;
             $3.ajax({
-                url: '/proposta/visualizar/identificacao/idPreProjeto/' + vue.idpreprojeto
+                url: '/proposta/visualizar/obter-identificacao/idPreProjeto/' + vue.idpreprojeto
             }).done(function (response) {
                 vue.dados = response.data;
             });

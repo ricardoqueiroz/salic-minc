@@ -39,7 +39,7 @@ Vue.component('salic-agente-usuario', {
             if (id) {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/dados-usuario/idUsuario/' + id
+                    url: '/autenticacao/index/obter-dados-usuario/idUsuario/' + id
                 }).done(function (response) {
                     vue.usuario = response.data;
                 });

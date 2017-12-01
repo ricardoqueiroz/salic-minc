@@ -78,7 +78,7 @@ Vue.component('salic-proposta-local-realizacao-deslocamento', {
             if (id) {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/local-realizacao-deslocamento/idPreProjeto/' + id
+                    url: '/proposta/visualizar/obter-local-realizacao-deslocamento/idPreProjeto/' + id
                 }).done(function (response) {
                     vue.proposta = response.data;
                 });

@@ -27,7 +27,7 @@ Vue.component('salic-proposta-historico-avaliacoes', {
             if (id) {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/historico-avaliacoes/idPreProjeto/' + id
+                    url: '/proposta/visualizar/obter-historico-avaliacoes/idPreProjeto/' + id
                 }).done(function (response) {
                     vue.dado = response.data;
                 });

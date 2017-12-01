@@ -181,7 +181,7 @@ Vue.component('salic-agente-proponente', {
             if (id) {
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/dados-proponente/idAgente/' + id
+                    url: '/agente/visualizar/obter-dados-proponente/idAgente/' + id
                 }).done(function (response) {
                     vue.proponente = response.data;
 

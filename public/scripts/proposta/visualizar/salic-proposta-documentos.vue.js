@@ -74,7 +74,7 @@ Vue.component('salic-proposta-documentos', {
 
                 let vue = this;
                 $3.ajax({
-                    url: '/proposta/visualizar/documentos-anexados/idPreProjeto/' + dados.idPreProjeto + '/idAgente/' + dados.idAgente
+                    url: '/proposta/visualizar/obter-documentos-anexados/idPreProjeto/' + dados.idPreProjeto + '/idAgente/' + dados.idAgente
                 }).done(function (response) {
                     vue.documentos = response.data;
                 });

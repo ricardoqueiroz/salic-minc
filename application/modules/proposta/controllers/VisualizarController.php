@@ -12,7 +12,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
     {
     }
 
-    public function identificacaoAction()
+    public function obterIdentificacaoAction()
     {
         $this->_helper->layout->disableLayout();
 
@@ -32,7 +32,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         }
     }
 
-    public function historicoAvaliacoesAction()
+    public function obterHistoricoAvaliacoesAction()
     {
         $this->_helper->layout->disableLayout();
 
@@ -61,85 +61,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         }
     }
 
-    public function dadosProponenteAction()
-    {
-        $this->_helper->layout->disableLayout();
-
-        $idAgente = $this->_request->getParam('idAgente');
-
-        $dados = [];
-        $matriz = [];
-
-        $tbAgentes = new Agente_Model_DbTable_Agentes();
-        $dados['identificacao'] = array_change_key_case(array_map('utf8_encode', $tbAgentes->buscarAgenteENome(['a.idAgente = ?' => $idAgente])->current()->toArray()));
-
-        $tbNatureza = new Agente_Model_DbTable_Natureza();
-        $dados['natureza'] = array_change_key_case(array_map('utf8_encode', $tbNatureza->findBy(['idAgente = ?' => $idAgente])));
-
-        $tbEndereco = new Agente_Model_DbTable_EnderecoNacional();
-        $matriz['enderecos'] = $tbEndereco->buscarEnderecos($idAgente)->toArray();
-
-        $tbInternet = new Agente_Model_DbTable_Internet();
-        $matriz['emails'] = $tbInternet->buscarEmails($idAgente)->toArray();
-
-        $tbTelefones = new Agente_Model_DbTable_Telefones();
-        $matriz['telefones'] = $tbTelefones->buscarFones($idAgente)->toArray();
-
-        $matriz['dirigentes'] = [];
-
-        if (strlen($dados['identificacao']['cnpjcpf']) > 11) {
-            $matriz['dirigentes'] = $tbAgentes->buscarDirigentes(array('v.idVinculoPrincipal = ?' => $idAgente, 'n.Status = ?' => 0), array('n.Descricao ASC'))->toArray();
-        }
-
-        foreach ($matriz as $key => $array) {
-            foreach ($array as $key2 => $dado) {
-                $dados[$key][$key2] = array_change_key_case(array_map('utf8_encode', $dado));
-            }
-        }
-//
-//        $dados['enderecos']['lines'] = $dados['enderecos'];
-//        $dados['enderecos']['cols'] = [
-//            'tipoendereco' => ['name' => 'Tipo de Endereco'],
-//            'descricao' => ['name' => 'E-mail'],
-//            'divulgar' => ['name' => 'Logradouro'],
-//            'numero' => ['name' => 'N&ordm;'],
-//            'complemento' => ['name' => 'Complemento'],
-//            'bairro' => ['name' => 'Bairro'],
-//            'municipio' => ['name' => 'Cidade'],
-//            'uf' => ['name' => 'UF'],
-//            'cep' => ['name' => 'CEP']
-//        ];
-//
-//        $dados['emails']['lines'] = $dados['emails'];
-//        $dados['emails']['cols'] = [
-//            'tipo' => ['name' => 'Tipo'],
-//            'dstipologradouro' => ['name' => 'Tipo do Logradouro'],
-//            'cep' => ['name' => 'CEP']
-//        ];
-
-
-
-
-
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
-    }
-
-    public function dadosUsuarioAction()
-    {
-        $this->_helper->layout->disableLayout();
-
-        $idUsuario = $this->_request->getParam('idUsuario');
-
-        $tbSgcAcesso = new Autenticacao_Model_Sgcacesso();
-        $this->debugMode = true;
-        $dados = $tbSgcAcesso->buscarUsuario(['IdUsuario = ?' => $idUsuario])->current()->toArray();
-
-        $dados = array_map('utf8_encode', $dados);
-
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
-    }
-
-    public function documentosAnexadosAction()
+    public function obterDocumentosAnexadosAction()
     {
         $this->_helper->layout->disableLayout();
 
@@ -183,7 +105,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $documentos, 'success' => 'true'));
     }
 
-    public function localRealizacaoDeslocamentoAction()
+    public function obterLocalRealizacaoDeslocamentoAction()
     {
         $this->_helper->layout->disableLayout();
 
@@ -207,7 +129,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function deslocamentoAction($idPreProjeto)
+    public function obterDeslocamentoAction($idPreProjeto)
     {
         $this->_helper->layout->disableLayout();
 
@@ -219,7 +141,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function planilhaOrcamentariaPropostaAction($idPreProjeto)
+    public function obterPlanilhaOrcamentariaPropostaAction($idPreProjeto)
     {
         $this->_helper->layout->disableLayout();
 
@@ -228,7 +150,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function planoDeDivulgacaoAction($idPreProjeto)
+    public function obterPlanoDeDivulgacaoAction($idPreProjeto)
     {
         $this->_helper->layout->disableLayout();
 
@@ -237,7 +159,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function planoDistribuicacaoAction($idPreProjeto)
+    public function obterPlanoDistribuicacaoAction($idPreProjeto)
     {
         $this->_helper->layout->disableLayout();
 
@@ -265,7 +187,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function detalhamentoPlanoDistribuicao($idPlanoDistribuicacao)
+    public function obterDetalhamentoPlanoDistribuicao($idPlanoDistribuicacao)
     {
         $this->_helper->layout->disableLayout();
 
@@ -274,7 +196,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function fonteDeRecursoAction() {
+    public function obterFonteDeRecursoAction() {
 
         $this->_helper->layout->disableLayout();
         $idPreProjeto = $this->_request->getParam('idPreProjeto');
