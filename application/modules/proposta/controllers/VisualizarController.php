@@ -96,6 +96,30 @@ class Proposta_VisualizarController extends Proposta_GenericController
                 $dados[$key][$key2] = array_change_key_case(array_map('utf8_encode', $dado));
             }
         }
+//
+//        $dados['enderecos']['lines'] = $dados['enderecos'];
+//        $dados['enderecos']['cols'] = [
+//            'tipoendereco' => ['name' => 'Tipo de Endereco'],
+//            'descricao' => ['name' => 'E-mail'],
+//            'divulgar' => ['name' => 'Logradouro'],
+//            'numero' => ['name' => 'N&ordm;'],
+//            'complemento' => ['name' => 'Complemento'],
+//            'bairro' => ['name' => 'Bairro'],
+//            'municipio' => ['name' => 'Cidade'],
+//            'uf' => ['name' => 'UF'],
+//            'cep' => ['name' => 'CEP']
+//        ];
+//
+//        $dados['emails']['lines'] = $dados['emails'];
+//        $dados['emails']['cols'] = [
+//            'tipo' => ['name' => 'Tipo'],
+//            'dstipologradouro' => ['name' => 'Tipo do Logradouro'],
+//            'cep' => ['name' => 'CEP']
+//        ];
+
+
+
+
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
