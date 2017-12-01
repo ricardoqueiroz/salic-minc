@@ -1,6 +1,6 @@
 Vue.component('salic-proposta', {
     template: `
-        <div class="proposta">
+        <div v-if="idpreprojeto" class="proposta">
             <salic-proposta-identificacao :idpreprojeto="idpreprojeto" :proposta="dados"></salic-proposta-identificacao>
             <ul class="collapsible" data-collapsible="accordion">
                 <li>
@@ -110,6 +110,9 @@ Vue.component('salic-proposta', {
                     </div>
                 </li>
             </ul>
+        </div>
+        <div v-else class="center-align">
+            <div class="padding10 green white-text">Opa! Proposta não informada...</div>
         </div>
     `,
     data: function () {

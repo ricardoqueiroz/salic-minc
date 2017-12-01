@@ -4,6 +4,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 {
     private $idPronac;
     private $idUsuario = 0;
+    private $idPreProjeto ;
 
     private function validarPerfis() {
         $auth = Zend_Auth::getInstance();
@@ -400,5 +401,37 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
             'draw' => $draw,
             'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0)
         );
+    }
+
+    public function analisarAction() {
+
+        $this->idPronac = $this->getRequest()->getParam('idPronac');
+        $idProduto = $this->getRequest()->getParam('idProduto');
+        $stPrincipal = $this->getRequest()->getParam('stPrincipal');
+        $idD = $this->getRequest()->getParam('idD');
+
+        $tbProjetos = new Projeto_Model_DbTable_Projetos();
+
+        $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
+        $whereProjeto['d.idProduto = ?'] = $idProduto;
+        $whereProjeto['d.stPrincipal = ?'] = $stPrincipal;
+
+//        $projetoDAO = new Projetos();
+//        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto);
+
+        $dadosProjeto = $tbProjetos->findBy(['IdPRONAC = ?' => $this->idPronac]);
+        $this->view->idPreProjeto = $dadosProjeto['idProjeto'];
+
+
+    }
+
+    public function analisarConteudoModalAction() {
+
+        $this->_helper->layout->disableLayout();
+
+        $dados = [];
+
+        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+
     }
 }
