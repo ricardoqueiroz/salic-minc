@@ -29,6 +29,7 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
 
     public function indexAction()
     {
+        die('w');
         $fooModel = new Foo_Model_Foo();
 
         $this->view->foos = $fooModel->listar();
@@ -36,5 +37,15 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
         $tooModel = new Foo_Model_Too();
 
         $this->view->toos = $tooModel->listar();
+    }
+
+    public function tipoAvaliacaoAction()
+    {
+        $idPronac = $this->_request->getParam("idPronac");
+        if (!$idPronac) {
+           throw new Exception('Não existe idPronac');
+        }
+
+        $this->view->idPronac = $this->_request->getParam("idPronac");
     }
 }

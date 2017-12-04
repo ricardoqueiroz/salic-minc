@@ -154,4 +154,44 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         return $db->fetchRow($exec);
     }
 
+    public function identificacao($idPronac) 
+    {
+        $sql = $this->select();
+        $sql->setIntegrityCheck(false);
+        $sql->from(
+            array( 'p' => $this->_name)
+            ,array('*')
+        );
+        $sql->join(
+            array( 'a' => 'agentes'),
+            'p.cgccpf = a.CNPJCPF',
+            ['*'],
+            'Agentes'
+        );
+        $sql->join(
+            array( 'n' => 'nomes'),
+            'n.idAgente = a.idAgente',
+            ['n.Descricao as NomeAgente'],
+            'Agentes'
+        );
+
+        $sql->join(
+            array( 's' => 'segmento'),
+            's.Codigo = p.Segmento',
+            ['*'],
+            $this->_schema
+        );
+
+        $sql->join(
+            array( 'si' => 'situacao'),
+            'p.situacao = si.Codigo',
+            ['Descricao as situacao'],
+            $this->_schema
+        );
+
+        $sql->where('p.IdPRONAC = ?', $idPronac);
+
+        return $this->_db->fetchRow($sql);
+    }
+
 }
