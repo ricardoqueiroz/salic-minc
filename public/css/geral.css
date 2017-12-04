@@ -2717,6 +2717,7 @@ td, th {
     margin-bottom: 1rem
 }
 
-.text-format {
+.text-format, .text-format p {
     padding: 0 0 10px;
+    white-space: normal;
 }
