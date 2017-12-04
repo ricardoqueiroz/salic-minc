@@ -1,13 +1,12 @@
 <?php
 /**
- * Classe para retirada de m�scaras javascript 
- * e inser��o em campos vindos do banco
+ * Classe para retirada de mascaras javascript e insercoo em campos vindos do banco
  * @author Equipe RUP - Politec
  * @since 29/03/2010
  * @version 1.0
  * @package library
  * @subpackage library.MinC.Validacao
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
+ * @copyright @ 2010 - Ministerio da Cultura - Todos os direitos reservados.
  * @link http://www.cultura.gov.br
  */
 
@@ -157,7 +156,21 @@ class Mascara
 		$valor = str_replace(",", ".", $valor);
 
 		return $valor;
-	} // fecha m�todo delMaskMoeda()
+	}
+
+	/**
+	 * @access public
+	 * @static
+	 * @param string $valor
+	 * @return string
+     *
+     * @author Ruy Ferreira <ruyjfs@gmail.com>
+     * @since 04/12/2017
+	 */
+	public static function addMaskMoeda($valor)
+	{
+		return number_format($valor, 2, ',', '.');
+	}
 
 
 

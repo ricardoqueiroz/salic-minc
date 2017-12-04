@@ -109,7 +109,6 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     {
         $this->_helper->layout->disableLayout();
 
-
         if ($this->getRequest()->isPost()) {
             $this->_helper->viewRenderer->setNoRender(true);
             $arrPost = $this->getRequest()->getPost();
@@ -169,7 +168,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
             $this->_helper->json(array('status' => $mapper->save($arrPost), 'msg' => $mapper->getMessages(), 'close' => 1));
         } else {
             $arrValue = [];
-            $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwEnquadramentoDoProjeto();
+            $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwVisualizarHomologacao();
             $this->view->urlAction = '/projeto/homologacao/homologar';
             $intId = $this->getRequest()->getParam('id');
             $dbTable = new Projeto_Model_DbTable_TbHomologacao();
@@ -198,7 +197,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     {
         # PARTE 1
         $dbTablePainelHomologacao = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
-        $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwEnquadramentoDoProjeto();
+        $dbTableEnquadramentoProjeto = new Projeto_Model_DbTable_VwVisualizarHomologacao();
         # PARTE 2 # PARTE 4
         $dbTableParecer = new Parecer();
         # PARTE 3
