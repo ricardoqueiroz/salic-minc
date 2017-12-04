@@ -1,0 +1,254 @@
+<div class="padding20">
+    <form id="formConsolidacao"
+          action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analisarprojetoparecer', 'action' => 'consolidacaoprojeto')); ?>"
+          method="post">
+        <input type="hidden" name="idPronacP" value="<?php echo $_GET['idPronac']; ?>"/>
+        <input type="hidden" name="AnoProjeto" value="<?php echo $this->projeto->AnoProjeto; ?>"/>
+        <input type="hidden" name="Sequencial" value="<?php echo $this->projeto->Sequencial; ?>"/>
+        <input type="hidden" name="sugeridoReal" value="<?php echo $this->itens['totalSugerido']; ?>"/>
+        <input type="hidden" name="stPrincipal" value="<?php echo $_GET['stPrincipal']; ?>"/>
+        <input type="hidden" name="idProduto" value="<?php echo $_GET['idProduto']; ?>"/>
+        <?php if ($this->IN2017 && $this->stPrincipal) : ?>
+            <input type="hidden" name="dsAcaoAlcanceProduto" id="consolidacaoDsAcaoAlcanceProduto" value=""/>
+        <?php endif; ?>
+
+        <?php if ($this->Perfil == Autenticacao_Model_Grupos::PARECERISTA) : ?>
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <label>Parecer favor&aacute;vel?</label><br>
+                    <input
+                        class="obrigatorioRadio"
+                        <?= (count($this->consolidacao) > 0 && ($this->consolidacao[0]->ParecerFavoravel == 2)) ? 'checked="checked"' : ''; ?>
+                        type="radio"
+                        name="parecerProjeto"
+                        id="parecerProjeto2"
+                        value="2"/>
+                    <label for="parecerProjeto2" style="margin-right:25px;">Sim</label>
+
+                    <input
+                        class="obrigatorioRadio"
+                        <?= (count($this->consolidacao) > 0 && ($this->consolidacao[0]->ParecerFavoravel == 1)) ? 'checked="checked"' : ''; ?>
+                        type="radio"
+                        name="parecerProjeto"
+                        id="parecerProjeto1"
+                        value="1"/>
+                    <label for="parecerProjeto1">N&atilde;o</label>
+                    <span id="parecerProjeto" class="spanError"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 m4 l4">
+                    <label for="areaCultural">&Aacute;rea Cultural</label><br>
+                    <select name="areaCultural" id="areaCultural" class="browser-default obrigatorio"
+                            style="width: 160px;">
+                        <option value=""> - Selecione -</option>
+                        <?php foreach ($this->comboareasculturais as $key => $value) : ?>
+                            <option
+                                value="<?= $key; ?>"
+                                <?= ($this->projeto->Area == $key) ? "selected='selected'" : ''; ?>>
+                                <?= $value; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <span id="erroAreaCultural" class="spanError"></span>
+                </div>
+                <div class="col s12 m8 l8">
+                    <label for="segmentoCultural">Segmento Cultural</label><br>
+                    <select name="segmentoCultural" id="segmentoCultural" class="browser-default obrigatorio">
+
+                        <?php if (!isset($this->projeto->Area) || empty($this->projeto->Area)) : ?>
+                            <option value=""> - Selecione uma &Aacute;rea Cultural -</option>
+                        <?php else : ?>
+
+                            <?php if (!isset($this->projeto->Segmento) || empty($this->projeto->Segmento)) : ?>
+                                <option value=""> - Selecione -</option>
+                            <?php endif; ?>
+
+                            <?php foreach ($this->combosegmentosculturais as $combosegmentocultural) : ?>
+                                <option
+                                    value="<?php echo $combosegmentocultural->id; ?>" <?php if ($this->projeto->Segmento == $combosegmentocultural->id) echo "selected=\"selected\""; ?>>
+                                    <?php echo $combosegmentocultural->descricao; ?>
+                                </option>
+                            <?php endforeach; ?>
+
+                        <?php endif; ?>
+
+                    </select>
+                    <span id="erroSegmentoCultural" class="spanError"></span>
+                </div>
+            </div>
+
+
+        <?php endif; ?>
+
+        <table class="tabela " id="consolidacaos" style="width:95%" width="95%">
+            <?php if ($this->Perfil == Autenticacao_Model_Grupos::PARECERISTA) { ?>
+
+                <?php $escondeLinha = ($this->IN2017) ? "display:nsone;" : ""; ?>
+                <tr style="<?php echo $escondeLinha; ?>">
+                    <td align="left" class="destacar bold">&Aacute;rea / Segmento do Projeto</td>
+                    <td valign="top" width="300px">
+
+                    </td>
+                    <td>
+
+
+                    </td>
+                </tr>
+                <tr style="<?php echo $escondeLinha; ?>">
+                    <td align="left" class="destacar bold">Enquadramento</td>
+                    <td width="250" colspan="2">
+                        <input type="hidden" name="enquadramentoProjeto" id="enquadramentoProjeto" value=""
+                               class="obrigatorio"/>
+                        <span id="enquadramentoText" class="bold"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" class="destacar bold">Sugerido</td>
+                    <td align="left" colspan="2"><?php echo $this->itens['totalSugerido']; ?></td>
+                </tr>
+
+                <?php if ($this->IN2017 && $this->stPrincipal): ?>
+                    <tr>
+                        <td class="destacar bold" colspan="5">
+                            A&ccedil;&otilde;es relevantes para o sucesso do projeto*
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <p>
+                            <center>
+                                <textarea class="textarea_simples" id="dsAcaoAlcanceProduto" name="dsAcaoAlcanceProduto"
+                                          rows="10" style="width: 98%;"><?php echo $this->AcoesRelevantes; ?></textarea>
+                            </center>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                <tr>
+                    <td class="destacar bold" colspan="5">
+                        Parecer t&eacute;cnico*
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <p>
+                            <textarea cols="80" id="dsConsolidacao" name="dsConsolidacao" rows="10"
+                                      class="textarea_simples"
+                                      style="width: 99%"><?php echo isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?></textarea>
+                    </td>
+                    </p>
+                </tr>
+                <td colspan="5" align="center">
+                    <input type="button" id="btSalvarConsolidacao" value=" " class="btn_salvar"/>
+                </td>
+
+            <?php } else if ($this->Perfil != Autenticacao_Model_Grupos::PARECERISTA) { ?>
+
+                <tr>
+                    <th colspan="2">Parecer</th>
+                </tr>
+                <tr>
+                    <td colspan="2"><?php echo isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?></td>
+                </tr>
+                <tr>
+                    <th width="250" align="left">Sugerido</th>
+                    <td><?php echo isset($this->consolidacao[0]->SugeridoReal) ? $this->formatarReal($this->consolidacao[0]->SugeridoReal) : ''; ?></td>
+                </tr>
+                <tr>
+                    <th align="left">Enquadramentos</th>
+                    <td><?php echo $this->enquadramento['Enquadramento'] == '1' ? 'Artigo 26' : 'Artigo 18'; ?></td>
+                </tr>
+                <?php if (!$this->IN2017) { ?>
+                    <tr>
+                        <th align="left">&Aacute;rea / Segmento do Projeto</th>
+                        <td><?php echo $this->dsArea . ' - ' . $this->dsSegmento; ?></td>
+                    </tr>
+                <?php } ?>
+                <tr align="left">
+                    <th>Parecer favor&aacute;vel</th>
+                    <td><?php echo isset($this->consolidacao[0]->ParecerFavoravel) ? $this->consolidacao[0]->ParecerFavoravel == '2' ? 'SIM' : 'N&Atilde;O' : ''; ?></td>
+                </tr>
+            <?php } ?>
+        </table>
+    </form>
+    <div class="botoes">
+        <?php if (
+        (($this->IsProdutosSecundariosAnalisados($this->projeto->IdPRONAC)) &&
+            ($this->projeto->stPrincipal == 1) &&
+            (!$isProdutosPendentesParecer) &&
+            ($this->IsProjetoEnquadrado($this->projeto->IdPRONAC)) &&
+            ($this->IsProjetoComParecer($this->projeto->IdPRONAC)) && ($dilig == 0))
+        ) : ?>
+            <?php if ($this->IN2017): ?>
+                <?php if ($isProjetoDisponivelParaAssinatura): ?>
+                    <?php $idDocumentoAssinatura = $this->GetIdDocumentoAssinatura($this->projeto->IdPRONAC, $this->idTipoDoAtoAdministrativo); ?>
+                    <a class="btn waves-effect waves-light cyan tooltipped small"
+                       href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'visualizar-projeto')) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
+                       data-tooltip="Visualizar documento">
+                        <i class="material-icons white-text">remove_red_eye</i>
+                    </a>
+
+
+                    <?php if ($isProjetoJaAssinado):
+                        $parametrosAssinatura = "?idPronac=" . $this->projeto->IdPRONAC . "&idProduto=" . $this->projeto->idProduto . "&situacao=" . $this->projeto->situacao . "&idD=" . $this->projeto->idDistribuirParecer . "&concluir=1";
+                        ?>
+                        <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                           href="#modalConfirmacao"
+                           data-redirect-url="<?php echo $this->url(
+                                   array(
+                                       'module' => 'parecer',
+                                       'controller' => 'analise-inicial',
+                                       'action' => 'fechar-parecer'
+                                   )
+                               ) . $parametrosAssinatura ?>"
+                           data-position="top"
+                           data-delay="50"
+                           data-tooltip="Concluir">
+                            <i class="material-icons">check_circle</i>
+                        </a>
+
+                    <?php elseif (!$isProjetoJaAssinado): ?>
+                        <a class="btn waves-effect waves-light cyan tooltipped small"
+                           href="<?php echo $this->url(array('module' => 'assinatura', 'controller' => 'index', 'action' => 'assinar-projeto')) . "?IdPRONAC={$this->projeto->IdPRONAC}&idTipoDoAtoAdministrativo=" . Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL; ?>&origin=parecer/analise-inicial"
+                           data-tooltip="Assinar documento">
+                            <i class="material-icons white-text">create</i>
+                        </a>
+                    <?php endif; ?>
+
+                <?php elseif (!$isProjetoDisponivelParaAssinatura): ?>
+                    <a class="btn waves-effect waves-light cyan tooltipped small"
+                       href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'encaminhar-assinatura')) . "?IdPRONAC={$this->projeto->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
+                       data-tooltip="Gerar documento para assinatura">
+                        <i class="material-icons white-text">note_add</i>
+                    </a>
+                <?php endif; ?>
+            <?php elseif (!$this->IN2017): ?>
+                <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif"
+                     onclick="redirecionar('<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'fechar-parecer', 'idPronac' => $this->projeto->IdPRONAC, 'idD' => $this->projeto->idDistribuirParecer, 'idProduto' => $this->projeto->idProduto, 'stPrincipal' => $this->projeto->stPrincipal)); ?>')"
+                     style="cursor: pointer;" title="Concluir An&aacute;lise"
+                     alt="Concluir An&aacute;lise"/>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if (($this->projeto->stPrincipal == 0) && ($isProdutosPendentesParecer == 0) && ($dilig == 0)): ?>
+            <?php /* fechamento do produto secundário */ ?>
+            <?php $parametrosAssinatura = "?idPronac=" . $this->projeto->IdPRONAC . "&idProduto=" . $this->projeto->idProduto . "&situacao=" . $this->projeto->situacao . "&idD=" . $this->projeto->idDistribuirParecer . "&stPrincipal=" . $this->projeto->stPrincipal . "&concluir=1"; ?>
+            <a class="btn waves-effect waves-light tooltipped small btn cyan"
+               href="#modalConfirmacao"
+               data-redirect-url="<?php echo $this->url(
+                       array(
+                           'module' => 'parecer',
+                           'controller' => 'analise-inicial',
+                           'action' => 'fechar-parecer'
+                       )
+                   ) . $parametrosAssinatura ?>"
+               data-position="top"
+               data-delay="50"
+               data-tooltip="Concluir">
+                <i class="material-icons">check_circle</i>
+            </a>
+        <?php endif; ?>
+
+    </div>
+</div>

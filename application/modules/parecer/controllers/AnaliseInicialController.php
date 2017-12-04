@@ -4,9 +4,11 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 {
     private $idPronac;
     private $idUsuario = 0;
-    private $idPreProjeto ;
+    private $idPreProjeto;
+    private $isIN2017 = false;
 
-    private function validarPerfis() {
+    private function validarPerfis()
+    {
         $auth = Zend_Auth::getInstance();
 
         $PermissoesGrupo = array();
@@ -24,6 +26,11 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->auth = Zend_Auth::getInstance();
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $this->idUsuario = $this->auth->getIdentity()->usu_codigo;
+
+        if ($this->idPronac) {
+            $projetos = new Projetos();
+            $this->isIN2017 = $projetos->verificarIN2017($this->idPronac);
+        }
     }
 
     public function gerenciarAssinaturasAction()
@@ -46,7 +53,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $idDocumentoAssinatura = $this->getIdDocumentoAssinatura($get['IdPRONAC'], $idTipoDoAtoAdministrativo);
 
                 $this->redirect("/assinatura/index/visualizar-projeto/?idDocumentoAssinatura=" . $idDocumentoAssinatura . "&origin=" . $get['origin']);
-            } elseif(isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
+            } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
                 // ainda nao implementado o encaminhamento de vários para pareceres
             }
         } catch (Exception $objException) {
@@ -57,7 +64,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
     function obterServicoDocumentoAssinatura()
     {
-        if(!isset($this->servicoDocumentoAssinatura)) {
+        if (!isset($this->servicoDocumentoAssinatura)) {
             require_once __DIR__ . DIRECTORY_SEPARATOR . "AnaliseInicialDocumentoAssinaturaController.php";
             $this->servicoDocumentoAssinatura = new Parecer_AnaliseInicialDocumentoAssinaturaController($this->getRequest()->getPost());
         }
@@ -153,7 +160,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $projetos = new Projetos();
         $orgaos = new Orgaos();
 
-        if (!$projetos->verificarIN2017($idPronac)) {
+        if ($this->isIN2017) {
             $this->validacaoAnteriorIN2017($idPronac);
         }
 
@@ -167,7 +174,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $tbDistribuirParecer->getAdapter()->beginTransaction();
                 foreach ($buscaDadosProjeto as $dp):
 
-                $fecharAnalise = 0;
+                    $fecharAnalise = 0;
 
                     $dados = array(
                         'idOrgao' => $dp->idOrgao,
@@ -217,7 +224,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->dados = $dadosProjetoProduto;
         /* var_dump($dadosProjetoProduto); */
 
-        $this->view->IN2017 = $projetos->verificarIN2017($idPronac);
+        $this->view->IN2017 = $this->isIN2017;
 
         $this->view->idpronac = $idPronac;
     }
@@ -370,7 +377,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
             die;
         }
 
-        $where = array (
+        $where = array(
             'idAgenteParecerista = ?' => $idAgenteParecerista,
             'idOrgao = ?' => $idOrgao,
         );
@@ -396,36 +403,256 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         }
 
         $this->_helper->json(array(
-            "data" => !empty($aux) ? $aux : 0,
-            'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
-            'draw' => $draw,
-            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0)
+                "data" => !empty($aux) ? $aux : 0,
+                'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
+                'draw' => $draw,
+                'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0)
         );
     }
 
-    public function analisarAction() {
-
+    public function analisarProdutoDoProjetoAction()
+    {
         $this->idPronac = $this->getRequest()->getParam('idPronac');
         $idProduto = $this->getRequest()->getParam('idProduto');
-        $stPrincipal = $this->getRequest()->getParam('stPrincipal');
+        $produtoPrincipal = $this->getRequest()->getParam('stPrincipal');
         $idD = $this->getRequest()->getParam('idD');
 
-        $tbProjetos = new Projeto_Model_DbTable_Projetos();
+        $projetoDAO = new Projetos();
 
         $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
         $whereProjeto['d.idProduto = ?'] = $idProduto;
-        $whereProjeto['d.stPrincipal = ?'] = $stPrincipal;
+        $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
 
-//        $projetoDAO = new Projetos();
-//        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto);
+        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto);
+        $this->view->projeto = $projeto[0];
+        $this->view->dsArea = $projeto[0]->dsArea;
+        $this->view->dsSegmento = $projeto[0]->dsSegmento;
+        $this->view->IN2017 = $this->isIN2017;
 
-        $dadosProjeto = $tbProjetos->findBy(['IdPRONAC = ?' => $this->idPronac]);
-        $this->view->idPreProjeto = $dadosProjeto['idProjeto'];
+//        $tbProjetos = new Projeto_Model_DbTable_Projetos();
 
+//        $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
+//        $whereProjeto['d.idProduto = ?'] = $idProduto;
+//        $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
+
+//        $dadosProjeto = $tbProjetos->findBy(['IdPRONAC = ?' => $this->idPronac]);
+        $this->view->idPreProjeto = $projeto[0]->idProjeto;
+    }
+
+    public function obterAnaliseConteudoAction()
+    {
+
+        $this->_helper->layout->disableLayout();
+//        $this->_helper->viewRenderer->setNoRender(true);
+
+        $auth = Zend_Auth::getInstance(); // pega a autenticacao
+        $idusuario = $auth->getIdentity()->usu_codigo;
+
+//        $dsJustificativa = $this->_request->getParam("ParecerDeConteudo");
+        $stAcao = $this->_request->getParam("stAcao");
+        $idPronac = $this->_request->getParam("idPRONAC");
+        $idProduto = $this->_request->getParam("idProduto");
+        $stPrincipal = $this->_request->getParam("stPrincipal");
+//        $idD = $this->_request->getParam("idD");
+
+//        $projetos = new Projetos();
+//        $IN2017 = $projetos->verificarIN2017($idPronac);
+
+        $analisedeConteudoDAO = new Analisedeconteudo();
+        $resp = $analisedeConteudoDAO->dadosAnaliseconteudo(false, array('idPRONAC = ?' => $idPronac, 'idProduto = ?' => $idProduto))->current()->toArray();
+        foreach ($resp as $key => $val) {
+            $arrayRetorno[$key] = utf8_encode($val);
+        }
+
+        if ($this->isIN2017) {
+            $tbAcaoAlcanteProjeto = new tbAcaoAlcanceProjeto();
+            $buscarAcaoAlcanceProjeto = $tbAcaoAlcanteProjeto->buscar(array('idPronac = ?' => $idPronac, 'idParecer = ?' => $resp['idAnaliseDeConteudo']));
+
+            if (count($buscarAcaoAlcanceProjeto) > 0) {
+                foreach ($buscarAcaoAlcanceProjeto->current() as $key => $val) {
+                    $arrayRetorno[$key] = utf8_encode($val);
+                }
+            }
+        }
+
+        $this->_helper->json($arrayRetorno);
+    }
+
+    public function salvarAnaliseConteudoAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $auth = Zend_Auth::getInstance(); // pega a autenticacao
+        $idusuario = $auth->getIdentity()->usu_codigo;
+
+        $dsJustificativa = $this->_request->getParam("ParecerDeConteudo");
+        $idPronac = $this->_request->getParam("idPRONAC");
+        $idProduto = $this->_request->getParam("idProduto");
+        $stPrincipal = $this->_request->getParam("stPrincipal");
+        $idD = $this->_request->getParam("idD");
+
+        try {
+            if (!$this->_request->getParam('ParecerFavoravel')) {
+                $planilhaProjeto = new PlanilhaProjeto();
+                $atualizar = array('idUnidade' => 1, 'Quantidade' => 0, 'Ocorrencia' => 0, 'ValorUnitario' => 0, 'QtdeDias' => 0, 'idUsuario' => $idusuario, 'Justificativa' => '');
+                if ($stPrincipal) {
+                    $planilhaProjeto->alterar($atualizar, array('idPRONAC = ?' => $idPronac));
+                } else {
+                    $planilhaProjeto->alterar($atualizar, array('idPRONAC = ?' => $idPronac, 'idProduto = ?' => $idProduto));
+                }
+            } else {
+                $analisedeConteudoDAO = new Analisedeconteudo();
+                $whereB['idPronac  = ?'] = $idPronac;
+                $whereB['idProduto = ?'] = $idProduto;
+                $buscaAnaliseConteudo = $analisedeConteudoDAO->buscar($whereB);
+
+                if ($buscaAnaliseConteudo[0]->ParecerFavoravel == 0) {
+                    $copiaPlanilha = PlanilhaPropostaDAO::parecerFavoravel($idPronac, $idProduto);
+                }
+            }
+
+            $dados = array(
+                'Lei8313' => $this->_request->getParam('Lei8313'),
+                'Artigo3' => $this->_request->getParam('Artigo3'),
+                'IncisoArtigo3' => $this->_request->getParam('IncisoArtigo3'),
+                'AlineaArtigo3' => $this->_request->getParam('AlineaArtigo3'),
+                'Artigo18' => $this->_request->getParam('Artigo18'),
+                'AlineaArtigo18' => $this->_request->getParam('AlineaArtigo18'),
+                'Artigo26' => $this->_request->getParam('Artigo26'),
+                'Lei5761' => $this->_request->getParam('Lei5761'),
+                'Artigo27' => $this->_request->getParam('Artigo27'),
+                'IncisoArtigo27_I' => $this->_request->getParam('IncisoArtigo27_I'),
+                'IncisoArtigo27_II' => $this->_request->getParam('IncisoArtigo27_II'),
+                'IncisoArtigo27_III' => $this->_request->getParam('IncisoArtigo27_III'),
+                'IncisoArtigo27_IV' => $this->_request->getParam('IncisoArtigo27_IV'),
+                'TipoParecer' => 1,
+                'ParecerFavoravel' => $this->_request->getParam('ParecerFavoravel'),
+                'ParecerDeConteudo' => $dsJustificativa,
+                'idUsuario' => $idusuario
+            );
+
+            $analisedeConteudoDAO = new Analisedeconteudo();
+            $where['idPRONAC = ?'] = $idPronac;
+            $where['idProduto = ?'] = $idProduto;
+            $analisedeConteudoDAO->update($dados, $where);
+
+            $this->_helper->json(array('status' => true, 'msg' => "Altera&ccedil;&atilde;o realizada com sucesso!"));
+        } catch (Exception $e) {
+
+            $this->_helper->json(array('status' => false, 'msg' => $e->getMessage()));
+        }
 
     }
 
-    public function analisarConteudoModalAction() {
+    public function obterAnaliseCustoAction()
+    {
+
+    }
+
+    public function obterParecerTecnicoConsolidadoAction()
+    {
+
+    }
+
+    public function obterItensOrcamentariosPorProduto($idPronac, $idProduto, $analisedeConteudo, $stPrincipal = false)
+    {
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $codGrupo = $GrupoAtivo->codGrupo;
+
+        $PlanilhaDAO = new PlanilhaProjeto();
+        if ($stPrincipal == 1) {
+            $where = array('PPJ.IdPRONAC = ?' => $idPronac, 'PPJ.IdProduto in (0, ?)' => $idProduto);
+        } else {
+            $where = array('PPJ.IdPRONAC = ?' => $idPronac, 'PPJ.IdProduto = ?' => $idProduto, 'PD.Descricao is not null' => null);
+        }
+
+        $resp = $PlanilhaDAO->buscarAnaliseCustos($where);
+        $itensCusto = array('fonte' => array(), 'totalSolicitado' => 0, 'totalSugerido' => 0);
+        $cont = true;
+
+        foreach ($resp as $key => $val) {
+            $produto = $val->Produto == null ? 'Administra&ccedil;&atilde;o do Projeto' : $val->Produto;
+            if (!isset($itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['qtd'])) {
+                $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade] = array('qtd' => 0, 'totalUfSolicitado' => 0, 'totalUfSugerido' => 0, 'itens' => array(), 'totalSolicitado' => 0, 'totalSugerido' => 0);
+            }
+            $itensCusto['totalSolicitado'] += $val->VlSolicitado;
+            $itensCusto['totalSugerido'] += $val->VlSugeridoParecerista;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['qtd']++;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['totalUfSolicitado'] += $val->VlSolicitado;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['totalUfSugerido'] += $val->VlSugeridoParecerista;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['&nbsp;'] = $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['qtd'];
+
+            // So pode alterar se for incentivo fiscal - FonteRecurso = 109
+            if (($analisedeConteudo[0]->ParecerFavoravel == 1) && ($val->idEtapa != 4)) {
+                if ($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) {
+                    $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "<a href='javascript:void(0);' onclick='javascript:AlterarItem({$val->idPlanilhaProjeto},{$idPronac},{$idProduto},{$stPrincipal})'>{$val->Item}</a>";
+                } else if ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
+                    $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = $val->Item;
+                }
+            } else if (($analisedeConteudo[0]->ParecerFavoravel == 1) && ($stPrincipal == 1)) {
+                if ($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) {
+                    $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "<a href='javascript:void(0);' onclick='javascript:AlterarItem({$val->idPlanilhaProjeto},{$idPronac},{$idProduto},{$stPrincipal})'>{$val->Item}</a>";
+                } else if ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
+                    $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = $val->Item;
+                }
+
+            } else {
+                $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "{$val->Item}";
+            }
+
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Dias'] = $val->diasprop;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Unidade'] = $val->UnidadeProposta;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Quantidade'] = number_format($val->quantidadeprop, 0, '.', ',');
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Ocorr&ecirc;ncias'] = number_format($val->ocorrenciaprop, 0, '.', ',');
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Valor Unit&aacute;rio'] = $val->valorUnitarioprop;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Valor Solicitado'] = $val->VlSolicitado;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Justificativa do Proponente'] = $val->justificitivaproponente;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Valor Sugerido pelo Parecerista'] = $val->VlSugeridoParecerista;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Justificativas do Parecerista'] = $val->dsJustificativaParecerista;
+            $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Custo praticado'] = $val->custopraticado;
+        }
+
+        foreach ($itensCusto['fonte'] as $key => $value) {
+            foreach ($value as $key2 => $value2) {
+                foreach ($value2 as $key3 => $value3) {
+                    foreach ($value3 as $key4 => $value4) {
+
+                        if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] != 0) {
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = $this->formatarReal($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado']);
+                        } else {
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = "R$ 0,00";
+                        }
+
+                        if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] != 0) {
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = $this->formatarReal($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido']);
+                        } else {
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = "R$ 0,00";
+                        }
+                    }
+                }
+            }
+        }
+
+        $valorPossivel = $itensCusto['totalSolicitado'] - $itensCusto['totalSugerido'];
+        $valorSolicitado = $itensCusto['totalSolicitado'];
+        if ($itensCusto['totalSolicitado'] != 0) {
+            $itensCusto['totalSolicitado'] = $this->formatarReal($itensCusto['totalSolicitado']);
+        } else {
+            $itensCusto['totalSugerido'] = "R$ 0,00";
+        }
+
+        if ($itensCusto['totalSugerido'] != 0) {
+            $itensCusto['totalSugerido'] = $this->formatarReal($itensCusto['totalSugerido']);
+        } else {
+            $itensCusto['totalSugerido'] = "R$ 0,00";
+        }
+
+        return $itensCusto;
+    }
+
+    public function analisarConteudoModalAction()
+    {
 
         $this->_helper->layout->disableLayout();
 

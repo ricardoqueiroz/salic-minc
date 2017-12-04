@@ -59,7 +59,7 @@ function carregarTextAreaCKEditor() {
         // });
 
         // salvar analise de conteudo
-        $('#btSalvarAnaliseDeConteudo').click(function()
+        $('#btSalvarAnaliseDeConteudos').click(function()
         {
             if (!somenteLeitura) {
                parecer = CKEDITOR.instances['ParecerDeConteudo'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
@@ -316,7 +316,7 @@ function carregarAnaliseDeConteudo()
             stPrincipal: stPrincipal
     };
 
-    recuperaFormulario($('#formAnaliseConteudo').prop('action'), obj);
+    recuperaFormulario('/parecer/analise-inicial/obter-analise-conteudo', obj);
     return true;
 }
 
