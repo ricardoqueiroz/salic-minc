@@ -213,7 +213,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
         $arrValue['acaoProjeto'] = $dbTableAcaoProjeto->findBy(['tpAnalise' => '1', 'idPronac' => $intIdPronac]); # 3
 //        $arrValue['aparicaoComissario'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'stAtivo' => '1', 'idTipoAgente' => '6', 'IdPRONAC' => 131182]); # 4
         $arrValue['aparicaoComissario'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'stAtivo' => '1', 'idTipoAgente' => '6', 'IdPRONAC' => $intIdPronac]); # 4
-        $arrValue['parecerHomologacao'] = $dbTableHomologacao->findBy(['idPronac' => $intIdPronac, 'tpHomologacao' => '1']); # 5
+        $arrValue['parecerHomologacao'] = $dbTableHomologacao->getBy(['idPronac' => $intIdPronac, 'tpHomologacao' => '1']); # 5
         if (isset($arrValue['Pronac'])) $arrValue['idPronac'] = $arrValue['Pronac'];
         $this->view->arrValue = $arrValue;
         return $arrValue;
