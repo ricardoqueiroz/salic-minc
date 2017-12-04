@@ -18,10 +18,9 @@
                 <td colspan="3">Segmento: <?= $this->arrValue['enquadramentoProjeto']['Segmento'] ?></td>
             </tr>
             <tr>
-                <td>UF:</td>
-                <td><?= $this->arrValue['enquadramentoProjeto']['UfProjeto'] ?></td>
-                <td>Per&iacute;odo de execu&ccedil;&atilde;o: <?= $this->arrValue['enquadramentoProjeto']['DtInicioExecucao'] ?>
-                    a <?= $this->arrValue['enquadramentoProjeto']['DtFimExecucao'] ?></td>
+                <td>UF: <?= $this->arrValue['enquadramentoProjeto']['UfProjeto'] ?></td>
+                <td>Per&iacute;odo de execu&ccedil;&atilde;o: <?= Mascara::convertDateToView($this->arrValue['enquadramentoProjeto']['DtInicioExecucao']) ?>
+                    &agrave; <?= Mascara::convertDateToView($this->arrValue['enquadramentoProjeto']['DtFimExecucao']) ?></td>
                 <td>Enquadramento: <?= $this->arrValue['enquadramentoProjeto']['Enquadramento'] ?></td>
             </tr>
             </tbody>

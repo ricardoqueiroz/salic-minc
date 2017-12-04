@@ -5,14 +5,11 @@
             <tbody>
             <tr>
                 <td>Decis&atilde;o</td>
-                <td></td>
+                <td><?php if (!is_null($this->arrValue['parecerHomologacao']['stDecisao'])) echo ($this->arrValue['parecerHomologacao']['stDecisao'] == 1)? 'Desfavor&aacute;vel' : 'Far&aacute;vel' ?></td>
             </tr>
             <tr>
-                <td>
-                    <?= ($this->arrValue['parecerHomologacao']['stDecisao'] == 0)? 'Desfavoravel' : 'Faravel' ?>
-                </td>
-                <td>
-                    <p><?= $this->arrValue['parecerHomologacao']['dsHomologacao'] ?></p>
+                <td colspan="2">
+                    <pre><?= $this->arrValue['parecerHomologacao']['dsHomologacao'] ?></pre>
                 </td>
             </tr>
             </tbody>

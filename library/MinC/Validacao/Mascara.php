@@ -310,8 +310,20 @@ class Mascara
 		$s1 = substr($data, 0, 2);
 		$s2 = substr($data, 2, 2);
 		$s3 = substr($data, 4, 4);
-
 		return $s1 . "/" . $s2 . "/" . $s3;
-	} // fecha m�todo addMaskDataBrasileira()
+	}
 
-} // fecha class
+	/**
+	 * @access public
+	 * @static
+	 * @param string $strDate
+	 * @return string
+     *
+     * @author Ruy Ferreira <ruyjfs@gmail.com>
+     * @since 04/12/2017
+	 */
+	public static function convertDateToView($strDate)
+	{
+        return reset(explode(' ', new Zend_Date($strDate)));
+	}
+}
