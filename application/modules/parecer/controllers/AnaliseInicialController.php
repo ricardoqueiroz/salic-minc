@@ -6,6 +6,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     private $idUsuario = 0;
     private $idPreProjeto;
     private $isIN2017 = false;
+    private $somenteLeitura = false;
 
     private function validarPerfis()
     {
@@ -15,7 +16,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::PARECERISTA;
 
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
-
 
     }
 
@@ -27,6 +27,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $this->idUsuario = $this->auth->getIdentity()->usu_codigo;
 
+        $this->idPronac = $this->_request->getParam("idPronac");
         if ($this->idPronac) {
             $projetos = new Projetos();
             $this->isIN2017 = $projetos->verificarIN2017($this->idPronac);
@@ -427,16 +428,37 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->projeto = $projeto[0];
         $this->view->dsArea = $projeto[0]->dsArea;
         $this->view->dsSegmento = $projeto[0]->dsSegmento;
+        $this->view->idPreProjeto = $projeto[0]->idProjeto;
         $this->view->IN2017 = $this->isIN2017;
 
-//        $tbProjetos = new Projeto_Model_DbTable_Projetos();
+        if ($idProduto) {
 
-//        $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
-//        $whereProjeto['d.idProduto = ?'] = $idProduto;
-//        $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
+            $tbDistribuirParecer = new tbDistribuirParecer();
+            $whereProduto = array();
+            $whereProduto['idPRONAC = ?'] = $this->idPronac;
+            $whereProduto['idProduto = ?'] = $idProduto;
+            $whereProduto["stEstado = ?"] = 0;
 
-//        $dadosProjeto = $tbProjetos->findBy(['IdPRONAC = ?' => $this->idPronac]);
-        $this->view->idPreProjeto = $projeto[0]->idProjeto;
+            // @todo codigo sem sentido
+            $pareceristaAtivo = ($idAgenteParecerista == $produto['idAgenteParecerista']) ? true : false;
+
+            /* Analise de conteudo */
+            $analisedeConteudoDAO = new Analisedeconteudo();
+            $analisedeConteudo = $analisedeConteudoDAO->dadosAnaliseconteudo(false, array('idPronac = ?' => $this->idPronac, 'idProduto = ?' => $idProduto));
+
+            if (count($analisedeConteudo) > 0) {
+                if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && ($pareceristaAtivo)) {
+                    $this->somenteLeitura = false;
+                } else if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && (!$pareceristaAtivo)) {
+                    $this->somenteLeitura = true;
+                } else if ($this->grupoAtivo->codGrupo <> Autenticacao_Model_Grupos::PARECERISTA) {
+                    $this->somenteLeitura = true;
+                }
+            } else {
+                $this->somenteLeitura = false;
+            }
+        }
+        $this->view->somenteLeitura = $this->somenteLeitura;
     }
 
     public function obterAnaliseConteudoAction()
@@ -545,8 +567,9 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
     }
 
-    public function obterAnaliseCustoAction()
+    public function analisarCustoAction()
     {
+
 
     }
 
