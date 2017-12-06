@@ -30,7 +30,7 @@
 <li>
     <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Resumo do Projeto</div>
     <div class="collapsible-body">
-        <p><?= $this->arrValue['enquadramentoProjeto']['ResumoProjeto'] ?></p>
+        <pre class="text-format"><?= $this->arrValue['enquadramentoProjeto']['ResumoProjeto'] ?></pre>
     </div>
 </li>
 <li>
@@ -65,7 +65,7 @@
     </div>
 </li>
 <li>
-    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Avalia&ccedil;&atilde;o de T&eacute;cnica</div>
+    <div class="collapsible-header green white-text <?= (isset($this->booShowAll) && $this->booShowAll === true)? 'active' : '' ?>">Avalia&ccedil;&atilde;o T&eacute;cnica</div>
     <div class="collapsible-body">
         <table class="responsive-table bordered-all" style="width: 100%;">
             <tbody>
