@@ -567,21 +567,25 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
     }
 
-    public function analisarCustoAction()
+    public function analisarCustosAction()
     {
+        $this->_helper->layout->disableLayout();
 
+        $idPronac = $this->_request->getParam("idPronac");
+        $idProduto = $this->_request->getParam("idProduto");
+        $stPrincipal = $this->_request->getParam("stPrincipal");
 
+        $this->itens = self::obterItensOrcamentariosPorProduto($idPronac, $idProduto, $stPrincipal);
+        $this->view->itens = $this->itens;
     }
 
-    public function obterParecerTecnicoConsolidadoAction()
-    {
-
-    }
-
-    public function obterItensOrcamentariosPorProduto($idPronac, $idProduto, $analisedeConteudo, $stPrincipal = false)
+    public function obterItensOrcamentariosPorProduto($idPronac, $idProduto, $stPrincipal = false)
     {
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         $codGrupo = $GrupoAtivo->codGrupo;
+
+        $analisedeConteudoDAO = new Analisedeconteudo();
+        $analisedeConteudo = $analisedeConteudoDAO->dadosAnaliseconteudo(false, array('idPronac = ?' => $idPronac, 'idProduto = ?' => $idProduto));
 
         $PlanilhaDAO = new PlanilhaProjeto();
         if ($stPrincipal == 1) {
@@ -642,15 +646,15 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                     foreach ($value3 as $key4 => $value4) {
 
                         if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] != 0) {
-                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = $this->formatarReal($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado']);
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = number_format($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'], 2, ',', '.');
                         } else {
-                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = "R$ 0,00";
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = "0,00";
                         }
 
                         if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] != 0) {
-                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = $this->formatarReal($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido']);
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] =  number_format($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'], 2, ',', '.');
                         } else {
-                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = "R$ 0,00";
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = "0,00";
                         }
                     }
                 }
@@ -660,18 +664,26 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $valorPossivel = $itensCusto['totalSolicitado'] - $itensCusto['totalSugerido'];
         $valorSolicitado = $itensCusto['totalSolicitado'];
         if ($itensCusto['totalSolicitado'] != 0) {
-            $itensCusto['totalSolicitado'] = $this->formatarReal($itensCusto['totalSolicitado']);
+            $itensCusto['totalSolicitado'] =  number_format($itensCusto['totalSolicitado'], 2, ',', '.');
         } else {
-            $itensCusto['totalSugerido'] = "R$ 0,00";
+            $itensCusto['totalSugerido'] = "0,00";
         }
 
         if ($itensCusto['totalSugerido'] != 0) {
-            $itensCusto['totalSugerido'] = $this->formatarReal($itensCusto['totalSugerido']);
+            $itensCusto['totalSugerido'] =  number_format($itensCusto['totalSugerido'], 2, ',', '.');
         } else {
-            $itensCusto['totalSugerido'] = "R$ 0,00";
+            $itensCusto['totalSugerido'] = "0,00";
         }
 
+        $itensCusto['valorPossivel'] = $valorPossivel;
+        $itensCusto['vlSolicitado'] = $valorSolicitado;
+
         return $itensCusto;
+    }
+
+    public function obterParecerTecnicoConsolidadoAction()
+    {
+
     }
 
     public function analisarConteudoModalAction()

@@ -16,9 +16,27 @@
         </li>
         <li>
             <a
-                class="btn-floating blue tooltipped waves-effect waves-light modal-trigger"
-                data-tooltip="An&aacute;lise de Custos"
-                href="#analisar-custos">
+                id="visualizar-form"
+                data-ajax-modal="
+                    <?php echo $this->url(
+                    array(
+                        'module' => 'parecer',
+                        'controller' => 'analise-inicial',
+                        'action' => 'analisar-custos',
+                        'idPronac' => $this->projeto['IdPRONAC'],
+                        'idProduto' => $this->projeto['idProduto'],
+                        'stPrincipal' => $this->projeto['stPrincipal']
+                    ),
+                    null,
+                    true);
+                ?>"
+                href="javascript:void(0);"
+                class="btn-floating blue tooltipped"
+                data-position="top"
+                data-delay="50"
+                data-ajax-modal-type="bottom-sheet"
+                data-ajax-modal-height="570px; min-height: 90%"
+                data-tooltip="Avaliar projeto">
                 <i class="material-icons">attach_money</i>
             </a>
         </li>
