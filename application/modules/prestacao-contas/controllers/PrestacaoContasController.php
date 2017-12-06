@@ -29,14 +29,6 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
 
     public function indexAction()
     {
-        die('w');
-        $fooModel = new Foo_Model_Foo();
-
-        $this->view->foos = $fooModel->listar();
-
-        $tooModel = new Foo_Model_Too();
-
-        $this->view->toos = $tooModel->listar();
     }
 
     public function tipoAvaliacaoAction()
@@ -45,6 +37,40 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
         if (!$idPronac) {
            throw new Exception('Não existe idPronac');
         }
+
+        $this->view->idPronac = $this->_request->getParam("idPronac");
+    }
+
+    /* @todo: adicionar função de salvar o tipo de amostragem*/
+    public function tipoAvaliacaoSalvarAction()
+    {
+        $idPronac = $this->_request->getParam("idPronac");
+        $avaliacao = $this->_request->getParam("avaliacao");
+
+        if (!$idPronac) {
+           throw new Exception('Não existe idPronac');
+        }
+
+        if (!$avaliacao) {
+           throw new Exception('Não existe avaliacao');
+        }
+
+        if ($avaliacao == "todos") {
+            $this->redirect('/realizarprestacaodecontas/planilhaorcamentaria/idPronac/' . $idPronac );
+        }
+
+        $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac );
+
+        /* $this->view->idPronac = $this->_request->getParam("idPronac"); */
+    }
+
+    public function amostragemAction()
+    {
+        $idPronac = $this->_request->getParam("idPronac");
+        if (!$idPronac) {
+           throw new Exception('Não existe idPronac');
+        }
+        $idPronac = $this->_request->getParam("idPronac");
 
         $this->view->idPronac = $this->_request->getParam("idPronac");
     }

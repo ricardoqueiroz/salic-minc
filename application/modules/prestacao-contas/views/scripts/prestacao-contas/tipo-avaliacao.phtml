@@ -115,24 +115,25 @@
         <article class="col s12">
             <div class="card">
                 <div class="card-content">
-                  <form>
+                  <form action="/prestacao-contas/prestacao-contas/tipo-avaliacao-salvar">
+                    <input type="hidden" name="idPronac" value="<?php echo ($this->idPronac);?>">
                     <fieldset>
                       <legend>Selecionar o tipo de avaliação financeria</legend>
                       <p>Avaliar comprovantes  por nível de confiança:<p>
                       <p>
-                        <input name="group1" type="radio" id="todos" />
+                        <input name="avaliacao" type="radio" id="todos" value="todos"/>
                         <label for="todos">Todos comprovantes</label>
                       </p>
                       <p>
-                        <input name="group1" type="radio" id="90" />
+                        <input name="avaliacao" type="radio" id="90"  value="90"/>
                         <label for="90">90%</label>
                       </p>
                       <p>
-                        <input name="group1" type="radio" id="95" />
+                        <input name="avaliacao" type="radio" id="95"  value="todos"/>
                         <label for="95">95%</label>
                       </p>
                       <p>
-                        <input name="group1" type="radio" id="99" />
+                        <input name="avaliacao" type="radio" id="99"  value="todos"/>
                         <label for="99">99%</label>
                       </p>
                       <button class="btn">
