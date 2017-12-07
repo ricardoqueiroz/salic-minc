@@ -425,22 +425,24 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
 
         $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto);
+        xd($projeto);
         $this->view->projeto = $projeto[0];
         $this->view->dsArea = $projeto[0]->dsArea;
         $this->view->dsSegmento = $projeto[0]->dsSegmento;
         $this->view->idPreProjeto = $projeto[0]->idProjeto;
+        $this->view->stPrincipal = $projeto[0]->stPrincipal;
         $this->view->IN2017 = $this->isIN2017;
 
         if ($idProduto) {
 
-            $tbDistribuirParecer = new tbDistribuirParecer();
-            $whereProduto = array();
-            $whereProduto['idPRONAC = ?'] = $this->idPronac;
-            $whereProduto['idProduto = ?'] = $idProduto;
-            $whereProduto["stEstado = ?"] = 0;
-
-            // @todo codigo sem sentido
-            $pareceristaAtivo = ($idAgenteParecerista == $produto['idAgenteParecerista']) ? true : false;
+//            $tbDistribuirParecer = new tbDistribuirParecer();
+//            $whereProduto = array();
+//            $whereProduto['idPRONAC = ?'] = $this->idPronac;
+//            $whereProduto['idProduto = ?'] = $idProduto;
+//            $whereProduto["stEstado = ?"] = 0;
+//
+//            // @todo codigo sem sentido
+//            $pareceristaAtivo = ($idAgenteParecerista == $produto['idAgenteParecerista']) ? true : false;
 
             /* Analise de conteudo */
             $analisedeConteudoDAO = new Analisedeconteudo();
@@ -458,7 +460,10 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->somenteLeitura = false;
             }
         }
+
+        $this->view->grupo = $this->grupoAtivo->codGrupo;
         $this->view->somenteLeitura = $this->somenteLeitura;
+
     }
 
     public function obterAnaliseConteudoAction()

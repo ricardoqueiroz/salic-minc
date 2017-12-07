@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <div class="row" >
+    <div class="row">
         <div class="col s12">
             <h3 class="left">An&aacute;lise do Produto </h3>
             <a class="btn right" href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>#produto_<?= $this->projeto->idProduto?>" title="P&aacute;gina Anterior">Voltar</a>
@@ -46,9 +46,14 @@
                 <li class="tab">
                     <a href="#tab_analise_custo">Analisar custos do Produto</a>
                 </li>
-                <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <?php if(($this->stPrincipal == 1) && ($this->grupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <li class="tab">
                         <a href="#tab_produtos_secundarios">Dados dos Produtos Secund&aacute;rios</a>
+                    </li>
+                <?php endif; ?>
+                <?php if($this->stPrincipal == 1) : ?>
+                    <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
+                        <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -63,9 +68,18 @@
         <div id="tab_analise_custo" class="col s12">
             <div id="planilha-analise-de-custos"></div>
         </div>
+
         <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
             <div id="tab_produtos_secundarios" class="col s12">
-                <?php echo $this->partial('produto/secundarios.phtml', 'parecer', $this); ?>
+                <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($this->stPrincipal == 1) : ?>
+            <div id="tab_consolidacao" class="col s12">
+                <?php if($this->produtosSecundariosEmAnalise == 0) : ?>
+                    <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>
