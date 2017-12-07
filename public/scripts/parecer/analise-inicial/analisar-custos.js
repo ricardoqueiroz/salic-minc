@@ -8,22 +8,17 @@ baseUrl = jQuery('#baseUrl').val();
 vlSolicitado = jQuery('#vlSolicitado').val();
 idProduto = jQuery('#idProduto').val();
 
-$(document).ready(function(){
+$3(document).ready(function($){
 
-    $(".item").mouseover(function(){
-        $(this).addClass('fundo_linha3');
-    });
-    $(".item").mouseout(function(){
-        $(this).removeClass('fundo_linha3');
-    });
-    $(".item").click(function(){
-        if($(this).hasClass('fundo_linha4')){
-            $(this).removeClass('fundo_linha4');
-        }
-        else{
-            $(this).addClass('fundo_linha4');
-        }
-    });
+    $("body")
+        .on('mouseover mouseout', 'tr.item',function(){
+            $(this).toggleClass('indigo lighten-5');
+        })
+        .on('click', 'tr.item', function() {
+            $(this).toggleClass('deep-purple lighten-4');
+        })
+    ;
+
 });
 
 
@@ -126,22 +121,6 @@ function AbrirFecharPlanilha(elemento)
         $('#' + elemento).addClass('icn_mais');
         $('#' + elemento).removeClass('icn_menos');
     }
-}
-
-function AbrirFecharPlanilha(elemento){
-    $('.' + elemento).toggle();
-
-    if ($('#' + elemento).hasClass('icn_mais'))
-    {
-        $('#' + elemento).addClass('icn_menos');
-        $('#' + elemento).removeClass('icn_mais');
-    }
-    else
-    {
-        $('#' + elemento).addClass('icn_mais');
-        $('#' + elemento).removeClass('icn_menos');
-    }
-    return false;
 }
 
 function janelaAlerta(mensagem,funcaoAdcional)
