@@ -1,0 +1,316 @@
+<?php
+$gmtDate = gmdate("D, d M Y H:i:s");
+header("Expires: {$gmtDate} GMT");
+header("Last-Modified: {$gmtDate} GMT");
+header("Cache-Control: no-cache, must-revalidate");
+header("Pragma: no-cache");
+?>
+
+<form method="POST" id="formSalvarItem" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'salvar-sugestao-item-custo')); ?>">
+    <table class="tabela">
+        <input type="hidden" name="idPlanilhaProjeto" id="idPlanilhaProjeto" value="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"/>
+        <input type="hidden" name="idPronac" value="<?php echo $this->projeto->IdPRONAC; ?>"/>
+        <input type="hidden" name="idProduto" value="<?php echo $this->projeto->idProduto; ?>"/>
+        <input type="hidden" name="stPrincipal" value="<?php echo $this->projeto->stPrincipal; ?>"/>
+        <tr valign="top">
+            <td colspan="3"><strong>PRONAC:</strong><br /><?php echo $this->projeto->PRONAC; ?></td>
+            <td colspan="3"><strong>Nome do Projeto:</strong><br /><?php echo $this->projeto->NomeProjeto; ?></td>
+        </tr>
+        <tr valign="top">
+            <td colspan="2"><strong>Produto:</strong><br />
+                <?php echo $this->projeto->dsProduto; ?>
+            </td>
+            <td colspan="2">
+                <strong>Etapa:</strong><br />
+                <?php echo $this->dadosItem['Etapa']; ?>
+            </td>
+            <td colspan="2"><strong>Item:</strong><br />
+                <?php echo $this->dadosItem['Item']; ?>
+            </td>
+        </tr>
+        <!-- DADOS DO PROPONENTE-->
+        <tr>
+            <th colspan="6"> Valores Solicitados</th>
+        </tr>
+        <tr valign="top">
+            <td class="centro">
+                <label for="unidade"><strong>Unidade:</strong></label><br />
+                <?php echo $this->dadosItem['UnidadeProposta']; ?>
+            </td>
+            <td class="centro w100">
+                <strong>Qtd.:</strong><br />
+                <?php echo (int) $this->dadosItem['quantidadeprop']; ?>
+            </td>
+            <td class="centro">
+                <strong>Ocorr&ecirc;ncia:</strong><br />
+                <?php echo (int) $this->dadosItem['ocorrenciaprop']; ?>
+            </td>
+            <td class="centro">
+                <strong>Vl. Unit&aacute;rio:</strong><br />
+                <?php echo $this->formatarReal($this->dadosItem['valorUnitarioprop']); ?>
+            </td>
+            <td class="centro">
+                <strong>Dias:</strong><br />
+                <?php echo (int) $this->dadosItem['diasprop']; ?>
+            </td>
+            <td class="centro" style="width: 150px;">
+                <strong>Total:</strong><br />
+                <div id="vlSolicitado"><?php echo $this->formatarReal($this->dadosItem['quantidadeprop'] * $this->dadosItem['ocorrenciaprop'] * $this->dadosItem['valorUnitarioprop']); ?><div>
+            </td>
+        </tr>
+        <!-- FIM DADOS DO PROPONENTE-->
+        <!-- DADOS DO PARECERISTA-->
+        <tr>
+            <th colspan="6"> Valores Parecerista</th>
+        </tr>
+        <tr valign="top">
+            <td>
+            <label for="unidade"><strong>Unidade:</strong></label><br />
+                <select class="input_simples" name="idUnidade" id="unidade">
+                    <?php foreach ($this->planilhaUnidade as $unidade) : ?>
+                        <option value="<?php echo $unidade->idUnidade; ?>" 
+                            <?php if ($unidade->idUnidade == $this->dadosItem['idUnidade']): ?>
+                                 selected="selected"
+                            <?php endif; ?>
+                        >
+                            <?php echo ($unidade->Descricao); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+            <td class="w50">
+                <label for="qtd<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"><strong>Qtd.:</strong></label<br />
+                <input 
+                    onkeyup="calcula_planilha_projeto(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                                validar_val_parec_relat(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                                mascara(this, format_num);" 
+                    class="input_simples w50 inputValor" type="text" idPlanilhaProjeto="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" name="Quantidade" id="qtd<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" maxlength="5" value="<?php echo (int) $this->dadosItem->quantidadeparc; ?>" />
+                <input type="hidden" id="qtdOrig<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo (int) $this->dadosItem->quantidadeparc; ?>" />
+            </td>
+            <td>
+                <label for="ocorrencia<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"><strong>Ocorr&ecirc;ncia:</strong></label><br />
+                <input 
+                    onkeyup="calcula_planilha_projeto(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                            validar_val_parec_relat(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                            mascara(this, format_num);" 
+                    class="input_simples w50 inputValor" type="text" idPlanilhaProjeto="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" name="Ocorrencia" id="ocorrencia<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" maxlength="5" value="<?php echo (int) $this->dadosItem->ocorrenciaparc ?>" />
+                <input type="hidden" id="ocorrenciaOrig<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo (int) $this->dadosItem->ocorrenciaparc ?>" />
+            </td>
+            <td>
+                <label for="vlunitario<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"><strong>Vl Unit&aacute;rio:<?php echo number_format($this->dadosItem->valorUnitarioparc,'2',',','.'); ?></strong></label><br />
+                <input
+                    onkeyup="calcula_planilha_projeto(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                                validar_val_parec_relat(<?php echo $this->dadosItem->idPlanilhaProjeto; ?>); 
+                                 " 
+                    class="input_simples w100 inputValor valorUnitario" type="text" idPlanilhaProjeto="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" name="ValorUnitario" 
+                    id="vlunitario<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" maxlength="13" 
+                    value="<?php echo number_format($this->dadosItem->valorUnitarioparc,2); ?>" />
+                <input type="hidden" id="vlunitarioOrig<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo number_format($this->dadosItem->valorUnitarioparc,'2',',','.'); ?>" />
+            </td>
+            <td>
+                <label for="dias<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"><strong>Dias:</strong></label><br />
+                <input class="input_simples w50" type="text" onkeyup="mascara(this, format_num);" name="QtdeDias" id="dias<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" maxlength="4" value="<?php echo $this->dadosItem->diasparc; ?>" />
+                <input type="hidden" id="diasOrig<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo $this->dadosItem->diasparc; ?>" />
+            </td>
+            <td >
+                <strong>Total:</strong><br />
+                <div id="calcular_total<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" ></div>
+                <input type="hidden" id="totalcalculos<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo $this->dadosItem->quantidadeparc * $this->dadosItem->ocorrenciaparc * $this->dadosItem->valorUnitarioparc; ?>"/>
+                <?php 
+                    $valorTotal = $this->dadosItem->quantidadeparc * $this->dadosItem->ocorrenciaparc * $this->dadosItem->valorUnitarioparc; 
+                    $valorTotal = $this->formatarReal($valorTotal);
+                ?>
+                <input type="hidden" id="totalcalculosOrig<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" value="<?php echo $valorTotal; ?>"/>
+            </td>
+        </tr>
+        <!-- FIM DADOS DO PARECERISTA-->
+        <tr valign="top">
+            <td colspan="6">
+                <label for="justificativa<?php echo $projeto->idPlanilhaProjeto; ?>"><strong>Justificativa</strong></label><br />
+                <textarea  class="textarea_simples h100" name="Justificativa" id="justificativa<?php echo $this->dadosItem->idPlanilhaProjeto; ?>" style="width:98%" rows="10" <?php echo $this->contadorTextarea('form.justificativa', 'form.exibirContadorTextarea', 5000); ?>><?php echo trim($this->dadosItem->dsJustificativaParecerista); ?></textarea>
+                <br clear="all">
+                
+            </td>
+        </tr>
+    </table>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('.valorUnitario').each(function(){
+            mascara(this, format_moeda);
+        });
+        $('#formSalvarItem').find('.inputValor').each(function(){
+            /*$(this).keyup(function(){
+                //calcula_planilha_projeto($(this).attr('idPlanilhaProjeto')); 
+                //valida_val_parec_relat($(this).attr('idPlanilhaProjeto'),$("#vlSolicitado").val()); 
+            });*/
+            $(this).keyup(function(){
+                if($(this).attr('name') == 'ValorUnitario'){
+                    mascara(this, format_moeda);
+                }else{
+                    mascara(this, format_num);
+                } 
+            })
+        });
+
+        $('.valorUnitario').keyup();
+    });
+
+    function calcula_planilha_projeto(cont)
+    {
+        // recebe os valores do formulário
+        var qtd        = $('#qtd' + cont).val(),
+            ocorrencia = $('#ocorrencia' + cont).val(),
+            valor      = $('#vlunitario' + cont).val(),
+            resultado  = '';
+        
+        // retira os pontos e as vírgulas, deixando somente números
+        valor = valor.replace(/\D/g, "")
+        .replace(/(\d{0})(\d)/, "$1$2")
+        // adiciona o ponto na casa decimal
+        .replace(/(\d)(\d{2})$/, "$1.$2");
+        
+        // converte para float e adiciona precisão decimal
+        qtd        = parseFloat(qtd).toFixed(2);
+        ocorrencia = parseFloat(ocorrencia).toFixed(2);
+        valor      = parseFloat(valor).toFixed(2);
+
+        // variável com o resultado
+        resultado = parseFloat(qtd * ocorrencia * valor).toFixed(2); // armazena o resultado
+        
+        if (isNaN(resultado))
+        {
+            resultado = '';
+        }
+        // caso seja número
+        else
+        {
+            // formata para real
+            resultado = resultado.replace(/\D/g, "");
+            resultado = resultado.replace(/(\d)(\d{2})$/, "$1,$2");
+            resultado = resultado.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
+
+            var q = (resultado.length - 3) / 3; // quantidade caracteres
+            var c = 0; // contador
+            while (q > c)
+            {
+                c++;
+                resultado = resultado.replace(/(\d+)(\d{3}.*)/, "$1.$2");
+            }
+            resultado = resultado.replace(/^(0+)(\d)/g, "$2");
+            resultado = 'R$ ' + resultado;
+        } 
+
+        $('#calcular_total' + cont).html(resultado);
+    }
+
+    function validar_val_parec_relat(i)
+    {
+        //recuperar valores originais 
+        var qtd_parec_relat        = $('#qtdOrig' + i).val(),
+            ocorrencia_parec_relat = $('#ocorrenciaOrig' + i).val(),
+            valor_parec_relat      = $('#vlunitarioOrig' + i).val(),
+            calcular_total_parec_relat = $('#totalcalculosOrig' + i).val(),
+            calcular_total = $("#calcular_total"+i).html(),        // pega o valor total do relator
+            calcular_total = calcular_total.replace('R$ ', ''),
+            totalcalculos = null,
+            valormaximo  = null,
+            somatotal = null;
+        
+        // retira os pontos e as virgulas, deixando somente numeros
+        calcular_total = calcular_total.replace(/\D/g, "");
+        calcular_total = calcular_total.replace(/(\d{0})(\d)/, "$1$2");
+        
+        // adiciona o ponto na casa decimal
+        calcular_total = calcular_total.replace(/(\d)(\d{2})$/, "$1.$2");
+
+        // converte para float
+        calcular_total = parseFloat(calcular_total);
+        totalcalculos  = new Number($("#totalcalculos" + i).val());
+        valormaximo  = new Number($("#valorpossivel").val());
+        
+        somatotal = new Number(totalcalculos+valormaximo);
+
+        // se o valor do parecerista e maior que o valor do relator
+        if (calcular_total > somatotal)
+        {
+            //reseta os campo (atribui os valores iniciais)
+            $('#qtd' + i). val(qtd_parec_relat);
+            $('#ocorrencia' + i). val(ocorrencia_parec_relat);
+            $('#vlunitario' + i). val(valor_parec_relat);
+            $('#calcular_total' + i).html(calcular_total_parec_relat);
+            $('#valorpossivelApresentacao').html($('#calcular_total' + i).html());
+                
+            // abre o modal com a mensagem de erro
+            $("#dialog-valor").dialog("destroy");
+            $("#dialog-valor").dialog
+            ({
+                    width:400,
+                    height:230,
+                    resizable:false,
+                    EscClose:false,
+                    modal:false,
+                    buttons:
+                    {
+                            'Ok':function()
+                            {			
+                                    $(this).dialog('close'); // fecha a modal
+                            }
+                    }
+            });
+            $('.ui-dialog-titlebar-close').remove();
+        }
+    }
+
+    function somarValores() {
+        var valorTotalSugerido = 0;
+        $('.cidade').each(function(){
+            var cidade = $(this).attr('cidade');
+            var valorUfSugerido = 0;
+            $(this).find('.item').each(function(){
+                var valor = $(this).find('.ValorSugerido').html().replace(/\R\$\s+/g, '');
+
+                valor = valor.replace(/\D/g, "")
+                .replace(/(\d{0})(\d)/, "$1$2")
+                .replace(/(\d)(\d{2})$/, "$1.$2");
+
+                valor = parseFloat(valor).toFixed(2);
+                
+                valorUfSugerido = (parseFloat(valorUfSugerido) + parseFloat(valor)).toFixed(2);
+                valorTotalSugerido = (parseFloat(valorTotalSugerido) + parseFloat(valor)).toFixed(2);
+            });
+            // formata para real
+            valorUfSugerido = valorUfSugerido.replace(/\D/g, "");
+            valorUfSugerido = valorUfSugerido.replace(/(\d)(\d{2})$/, "$1,$2");
+            valorUfSugerido = valorUfSugerido.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
+
+            var q = (valorUfSugerido.length - 3) / 3; // quantidade caracteres
+            var c = 0; // contador
+            while (q > c)
+            {
+                c++;
+                valorUfSugerido = valorUfSugerido.replace(/(\d+)(\d{3}.*)/, "$1.$2");
+            }
+            valorUfSugerido = valorUfSugerido.replace(/^(0+)(\d)/g, "$2");
+            valorUfSugerido = 'R$ ' + valorUfSugerido;
+            $(this).find('.valorUfSugerido').html(valorUfSugerido);
+        });
+        // formata para real
+        valorTotalSugerido = valorTotalSugerido.replace(/\D/g, "");
+        valorTotalSugerido = valorTotalSugerido.replace(/(\d)(\d{2})$/, "$1,$2");
+        valorTotalSugerido = valorTotalSugerido.replace(/(\d+)(\d{3},\d{2})$/g, "$1.$2");
+
+        var q = (valorTotalSugerido.length - 3) / 3; // quantidade caracteres
+        var c = 0; // contador
+        while (q > c)
+        {
+            c++;
+            valorTotalSugerido = valorTotalSugerido.replace(/(\d+)(\d{3}.*)/, "$1.$2");
+        }
+        valorTotalSugerido = valorTotalSugerido.replace(/^(0+)(\d)/g, "$2");
+        valorTotalSugerido = 'R$ ' + valorTotalSugerido;
+        $(this).find('.valorTotalSugerido').html(valorTotalSugerido);
+        $('.valorTotalSugerido').html(valorTotalSugerido);
+    }
+</script>

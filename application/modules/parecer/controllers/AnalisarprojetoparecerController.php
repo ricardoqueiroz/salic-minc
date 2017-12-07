@@ -329,6 +329,9 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         $this->view->Pareceres = $Pareceres;
     }
 
+    /**
+     * @todo remover
+     */
     public function produtoAction()
     {
         $mapperArea = new Agente_Model_AreaMapper();
@@ -629,6 +632,9 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
     {
     }
 
+    /**
+     * @todo remover
+     */
     public function analisedeconteudoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -665,7 +671,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                         }
                     }
                 }
-                
+
                 $this->_helper->json($arrayRetorno);
                 break;
 
@@ -772,6 +778,9 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         }
     }
 
+    /**
+     * @todo remover
+    */
     public function alteraritemsolicitadoAction()
     {
         $this->_helper->layout->disableLayout();
@@ -794,6 +803,9 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         /* var_dump($this->view->dadosItem);die; */
     }
 
+    /**
+     * @todo remover
+     */
     public function salvaritemAction()
     {
         $this->_helper->layout->disableLayout();

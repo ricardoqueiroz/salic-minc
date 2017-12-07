@@ -1,4 +1,4 @@
-<div class="fixed-action-btn vertical">
+<div class="fixed-action-btn active vertical">
     <a class="btn-floating btn-large red"><i class="large material-icons">spellcheck</i></a>
     <ul>
         <li>
@@ -16,27 +16,10 @@
         </li>
         <li>
             <a
-                id="visualizar-form"
-                data-ajax-modal="
-                    <?php echo $this->url(
-                    array(
-                        'module' => 'parecer',
-                        'controller' => 'analise-inicial',
-                        'action' => 'analisar-custos',
-                        'idPronac' => $this->projeto['IdPRONAC'],
-                        'idProduto' => $this->projeto['idProduto'],
-                        'stPrincipal' => $this->projeto['stPrincipal']
-                    ),
-                    null,
-                    true);
-                ?>"
-                href="javascript:void(0);"
+                id="bt-analisar-custos"
+                href="javascript:void(0)"
                 class="btn-floating blue tooltipped"
-                data-position="top"
-                data-delay="50"
-                data-ajax-modal-type="bottom-sheet"
-                data-ajax-modal-height="570px; min-height: 90%"
-                data-tooltip="Avaliar projeto">
+                data-tooltip="Análise de custo">
                 <i class="material-icons">attach_money</i>
             </a>
         </li>
@@ -56,6 +39,10 @@
 
         $3("#visualizar-form").on('click', function () {
             tinymce.remove();
+        });
+
+        $3("#bt-analisar-custos").on('click', function() {
+            $3('ul.tabs').tabs('select_tab', 'tab_analise_custo');
         });
 
         if ($3('#ir-para-o-topo').length) {

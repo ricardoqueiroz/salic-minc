@@ -681,6 +681,61 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         return $itensCusto;
     }
 
+    public function sugerirItemCustoModalAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $idPronac = $this->_request->getParam("idPronac");
+        $idProduto = $this->_request->getParam("idProduto");
+        $stPrincipal = $this->_request->getParam("stPrincipal");
+        $idPlanilhaProjeto = $this->_request->getParam("idPlanilhaProjeto");
+
+        $this->view->planilhaUnidade = PlanilhaUnidadeDAO::buscar();
+
+        $projetoDAO = new Projetos();
+        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial(array('p.IdPRONAC = ?' => $idPronac, 'd.idProduto = ?' => $idProduto, 'd.stPrincipal = ?' => $stPrincipal));
+        $this->view->projeto = $projeto[0];
+
+        /* ITEM */
+        $PlanilhaDAO = new PlanilhaProjeto();
+        $planilha = $PlanilhaDAO->buscarAnaliseCustos(array('PPJ.idPlanilhaProjeto= ?' => $idPlanilhaProjeto));
+        $this->view->dadosItem = $planilha[0];
+        /* var_dump($this->view->dadosItem);die; */
+    }
+
+    public function salvarSugestaoItemCustoAction()
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
+        $auth = Zend_Auth::getInstance(); // pega a autenticacao
+        $idusuario = $auth->getIdentity()->usu_codigo;
+
+        $dados = $this->_request->getParams();
+        $idPlanilhaProjeto = $this->_request->getParam('idPlanilhaProjeto');
+        $idPronac = $this->_request->getParam('idPronac');
+        $idProduto = $this->_request->getParam('idProduto');
+        $stPrincipal = $this->_request->getParam('stPrincipal');
+
+        unset($dados['idPlanilhaProjeto']);
+        unset($dados['exibirContadorTextarea']);
+        unset($dados['idPronac']);
+        unset($dados['idProduto']);
+        unset($dados['stPrincipal']);
+        $dados['ValorUnitario'] = str_replace('.', '', $this->_request->getParam('ValorUnitario'));
+        $dados['ValorUnitario'] = str_replace(',', '.', $dados['ValorUnitario']);
+        $dados['Justificativa'] = utf8_decode($this->_request->getParam('Justificativa'));
+        $dados['idUsuario'] = $idusuario;
+        $where = array('idPlanilhaProjeto = ?' => $idPlanilhaProjeto);
+
+        $planilhaProjeto = new PlanilhaProjeto();
+
+        if ($planilhaProjeto->alterar($dados, $where)) {
+            echo "Salvo com sucesso!";
+        } else {
+            echo "N&atilde;o foi poss&iacute;vel salvar!";
+        }
+    }
+
     public function obterParecerTecnicoConsolidadoAction()
     {
 
