@@ -59,19 +59,46 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
             $this->redirect('/realizarprestacaodecontas/planilhaorcamentaria/idPronac/' . $idPronac );
         }
 
-        $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac );
-
-        /* $this->view->idPronac = $this->_request->getParam("idPronac"); */
+        $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac . '/tipoAvaliacao/' . $avaliacao);
     }
 
     public function amostragemAction()
     {
         $idPronac = $this->_request->getParam("idPronac");
+        $tipoAvaliacao = $this->_request->getParam("tipoAvaliacao");
         if (!$idPronac) {
            throw new Exception('Não existe idPronac');
         }
+        if (!$tipoAvaliacao) {
+           throw new Exception('Não existe tipoAvaliacao');
+        }
+
         $idPronac = $this->_request->getParam("idPronac");
+        $comprovantes = new PrestacaoContas_Model_spComprovantes();
+        $comprovantes = $comprovantes->exec($idPronac, $tipoAvaliacao);
 
         $this->view->idPronac = $this->_request->getParam("idPronac");
+        $this->view->comprovantes = $comprovantes;
+    }
+
+    public function salvarAnaliseAction()
+    {
+        $idPronac = $this->_request->getParam("idPronac");
+        $idComprovantePagamento = $this->_request->getParam("idComprovantePagamento");
+
+        $situacao = $this->_request->getParam("situacao");
+        $justificativa = $this->_request->getParam("justificativa");
+
+        $tblComprovantePag = new ComprovantePagamentoxPlanilhaAprovacao();
+        $rsComprovantePag = $tblComprovantePag
+            ->buscar(['idComprovantePagamento = ?' => $idComprovantePagamento])
+            ->current();
+        $rsComprovantePag->dtValidacao = date('Y/m/d H:i:s');
+        $rsComprovantePag->dsJustificativa = isset($justificativa) ? $justificativa : null;
+        $rsComprovantePag->stItemAvaliado = $situacao;
+
+        $rsComprovantePag->save();
+
+        $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac . '/tipoAvaliacao/90');
     }
 }
