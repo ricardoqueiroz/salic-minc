@@ -9,13 +9,12 @@
             <salic-projeto-identificacao idPronac="<?php echo ($this->idPronac);?>"></salic-projeto-identificacao>
         </article>
         <article class="col s12">
-            <div class="card">
+            <div class="card z-depth-2">
                 <div class="card-content">
                     <span class="card-title">Avalia&ccedil;&atilde;o Financeira por Amostragem</span>
                     <div class="row">
                         <div class="col l12 s12">
-
-                          <ul class="collapsible popout" data-collapsible="accordion">
+                          <ul class="collapsible popout " data-collapsible="accordion">
                             <?php foreach($this->comprovantes as $comprovante):?>
                               <li class="">
                                 <div 
@@ -35,13 +34,13 @@
                                     <?php elseif($comprovante->stEstado[0] == "I") : ?> 
                                       <i class="material-icons">block</i>
                                     <?php endif ?> 
-                                  <?php echo ($comprovante->Item) ?> - <?php echo ($comprovante->Fornecedor)?> - <?php echo ($comprovante->vlPagamento)?>
+                                  <?php echo ($comprovante->Item) ?> - <?php echo ($comprovante->Fornecedor)?> - <?php echo number_format($comprovante->vlPagamento, 2, ',','.')?>
                                 </div>
-                                <div class="collapsible-body">
+                                <div class="collapsible-body  z-depth-2">
                                       <div class="row">
                                           <div class="input-field col s12">
                                             <table class="bordered">
-                                              <thead>
+                                              <thead class="grey lighten-2">
                                                 <tr>
                                                   <th rowspan="2">Item</th>
                                                   <th rowspan="2">Fornecedor</th>
@@ -64,7 +63,7 @@
                                                     <?php echo ($comprovante->Fornecedor)?>
                                                   </td>
                                                   <td>
-                                                    <?php echo ($comprovante->DtComprovacao)?>
+                                                    <?php echo (new DateTime($comprovante->DtComprovacao))->format('d/m/Y') ?>
                                                   </td>
                                                   <td>
                                                     <?php echo ($comprovante->tpFormaDePagamento)?>
@@ -73,56 +72,65 @@
                                                     <?php echo ($comprovante->nrDocumentoDePagamento)?>
                                                   </td>
                                                   <td>
-                                                    <?php echo ($comprovante->vlPagamento)?>
+                                                    <?php echo number_format($comprovante->vlPagamento, 2, ',', '.')?>
                                                   </td>
                                                   <td class="center-align">
                                                     <?php echo ($comprovante->stEstado)?>
                                                   </td>
                                                 </tr>
+                                                <tr>
+                                                  <th class=" grey lighten-2">
+                                                    Jutificativa do Proponente
+                                                  </th>
+                                                  <td colspan="7" class="">
+                                                    <?php echo $comprovante->dsJustificativa ?>
+                                                  </td>
+                                                </tr>
                                               </tbody>
                                             </table>
-                                            <p>Jutificativa do Proponente: <?php echo $comprovante->dsJustificativa ?></p>
                                           </div>
                                       </div>
-                                  <form action="/prestacao-contas/prestacao-contas/salvar-analise" method="post">
-                                    <input name="idComprovantePagamento" type="hidden" value="<?php echo $comprovante->idComprovantePagamento ?>" >
-                                    <input name="idPronac" type="hidden" value="<?php echo $this->idPronac;?>" >
-                                    <fieldset>
-                                      <legend>Avalia&ccedil;&atilde;o</legend>
                                       <div class="row">
-                                          <div class="col s12">
-                                            <strong>Status:</strong>
-                                            <input 
-                                              <?php if($comprovante->stEstadoId == 1):?>
+                                        <div class="col l12 s12">
+                                          <form action="/prestacao-contas/prestacao-contas/salvar-analise" method="post">
+                                            <input name="idComprovantePagamento" type="hidden" value="<?php echo $comprovante->idComprovantePagamento ?>" >
+                                            <input name="idPronac" type="hidden" value="<?php echo $this->idPronac;?>" >
+                                            <fieldset>
+                                              <legend>Avalia&ccedil;&atilde;o</legend>
+                                              <div class="row">
+                                                <div class="input-field col s12">
+                                                  <textarea name="justificativa" id="ocorrencia" class="materialize-textarea"><?php echo $comprovante->ocorrenciaTecnico ?></textarea>
+                                                  <label for="ocorrencia">Ocorr&ecirc;ncia:</label>
+                                                </div>
+                                              </div>
+                                              <div class="row">
+                                                <div class="col s12">
+                                                  <strong>Avalia&ccedil;&atilde;o:</strong>
+                                                  <input 
+                                                  <?php if($comprovante->stEstadoId == 1):?>
+                                                  checked="checked" 
+                                                  <?php endif?>
+                                                  name="situacao" type="radio" id="test1<?php echo $comprovante->idComprovantePagamento ?>" value="1"/>
+                                                <label for="test1<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o validada</label>
+                                                <input 
+                                                <?php if($comprovante->stEstadoId == 3):?>
                                                 checked="checked" 
-                                              <?php endif?>
-                                              name="situacao" type="radio" id="test1<?php echo $comprovante->idComprovantePagamento ?>" value="1"/>
-                                            <label for="test1<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o validada</label>
-                                            <input 
-                                              <?php if($comprovante->stEstadoId == 3):?>
-                                                checked="checked" 
-                                              <?php endif?>
-                                            name="situacao" type="radio" id="test2<?php echo $comprovante->idComprovantePagamento ?>" value="3"/>
-                                            <label for="test2<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o recusada</label>
+                                                <?php endif?>
+                                                name="situacao" type="radio" id="test2<?php echo $comprovante->idComprovantePagamento ?>" value="3"/>
+                                              <label for="test2<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o recusada</label>
+                                            </div>
                                           </div>
-                                      </div>
-                                      <div class="row">
-                                          <div class="input-field col s12">
-                                            <textarea name="justificativa" id="ocorrencia" class="materialize-textarea"><?php echo $comprovante->ocorrenciaTecnico ?></textarea>
-                                            <label for="ocorrencia">Ocorr&ecirc;ncia:</label>
+                                          <div class="row">
+                                            <div class="center-align col s12">
+                                              <button class="btn waves-effect" type="submit">salvar</button>
+                                            </div>
                                           </div>
-                                      </div>
-                                      <div class="row">
-                                          <div class="centered col s12">
-                                            <button class="btn waves-effect" type="submit">salvar</button>
-                                          </div>
-                                      </div>
-                                    </fieldset>
-                                  </form>
-                                </div>
-                              </li>
-                            <?php endforeach ?>
-                          </ul>
+                                        </fieldset>
+                                      </form>
+                                    </div>
+                                  </li>
+                                  <?php endforeach ?>
+                                </ul>
                          <!--table class="bordered">
                             <thead>
                                 <tr>
@@ -168,6 +176,8 @@
                             </table-->
                         </div>
                     </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </article>
