@@ -424,39 +424,39 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $whereProjeto['d.idProduto = ?'] = $idProduto;
         $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
 
-        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto);
-        xd($projeto);
-        $this->view->projeto = $projeto[0];
-        $this->view->dsArea = $projeto[0]->dsArea;
-        $this->view->dsSegmento = $projeto[0]->dsSegmento;
-        $this->view->idPreProjeto = $projeto[0]->idProjeto;
-        $this->view->stPrincipal = $projeto[0]->stPrincipal;
+        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto)->current();
+        $this->view->projeto = $projeto;
+        $this->view->dsArea = $projeto->dsArea;
+        $this->view->dsSegmento = $projeto->dsSegmento;
+        $this->view->idPreProjeto = $projeto->idProjeto;
+        $this->view->stPrincipal = $projeto->stPrincipal;
         $this->view->IN2017 = $this->isIN2017;
 
-        if ($idProduto) {
+        $this->view->situacao = self::definirSituacaoAnaliseProduto(
+            $projeto->DtDistribuicao,
+            $projeto->DtDevolucao,
+            $projeto->FecharAnalise,
+            $projeto->idAgenteParecerista
+        );
 
-//            $tbDistribuirParecer = new tbDistribuirParecer();
-//            $whereProduto = array();
-//            $whereProduto['idPRONAC = ?'] = $this->idPronac;
-//            $whereProduto['idProduto = ?'] = $idProduto;
-//            $whereProduto["stEstado = ?"] = 0;
-//
-//            // @todo codigo sem sentido
-//            $pareceristaAtivo = ($idAgenteParecerista == $produto['idAgenteParecerista']) ? true : false;
+        $this->somenteLeitura = true;
 
-            /* Analise de conteudo */
-            $analisedeConteudoDAO = new Analisedeconteudo();
-            $analisedeConteudo = $analisedeConteudoDAO->dadosAnaliseconteudo(false, array('idPronac = ?' => $this->idPronac, 'idProduto = ?' => $idProduto));
+        if ($projeto) {
 
-            if (count($analisedeConteudo) > 0) {
-                if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && ($pareceristaAtivo)) {
-                    $this->somenteLeitura = false;
-                } else if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && (!$pareceristaAtivo)) {
-                    $this->somenteLeitura = true;
-                } else if ($this->grupoAtivo->codGrupo <> Autenticacao_Model_Grupos::PARECERISTA) {
-                    $this->somenteLeitura = true;
-                }
-            } else {
+            /*
+             * Se for o produto principal, envia os dados dos produtos secundarios juntos
+             *
+             */
+            if ($projeto->stPrincipal) {
+
+                $produtosSecundarios = self::obterProdutosSecundarios($this->idPronac);
+                $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
+                $this->view->produtosSecundarios = $produtosSecundarios;
+            }
+
+            $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
+
+            if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && $pareceristaAtivo) {
                 $this->somenteLeitura = false;
             }
         }
@@ -468,41 +468,105 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
     public function obterAnaliseConteudoAction()
     {
-
         $this->_helper->layout->disableLayout();
-//        $this->_helper->viewRenderer->setNoRender(true);
 
-        $auth = Zend_Auth::getInstance(); // pega a autenticacao
-        $idusuario = $auth->getIdentity()->usu_codigo;
-
-//        $dsJustificativa = $this->_request->getParam("ParecerDeConteudo");
-        $stAcao = $this->_request->getParam("stAcao");
         $idPronac = $this->_request->getParam("idPRONAC");
         $idProduto = $this->_request->getParam("idProduto");
-        $stPrincipal = $this->_request->getParam("stPrincipal");
-//        $idD = $this->_request->getParam("idD");
-
-//        $projetos = new Projetos();
-//        $IN2017 = $projetos->verificarIN2017($idPronac);
+        $dadosAnaliseConteudo = [];
 
         $analisedeConteudoDAO = new Analisedeconteudo();
-        $resp = $analisedeConteudoDAO->dadosAnaliseconteudo(false, array('idPRONAC = ?' => $idPronac, 'idProduto = ?' => $idProduto))->current()->toArray();
+
+        $resp = $analisedeConteudoDAO->dadosAnaliseconteudo($idPronac, ['idProduto = ?' => $idProduto])
+            ->current()
+            ->toArray();
+
         foreach ($resp as $key => $val) {
-            $arrayRetorno[$key] = utf8_encode($val);
+            $dadosAnaliseConteudo[$key] = utf8_encode($val);
         }
 
         if ($this->isIN2017) {
             $tbAcaoAlcanteProjeto = new tbAcaoAlcanceProjeto();
-            $buscarAcaoAlcanceProjeto = $tbAcaoAlcanteProjeto->buscar(array('idPronac = ?' => $idPronac, 'idParecer = ?' => $resp['idAnaliseDeConteudo']));
+
+            $buscarAcaoAlcanceProjeto = $tbAcaoAlcanteProjeto->buscar(
+                array(
+                    'idPronac = ?' => $idPronac,
+                    'idParecer = ?' => $resp['idAnaliseDeConteudo']
+                )
+            );
 
             if (count($buscarAcaoAlcanceProjeto) > 0) {
                 foreach ($buscarAcaoAlcanceProjeto->current() as $key => $val) {
-                    $arrayRetorno[$key] = utf8_encode($val);
+                    $dadosAnaliseConteudo[$key] = utf8_encode($val);
                 }
             }
         }
 
-        $this->_helper->json($arrayRetorno);
+        $this->_helper->json($dadosAnaliseConteudo);
+    }
+
+    private function obterProdutosSecundarios($idPronac)
+    {
+        $produtosSecundarios = [];
+
+        $dadosWhere["t.stEstado = ?"] = 0;
+        $dadosWhere["t.TipoAnalise in (?)"] = array(1, 3);
+        $dadosWhere["p.Situacao IN ('B11', 'B14')"] = '';
+        $dadosWhere["p.IdPRONAC = ?"] = $idPronac;
+        $dadosWhere["t.stPrincipal = ?"] = 0;
+
+        $tbDistribuirParecer = new tbDistribuirParecer();
+        $Secundarios = $tbDistribuirParecer->dadosParaDistribuirSecundarios($dadosWhere);
+
+        $i = 1;
+        foreach ($Secundarios as $ps) {
+
+            $produtosSecundarios[$i]['IdPRONAC'] = $ps->IdPRONAC;
+            $produtosSecundarios[$i]['idProduto'] = $ps->idProduto;
+            $produtosSecundarios[$i]['stPrincipal'] = $ps->stPrincipal;
+            $produtosSecundarios[$i]['Produto'] = $ps->Produto;
+            $produtosSecundarios[$i]['DescricaoAnalise'] = $ps->DescricaoAnalise;
+            $produtosSecundarios[$i]['Obs'] = $ps->Obs;
+            $produtosSecundarios[$i]['Situacao'] = self::definirSituacaoAnaliseProduto(
+                $ps->DtDistribuicaoPT,
+                $ps->DtDevolucaoPT,
+                $ps->FecharAnalise,
+                $ps->idAgenteParecerista
+            );
+
+
+            $i++;
+        }
+
+        return $produtosSecundarios;
+    }
+
+    private function definirSituacaoAnaliseProduto($dtDistribuicao, $dtDevolucao, $fecharAnalise, $idAgenteParecerista)
+    {
+
+        if (!empty($dtDistribuicao)) {
+            $situacao = 'Aguardando an&aacute;lise de outro parecerista';
+
+            if ($idAgenteParecerista == $this->view->idAgente) {
+                $situacao = 'Aguardando sua an&aacute;lise';
+            }
+
+            if (!empty($dtDevolucao)) {
+                $situacao = 'An&aacute;lise concluida e n&atilde;o finalizada';
+
+                if ($fecharAnalise == 1) {
+                    $situacao = 'An&aacute;lise finalizada';
+                }
+            }
+
+        } else {
+            $situacao = 'Aguardando distribui&ccedil;&atilde;o';
+
+            if (!empty($dtDevolucao) && $fecharAnalise == 0) {
+                $situacao = 'Devolvida p/ an&aacute;lise';
+            }
+        }
+
+        return $situacao;
     }
 
     public function salvarAnaliseConteudoAction()
@@ -522,7 +586,16 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         try {
             if (!$this->_request->getParam('ParecerFavoravel')) {
                 $planilhaProjeto = new PlanilhaProjeto();
-                $atualizar = array('idUnidade' => 1, 'Quantidade' => 0, 'Ocorrencia' => 0, 'ValorUnitario' => 0, 'QtdeDias' => 0, 'idUsuario' => $idusuario, 'Justificativa' => '');
+                $atualizar = array(
+                    'idUnidade' => 1,
+                    'Quantidade' => 0,
+                    'Ocorrencia' => 0,
+                    'ValorUnitario' => 0,
+                    'QtdeDias' => 0,
+                    'idUsuario' => $idusuario,
+                    'Justificativa' => ''
+                );
+
                 if ($stPrincipal) {
                     $planilhaProjeto->alterar($atualizar, array('idPRONAC = ?' => $idPronac));
                 } else {
@@ -657,7 +730,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                         }
 
                         if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] != 0) {
-                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] =  number_format($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'], 2, ',', '.');
+                            $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = number_format($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'], 2, ',', '.');
                         } else {
                             $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSugerido'] = "0,00";
                         }
@@ -669,13 +742,13 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $valorPossivel = $itensCusto['totalSolicitado'] - $itensCusto['totalSugerido'];
         $valorSolicitado = $itensCusto['totalSolicitado'];
         if ($itensCusto['totalSolicitado'] != 0) {
-            $itensCusto['totalSolicitado'] =  number_format($itensCusto['totalSolicitado'], 2, ',', '.');
+            $itensCusto['totalSolicitado'] = number_format($itensCusto['totalSolicitado'], 2, ',', '.');
         } else {
             $itensCusto['totalSugerido'] = "0,00";
         }
 
         if ($itensCusto['totalSugerido'] != 0) {
-            $itensCusto['totalSugerido'] =  number_format($itensCusto['totalSugerido'], 2, ',', '.');
+            $itensCusto['totalSugerido'] = number_format($itensCusto['totalSugerido'], 2, ',', '.');
         } else {
             $itensCusto['totalSugerido'] = "0,00";
         }
@@ -697,14 +770,18 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->planilhaUnidade = PlanilhaUnidadeDAO::buscar();
 
         $projetoDAO = new Projetos();
-        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial(array('p.IdPRONAC = ?' => $idPronac, 'd.idProduto = ?' => $idProduto, 'd.stPrincipal = ?' => $stPrincipal));
+        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial(
+            array(
+                'p.IdPRONAC = ?' => $idPronac,
+                'd.idProduto = ?' => $idProduto,
+                'd.stPrincipal = ?' => $stPrincipal
+            )
+        );
         $this->view->projeto = $projeto[0];
 
-        /* ITEM */
         $PlanilhaDAO = new PlanilhaProjeto();
         $planilha = $PlanilhaDAO->buscarAnaliseCustos(array('PPJ.idPlanilhaProjeto= ?' => $idPlanilhaProjeto));
         $this->view->dadosItem = $planilha[0];
-        /* var_dump($this->view->dadosItem);die; */
     }
 
     public function salvarSugestaoItemCustoAction()
@@ -717,9 +794,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
         $dados = $this->_request->getParams();
         $idPlanilhaProjeto = $this->_request->getParam('idPlanilhaProjeto');
-        $idPronac = $this->_request->getParam('idPronac');
-        $idProduto = $this->_request->getParam('idProduto');
-        $stPrincipal = $this->_request->getParam('stPrincipal');
 
         unset($dados['idPlanilhaProjeto']);
         unset($dados['exibirContadorTextarea']);

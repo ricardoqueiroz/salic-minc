@@ -22,17 +22,19 @@
 
     <div class="row">
         <div class="col s12">
-            <h3 class="left">An&aacute;lise do Produto </h3>
+            <h4 class="left">An&aacute;lise do Produto </h4>
             <a class="btn right" href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>#produto_<?= $this->projeto->idProduto?>" title="P&aacute;gina Anterior">Voltar</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col s12">
-            <h4>Projeto: <?= $this->projeto->PRONAC; ?> - <?= $this->projeto->NomeProjeto; ?></h4>
-            <h5>Produto <?= ($this->projeto->stPrincipal) ? 'Principal' : 'Secund&aacute;rio'; ?>
-                : <?php echo $this->projeto->dsProduto; ?>
-            </h5>
+            <p><b>Projeto: </b><?= $this->projeto->PRONAC; ?> - <?= $this->projeto->NomeProjeto; ?></p>
+            <p>
+                <b>Produto <?= ($this->projeto->stPrincipal) ? 'Principal' : 'Secund&aacute;rio'; ?>: </b>
+                <?php echo $this->projeto->dsProduto; ?>
+            </p>
+            <p><b>Situa&ccedil;&atilde;o: </b><?= $this->situacao; ?></p>
         </div>
     </div>
 
@@ -41,19 +43,22 @@
         <div class="col s12">
             <ul class="tabs tabs-fixed-width">
                 <li class="tab">
-                    <a href="#tab_analise_projeto">Projeto</a>
+                    <a href="#tab_analise_projeto">Visualizar Projeto</a>
                 </li>
                 <li class="tab">
                     <a href="#tab_analise_custo">Analisar custos do Produto</a>
                 </li>
                 <?php if(($this->stPrincipal == 1) && ($this->grupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                    <li class="tab">
-                        <a href="#tab_produtos_secundarios">Dados dos Produtos Secund&aacute;rios</a>
-                    </li>
+                    <?php if($this->existeProdutoSecundario) : ?>
+                        <li class="tab">
+                            <a href="#tab_produtos_secundarios">Produtos Secund&aacute;rios</a>
+                        </li>
+                    <?php endif; ?>
                 <?php endif; ?>
+
                 <?php if($this->stPrincipal == 1) : ?>
                     <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
-                        <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolida&ccedil;&atilde;o do Parecer T&eacute;cnico</a>
+                        <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolidar Parecer T&eacute;cnico</a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -69,10 +74,12 @@
             <div id="planilha-analise-de-custos"></div>
         </div>
 
-        <?php if(($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-            <div id="tab_produtos_secundarios" class="col s12">
-                <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
-            </div>
+        <?php if($this->stPrincipal == 1): ?>
+            <?php if($this->existeProdutoSecundario) : ?>
+                <div id="tab_produtos_secundarios" class="col s12">
+                    <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
 
         <?php if($this->stPrincipal == 1) : ?>
@@ -218,7 +225,11 @@
             stPrincipal: $('#stPrincipal').val()
         };
 
-        jqAjaxLink('/parecer/analise-inicial/analisar-custos', dados, 'planilha-analise-de-custos');
+        elmBody.on('click', "a[href='#tab_analise_custo']", function () {
+            if($("#planilha-analise-de-custos").html().length == 0) {
+                jqAjaxLink('/parecer/analise-inicial/analisar-custos', dados, 'planilha-analise-de-custos');
+            }
+        });
 
     });
 

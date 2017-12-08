@@ -496,136 +496,133 @@ class tbDistribuirParecer extends MinC_Db_Table_Abstract
                 
                 return $this->fetchAll($select);
 
-	} // fecha m�todo()
+	}
 
-        public function dadosParaDistribuir($dadosWhere) {
+    public function dadosParaDistribuir($dadosWhere)
+    {
 
-            $select = $this->select();
-            $select->setIntegrityCheck(false);
-            $select->from(
-                    array('t' => $this->_name),
-                    array(
-                    "t.idProduto",
-                    "t.idDistribuirParecer",
-                    "t.idOrgao",
-                    "t.DtDevolucao",
-                    "t.DtEnvio",
-                    "t.idAgenteParecerista",
-                    "t.stDiligenciado",
-                    "t.DtDistribuicao",
-                    "t.TipoAnalise",
-                    "t.FecharAnalise",
-                    "t.stPrincipal",
-                    "nrDias" => new Zend_Db_Expr("DATEDIFF(day, t.DtEnvio,t.DtDistribuicao)"),
-                    "CONVERT(CHAR(10), DtEnvio, 103) AS DtEnvioPT",
-                    "CONVERT(CHAR(10), t.DtDevolucao, 103) AS DtDevolucaoPT",
-                    "CONVERT(CHAR(10), t.DtDistribuicao, 103) AS DtDistribuicaoPT",
-                    "DescricaoAnalise" => new Zend_Db_Expr("CASE WHEN TipoAnalise = 0 THEN 'Cont�udo' WHEN TipoAnalise = 1 THEN 'Custo do Produto' ELSE 'Custo Administrativo' END"),
-                    "SAC.dbo.fnChecarDistribuicaoProjeto(p.IdPRONAC, t.idProduto, t.TipoAnalise) AS Obs",
-                    "(Select SUM(x.Ocorrencia*x.Quantidade*x.ValorUnitario) FROM SAC.dbo.tbPlanilhaProjeto x WHERE p.IdPRONAC = x.idPRONAC and x.FonteRecurso = 109 and x.idProduto = t.idProduto) as Valor",
-		    "(SELECT x1.Segmento FROM sac.dbo.PlanoDistribuicaoProduto x1
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('t' => $this->_name),
+            array(
+                "t.idProduto",
+                "t.idDistribuirParecer",
+                "t.idOrgao",
+                "t.DtDevolucao",
+                "t.DtEnvio",
+                "t.idAgenteParecerista",
+                "t.stDiligenciado",
+                "t.DtDistribuicao",
+                "t.TipoAnalise",
+                "t.FecharAnalise",
+                "t.stPrincipal",
+                "nrDias" => new Zend_Db_Expr("DATEDIFF(day, t.DtEnvio,t.DtDistribuicao)"),
+                "CONVERT(CHAR(10), DtEnvio, 103) AS DtEnvioPT",
+                "CONVERT(CHAR(10), t.DtDevolucao, 103) AS DtDevolucaoPT",
+                "CONVERT(CHAR(10), t.DtDistribuicao, 103) AS DtDistribuicaoPT",
+                "DescricaoAnalise" => new Zend_Db_Expr("CASE WHEN TipoAnalise = 0 THEN 'Cont�udo' WHEN TipoAnalise = 1 THEN 'Custo do Produto' ELSE 'Custo Administrativo' END"),
+                "SAC.dbo.fnChecarDistribuicaoProjeto(p.IdPRONAC, t.idProduto, t.TipoAnalise) AS Obs",
+                "(Select SUM(x.Ocorrencia*x.Quantidade*x.ValorUnitario) FROM SAC.dbo.tbPlanilhaProjeto x WHERE p.IdPRONAC = x.idPRONAC and x.FonteRecurso = 109 and x.idProduto = t.idProduto) as Valor",
+                "(SELECT x1.Segmento FROM sac.dbo.PlanoDistribuicaoProduto x1
 		     WHERE x1.idProjeto = p.idProjeto and x1.idProduto = t.idProduto)  AS
 		    idSegmento, (SELECT x1.Segmento FROM sac.dbo.PlanoDistribuicaoProduto x1
 				 INNER JOIN sac.dbo.Projetos y1 on (x1.idProjeto = y1.idProjeto)
 				 WHERE x1.idProjeto = p.idProjeto and x1.idProduto = t.idProduto)  AS idSegmento",
-		    "(SELECT z1.Descricao FROM sac.dbo.PlanoDistribuicaoProduto x1
+                "(SELECT z1.Descricao FROM sac.dbo.PlanoDistribuicaoProduto x1
                          INNER JOIN sac.dbo.Segmento z1 on (x1.Segmento  = z1.Codigo)
                                 WHERE x1.idProjeto = p.idProjeto and x1.idProduto = t.idProduto)  AS Segmento"
             ));
 
 
-            $select->joinInner(
-                array('p' => 'Projetos'),'t.idPRONAC = p.IdPRONAC',
-                array('p.IdPRONAC','(p.AnoProjeto + p.Sequencial) AS NrProjeto','p.NomeProjeto','p.Area as idArea')
-		);
-
-            $select->joinInner(
-                array('r' => 'Produto'),'t.idProduto = r.Codigo',
-                array('r.Descricao AS Produto')
-            );
-
-            $select->joinInner(
-                array('a' => 'Area'),'p.Area = a.Codigo',
-                array('a.Descricao AS Area')
-            );
-
-            foreach ($dadosWhere as $coluna => $valor) {
-                $select->where($coluna, $valor);
-            }
-
-            $select->distinct('t.idDistribuirParecer');
-
-            $select->order('t.stPrincipal desc');
-
-            return $this->fetchAll($select);
-
-        } // fecha m�todo dadosParaDistribuir()
-
-        public function dadosParaDistribuirSecundarios($dadosWhere)
-        {
-
-		$select = $this->select();
-		$select->setIntegrityCheck(false);
-		$select->from(
-				array('t' => $this->_name),
-		                array(
-		                 "t.idProduto",
-		                 "t.idDistribuirParecer",
-		                 "t.idOrgao",
-		                 "t.DtDevolucao",
-		                 "t.TipoAnalise",
-                                 "t.stPrincipal",
-                                 "nrDias"=>new Zend_Db_Expr("DATEDIFF(day, t.DtEnvio,t.DtDistribuicao)"),
-		                 "CONVERT(CHAR(10), DtEnvio, 103) AS DtEnvioPT",
-		                 "CONVERT(CHAR(10), t.DtDevolucao, 103) AS DtDevolucaoPT",
-		                 "CONVERT(CHAR(10), t.DtDistribuicao, 103) AS DtDistribuicaoPT",
-                                 "DescricaoAnalise" => new Zend_Db_Expr("CASE WHEN TipoAnalise = 0 THEN 'Cont�udo' WHEN TipoAnalise = 1 THEN 'Custo do Produto' ELSE 'Custo Administrativo' END"),
-		                 "SAC.dbo.fnChecarDistribuicaoProjeto(p.IdPRONAC, t.idProduto, t.TipoAnalise) AS Obs"
-        ));
-
-				/*$select->joinInner(
-                array('ac' => 'tbAnaliseDeConteudo'),'t.idPRONAC = ac.idPRONAC',
-                array('ac.ParecerFavoravel', 'ac.ParecerDeConteudo as dsParecer')
-        );*/
-
-        		$select->joinInner(
-                array('p' => 'Projetos'),'t.idPRONAC = p.IdPRONAC',
-                array('p.IdPRONAC', '(p.AnoProjeto + p.Sequencial) AS NrProjeto', 'p.NomeProjeto')
+        $select->joinInner(
+            array('p' => 'Projetos'), 't.idPRONAC = p.IdPRONAC',
+            array('p.IdPRONAC', '(p.AnoProjeto + p.Sequencial) AS NrProjeto', 'p.NomeProjeto', 'p.Area as idArea')
         );
 
-                $select->joinInner(
-                array('r' => 'Produto'),'t.idProduto = r.Codigo',
-                array('r.Descricao AS Produto')
+        $select->joinInner(
+            array('r' => 'Produto'), 't.idProduto = r.Codigo',
+            array('r.Descricao AS Produto')
         );
 
-                 $select->joinInner(
-                array('a' => 'Area'),'p.Area = a.Codigo',
-                array('a.Descricao AS Area')
+        $select->joinInner(
+            array('a' => 'Area'), 'p.Area = a.Codigo',
+            array('a.Descricao AS Area')
         );
 
-                $select->joinInner(
-                array('s' => 'Segmento'),'p.Segmento = s.Codigo',
-                array('s.Descricao AS Segmento')
-        );
-
-
-		foreach ($dadosWhere as $coluna => $valor)
-                {
-                    $select->where($coluna, $valor);
-                }
+        foreach ($dadosWhere as $coluna => $valor) {
+            $select->where($coluna, $valor);
+        }
 
         $select->distinct('t.idDistribuirParecer');
 
         $select->order('t.stPrincipal desc');
-               
-		return $this->fetchAll($select);
+
+        return $this->fetchAll($select);
 
     } // fecha m�todo dadosParaDistribuir()
 
+    public function dadosParaDistribuirSecundarios($dadosWhere)
+    {
 
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('t' => $this->_name),
+            array(
+                "t.idProduto",
+                "t.idDistribuirParecer",
+                "t.idOrgao",
+                "t.DtDevolucao",
+                "t.TipoAnalise",
+                "t.stPrincipal",
+                "t.FecharAnalise",
+                "t.idAgenteParecerista",
+                "nrDias" => new Zend_Db_Expr("DATEDIFF(day, t.DtEnvio,t.DtDistribuicao)"),
+                "CONVERT(CHAR(10), DtEnvio, 103) AS DtEnvioPT",
+                "CONVERT(CHAR(10), t.DtDevolucao, 103) AS DtDevolucaoPT",
+                "CONVERT(CHAR(10), t.DtDistribuicao, 103) AS DtDistribuicaoPT",
+                "DescricaoAnalise" => new Zend_Db_Expr("CASE WHEN TipoAnalise = 0 THEN 'Conte&uacute;do' WHEN TipoAnalise = 1 THEN 'Custo do Produto' ELSE 'Custo Administrativo' END"),
+                "SAC.dbo.fnChecarDistribuicaoProjeto(p.IdPRONAC, t.idProduto, t.TipoAnalise) AS Obs"
+            )
+        );
 
+        /*$select->joinInner(
+        array('ac' => 'tbAnaliseDeConteudo'),'t.idPRONAC = ac.idPRONAC',
+        array('ac.ParecerFavoravel', 'ac.ParecerDeConteudo as dsParecer')
+            );*/
 
+        $select->joinInner(
+            array('p' => 'Projetos'), 't.idPRONAC = p.IdPRONAC',
+            array('p.IdPRONAC', '(p.AnoProjeto + p.Sequencial) AS NrProjeto', 'p.NomeProjeto')
+        );
 
+        $select->joinInner(
+            array('r' => 'Produto'), 't.idProduto = r.Codigo',
+            array('r.Descricao AS Produto')
+        );
+
+        $select->joinInner(
+            array('a' => 'Area'), 'p.Area = a.Codigo',
+            array('a.Descricao AS Area')
+        );
+
+        $select->joinInner(
+            array('s' => 'Segmento'), 'p.Segmento = s.Codigo',
+            array('s.Descricao AS Segmento')
+        );
+
+        foreach ($dadosWhere as $coluna => $valor) {
+            $select->where($coluna, $valor);
+        }
+
+        $select->distinct('t.idDistribuirParecer');
+
+        $select->order('t.stPrincipal desc');
+
+        return $this->fetchAll($select);
+
+    }
 
     public function distribuirParecer($dados) {
 
@@ -689,7 +686,7 @@ class tbDistribuirParecer extends MinC_Db_Table_Abstract
 
     } // fecha m�todo encaminharParecer()
 
-public function concluirParecer($dados) {
+    public function concluirParecer($dados) {
 
         //INSTANCIANDO UM OBJETO DE ACESSO AOS DADOS DA TABELA
         $tbDistribuirParecer = new tbDistribuirParecer();
@@ -716,7 +713,7 @@ public function concluirParecer($dados) {
 
 
 
-    } // fecha m�todo concluirParecer()
+    }
 
 	public function atualizarParecer($data, $idDistribuirParecer)
 	{
@@ -734,12 +731,12 @@ public function concluirParecer($dados) {
         }
     }
 
-public function excluirDados($where) {
+    public function excluirDados($where) {
         $where = "idDistribuirParecer = " . $where;
         return $this->delete($where);
-    } // fecha m�todo excluirDados()
+    }
 
-public function aguardandoparecerresumo($where) {
+    public function aguardandoparecerresumo($where) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
 
@@ -829,7 +826,8 @@ public function aguardandoparecerresumo($where) {
 
         return $this->fetchAll($selectAux);
     }
-        public function aguardandoparecer($where,$tamanho=-1, $inicio=-1) {
+
+    public function aguardandoparecer($where,$tamanho=-1, $inicio=-1) {
         $tmpInicio = null;
         if ($tamanho > -1) {
             $tmpInicio = 0;
@@ -958,7 +956,8 @@ public function aguardandoparecerresumo($where) {
         else
             return $this->fetchAll($selectAux2);
     }
-        public function aguardandoparecerTotal($where) {
+
+    public function aguardandoparecerTotal($where) {
 
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -1034,7 +1033,7 @@ public function aguardandoparecerresumo($where) {
         return $this->fetchAll($select);
     }
 
-        public function pareceremitido($pronac) {
+    public function pareceremitido($pronac) {
 
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -1090,7 +1089,7 @@ public function aguardandoparecerresumo($where) {
 
     }
 
-        public function parecerconsolidado($pronac) {
+    public function parecerconsolidado($pronac) {
 
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -1145,7 +1144,8 @@ public function aguardandoparecerresumo($where) {
         return $this->fetchAll($select);
 
     }
-public function analisePorParecerista($where){
+
+    public function analisePorParecerista($where){
 
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -1359,7 +1359,7 @@ public function analisePorParecerista($where){
 
             return $this->fetchAll($slct);
         }
-        public function analisePorPareceristaPagamento($where){
+    public function analisePorPareceristaPagamento($where){
 
         $select = $this->select();
         $select->setIntegrityCheck(false);
@@ -1496,6 +1496,7 @@ public function analisePorParecerista($where){
         
         return $this->fetchAll($select);
     }
+
     public function analiseParecerista($where){
 
         $select = $this->select();
@@ -1692,7 +1693,7 @@ public function analisePorParecerista($where){
 
 
     /**
-     * M�todo que lista os projetos na tela inicial do UC 103 ( Gerenciar Parecerer )
+     * Metodo que lista os projetos na tela inicial do UC 103 ( Gerenciar Parecerer )
      * @param Int
      * @return List
      */

@@ -1992,6 +1992,7 @@ class Projetos extends MinC_Db_Table_Abstract
                 "d.DtDistribuicao",
                 "d.stDiligenciado",
                 "d.DtDevolucao",
+                "d.FecharAnalise",
                 "CONVERT(CHAR(10), d.DtEnvio, 103) as DtEnvio",
                 "d.idAgenteParecerista",
                 'tempoFimParecer' => new Zend_Db_Expr('CASE WHEN d.stPrincipal = 1 THEN 20 ELSE 10 END'),
