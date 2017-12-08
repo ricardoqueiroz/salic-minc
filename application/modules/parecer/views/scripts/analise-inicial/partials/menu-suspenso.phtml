@@ -1,5 +1,5 @@
-<div class="fixed-action-btn active vertical">
-    <a class="btn-floating btn-large red"><i class="large material-icons">spellcheck</i></a>
+<div id="menu-suspenso" class="fixed-action-btn vertical click-to-toggle">
+    <a id="bt-aciona-menu" class="btn-floating btn-large red"><i class="large material-icons">add</i></a>
     <ul>
         <li>
             <a id="ir-para-o-topo" class="btn-floating yellow darken-1 tooltipped" data-tooltip="Ir para o topo">
@@ -35,35 +35,35 @@
 </div>
 
 <script>
-    $3(document).ready(function () {
+    $3(document).ready(function ($) {
 
-        $3("#visualizar-form").on('click', function () {
+        $("#visualizar-form").on('click', function () {
             tinymce.remove();
         });
 
-        $3("#bt-analisar-custos").on('click', function() {
-            $3('ul.tabs').tabs('select_tab', 'tab_analise_custo');
+        $("#bt-analisar-custos").on('click', function() {
+            $('ul.tabs').tabs('select_tab', 'tab_analise_custo');
         });
 
-        if ($3('#ir-para-o-topo').length) {
+        if ($('#ir-para-o-topo').length) {
             var scrollTrigger = 100, // px
                 backToTop = function () {
-                    var scrollTop = $3(window).scrollTop();
+                    var scrollTop = $(window).scrollTop();
                     if (scrollTop > scrollTrigger) {
-                        $3('#ir-para-o-topo').parent().show();
+                        $('#ir-para-o-topo').parent().show();
                     } else {
-                        $3('#ir-para-o-topo').parent().hide();
+                        $('#ir-para-o-topo').parent().hide();
                     }
                 };
             backToTop();
 
-            $3(window).on('scroll', function () {
+            $(window).on('scroll', function () {
                 backToTop();
             });
 
-            $3('#ir-para-o-topo').on('click', function (e) {
+            $('#ir-para-o-topo').on('click', function (e) {
                 e.preventDefault();
-                $3('html,body').animate({
+                $('html,body').animate({
                     scrollTop: 0
                 }, 700);
             });

@@ -165,6 +165,13 @@
 
     $3(document).ready(function ($) {
 
+        var options = [
+            {selector: 'body', offset: 200, callback: function() {
+                $("#menu-suspenso a#bt-aciona-menu").trigger('click');
+            } }
+        ];
+        Materialize.scrollFire(options);
+
         var dadosFormulario = '';
         var elmBody = $('body');
 
