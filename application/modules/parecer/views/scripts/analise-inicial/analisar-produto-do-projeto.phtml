@@ -39,14 +39,13 @@
     </div>
 
     <div class="row">
-
         <div class="col s12">
             <ul class="tabs tabs-fixed-width">
                 <li class="tab">
                     <a href="#tab_analise_projeto">Visualizar Projeto</a>
                 </li>
                 <li class="tab">
-                    <a href="#tab_analise_custo">Analisar custos do Produto</a>
+                    <a href="#tab_analise_custo">Analisar custos</a>
                 </li>
                 <?php if(($this->stPrincipal == 1) && ($this->grupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <?php if($this->existeProdutoSecundario) : ?>
@@ -61,6 +60,9 @@
                         <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolidar Parecer T&eacute;cnico</a>
                     </li>
                 <?php endif; ?>
+                <li class="tab">
+                    <a href="#tab_finalizar">Finalizar</a>
+                </li>
             </ul>
         </div>
 
@@ -89,6 +91,10 @@
                 <?php endif; ?>
             </div>
         <?php endif; ?>
+
+        <div id="tab_finalizar" class="col s12">
+            <div>finalizar</div>
+        </div>
     </div>
 
     <div id="analisar-conteudo" class="modal bottom-sheet">
