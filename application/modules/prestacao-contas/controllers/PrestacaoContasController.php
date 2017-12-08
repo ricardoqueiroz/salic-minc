@@ -85,9 +85,12 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
     {
         $idPronac = $this->_request->getParam("idPronac");
         $idComprovantePagamento = $this->_request->getParam("idComprovantePagamento");
-
         $situacao = $this->_request->getParam("situacao");
         $justificativa = $this->_request->getParam("justificativa");
+
+        if (!$justificativa || !$idComprovantePagamento || !$situacao) {
+           throw new Exception('Faltando dados');
+        }
 
         $tblComprovantePag = new ComprovantePagamentoxPlanilhaAprovacao();
         $rsComprovantePag = $tblComprovantePag
