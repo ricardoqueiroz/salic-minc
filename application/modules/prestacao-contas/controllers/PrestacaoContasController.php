@@ -37,8 +37,11 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
         if (!$idPronac) {
            throw new Exception('Não existe idPronac');
         }
+        $informacoes = new PrestacaoContas_Model_vwInformacoesConsolidadasParaAvaliacaoFinanceira();
+        $informacoes = $informacoes->informacoes($idPronac);
 
         $this->view->idPronac = $this->_request->getParam("idPronac");
+        $this->view->informacoes = $informacoes->current();
     }
 
     /* @todo: adicionar função de salvar o tipo de amostragem*/
@@ -54,7 +57,6 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
         if (!$avaliacao) {
            throw new Exception('Não existe avaliacao');
         }
-
         if ($avaliacao == "todos") {
             $this->redirect('/realizarprestacaodecontas/planilhaorcamentaria/idPronac/' . $idPronac );
         }
@@ -102,6 +104,7 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
 
         $rsComprovantePag->save();
 
-        $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac . '/tipoAvaliacao/90');
+        $this->_helper->json(['idComprovantePagamento' => $idComprovantePagamento]);
+        /* $this->redirect('/prestacao-contas/prestacao-contas/amostragem/idPronac/' . $idPronac . '/tipoAvaliacao/90'); */
     }
 }
