@@ -15,42 +15,38 @@
                     <div class="row">
                         <div class="col l12 s12">
                             <table class="bordered">
-                            <thead>
+                              <thead  class="grey lighten-3">
                                 <tr>
-                                    <th rowspan="2">Dt.Envio Presta&ccedil;&atilde;o de Contas</th>
-                                    <th rowspan="2">Resultado  da Avalia&ccedil;&atilde;o do Objeto</th>
-                                    <th class="center-align" colspan="3">Empregos Gerados</th>
+                                  <th rowspan="2">Dt.Envio Presta&ccedil;&atilde;o de Contas</th>
+                                  <th rowspan="2">Resultado  da Avalia&ccedil;&atilde;o do Objeto</th>
+                                  <th class="center-align" colspan="3">Empregos Gerados</th>
                                 </tr>
                                 <tr>
-                                    <th>Direto<th>
-                                    <th>Indireto</th>
-                                    <th>Total</th>
+                                  <th>Direto</th>
+                                  <th>Indireto</th>
+                                  <th>Total</th>
                                 </tr>
-                            </thead>
-                            <tbody>
+                              </thead>
+                              <tbody>
                                 <tr>
-                                    <td>
-                                        teste
-                                    </td>
-                                    <td>
-                                        teste
-                                    </td>
-                                    <td>
-                                        teste
-                                    </td>
-                                    <td>
-                                        teste
-                                    </td>
-                                    <td>
-                                        teste
-                                    </td>
-                                    <td>
-                                        teste
-                                    </td>
+                                  <td>
+                                    <?php echo $this->informacoes->DtEnvioDaPrestacaoContas;?>
+                                  </td>
+                                  <td>
+                                    <?php echo $this->informacoes->ResultadoAvaliacaoObjeto;?>
+                                  </td>
+                                  <td>
+                                    <?php echo $this->informacoes->qtEmpregosDiretos;?>
+                                  </td>
+                                  <td>
+                                    <?php echo $this->informacoes->qtEmpregosIndiretos;?>
+                                  </td>
+                                  <td>
+                                    <?php echo $this->informacoes->qtEmpregosGerados;?>
+                                  </td>
                                 </tr>
-                            </tbody>
+                              </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -63,13 +59,13 @@
                     <div class="row">
                         <div class="col l12 s12">
                             <table class="bordered">
-                              <thead>
+                              <thead class="grey lighten-3">
                                   <tr>
-                                      <th colspan="4">Valores</th>
-                                      <th colspan="3">Quantidade de Comprovantes por n&iacute;vel de confian&ccedil;a</th>
+                                      <th class="center-align" colspan="3">Valores</th>
+                                      <th  class="center-align" colspan="4">Quantidade de Comprovantes por n&iacute;vel de confian&ccedil;a</th>
                                   </tr>
                                   <tr>
-                                      <th>Aprovado<th>
+                                      <th>Aprovado</th>
                                       <th>Captado</th>
                                       <th>Comprovado</th>
                                       <th>Todos</th>
@@ -81,28 +77,25 @@
                               <tbody>
                                   <tr>
                                       <td>
-                                          25.296.427,87
+                                        <?php echo $this->informacoes->vlAprovado;?>
                                       </td>
                                       <td>
-                                          14.730.000,00
+                                        <?php echo $this->informacoes->vlCaptado;?>
                                       </td>
                                       <td>
-                                          14.931.639.68
+                                        <?php echo $this->informacoes->vlComprovado;?>
                                       </td>
                                       <td>
-                                          6.074
+                                        <?php echo $this->informacoes->qtComprovacao;?>
                                       </td>
                                       <td>
-                                          259
+                                        <?php echo $this->informacoes->qtNC_90;?>
                                       </td>
                                       <td>
-                                          361
+                                        <?php echo $this->informacoes->qtNC_95;?>
                                       </td>
                                       <td>
-                                        598
-                                      </td>
-                                      <td>
-                                        598
+                                        <?php echo $this->informacoes->qtNC_99;?>
                                       </td>
                                   </tr>
                               </tbody>
