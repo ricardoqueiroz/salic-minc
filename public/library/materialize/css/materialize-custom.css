@@ -377,6 +377,10 @@ x - TABS
     background-color: #4caf50;
 }
 
+.tabs.tabs-fixed-width {
+    overflow: hidden;
+}
+
 @media screen and (max-width: 768px) {
     .tabs .tab {
         width: 100%;

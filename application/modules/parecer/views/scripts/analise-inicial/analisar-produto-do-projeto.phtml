@@ -4,16 +4,40 @@
 
     <div id="dialog-valor" class="sumir" title="Valor Inv&aacute;lido">
         <div class="msgERROR">
-            <div>Valor de remanejamento maior que o permitido! M&aacute;ximo : <span id="valorpossivelApresentacao"></span></div>
+            <div>
+                Valor de remanejamento maior que o permitido! M&aacute;ximo :
+                <span id="valorpossivelApresentacao"></span>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col s12">
             <div id="breadcrumb">
                 <ul>
-                    <li class="first"><a href="<?php echo $this->url(array('controller' => 'principal', 'action' => ''), '', true); ?>" title="Ir para P&aacute;gina Inicial">In&iacute;cio</a></li>
+                    <li class="first"><a
+                            href="<?php echo $this->url(
+                                array(
+                                    'controller' => 'principal',
+                                    'action' => ''),
+                                '', true); ?>"
+                            title="Ir para P&aacute;gina Inicial"
+                        >
+                            In&iacute;cio
+                        </a>
+                    </li>
                     <li class="second">An&aacute;lise T&eacute;cnica Inicial</li>
-                    <li class="second"><a href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>" title="Ir para P&aacute;gina Inicial">Projetos/Produtos para An&aacute;lise</a></li>
+                    <li class="second"><a
+                            href="<?php echo $this->url(
+                                array(
+                                    'module' => 'parecer',
+                                    'controller' => 'analise-inicial',
+                                    'action' => 'index'
+                                ), '', true); ?>"
+                            title="Ir para P&aacute;gina Inicial"
+                        >
+                            Projetos/Produtos para An&aacute;lise
+                        </a>
+                    </li>
                     <li class="last">An&aacute;lise do Produtos</li>
                 </ul>
             </div>
@@ -23,7 +47,17 @@
     <div class="row">
         <div class="col s12">
             <h4 class="left">An&aacute;lise do Produto </h4>
-            <a class="btn right" href="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'index'), '', true); ?>#produto_<?= $this->projeto->idProduto?>" title="P&aacute;gina Anterior">Voltar</a>
+            <a class="btn right"
+               href="<?php echo $this->url(
+                   array(
+                       'module' => 'parecer',
+                       'controller' => 'analise-inicial',
+                       'action' => 'index'),
+                   '', true); ?>#produto_<?= $this->projeto->idProduto ?>"
+               title="P&aacute;gina Anterior"
+            >
+                Voltar
+            </a>
         </div>
     </div>
 
@@ -42,73 +76,74 @@
         <div class="col s12">
             <ul class="tabs tabs-fixed-width">
                 <li class="tab">
-                    <a href="#tab_analise_projeto">Visualizar Projeto</a>
+                    <a href="#tab-analise-projeto">Visualizar Projeto</a>
                 </li>
                 <li class="tab">
-                    <a href="#tab_analise_custo">Analisar custos</a>
+                    <a href="#tab-analise-custo">Analisar custos</a>
                 </li>
-                <?php if(($this->stPrincipal == 1) && ($this->grupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                    <?php if($this->existeProdutoSecundario) : ?>
+                <?php if (($this->stPrincipal == 1) && ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                    <?php if ($this->existeProdutoSecundario) : ?>
                         <li class="tab">
-                            <a href="#tab_produtos_secundarios">Produtos Secund&aacute;rios</a>
+                            <a href="#tab-produtos-secundarios">Produtos Secund&aacute;rios</a>
                         </li>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if($this->stPrincipal == 1) : ?>
+                <?php if ($this->stPrincipal == 1 && 1 == 2) : ?>
                     <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
-                        <a class="text-gray grey lighten-2" href="#tab_consolidacao">Consolidar Parecer T&eacute;cnico</a>
+                        <a class="text-gray grey lighten-2" href="#tab-consolidacao">Consolidar Parecer
+                            T&eacute;cnico</a>
                     </li>
                 <?php endif; ?>
                 <li class="tab">
-                    <a href="#tab_finalizar">Finalizar</a>
+                    <a href="#tab-finalizar-parecer-tecnico">Finalizar</a>
                 </li>
             </ul>
         </div>
 
-        <div id="tab_analise_projeto" class="col s12">
+        <div id="tab-analise-projeto" class="col s12">
             <div id="container-vue">
                 <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-proposta>
             </div>
         </div>
 
-        <div id="tab_analise_custo" class="col s12">
+        <div id="tab-analise-custo" class="col s12">
             <div id="planilha-analise-de-custos"></div>
         </div>
 
-        <?php if($this->stPrincipal == 1): ?>
-            <?php if($this->existeProdutoSecundario) : ?>
-                <div id="tab_produtos_secundarios" class="col s12">
+        <?php if ($this->stPrincipal == 1): ?>
+            <?php if ($this->existeProdutoSecundario) : ?>
+                <div id="tab-produtos-secundarios" class="col s12 ">
                     <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php if($this->stPrincipal == 1) : ?>
-            <div id="tab_consolidacao" class="col s12">
-                <?php if($this->produtosSecundariosEmAnalise == 0) : ?>
+        <?php if ($this->stPrincipal == 1 && 1 == 2) : ?>
+            <div id="tab-consolidacao" class="col s12 ">
+                <?php if ($this->produtosSecundariosEmAnalise == 0) : ?>
                     <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
 
-        <div id="tab_finalizar" class="col s12">
-            <div>finalizar</div>
+        <div id="tab-finalizar-parecer-tecnico" class="col s12">
+            <div id="finalizar-parecer-tecnico"></div>
         </div>
     </div>
 
-    <div id="analisar-conteudo" class="modal bottom-sheet">
+    <div id="modal-analisar-conteudo" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>Analisar conte&uacute;do</h4>
             <?php echo $this->partial('analise-inicial/partials/analisar-conteudo.phtml', 'parecer', $this); ?>
         </div>
     </div>
 
-    <div id="consolidar-parecer-tecnico" class="modal bottom-sheet">
+    <div id="modal-consolidar-parecer-tecnico" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>Consolidar parecer t&eacute;cnico</h4>
-            <?php if (($this->stPrincipal == 1) && ($this->grupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
+            <?php if (($this->stPrincipal == 1) && ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>
     </div>
@@ -117,7 +152,7 @@
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>
 
-<input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?php echo $this->grupoAtivo; ?>"/>
+<input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?= $this->idGrupoAtivo; ?>"/>
 
 <input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?php echo $this->vlSolicitado; ?>"/>
 <input type="hidden" name="produtosSecundariosEmAnalise" id="produtosSecundariosEmAnalise"
@@ -143,9 +178,12 @@
 <script src="/public/scripts/proposta/visualizar/salic-proposta.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/proposta/visualizar/salic-proposta-identificacao.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/proposta/visualizar/salic-proposta-documentos.vue.js" type="text/javascript"></script>
-<script src="/public/scripts/proposta/visualizar/salic-proposta-fontes-de-recursos.vue.js" type="text/javascript"></script>
-<script src="/public/scripts/proposta/visualizar/salic-proposta-historico-avaliacoes.vue.js" type="text/javascript"></script>
-<script src="/public/scripts/proposta/visualizar/salic-proposta-local-realizacao-deslocamento.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/proposta/visualizar/salic-proposta-fontes-de-recursos.vue.js"
+        type="text/javascript"></script>
+<script src="/public/scripts/proposta/visualizar/salic-proposta-historico-avaliacoes.vue.js"
+        type="text/javascript"></script>
+<script src="/public/scripts/proposta/visualizar/salic-proposta-local-realizacao-deslocamento.vue.js"
+        type="text/javascript"></script>
 <script src="/public/scripts/agente/visualizar/salic-agente-proponente.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/autenticacao/index/salic-autenticacao-usuario.vue.js" type="text/javascript"></script>
 
@@ -154,7 +192,7 @@
 <script type="text/javascript" src="/public/scripts/parecer/analise-inicial/analisar-custos.js"></script>
 <script type="text/javascript" src="/public/scripts/parecer/analise-inicial/consolidar-parecer.js"></script>
 
-<?php if(!$this->IN2017) : ?>
+<?php if (!$this->IN2017) : ?>
     <script type="text/javascript">
         APPescolherArt_18();
         APPescolherArt_26();
@@ -172,9 +210,11 @@
     $3(document).ready(function ($) {
 
         var options = [
-            {selector: 'body', offset: 200, callback: function() {
+            {
+                selector: 'body', offset: 200, callback: function () {
                 $("#menu-suspenso a#bt-aciona-menu").trigger('click');
-            } }
+            }
+            }
         ];
         Materialize.scrollFire(options);
 
@@ -238,10 +278,14 @@
             stPrincipal: $('#stPrincipal').val()
         };
 
-        elmBody.on('click', "a[href='#tab_analise_custo']", function () {
-            if($("#planilha-analise-de-custos").html().length == 0) {
+        elmBody.on('click', "a[href='#tab-analise-custo']", function () {
+            if ($("#planilha-analise-de-custos").html().length == 0) {
                 jqAjaxLink('/parecer/analise-inicial/analisar-custos', dados, 'planilha-analise-de-custos');
             }
+        });
+
+        elmBody.on('click', "a[href='#tab-finalizar-parecer-tecnico']", function () {
+            jqAjaxLink('/parecer/analise-inicial/finalizar-parecer-tecnico', dados, 'finalizar-parecer-tecnico');
         });
 
     });
