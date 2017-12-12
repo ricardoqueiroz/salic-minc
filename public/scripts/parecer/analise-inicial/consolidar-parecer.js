@@ -1,5 +1,13 @@
+stPrincipal = parseInt(jQuery('#stPrincipal').val());
+IN2017 = parseInt(jQuery('#IN2017').val());
+produtosSecundariosEmAnalise = parseInt(jQuery('#produtosSecundariosEmAnalise').val());
+
 
 $(document).ready(function(){
+    $("textarea").editorRico({
+        altura: 200,
+        isLimitarCarateres: true
+    });
 
     $('#areaCultural').change(function() {
         carregarSegmento();

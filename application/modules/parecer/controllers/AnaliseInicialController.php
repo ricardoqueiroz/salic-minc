@@ -453,10 +453,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
                 $this->view->produtosSecundarios = $produtosSecundarios;
 
-
                 self::consolidarParecerTecnico();
-
-
             }
 
             $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
@@ -466,7 +463,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
             }
         }
 
-        $this->view->idGrupoAtivo = $this->grupoAtivo->codGrupo;
+        $this->view->codGrupo = $this->grupoAtivo->codGrupo;
         $this->view->somenteLeitura = $this->somenteLeitura;
 
     }
@@ -1013,7 +1010,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $tbDiligencia = new tbDiligencia();
         $this->view->quantidadeDiligencias = count($tbDiligencia->buscarDados($this->idPronac));
 
-        $this->view->idGrupoAtivo = $this->grupoAtivo->codGrupo;
+        $this->view->codGrupo = $this->grupoAtivo->codGrupo;
         $this->view->idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
         $this->view->idTipoAtoAnaliseInicial = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
         $this->view->IN2017 = $this->isIN2017;

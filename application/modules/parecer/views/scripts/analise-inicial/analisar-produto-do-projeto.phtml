@@ -81,7 +81,7 @@
                 <li class="tab">
                     <a href="#tab-analise-custo">Analisar custos</a>
                 </li>
-                <?php if (($this->stPrincipal == 1) && ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <?php if ($this->existeProdutoSecundario) : ?>
                         <li class="tab">
                             <a href="#tab-produtos-secundarios">Produtos Secund&aacute;rios</a>
@@ -142,7 +142,7 @@
     <div id="modal-consolidar-parecer-tecnico" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>Consolidar parecer t&eacute;cnico</h4>
-            <?php if (($this->stPrincipal == 1) && ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+            <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                 <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>
@@ -152,7 +152,7 @@
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>
 
-<input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?= $this->idGrupoAtivo; ?>"/>
+<input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?= $this->codGrupo; ?>"/>
 
 <input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?php echo $this->vlSolicitado; ?>"/>
 <input type="hidden" name="produtosSecundariosEmAnalise" id="produtosSecundariosEmAnalise"
@@ -208,15 +208,6 @@
     });
 
     $3(document).ready(function ($) {
-
-        var options = [
-            {
-                selector: 'body', offset: 200, callback: function () {
-                $("#menu-suspenso a#bt-aciona-menu").trigger('click');
-            }
-            }
-        ];
-        Materialize.scrollFire(options);
 
         var dadosFormulario = '';
         var elmBody = $('body');
@@ -287,6 +278,13 @@
         elmBody.on('click', "a[href='#tab-finalizar-parecer-tecnico']", function () {
             jqAjaxLink('/parecer/analise-inicial/finalizar-parecer-tecnico', dados, 'finalizar-parecer-tecnico');
         });
+
+        var options = [{
+            selector: 'body', offset: 200, callback: function () {
+                $("#menu-suspenso a#bt-aciona-menu").trigger('click');
+            }
+        }];
+        Materialize.scrollFire(options);
 
     });
 

@@ -37,7 +37,8 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                            ) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
                        data-tooltip="Visualizar documento"
                     >
-                        <i class="material-icons white-text">remove_red_eye</i>
+                        <i class="material-icons white-text left">remove_red_eye</i>
+                        Visualizar documento
                     </a>
 
                     <?php $isProjetoJaAssinado = $this->IsProjetoJaAssinado(
@@ -69,7 +70,8 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                            data-position="top"
                            data-delay="50"
                            data-tooltip="Concluir">
-                            <i class="material-icons">check_circle</i>
+                            <i class="material-icons left">check_circle</i>
+                            Finalizar an&aacute;lise
                         </a>
                     <?php else : ?>
                         <a class="btn waves-effect waves-light cyan tooltipped small"
@@ -82,7 +84,8 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                                . $this->idTipoDoAtoAdministrativo; ?>&origin=parecer/analise-inicial"
                            data-tooltip="Assinar documento"
                         >
-                            <i class="material-icons white-text">create</i>
+                            <i class="material-icons white-text left">create</i>
+                            Assinar documento
                         </a>
                     <?php endif; ?>
                 <?php else : ?>
@@ -94,24 +97,29 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                                    'action' => 'encaminhar-assinatura')
                            ) . "?IdPRONAC={$this->projeto->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
                        data-tooltip="Gerar documento para assinatura">
-                        <i class="material-icons white-text">note_add</i>
+                        <i class="material-icons white-text left">note_add</i>
+                        Gerar documento para assinatura
                     </a>
                 <?php endif; ?>
             <?php else : ?>
-                <img src="<?php echo $this->baseUrl(); ?>/public/img/save.gif"
-                     onclick="redirecionar('<?php echo $this->url(
-                         array(
-                             'module' => 'parecer',
-                             'controller' => 'analise-inicial',
-                             'action' => 'fechar-parecer',
-                             'idPronac' => $this->projeto->IdPRONAC,
-                             'idD' => $this->projeto->idDistribuirParecer,
-                             'idProduto' => $this->projeto->idProduto,
-                             'stPrincipal' => $this->projeto->stPrincipal
-                         )
-                     ); ?>')"
-                     style="cursor: pointer;" title="Concluir An&aacute;lise"
-                     alt="Concluir An&aacute;lise"/>
+                <a class="btn waves-effect waves-light cyan tooltipped small"
+                   onclick="redirecionar('<?php echo $this->url(
+                       array(
+                           'module' => 'parecer',
+                           'controller' => 'analise-inicial',
+                           'action' => 'fechar-parecer',
+                           'idPronac' => $this->projeto->IdPRONAC,
+                           'idD' => $this->projeto->idDistribuirParecer,
+                           'idProduto' => $this->projeto->idProduto,
+                           'stPrincipal' => $this->projeto->stPrincipal
+                       )
+                   ); ?>')"
+                   href="javascript:void(0)"
+                   data-tooltip="Concluir An&aacute;lise"
+                >
+                    <i class="material-icons white-text left">note_add</i>
+                    Concluir An&aacute;lise
+                </a>
             <?php endif; ?>
         <?php endif; ?>
 
@@ -142,7 +150,8 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                data-delay="50"
                data-tooltip="Concluir"
             >
-                <i class="material-icons">check_circle</i>
+                <i class="material-icons left">check_circle</i>
+                Finalizar an&aacute;lise
             </a>
         <?php endif; ?>
     </div>

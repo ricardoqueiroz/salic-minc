@@ -21,7 +21,7 @@ $action = $this->url(
             <input type="hidden" name="dsAcaoAlcanceProduto" id="consolidacaoDsAcaoAlcanceProduto" value=""/>
         <?php endif; ?>
 
-        <?php if ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA) : ?>
+        <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) : ?>
             <div class="row">
                 <div class="col s12 m12 l12">
                     <label>Parecer favor&aacute;vel?</label><br>
@@ -89,7 +89,7 @@ $action = $this->url(
         <?php endif; ?>
 
         <table class="tabela " id="consolidacaos" style="width:95%" width="95%">
-            <?php if ($this->idGrupoAtivo == Autenticacao_Model_Grupos::PARECERISTA) { ?>
+            <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) { ?>
 
                 <?php $escondeLinha = (!$this->IN2017) ? "sumirs" : ""; ?>
                 <tr class="<?php echo $escondeLinha; ?>">
@@ -112,10 +112,10 @@ $action = $this->url(
                 </tr>
                 <tr>
                     <td align="left" class="destacar bold">Sugerido</td>
-                    <td align="left" colspan="2"><?php echo $this->itens['totalSugerido']; ?></td>
+                    <td align="left" colspan="2"><div class="mostrarTotalSugerido"></td>
                 </tr>
 
-                <?php if ($this->IN2017 && $this->stPrincipal): ?>
+                <?php if ($this->IN2017 && $this->projeto->stPrincipal): ?>
                     <tr>
                         <td class="destacar bold" colspan="5">
                             A&ccedil;&otilde;es relevantes para o sucesso do projeto*
@@ -123,13 +123,11 @@ $action = $this->url(
                     </tr>
                     <tr>
                         <td colspan="5">
-                            <p>
-                            <center>
-                            <textarea class="textarea_simples" id="dsAcaoAlcanceProduto"
+                            <textarea id="dsAcaoAlcanceProduto"
                                       name="dsAcaoAlcanceProduto"
                                       rows="10"
-                                      style="width: 98%;"><?php echo $this->AcoesRelevantes; ?></textarea>
-                            </center>
+                                      style="width: 98%;"><?php echo $this->AcoesRelevantes; ?>
+                            </textarea>
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -141,18 +139,22 @@ $action = $this->url(
                 </tr>
                 <tr>
                     <td colspan="5">
-                        <p>
-                        <textarea cols="80" id="dsConsolidacao" name="dsConsolidacao" rows="10"
-                                  class="textarea_simples"
-                                  style="width: 99%"><?php echo isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?></textarea>
+                        <textarea
+                            id="dsConsolidacao"
+                            name="dsConsolidacao"
+                            cols="80"
+                            rows="10"
+                            style="width: 99%"
+                        >
+                            <?= isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?>
+                        </textarea>
                     </td>
-                    </p>
                 </tr>
                 <td colspan="5" align="center">
-                    <input type="button" id="btSalvarConsolidacao" value=" " class="btn_salvar"/>
+                    <button type="submit" id="btSalvarConsolidacao" class="waves-effect waves-light btn"><i class="material-icons left">send</i>Salvar</button>
                 </td>
 
-            <?php } else if ($this->Perfil != Autenticacao_Model_Grupos::PARECERISTA) { ?>
+            <?php } else if ($this->codGrupo != Autenticacao_Model_Grupos::PARECERISTA) { ?>
 
                 <tr>
                     <th colspan="2">Parecer</th>
@@ -181,4 +183,4 @@ $action = $this->url(
             <?php } ?>
         </table>
     </form>
-    </div>
+</div>
