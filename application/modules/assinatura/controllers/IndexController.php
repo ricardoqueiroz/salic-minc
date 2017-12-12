@@ -265,12 +265,21 @@ class Assinatura_IndexController extends Assinatura_GenericController
                     $this->view->dsManifestacao = $post['dsManifestacao'];
                     foreach ($arrayIdPronacs as $idPronac) {
 
+                        $documentoAssinatura = $objModelDocumentoAssinatura->findBy(
+                            array(
+                                'IdPRONAC' => $idPronac,
+                                'idTipoDoAtoAdministrativo' => $idTipoDoAtoAdministrativo,
+                                'cdSituacao' => Assinatura_Model_TbDocumentoAssinatura::CD_SITUACAO_DISPONIVEL_PARA_ASSINATURA,
+                                'stEstado' => Assinatura_Model_TbDocumentoAssinatura::ST_ESTADO_DOCUMENTO_ATIVO
+                            )
+                        );
+
                         $modelAssinatura = new MinC_Assinatura_Model_Assinatura();
                         $modelAssinatura->setCodGrupo($this->grupoAtivo->codGrupo)
                             ->setCodOrgao($this->grupoAtivo->codOrgao)
                             ->setIdPronac($idPronac)
                             ->setIdTipoDoAtoAdministrativo($idTipoDoAtoAdministrativo)
-                            ->setIdDocumentoAssinatura($idDocumentoAssinatura)
+                            ->setIdDocumentoAssinatura($documentoAssinatura['idDocumentoAssinatura'])
                             ->setDsManifestacao($post['dsManifestacao'])
                             ->setIdOrgaoSuperiorDoAssinante($this->auth->getIdentity()->usu_org_max_superior);
                         $objAssinatura->assinarProjeto($modelAssinatura);
