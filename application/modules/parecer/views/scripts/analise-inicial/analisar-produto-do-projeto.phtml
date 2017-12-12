@@ -76,10 +76,10 @@
         <div class="col s12">
             <ul class="tabs tabs-fixed-width">
                 <li class="tab">
-                    <a href="#tab-analise-projeto">Visualizar Projeto</a>
+                    <a href="#tab-analise-projeto">Analisar conteúdo</a>
                 </li>
                 <li class="tab">
-                    <a href="#tab-analise-custo">Analisar custos</a>
+                    <a href="#tab-analise-custo" class="bt-analisar-custos">Analisar custos</a>
                 </li>
                 <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <?php if ($this->existeProdutoSecundario) : ?>
@@ -104,6 +104,16 @@
         <div id="tab-analise-projeto" class="col s12">
             <div id="container-vue">
                 <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-proposta>
+
+                <div class="center-align">
+                    <a
+                        class="btn blue tooltipped waves-effect waves-light modal-trigger"
+                        data-tooltip="An&aacute;lise de Conte&uacute;do"
+                        href="#modal-analisar-conteudo">
+                        <i class="material-icons left">playlist_add_check</i>
+                        Parecer do conteúdo
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -135,7 +145,7 @@
     <div id="modal-analisar-conteudo" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>Analisar conte&uacute;do</h4>
-            <?php echo $this->partial('analise-inicial/partials/analisar-conteudo.phtml', 'parecer', $this); ?>
+            <?= $this->partial('analise-inicial/partials/analisar-conteudo.phtml', 'parecer', $this); ?>
         </div>
     </div>
 
@@ -143,7 +153,7 @@
         <div class="modal-content">
             <h4>Consolidar parecer t&eacute;cnico</h4>
             <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
+                <?= $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>
     </div>

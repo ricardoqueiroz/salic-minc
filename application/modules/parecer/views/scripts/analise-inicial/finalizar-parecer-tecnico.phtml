@@ -4,155 +4,176 @@ $isProdutosPendentesParecer = $this->IsProdutosPendentesParecer($this->projeto->
 $isProjetoEnquadrado = $this->IsProjetoEnquadrado($this->projeto->IdPRONAC);
 $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
 ?>
-<div class="padding20 center-align">
-    <div class="botoes">
-        <?php if (
-            ($isProdutosSecundariosAnalisados) &&
-            ($this->projeto->stPrincipal == 1) &&
-            (!$isProdutosPendentesParecer) &&
-            ($isProjetoEnquadrado) &&
-            ($isProjetoComParecer) &&
-            ($this->quantidadeDiligencias == 0)
-        ) : ?>
-            <?php if ($this->IN2017): ?>
+<div class="padding20">
+    <div class="botoes center-align">
+        <?php if ($this->projeto->stPrincipal == 1) : ?>
+            <?php if (
+                ($isProdutosSecundariosAnalisados) &&
+                (!$isProdutosPendentesParecer) &&
+                ($isProjetoEnquadrado) &&
+                ($isProjetoComParecer) &&
+                ($this->quantidadeDiligencias == 0)
+            ) : ?>
+                <?php if ($this->IN2017): ?>
 
-                <?php $isProjetoDisponivelParaAssinatura = $this->IsProjetoDisponivelParaAssinatura(
-                    $this->projeto->IdPRONAC,
-                    $this->idTipoDoAtoAdministrativo
-                ); ?>
-
-                <?php if ($isProjetoDisponivelParaAssinatura): ?>
-
-                    <?php $idDocumentoAssinatura = $this->GetIdDocumentoAssinatura(
+                    <?php $isProjetoDisponivelParaAssinatura = $this->IsProjetoDisponivelParaAssinatura(
                         $this->projeto->IdPRONAC,
                         $this->idTipoDoAtoAdministrativo
                     ); ?>
 
-                    <a class="btn waves-effect waves-light cyan tooltipped small"
-                       href="<?php echo $this->url(
-                               array(
-                                   'module' => 'assinatura',
-                                   'controller' => 'index',
-                                   'action' => 'visualizar-projeto')
-                           ) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
-                       data-tooltip="Visualizar documento"
-                    >
-                        <i class="material-icons white-text left">remove_red_eye</i>
-                        Visualizar documento
-                    </a>
+                    <?php if ($isProjetoDisponivelParaAssinatura): ?>
 
-                    <?php $isProjetoJaAssinado = $this->IsProjetoJaAssinado(
-                        $this->projeto->IdPRONAC,
-                        $this->idTipoDoAtoAdministrativo,
-                        $this->idGrupoAtivo);
-                    ?>
+                        <?php $idDocumentoAssinatura = $this->GetIdDocumentoAssinatura(
+                            $this->projeto->IdPRONAC,
+                            $this->idTipoDoAtoAdministrativo
+                        ); ?>
 
-                    <?php if ($isProjetoJaAssinado) : ?>
-
-                        <?php
-                        $parametrosAssinatura = "?idPronac="
-                            . $this->projeto->IdPRONAC
-                            . "&idProduto=" . $this->projeto->idProduto
-                            . "&situacao=" . $this->projeto->situacao
-                            . "&idD=" . $this->projeto->idDistribuirParecer
-                            . "&concluir=1";
-                        ?>
-
-                        <a class="btn waves-effect waves-light tooltipped small btn cyan"
-                           href="#modalConfirmacao"
-                           data-redirect-url="<?php echo $this->url(
-                                   array(
-                                       'module' => 'parecer',
-                                       'controller' => 'analise-inicial',
-                                       'action' => 'fechar-parecer'
-                                   )
-                               ) . $parametrosAssinatura ?>"
-                           data-position="top"
-                           data-delay="50"
-                           data-tooltip="Concluir">
-                            <i class="material-icons left">check_circle</i>
-                            Finalizar an&aacute;lise
-                        </a>
-                    <?php else : ?>
                         <a class="btn waves-effect waves-light cyan tooltipped small"
                            href="<?php echo $this->url(
                                    array(
                                        'module' => 'assinatura',
                                        'controller' => 'index',
-                                       'action' => 'assinar-projeto')
-                               ) . "?IdPRONAC={$this->projeto->IdPRONAC}&idTipoDoAtoAdministrativo="
-                               . $this->idTipoDoAtoAdministrativo; ?>&origin=parecer/analise-inicial"
-                           data-tooltip="Assinar documento"
+                                       'action' => 'visualizar-projeto')
+                               ) . "?idDocumentoAssinatura=" . $idDocumentoAssinatura; ?>&origin=parecer/analise-inicial"
+                           data-tooltip="Visualizar documento"
                         >
-                            <i class="material-icons white-text left">create</i>
-                            Assinar documento
+                            <i class="material-icons white-text left">remove_red_eye</i>
+                            Visualizar parecer
+                        </a>
+
+                        <?php $isProjetoJaAssinado = $this->IsProjetoJaAssinado(
+                            $this->projeto->IdPRONAC,
+                            $this->idTipoDoAtoAdministrativo,
+                            $this->idGrupoAtivo);
+                        ?>
+
+                        <?php if ($isProjetoJaAssinado) : ?>
+
+                            <?php
+                            $parametrosAssinatura = "?idPronac="
+                                . $this->projeto->IdPRONAC
+                                . "&idProduto=" . $this->projeto->idProduto
+                                . "&situacao=" . $this->projeto->situacao
+                                . "&idD=" . $this->projeto->idDistribuirParecer
+                                . "&concluir=1";
+                            ?>
+
+                            <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                               href="#modalConfirmacao"
+                               data-redirect-url="<?php echo $this->url(
+                                       array(
+                                           'module' => 'parecer',
+                                           'controller' => 'analise-inicial',
+                                           'action' => 'fechar-parecer'
+                                       )
+                                   ) . $parametrosAssinatura ?>"
+                               data-position="top"
+                               data-delay="50"
+                               data-tooltip="Fechar parecer"
+                            >
+                                <i class="material-icons left">check_circle</i>
+                                Finalizar an&aacute;lise
+                            </a>
+                        <?php else : ?>
+                            <a class="btn waves-effect waves-light cyan tooltipped small"
+                               href="<?php echo $this->url(
+                                       array(
+                                           'module' => 'assinatura',
+                                           'controller' => 'index',
+                                           'action' => 'assinar-projeto')
+                                   ) . "?IdPRONAC={$this->projeto->IdPRONAC}&idTipoDoAtoAdministrativo="
+                                   . $this->idTipoDoAtoAdministrativo; ?>&origin=parecer/analise-inicial"
+                               data-tooltip="Assinar documento"
+                            >
+                                <i class="material-icons white-text left">create</i>
+                                Assinar parecer
+                            </a>
+
+                            <a class="btn waves-effect waves-light tooltipped small btn disabled"
+                               href="javascript:void(0)"
+                            >
+                                <i class="material-icons left">check_circle</i>
+                                Finalizar an&aacute;lise
+                            </a>
+                        <?php endif; ?>
+                    <?php else : ?>
+                        <a class="btn waves-effect waves-light cyan tooltipped small"
+                           href="<?php echo $this->url(
+                                   array(
+                                       'module' => 'parecer',
+                                       'controller' => 'analise-inicial',
+                                       'action' => 'encaminhar-assinatura')
+                               ) . "?IdPRONAC={$this->projeto->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
+                           data-tooltip="Gerar documento para assinatura">
+                            <i class="material-icons white-text left">note_add</i>
+                            Gerar parecer t&eacute;cnico
                         </a>
                     <?php endif; ?>
                 <?php else : ?>
                     <a class="btn waves-effect waves-light cyan tooltipped small"
-                       href="<?php echo $this->url(
-                               array(
-                                   'module' => 'parecer',
-                                   'controller' => 'analise-inicial',
-                                   'action' => 'encaminhar-assinatura')
-                           ) . "?IdPRONAC={$this->projeto->IdPRONAC}&encaminhar=true&origin=parecer/analise-inicial" ?>"
-                       data-tooltip="Gerar documento para assinatura">
+                       onclick="redirecionar('<?php echo $this->url(
+                           array(
+                               'module' => 'parecer',
+                               'controller' => 'analise-inicial',
+                               'action' => 'fechar-parecer',
+                               'idPronac' => $this->projeto->IdPRONAC,
+                               'idD' => $this->projeto->idDistribuirParecer,
+                               'idProduto' => $this->projeto->idProduto,
+                               'stPrincipal' => $this->projeto->stPrincipal
+                           )
+                       ); ?>')"
+                       href="javascript:void(0)"
+                       data-tooltip="Concluir An&aacute;lise"
+                    >
                         <i class="material-icons white-text left">note_add</i>
-                        Gerar documento para assinatura
+                        Concluir An&aacute;lise
                     </a>
                 <?php endif; ?>
-            <?php else : ?>
-                <a class="btn waves-effect waves-light cyan tooltipped small"
-                   onclick="redirecionar('<?php echo $this->url(
-                       array(
-                           'module' => 'parecer',
-                           'controller' => 'analise-inicial',
-                           'action' => 'fechar-parecer',
-                           'idPronac' => $this->projeto->IdPRONAC,
-                           'idD' => $this->projeto->idDistribuirParecer,
-                           'idProduto' => $this->projeto->idProduto,
-                           'stPrincipal' => $this->projeto->stPrincipal
-                       )
-                   ); ?>')"
+            <?php else: ?>
+                <a class="btn waves-effect waves-light tooltipped small btn disabled"
                    href="javascript:void(0)"
-                   data-tooltip="Concluir An&aacute;lise"
                 >
-                    <i class="material-icons white-text left">note_add</i>
-                    Concluir An&aacute;lise
+                    <i class="material-icons left">check_circle</i>
+                    Finalizar an&aacute;lise
                 </a>
             <?php endif; ?>
-        <?php endif; ?>
+        <?php else : ?>
+            <?php if (
+                $isProdutosPendentesParecer == 0 &&
+                $this->quantidadeDiligencias == 0
+            ): ?>
+                <?php $parametrosAssinatura = "?idPronac=" . $this->projeto->IdPRONAC
+                    . "&idProduto=" . $this->projeto->idProduto
+                    . "&situacao=" . $this->projeto->situacao
+                    . "&idD=" . $this->projeto->idDistribuirParecer
+                    . "&stPrincipal=" . $this->projeto->stPrincipal
+                    . "&concluir=1";
+                ?>
 
-        <?php /* fechamento do produto secundário */ ?>
-        <?php if (
-            $this->projeto->stPrincipal == 0 &&
-            $isProdutosPendentesParecer == 0 &&
-            $this->quantidadeDiligencias == 0
-        ): ?>
-            <?php $parametrosAssinatura = "?idPronac=" . $this->projeto->IdPRONAC
-                . "&idProduto=" . $this->projeto->idProduto
-                . "&situacao=" . $this->projeto->situacao
-                . "&idD=" . $this->projeto->idDistribuirParecer
-                . "&stPrincipal=" . $this->projeto->stPrincipal
-                . "&concluir=1";
-            ?>
-
-            <a class="btn waves-effect waves-light tooltipped small btn cyan"
-               href="#modalConfirmacao"
-               data-redirect-url="<?php echo $this->url(
-                       array(
-                           'module' => 'parecer',
-                           'controller' => 'analise-inicial',
-                           'action' => 'fechar-parecer'
-                       )
-                   ) . $parametrosAssinatura ?>"
-               data-position="top"
-               data-delay="50"
-               data-tooltip="Concluir"
-            >
-                <i class="material-icons left">check_circle</i>
-                Finalizar an&aacute;lise
-            </a>
+                <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                   href="#modalConfirmacao"
+                   data-redirect-url="<?php echo $this->url(
+                           array(
+                               'module' => 'parecer',
+                               'controller' => 'analise-inicial',
+                               'action' => 'fechar-parecer'
+                           )
+                       ) . $parametrosAssinatura ?>"
+                   data-position="top"
+                   data-delay="50"
+                   data-tooltip="Concluir"
+                >
+                    <i class="material-icons left">check_circle</i>
+                    Finalizar an&aacute;lise
+                </a>
+            <?php else: ?>
+                <a class="btn waves-effect waves-light tooltipped small btn disabled"
+                   href="javascript:void(0)"
+                >
+                    <i class="material-icons left">check_circle</i>
+                    Finalizar an&aacute;lise
+                </a>
+            <? endif; ?>
         <?php endif; ?>
     </div>
 </div>

@@ -453,7 +453,16 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
                 $this->view->produtosSecundarios = $produtosSecundarios;
 
-                self::consolidarParecerTecnico();
+
+                /**
+                 * Consolidacao de parecer
+                 *
+                 */
+                $mapperArea = new Agente_Model_AreaMapper();
+                $this->view->comboareasculturais = $mapperArea->fetchPairs('Codigo', 'Descricao');
+
+                $objSegmentocultural = new Segmentocultural();
+                $this->view->combosegmentosculturais = $objSegmentocultural->buscarSegmento($projeto->Area);
             }
 
             $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
@@ -830,12 +839,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     public function consolidarParecerTecnico()
     {
 
-        /**
-         * Consolidacao de parecer
-         *
-         */
-        $mapperArea = new Agente_Model_AreaMapper();
-        $this->view->comboareasculturais = $mapperArea->fetchPairs('Codigo', 'Descricao');
+
     }
 
     public function salvarConsolidacaoParecerTecnicoAction()

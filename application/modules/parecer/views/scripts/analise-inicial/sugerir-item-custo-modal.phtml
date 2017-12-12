@@ -4,9 +4,17 @@ header("Expires: {$gmtDate} GMT");
 header("Last-Modified: {$gmtDate} GMT");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
+
+$action = $this->url(
+    array(
+        'module' => 'parecer',
+        'controller' => 'analise-inicial',
+        'action' => 'salvar-sugestao-item-custo'
+    )
+);
 ?>
 
-<form method="POST" id="formSalvarItem" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'salvar-sugestao-item-custo')); ?>">
+<form method="POST" id="formSalvarItem" action="<?php echo $action; ?>">
     <table class="tabela">
         <input type="hidden" name="idPlanilhaProjeto" id="idPlanilhaProjeto" value="<?php echo $this->dadosItem->idPlanilhaProjeto; ?>"/>
         <input type="hidden" name="idPronac" value="<?php echo $this->projeto->IdPRONAC; ?>"/>

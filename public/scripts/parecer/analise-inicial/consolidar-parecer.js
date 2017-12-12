@@ -4,7 +4,7 @@ produtosSecundariosEmAnalise = parseInt(jQuery('#produtosSecundariosEmAnalise').
 
 
 $(document).ready(function(){
-    $("textarea").editorRico({
+    $(".editor").editorRico({
         altura: 200,
         isLimitarCarateres: true
     });

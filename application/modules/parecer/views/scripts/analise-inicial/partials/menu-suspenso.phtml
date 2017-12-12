@@ -8,8 +8,9 @@
         </li>
         <li>
             <a
+                id="bt-analisar-conteudo"
                 class="btn-floating blue tooltipped waves-effect waves-light modal-trigger"
-                data-tooltip="An&aacute;lise de Conte&uacute;do"
+                data-tooltip="Parecer do Conte&uacute;do"
                 href="#modal-analisar-conteudo">
                 <i class="material-icons">playlist_add_check</i>
             </a>
@@ -18,7 +19,7 @@
             <a
                 id="bt-analisar-custos"
                 href="#"
-                class="btn-floating blue tooltipped"
+                class="btn-floating blue tooltipped bt-analisar-custos"
                 data-tooltip="Análise de custo">
                 <i class="material-icons">attach_money</i>
             </a>
@@ -46,6 +47,10 @@
         $("#bt-analisar-custos").on('click', function() {
             $('ul.tabs').tabs('select_tab', 'tab-analise-custo');
             return false;
+        });
+
+        $("#bt-analisar-conteudo").on('click', function() {
+            $('ul.tabs').tabs('select_tab', 'tab-analise-projeto');
         });
 
         if ($('#ir-para-o-topo').length) {

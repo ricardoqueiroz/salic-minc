@@ -17,14 +17,17 @@ $action = $this->url(
         <input type="hidden" name="sugeridoReal" value="<?php echo $this->itens['totalSugerido']; ?>"/>
         <input type="hidden" name="stPrincipal" value="<?php echo $this->projeto->stPrincipal; ?>"/>
         <input type="hidden" name="idProduto" value="<?php echo $this->projeto->idProduto; ?>"/>
-        <?php if ($this->IN2017 && $this->stPrincipal) : ?>
+        <?php if ($this->IN2017 && $this->projeto->stPrincipal) : ?>
             <input type="hidden" name="dsAcaoAlcanceProduto" id="consolidacaoDsAcaoAlcanceProduto" value=""/>
         <?php endif; ?>
 
         <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) : ?>
+
             <div class="row">
                 <div class="col s12 m12 l12">
-                    <label>Parecer favor&aacute;vel?</label><br>
+                    <label for="areaCultural">
+                        <small><b>Parecer favor&aacute;vel?</b></small>
+                    </label><br>
                     <input
                         class="obrigatorioRadio"
                         <?= (count($this->consolidacao) > 0 && ($this->consolidacao[0]->ParecerFavoravel == 2)) ? 'checked="checked"' : ''; ?>
@@ -45,16 +48,20 @@ $action = $this->url(
                     <span id="parecerProjeto" class="spanError"></span>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col s12 m4 l4">
-                    <label for="areaCultural">&Aacute;rea Cultural</label><br>
+                    <label for="areaCultural">
+                        <small><b>&Aacute;rea Cultural</b></small>
+                    </label><br>
                     <select name="areaCultural" id="areaCultural" class="browser-default obrigatorio"
                             style="width: 160px;">
                         <option value=""> - Selecione -</option>
                         <?php foreach ($this->comboareasculturais as $key => $value) : ?>
                             <option
                                 value="<?= $key; ?>"
-                                <?= ($this->projeto->Area == $key) ? "selected='selected'" : ''; ?>>
+                                <?= ($this->projeto->Area == $key) ? "selected='selected'" : ''; ?>
+                            >
                                 <?= $value; ?>
                             </option>
                         <?php endforeach; ?>
@@ -62,23 +69,29 @@ $action = $this->url(
                     <span id="erroAreaCultural" class="spanError"></span>
                 </div>
                 <div class="col s12 m8 l8">
-                    <label for="segmentoCultural">Segmento Cultural</label><br>
+                    <label for="segmentoCultural">
+                        <small><b>Segmento Cultural</b></small>
+                    </label><br>
                     <select name="segmentoCultural" id="segmentoCultural" class="browser-default obrigatorio">
 
                         <?php if (!isset($this->projeto->Area) || empty($this->projeto->Area)) : ?>
-                            <option value=""> - Selecione uma &Aacute;rea Cultural -</option>
+                            <option> - Selecione uma &Aacute;rea Cultural -</option>
                         <?php else : ?>
 
                             <?php if (!isset($this->projeto->Segmento) || empty($this->projeto->Segmento)) : ?>
-                                <option value=""> - Selecione -</option>
+                                <option> - Selecione -</option>
                             <?php endif; ?>
 
-                            <?php foreach ($this->combosegmentosculturais as $combosegmentocultural) : ?>
-                                <option
-                                    value="<?php echo $combosegmentocultural->id; ?>" <?php if ($this->projeto->Segmento == $combosegmentocultural->id) echo "selected=\"selected\""; ?>>
-                                    <?php echo $combosegmentocultural->descricao; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if ($this->combosegmentosculturais) : ?>
+                                <?php foreach ($this->combosegmentosculturais as $combosegmentocultural) : ?>
+                                    <option
+                                        value="<?= $combosegmentocultural->id; ?>"
+                                        <?php if ($this->projeto->Segmento == $combosegmentocultural->id) echo "selected=\"selected\""; ?>
+                                    >
+                                        <?= $combosegmentocultural->descricao; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
 
                         <?php endif; ?>
 
@@ -86,101 +99,48 @@ $action = $this->url(
                     <span id="erroSegmentoCultural" class="spanError"></span>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col s12 m6 l6">
+                    <label>
+                        <small><b>Enquadramento</b></small>
+                    </label><br>
+                    <input type="hidden" name="enquadramentoProjeto" id="enquadramentoProjeto" value=""
+                           class="obrigatorio"/>
+                    <span id="enquadramentoText" class="bold"></span>
+                </div>
+                <div class="col s12 m6 l6">
+                    <label>
+                        <small><b>Valor sugerido</b></small>
+                    </label><br>
+                    <div class="mostrarTotalSugerido"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <label>
+                        <small><b>Parecer t&eacute;cnico *</b></small>
+                    </label><br>
+                    <textarea
+                        id="dsConsolidacao"
+                        name="dsConsolidacao"
+                        cols="80"
+                        rows="10"
+                        class="editor"
+                    >
+                        <?= isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?>
+                    </textarea>
+                </div>
+            </div>
         <?php endif; ?>
-
-        <table class="tabela " id="consolidacaos" style="width:95%" width="95%">
-            <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) { ?>
-
-                <?php $escondeLinha = (!$this->IN2017) ? "sumirs" : ""; ?>
-                <tr class="<?php echo $escondeLinha; ?>">
-                    <td align="left" class="destacar bold"><b>&Aacute;rea / Segmento do Projeto</b></td>
-                    <td valign="top" width="300px">
-
-                    </td>
-                    <td>
-
-
-                    </td>
-                </tr>
-                <tr class="<?php echo $escondeLinha; ?>">
-                    <td align="left" class="destacar bold">Enquadramento</td>
-                    <td width="250" colspan="2">
-                        <input type="hidden" name="enquadramentoProjeto" id="enquadramentoProjeto" value=""
-                               class="obrigatorio"/>
-                        <span id="enquadramentoText" class="bold"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" class="destacar bold">Sugerido</td>
-                    <td align="left" colspan="2"><div class="mostrarTotalSugerido"></td>
-                </tr>
-
-                <?php if ($this->IN2017 && $this->projeto->stPrincipal): ?>
-                    <tr>
-                        <td class="destacar bold" colspan="5">
-                            A&ccedil;&otilde;es relevantes para o sucesso do projeto*
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="5">
-                            <textarea id="dsAcaoAlcanceProduto"
-                                      name="dsAcaoAlcanceProduto"
-                                      rows="10"
-                                      style="width: 98%;"><?php echo $this->AcoesRelevantes; ?>
-                            </textarea>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
-                <tr>
-                    <td class="destacar bold" colspan="5">
-                        Parecer t&eacute;cnico*
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="5">
-                        <textarea
-                            id="dsConsolidacao"
-                            name="dsConsolidacao"
-                            cols="80"
-                            rows="10"
-                            style="width: 99%"
-                        >
-                            <?= isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?>
-                        </textarea>
-                    </td>
-                </tr>
-                <td colspan="5" align="center">
-                    <button type="submit" id="btSalvarConsolidacao" class="waves-effect waves-light btn"><i class="material-icons left">send</i>Salvar</button>
-                </td>
-
-            <?php } else if ($this->codGrupo != Autenticacao_Model_Grupos::PARECERISTA) { ?>
-
-                <tr>
-                    <th colspan="2">Parecer</th>
-                </tr>
-                <tr>
-                    <td colspan="2"><?php echo isset($this->consolidacao[0]->ResumoParecer) ? $this->consolidacao[0]->ResumoParecer : ''; ?></td>
-                </tr>
-                <tr>
-                    <th width="250" align="left">Sugerido</th>
-                    <td><?php echo isset($this->consolidacao[0]->SugeridoReal) ? $this->formatarReal($this->consolidacao[0]->SugeridoReal) : ''; ?></td>
-                </tr>
-                <tr>
-                    <th align="left">Enquadramentos</th>
-                    <td><?php echo $this->enquadramento['Enquadramento'] == '1' ? 'Artigo 26' : 'Artigo 18'; ?></td>
-                </tr>
-                <?php if (!$this->IN2017) { ?>
-                    <tr>
-                        <th align="left">&Aacute;rea / Segmento do Projeto</th>
-                        <td><?php echo $this->dsArea . ' - ' . $this->dsSegmento; ?></td>
-                    </tr>
-                <?php } ?>
-                <tr align="left">
-                    <th>Parecer favor&aacute;vel</th>
-                    <td><?php echo isset($this->consolidacao[0]->ParecerFavoravel) ? $this->consolidacao[0]->ParecerFavoravel == '2' ? 'SIM' : 'N&Atilde;O' : ''; ?></td>
-                </tr>
-            <?php } ?>
-        </table>
+        <div class="row center-align">
+            <button type="submit" id="btSalvarConsolidacao"
+                    class="waves-effect waves-light btn"
+            >
+                <i class="material-icons left">send</i>
+                Salvar
+            </button>
+        </div>
     </form>
 </div>
