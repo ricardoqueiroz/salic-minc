@@ -149,13 +149,13 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $produtoPrincipal = $this->getRequest()->getParam('stPrincipal');
         $idD = $this->getRequest()->getParam('idD');
 
-        $projetoDAO = new Projetos();
+        $tbProjetos = new Projetos();
 
         $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
         $whereProjeto['d.idProduto = ?'] = $idProduto;
         $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
 
-        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto)->current();
+        $projeto = $tbProjetos->buscaProjetosProdutosAnaliseInicial($whereProjeto)->current();
         $this->view->projeto = $projeto;
 //        $this->view->dsArea = $projeto->dsArea;
 //        $this->view->dsSegmento = $projeto->dsSegmento;
@@ -184,7 +184,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
                 $this->view->produtosSecundarios = $produtosSecundarios;
 
-
                 /*
                  * Consolidacao de parecer
                  *
@@ -198,12 +197,35 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $whereParecer['idPRONAC = ?'] = $this->idPronac;
                 $parecerDAO = new Parecer();
                 $this->view->consolidacao = $parecerDAO->buscar($whereParecer);
+
+                $tbAcaoAlcanceProjeto = new tbAcaoAlcanceProjeto();
+                $buscarAcaoAlcanceProjeto = $tbAcaoAlcanceProjeto->buscar(array('idPronac = ?' => $this->idPronac));
+                if (count($buscarAcaoAlcanceProjeto) > 0) {
+                    $this->view->alcance = $buscarAcaoAlcanceProjeto[0];
+                }
+
+                $this->view->dadosEnquadramento = $tbProjetos->enquadramentoProjeto($this->idPronac);
+
+                /*
+                 * Finalizar
+                 */
+
+
             }
 
             $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
 
             if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && $pareceristaAtivo) {
-                $this->somenteLeitura = false;
+
+                $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+                $isProjetoDisponivelParaAssinatura = $objModelDocumentoAssinatura->isProjetoDisponivelParaAssinatura(
+                    $this->idPronac,
+                    Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL
+                );
+
+                if(!$isProjetoDisponivelParaAssinatura) {
+                    $this->somenteLeitura = false;
+                }
             }
         }
 
@@ -835,17 +857,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         }
     }
 
-    public function obterParecerTecnicoConsolidadoAction()
-    {
-
-    }
-
-    public function consolidarParecerTecnico()
-    {
-
-
-    }
-
     public function salvarConsolidacaoParecerTecnicoAction()
     {
         $auth = Zend_Auth::getInstance();
@@ -990,7 +1001,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                     }
                 }
 
-                $this->_helper->json(array('status' => true, 'msg' => "Projeto consolidado com sucesso!"));
+                $this->_helper->json(array('status' => true, 'msg' => "Consolida&ccedil;&atilde;o salva com sucesso!"));
 
             } catch (Exception $e) {
 
@@ -1022,10 +1033,5 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
         $this->view->idTipoAtoAnaliseInicial = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
         $this->view->IN2017 = $this->isIN2017;
-    }
-
-    public function salvarFinalizacaoParecerTecnicoAction()
-    {
-
     }
 }

@@ -4,9 +4,15 @@ produtosSecundariosEmAnalise = parseInt(jQuery('#produtosSecundariosEmAnalise').
 
 
 $(document).ready(function(){
-    $(".editor").editorRico({
-        altura: 200,
-        isLimitarCarateres: true
+
+    $("textarea.editor").each(function () {
+
+        $(this).editorRico({
+            altura: 200,
+            maxchar: 8000,
+            isLimitarCarateres : true,
+            isDesabilitarEdicao: 0
+        });
     });
 
     $('#areaCultural').change(function() {
