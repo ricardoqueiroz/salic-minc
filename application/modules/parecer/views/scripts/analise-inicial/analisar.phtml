@@ -81,7 +81,7 @@
                 <li class="tab">
                     <a href="#tab-analise-custo" class="bt-analisar-custos">Analisar custos</a>
                 </li>
-                <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <?php if ($this->existeProdutoSecundario) : ?>
                         <li class="tab">
                             <a href="#tab-produtos-secundarios">Produtos Secund&aacute;rios</a>
@@ -89,9 +89,9 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if ($this->stPrincipal == 1 && 1 == 2) : ?>
+                <?php if ($this->projeto->stPrincipal == 1 && 1 == 2) : ?>
                     <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
-                        <a class="text-gray grey lighten-2" href="#tab-consolidacao">Consolidar Parecer
+                        <a class="text-gray grey lighten-2" href="#tab-consolidar-parecer">Consolidar Parecer
                             T&eacute;cnico</a>
                     </li>
                 <?php endif; ?>
@@ -103,7 +103,7 @@
 
         <div id="tab-analise-projeto" class="col s12">
             <div id="container-vue">
-                <salic-proposta idpreprojeto="<?= $this->idPreProjeto; ?>"></salic-proposta>
+                <salic-proposta idpreprojeto="<?= $this->projeto->idProjeto; ?>"></salic-proposta>
 
                 <div class="center-align">
                     <a
@@ -121,7 +121,7 @@
             <div id="planilha-analise-de-custos"></div>
         </div>
 
-        <?php if ($this->stPrincipal == 1): ?>
+        <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
             <?php if ($this->existeProdutoSecundario) : ?>
                 <div id="tab-produtos-secundarios" class="col s12 ">
                     <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
@@ -129,10 +129,10 @@
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($this->stPrincipal == 1 && 1 == 2) : ?>
-            <div id="tab-consolidacao" class="col s12 ">
+        <?php if ($this->projeto->stPrincipal == 1 && 1 == 2) : ?>
+            <div id="tab-consolidar-parecer" class="col s12 ">
                 <?php if ($this->produtosSecundariosEmAnalise == 0) : ?>
-                    <?php echo $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
+                    <?php echo $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
@@ -152,8 +152,8 @@
     <div id="modal-consolidar-parecer-tecnico" class="modal bottom-sheet">
         <div class="modal-content">
             <h4>Consolidar parecer t&eacute;cnico</h4>
-            <?php if (($this->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
-                <?= $this->partial('analise-inicial/partials/consolidacao.phtml', 'parecer', $this); ?>
+            <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+                <?= $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>
     </div>
@@ -161,22 +161,18 @@
 
 <div id="confirma" class="sumir"></div>
 <div id="camposObrigatorios" class="sumir"></div>
-
 <input type="hidden" name="grupoAtivo" id="grupoAtivo" value="<?= $this->codGrupo; ?>"/>
-
-<input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?php echo $this->vlSolicitado; ?>"/>
+<input type="hidden" name="vlSolicitado" id="vlSolicitado" value="<?= $this->vlSolicitado; ?>"/>
 <input type="hidden" name="produtosSecundariosEmAnalise" id="produtosSecundariosEmAnalise"
-       value="<?php echo ($this->produtosSecundariosEmAnalise > 0) ? 1 : 0; ?>"/>
+       value="<?= ($this->produtosSecundariosEmAnalise > 0) ? 1 : 0; ?>"/>
 <input type="hidden" name="valorpossivelApresentacao" id="valorpossivelApresentacao"
-       value="<?php echo $this->formatarReal($this->valorpossivel); ?>"/>
-<input type="hidden" name="baseUrl" id="baseUrl" value="<?php echo $this->baseUrl(); ?>"/>
-
-<!-- analise de conteudo -->
-<input type="hidden" name="stPrincipal" id="stPrincipal" value="<?php echo ($this->stPrincipal == 1) ? 1 : 0; ?>"/>
-<input type="hidden" name="somenteLeitura" id="somenteLeitura" value="<?php echo $this->somenteLeitura ? 1 : 0; ?>"/>
-<input type="hidden" name="IdPRONAC" id="IdPRONAC" value="<?php echo $this->projeto->IdPRONAC; ?>"/>
-<input type="hidden" name="idProduto" id="idProduto" value="<?php echo $this->projeto->idProduto; ?>"/>
-<input type="hidden" name="IN2017" id="IN2017" value="<?php echo ($this->IN2017 == 1) ? 1 : 0; ?>"/>
+       value="<?= $this->formatarReal($this->valorpossivel); ?>"/>
+<input type="hidden" name="baseUrl" id="baseUrl" value="<?= $this->baseUrl(); ?>"/>
+<input type="hidden" name="stPrincipal" id="stPrincipal" value="<?= ($this->projeto->stPrincipal == 1) ? 1 : 0; ?>"/>
+<input type="hidden" name="somenteLeitura" id="somenteLeitura" value="<?= $this->somenteLeitura ? 1 : 0; ?>"/>
+<input type="hidden" name="IdPRONAC" id="IdPRONAC" value="<?= $this->projeto->IdPRONAC; ?>"/>
+<input type="hidden" name="idProduto" id="idProduto" value="<?= $this->projeto->idProduto; ?>"/>
+<input type="hidden" name="IN2017" id="IN2017" value="<?= ($this->IN2017 == 1) ? 1 : 0; ?>"/>
 
 <script src="/public/js/vue.js" type="text/javascript"></script>
 <script src="http://momentjs.com/downloads/moment-with-locales.js"></script>
@@ -266,30 +262,28 @@
 
         elmBody.on('click', '#plano-distribuicao', function () {
             let idRetorno = 'plano-distribuicao';
-            jqAjaxLink('<?php echo $this->url(['module' => 'proposta', 'controller' => 'visualizar-plano-distribuicao', 'action' => 'visualizar', 'idPreProjeto' => $this->idPreProjeto]); ?>', '', 'html-plano-distribuicao');
+            jqAjaxLink('<?php echo $this->url(['module' => 'proposta', 'controller' => 'visualizar-plano-distribuicao', 'action' => 'visualizar', 'idPreProjeto' => $this->projeto->idProjeto]); ?>', '', 'html-plano-distribuicao');
         });
 
         elmBody.on('click', '#planilha-orcamentaria', function () {
-            jqAjaxLink('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?= $this->idPreProjeto; ?>&tipoPlanilha=0', '', 'planilhaOrcamentariaMontada');
+            jqAjaxLink('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?= $this->projeto->idProjeto; ?>&tipoPlanilha=0', '', 'planilhaOrcamentariaMontada');
         });
 
-        var dados = {
+        let dados = {
             idPronac: $('#IdPRONAC').val(),
             idProduto: $('#idProduto').val(),
             stPrincipal: $('#stPrincipal').val()
         };
 
         elmBody.on('click', "a[href='#tab-analise-custo']", function () {
-            if ($("#planilha-analise-de-custos").html().length == 0) {
-                jqAjaxLink('/parecer/analise-inicial/analisar-custos', dados, 'planilha-analise-de-custos');
-            }
+            jqAjaxLink('/parecer/analise-inicial/analisar-custos', dados, 'planilha-analise-de-custos');
         });
 
         elmBody.on('click', "a[href='#tab-finalizar-parecer-tecnico']", function () {
             jqAjaxLink('/parecer/analise-inicial/finalizar-parecer-tecnico', dados, 'finalizar-parecer-tecnico');
         });
 
-        var options = [{
+        let options = [{
             selector: 'body', offset: 200, callback: function () {
                 $("#menu-suspenso a#bt-aciona-menu").trigger('click');
             }

@@ -142,6 +142,113 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 //        $this->view->d = $d;
     }
 
+    public function analisarAction()
+    {
+        $this->idPronac = $this->getRequest()->getParam('idPronac');
+        $idProduto = $this->getRequest()->getParam('idProduto');
+        $produtoPrincipal = $this->getRequest()->getParam('stPrincipal');
+        $idD = $this->getRequest()->getParam('idD');
+
+        $projetoDAO = new Projetos();
+
+        $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
+        $whereProjeto['d.idProduto = ?'] = $idProduto;
+        $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
+
+        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto)->current();
+        $this->view->projeto = $projeto;
+//        $this->view->dsArea = $projeto->dsArea;
+//        $this->view->dsSegmento = $projeto->dsSegmento;
+//        $this->view->idPreProjeto = $projeto->idProjeto;
+//        $this->view->stPrincipal = $projeto->stPrincipal;
+        $this->view->IN2017 = $this->isIN2017;
+
+        $this->view->situacao = self::definirSituacaoAnaliseProduto(
+            $projeto->DtDistribuicao,
+            $projeto->DtDevolucao,
+            $projeto->FecharAnalise,
+            $projeto->idAgenteParecerista
+        );
+
+        $this->somenteLeitura = true;
+
+        if ($projeto) {
+
+            /*
+             * Se for o produto principal, envia os dados dos produtos secundarios juntos
+             *
+             */
+            if ($projeto->stPrincipal) {
+
+                $produtosSecundarios = self::obterProdutosSecundarios($this->idPronac);
+                $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
+                $this->view->produtosSecundarios = $produtosSecundarios;
+
+
+                /*
+                 * Consolidacao de parecer
+                 *
+                 */
+                $mapperArea = new Agente_Model_AreaMapper();
+                $this->view->comboareasculturais = $mapperArea->fetchPairs('Codigo', 'Descricao');
+
+                $objSegmentocultural = new Segmentocultural();
+                $this->view->combosegmentosculturais = $objSegmentocultural->buscarSegmento($projeto->Area);
+
+                $whereParecer['idPRONAC = ?'] = $this->idPronac;
+                $parecerDAO = new Parecer();
+                $this->view->consolidacao = $parecerDAO->buscar($whereParecer);
+            }
+
+            $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
+
+            if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && $pareceristaAtivo) {
+                $this->somenteLeitura = false;
+            }
+        }
+
+        $this->view->codGrupo = $this->grupoAtivo->codGrupo;
+        $this->view->somenteLeitura = $this->somenteLeitura;
+
+    }
+
+    public function obterAnaliseConteudoAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $idPronac = $this->_request->getParam("idPRONAC");
+        $idProduto = $this->_request->getParam("idProduto");
+        $dadosAnaliseConteudo = [];
+
+        $analisedeConteudoDAO = new Analisedeconteudo();
+
+        $dadosAnaliseConteudo = $analisedeConteudoDAO->dadosAnaliseconteudo($idPronac, ['idProduto = ?' => $idProduto])
+            ->current()
+            ->toArray();
+
+        foreach ($dadosAnaliseConteudo as $key => $val) {
+            $dadosAnaliseConteudo[$key] = utf8_encode($val);
+        }
+
+        if ($this->isIN2017) {
+            $tbAcaoAlcanteProjeto = new tbAcaoAlcanceProjeto();
+
+            $buscarAcaoAlcanceProjeto = $tbAcaoAlcanteProjeto->buscar(
+                array(
+                    'idPronac = ?' => $idPronac,
+                    'idParecer = ?' => $dadosAnaliseConteudo['idAnaliseDeConteudo']
+                )
+            );
+
+            if (count($buscarAcaoAlcanceProjeto) > 0) {
+                foreach ($buscarAcaoAlcanceProjeto->current() as $key => $val) {
+                    $dadosAnaliseConteudo[$key] = utf8_encode($val);
+                }
+            }
+        }
+
+        $this->_helper->json($dadosAnaliseConteudo);
+    }
 
     public function fecharParecerAction()
     {
@@ -411,109 +518,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         );
     }
 
-    public function analisarProdutoDoProjetoAction()
-    {
-        $this->idPronac = $this->getRequest()->getParam('idPronac');
-        $idProduto = $this->getRequest()->getParam('idProduto');
-        $produtoPrincipal = $this->getRequest()->getParam('stPrincipal');
-        $idD = $this->getRequest()->getParam('idD');
-
-        $projetoDAO = new Projetos();
-
-        $whereProjeto['p.IdPRONAC = ?'] = $this->idPronac;
-        $whereProjeto['d.idProduto = ?'] = $idProduto;
-        $whereProjeto['d.stPrincipal = ?'] = $produtoPrincipal;
-
-        $projeto = $projetoDAO->buscaProjetosProdutosAnaliseInicial($whereProjeto)->current();
-        $this->view->projeto = $projeto;
-        $this->view->dsArea = $projeto->dsArea;
-        $this->view->dsSegmento = $projeto->dsSegmento;
-        $this->view->idPreProjeto = $projeto->idProjeto;
-        $this->view->stPrincipal = $projeto->stPrincipal;
-        $this->view->IN2017 = $this->isIN2017;
-
-        $this->view->situacao = self::definirSituacaoAnaliseProduto(
-            $projeto->DtDistribuicao,
-            $projeto->DtDevolucao,
-            $projeto->FecharAnalise,
-            $projeto->idAgenteParecerista
-        );
-
-        $this->somenteLeitura = true;
-
-        if ($projeto) {
-
-            /*
-             * Se for o produto principal, envia os dados dos produtos secundarios juntos
-             *
-             */
-            if ($projeto->stPrincipal) {
-
-                $produtosSecundarios = self::obterProdutosSecundarios($this->idPronac);
-                $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
-                $this->view->produtosSecundarios = $produtosSecundarios;
-
-
-                /**
-                 * Consolidacao de parecer
-                 *
-                 */
-                $mapperArea = new Agente_Model_AreaMapper();
-                $this->view->comboareasculturais = $mapperArea->fetchPairs('Codigo', 'Descricao');
-
-                $objSegmentocultural = new Segmentocultural();
-                $this->view->combosegmentosculturais = $objSegmentocultural->buscarSegmento($projeto->Area);
-            }
-
-            $pareceristaAtivo = ($this->view->idAgente == $projeto['idAgenteParecerista']) ? true : false;
-
-            if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && $pareceristaAtivo) {
-                $this->somenteLeitura = false;
-            }
-        }
-
-        $this->view->codGrupo = $this->grupoAtivo->codGrupo;
-        $this->view->somenteLeitura = $this->somenteLeitura;
-
-    }
-
-    public function obterAnaliseConteudoAction()
-    {
-        $this->_helper->layout->disableLayout();
-
-        $idPronac = $this->_request->getParam("idPRONAC");
-        $idProduto = $this->_request->getParam("idProduto");
-        $dadosAnaliseConteudo = [];
-
-        $analisedeConteudoDAO = new Analisedeconteudo();
-
-        $resp = $analisedeConteudoDAO->dadosAnaliseconteudo($idPronac, ['idProduto = ?' => $idProduto])
-            ->current()
-            ->toArray();
-
-        foreach ($resp as $key => $val) {
-            $dadosAnaliseConteudo[$key] = utf8_encode($val);
-        }
-
-        if ($this->isIN2017) {
-            $tbAcaoAlcanteProjeto = new tbAcaoAlcanceProjeto();
-
-            $buscarAcaoAlcanceProjeto = $tbAcaoAlcanteProjeto->buscar(
-                array(
-                    'idPronac = ?' => $idPronac,
-                    'idParecer = ?' => $resp['idAnaliseDeConteudo']
-                )
-            );
-
-            if (count($buscarAcaoAlcanceProjeto) > 0) {
-                foreach ($buscarAcaoAlcanceProjeto->current() as $key => $val) {
-                    $dadosAnaliseConteudo[$key] = utf8_encode($val);
-                }
-            }
-        }
-
-        $this->_helper->json($dadosAnaliseConteudo);
-    }
 
     private function obterProdutosSecundarios($idPronac)
     {

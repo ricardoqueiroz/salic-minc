@@ -522,8 +522,8 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                 $consolidado = 'S';
             }
 
-            $this->view->consolidado = $consolidado;
             $this->view->consolidacao = $buscaParecer;
+            $this->view->consolidado = $consolidado;
             $this->view->enquadramento = $buscaEnquadramento;
         }
 
