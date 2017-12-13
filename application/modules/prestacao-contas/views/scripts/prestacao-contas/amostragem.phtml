@@ -19,22 +19,22 @@
                               <li class="">
                                 <div id="head_<?php echo $comprovante->idComprovantePagamento ?>"
                                   class="collapsible-header  waves-effect
-                                    <?php if($comprovante->stEstado[0] == "S") : ?> 
-                                      grey lighten-2 
-                                    <?php elseif($comprovante->stEstado[0] == "V") : ?> 
+                                    <?php if($comprovante->stEstado[0] == "S") : ?>
+                                      grey lighten-2
+                                    <?php elseif($comprovante->stEstado[0] == "V") : ?>
                                       green lighten-3
-                                    <?php elseif($comprovante->stEstado[0] == "I") : ?> 
+                                    <?php elseif($comprovante->stEstado[0] == "I") : ?>
                                       red lighten-3
                                     <?php endif ?> "
-                                  > 
+                                  >
                                     <i id="icon_<?php echo $comprovante->idComprovantePagamento ?>" class="material-icons" >
-                                        <?php if($comprovante->stEstado[0] == "S") : ?> 
-                                         check_box_outline_blank
-                                        <?php elseif($comprovante->stEstado[0] == "V") : ?> 
+                                        <?php if($comprovante->stEstado[0] == "S") : ?>
+                                          radio_button_unchecked
+                                        <?php elseif($comprovante->stEstado[0] == "V") : ?>
                                           check_circle
-                                        <?php elseif($comprovante->stEstado[0] == "I") : ?> 
+                                        <?php elseif($comprovante->stEstado[0] == "I") : ?>
                                           block
-                                        <?php endif ?> 
+                                        <?php endif ?>
                                     </i>
                                   <?php echo ($comprovante->Item) ?> - <?php echo ($comprovante->Fornecedor)?> - <?php echo number_format($comprovante->vlPagamento, 2, ',','.')?>
                                 </div>
@@ -84,8 +84,16 @@
                                                   <th class=" grey lighten-2">
                                                     Jutificativa do Proponente
                                                   </th>
-                                                  <td colspan="7" class="">
+                                                  <td colspan="4" class="">
                                                     <?php echo $comprovante->dsJustificativa ?>
+                                                  </td>
+                                                  <th class=" grey lighten-2">
+                                                   Arquivo
+                                                  </th>
+                                                  <td colspan="7" class="">
+                                                    <a href="/upload/abrir/id/<?php echo $comprovante->idArquivo ?>">
+                                                      <?php echo $comprovante->nmArquivo ?>
+                                                   </a>
                                                   </td>
                                                 </tr>
                                               </tbody>
@@ -108,18 +116,18 @@
                                               <div class="row">
                                                 <div class="col s12">
                                                   <strong>Avalia&ccedil;&atilde;o:</strong>
-                                                  <input 
+                                                  <input
                                                   <?php if($comprovante->stEstadoId == 1):?>
-                                                  checked="checked" 
+                                                  checked="checked"
                                                   <?php endif?>
-                                                  name="situacao" type="radio" id="test1<?php echo $comprovante->idComprovantePagamento ?>" value="1"/>
-                                                <label for="test1<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o validada</label>
-                                                <input 
+                                                  name="situacao" type="radio" id="situacao_1_<?php echo $comprovante->idComprovantePagamento ?>" value="1"/>
+                                                <label for="situacao_1_<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o validada</label>
+                                                <input
                                                 <?php if($comprovante->stEstadoId == 3):?>
-                                                checked="checked" 
+                                                checked="checked"
                                                 <?php endif?>
-                                                name="situacao" type="radio" id="test2<?php echo $comprovante->idComprovantePagamento ?>" value="3"/>
-                                              <label for="test2<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o recusada</label>
+                                               name="situacao" id="situacao_2_<?php echo $comprovante->idComprovantePagamento ?>" type="radio" id="test2<?php echo $comprovante->idComprovantePagamento ?>" value="3"/>
+                                              <label for="situacao_2_<?php echo $comprovante->idComprovantePagamento ?>">Comprova&ccedil;&atilde;o recusada</label>
                                             </div>
                                           </div>
                                           <div class="row">
@@ -194,24 +202,36 @@
 </script>
 
 <script>
+$.validator.addMethod("dependeSituacao", function(value, element, params) {
+    console.log($(element).val());
+
+    console.log($('#situacao_1_' + params.id).is(':checked'));
+    if ($('#situacao_1_' + params.id).is(':checked')) {
+        return true;
+    } 
+    if ($('#situacao_2_' + params.id).is(':checked') && $(element).val() == '' ) {
+        return false;
+    } 
+    return true; 
+}, "Por Favor preeencher: Ocorrencia");
+
 $(document).ready(function(){
     $("form").each( function(index, value)
     {
+      let id = this.id;
+      /* console.log(id); */
         $(this).validate({
             rules: {
                 justificativa: {
-                    required: true
+                    dependeSituacao: { id : id},
                 },
                 situacao: {
-                    required: true
+                  required: true,
                 }
             },
             messages:{
-                justificativa: {
-                    required: 'Por Favor preeencher: Ocorrencia' 
-                },
                 situacao: {
-                    required: 'Por Favor preeencher: Situa&ccedil;&atilde;o' 
+                    required: 'Por Favor preeencher: Situa&ccedil;&atilde;o'
                 }
             },
             submitHandler: function (form) {
@@ -226,7 +246,6 @@ $(document).ready(function(){
                 })
                 .done( function(data) {
                     Materialize.toast('Salvo!!', 4000, 'green darken-1');
-                    console.log('head_' + id);
                     if (situacao == 1){
                         $3('#head_' + id).removeClass('red lighten-3 grey lighten-2').addClass('green lighten-3');
                         $3('#icon_' + id).text('check_circle');
@@ -238,13 +257,12 @@ $(document).ready(function(){
                     }
                 });
             },
-            invalidHandler: function (event, validator) {
-            },
-            highlight: (element) => { },
-            unhighlight: element => { },
             errorPlacement: function(error, element) {
                 Materialize.toast(error[0].textContent, 4000, 'red accent-1');
             },
+            onkeyup: false,
+            onclick: false,
+            onfocusout: false,
         });
     })
 });
