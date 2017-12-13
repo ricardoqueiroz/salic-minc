@@ -90,7 +90,7 @@ class PrestacaoContas_PrestacaoContasController extends  MinC_Controller_Action_
         $situacao = $this->_request->getParam("situacao");
         $justificativa = $this->_request->getParam("justificativa");
 
-        if (!$justificativa || !$idComprovantePagamento || !$situacao) {
+        if (!$idComprovantePagamento || !$situacao) {
            throw new Exception('Faltando dados');
         }
 
