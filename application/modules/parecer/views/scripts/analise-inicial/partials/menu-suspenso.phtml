@@ -76,5 +76,12 @@
                 }, 700);
             });
         }
+
+        let options = [{
+            selector: 'body', offset: 200, callback: function () {
+                $("#menu-suspenso a#bt-aciona-menu").trigger('click');
+            }
+        }];
+//        Materialize.scrollFire(options);
     });
 </script>

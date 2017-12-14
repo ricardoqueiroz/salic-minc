@@ -356,33 +356,33 @@ x - CARD
 /*--------------------------------------------------------------
 x - TABS
 --------------------------------------------------------------*/
-.tabs .tab a {
+.tabs:not(.tabs-transparent) .tab a {
     background: #fff;
     color: #212121;
 }
 
-.tabs .tab a:hover,
-.tabs .tab a.active {
+.tabs:not(.tabs-transparent) .tab a:hover,
+.tabs:not(.tabs-transparent) .tab a.active {
     background-color: #c8e6c9;
     color: #212121;
 }
 
-.tabs .tab.disabled a,
-.tabs .tab.disabled a:hover {
+.tabs:not(.tabs-transparent) .tab.disabled a,
+.tabs:not(.tabs-transparent) .tab.disabled a:hover {
     color: #868484;
     background-color: #e0e0e0;
 }
 
-.tabs .indicator {
+.tabs:not(.tabs-transparent) .indicator {
     background-color: #4caf50;
 }
 
-.tabs.tabs-fixed-width {
+.tabs:not(.tabs-transparent).tabs-fixed-width {
     overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {
-    .tabs .tab {
+    .tabs:not(.tabs-transparent) .tab {
         width: 100%;
         float: left;
     }

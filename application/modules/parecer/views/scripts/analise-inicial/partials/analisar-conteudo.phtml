@@ -1,192 +1,207 @@
-<div id="divAnaliseConteudo" class="">
-    <form name="formAnaliseConteudo" id="formAnaliseConteudo"
-          action="<?= $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'salvar-analise-conteudo')); ?>"
-          method="post">
-        <input type="hidden" id="stAcao" name="stAcao" value="0"/>
-        <input type="hidden" name="idPRONAC" value="<?= $this->projeto->IdPRONAC; ?>"/>
-        <input type="hidden" name="idProduto" value="<?= $this->projeto->idProduto; ?>"/>
-        <input type="hidden" id="stPrincipal" name="stPrincipal" value="<?= $this->projeto->stPrincipal; ?>"/>
-        <input type="hidden" id="idD" name="idD" value="<?= $this->idD; ?>"/>
+<nav class="green">
+    <div class="nav-wrapper">
+        <div class="left hide-on-med-and-down">
+            <a class="btn-floating btn modal-close"><i class="material-icons">close</i></a>
+        </div>
+        <div class="left"><b>Analisar conte&uacute;do</b></div>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="badges.html">Salvar</a></li>
+        </ul>
+    </div>
+</nav>
+<div class="card">
+    <div class="card-content">
+        <div id="divAnaliseConteudo" class="">
+            <form name="formAnaliseConteudo" id="formAnaliseConteudo"
+                  action="<?= $this->url(array('module' => 'parecer', 'controller' => 'analise-inicial', 'action' => 'salvar-analise-conteudo')); ?>"
+                  method="post">
+                <input type="hidden" id="stAcao" name="stAcao" value="0"/>
+                <input type="hidden" name="idPRONAC" value="<?= $this->projeto->IdPRONAC; ?>"/>
+                <input type="hidden" name="idProduto" value="<?= $this->projeto->idProduto; ?>"/>
+                <input type="hidden" id="stPrincipal" name="stPrincipal" value="<?= $this->projeto->stPrincipal; ?>"/>
+                <input type="hidden" id="idD" name="idD" value="<?= $this->idD; ?>"/>
 
-        <?php if (!$this->IN2017) : ?>
-            <fieldset class="">
-                <legend>Enquadramento</legend>
+                <?php if (!$this->IN2017) : ?>
+                    <fieldset class="">
+                        <legend>Enquadramento</legend>
 
-                <div class="row">
-                    <div id="Lei8313" class="col s12 m4 l4">
-                        <label>
-                            <small><strong>Lei 8.313/91 alterada pela Lei 9.874/1999 * </strong></small>
-                        </label>
-                        <p>
-                            <input id="lei_8313_sim" type="radio" style="margin-right: 5px;" value="1" name="Lei8313"
-                                   onclick="APPescolherLei_8313();"/>
-                            <label for="lei_8313_sim">Sim</label>
-                            <input id="lei_8313_nao" type="radio" style="margin-right: 5px;" value="0" name="Lei8313"
-                                   onclick="APPescolherLei_8313();"/>
-                            <label for="lei_8313_nao">N&atilde;o</label>
-                        </p>
-                    </div>
-                    <div class="col s12 m8 l8">
                         <div class="row">
-                            <div id="Artigo3" class="col s12 m4 l4">
+                            <div id="Lei8313" class="col s12 m4 l4">
                                 <label>
-                                    <small><strong>Artigo 3&deg; *</strong></small>
+                                    <small><strong>Lei 8.313/91 alterada pela Lei 9.874/1999 * </strong></small>
                                 </label>
                                 <p>
-                                    <input id="artigo_3_sim" type="radio" style="margin-right: 5px;" value="1"
-                                           name="Artigo3" onclick="APPescolherArtigo3();"/>
-                                    <label for="artigo_3_sim">Sim</label>
-                                    <input id="artigo_3_nao" type="radio" style="margin-right: 5px;" value="0"
-                                           name="Artigo3" onclick="APPescolherArtigo3();"/>
-                                    <label for="artigo_3_nao">N&atilde;o</label>
+                                    <input id="lei_8313_sim" type="radio" style="margin-right: 5px;" value="1" name="Lei8313"
+                                           onclick="APPescolherLei_8313();"/>
+                                    <label for="lei_8313_sim">Sim</label>
+                                    <input id="lei_8313_nao" type="radio" style="margin-right: 5px;" value="0" name="Lei8313"
+                                           onclick="APPescolherLei_8313();"/>
+                                    <label for="lei_8313_nao">N&atilde;o</label>
                                 </p>
                             </div>
+                            <div class="col s12 m8 l8">
+                                <div class="row">
+                                    <div id="Artigo3" class="col s12 m4 l4">
+                                        <label>
+                                            <small><strong>Artigo 3&deg; *</strong></small>
+                                        </label>
+                                        <p>
+                                            <input id="artigo_3_sim" type="radio" style="margin-right: 5px;" value="1"
+                                                   name="Artigo3" onclick="APPescolherArtigo3();"/>
+                                            <label for="artigo_3_sim">Sim</label>
+                                            <input id="artigo_3_nao" type="radio" style="margin-right: 5px;" value="0"
+                                                   name="Artigo3" onclick="APPescolherArtigo3();"/>
+                                            <label for="artigo_3_nao">N&atilde;o</label>
+                                        </p>
+                                    </div>
+                                    <div class="col s12 m4 l4">
+                                        <label>
+                                            <small><strong>Inciso</strong></small>
+                                        </label>
+                                        <select class="campo browser-default" id="IncisoArtigo3" name="IncisoArtigo3">
+                                            <option value="0">Selecione</option>
+                                            <option value="1">I</option>
+                                            <option value="2">II</option>
+                                            <option value="3">III</option>
+                                            <option value="4">IV</option>
+                                            <option value="5">V</option>
+                                        </select>
+                                    </div>
+                                    <div id="AlineaArtigo3_" class="col s12 m4 l4">
+                                        <label for="AlineaArtigo3">
+                                            <small><strong>Alinea Artigo 3</strong></small>
+                                        </label>
+                                        <input id="AlineaArtigo3" type="text" class="browser-default" name="AlineaArtigo3"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="Artigo18" class="col s12 m4 l4">
+                                        <label>
+                                            <small><strong>Artigo 18&deg;</strong></small>
+                                        </label>
+                                        <p>
+                                            <input id="artigo_18_sim" type="radio" value="1" name="Artigo18"
+                                                   onclick="APPescolherArt_18();"/>
+                                            <label for="artigo_18_sim">Sim</label>
+                                            <input id="artigo_18_nao" type="radio" value="0" name="Artigo18"
+                                                   onclick="APPescolherArt_18();"/>
+                                            <label for="artigo_18_nao">N&atilde;o</label>
+                                        </p>
+                                    </div>
+                                    <div id="AlineaArtigo18_" class="col s12 m4 l4">
+                                        <label for="AlineaArtigo18">
+                                            <small><strong>Alinea Artigo 18</strong></small>
+                                        </label>
+                                        <input id="AlineaArtigo18" type="text" class="browser-default" name="AlineaArtigo18"/>
+                                        <input id="AlineaArt18" type="hidden" name="AlineaArt18"/>
+                                    </div>
+                                    <div id="Artigo26" class="col s12 m4 l4">
+                                        <label>
+                                            <small><strong>Artigo 26&deg;</strong></small>
+                                        </label>
+                                        <p>
+                                            <input id="artigo_26_sim" type="radio" value="1" name="Artigo26"
+                                                   onclick="APPescolherArt_26();"/>
+                                            <label for="artigo_26_sim">Sim</label>
+                                            <input id="artigo_26_nao" type="radio" value="0" name="Artigo26"
+                                                   onclick="APPescolherArt_26();"/>
+                                            <label for="artigo_26_nao">N&atilde;o</label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col s12 m4 l4">
                                 <label>
-                                    <small><strong>Inciso</strong></small>
-                                </label>
-                                <select class="campo browser-default" id="IncisoArtigo3" name="IncisoArtigo3">
-                                    <option value="0">Selecione</option>
-                                    <option value="1">I</option>
-                                    <option value="2">II</option>
-                                    <option value="3">III</option>
-                                    <option value="4">IV</option>
-                                    <option value="5">V</option>
-                                </select>
-                            </div>
-                            <div id="AlineaArtigo3_" class="col s12 m4 l4">
-                                <label for="AlineaArtigo3">
-                                    <small><strong>Alinea Artigo 3</strong></small>
-                                </label>
-                                <input id="AlineaArtigo3" type="text" class="browser-default" name="AlineaArtigo3"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div id="Artigo18" class="col s12 m4 l4">
-                                <label>
-                                    <small><strong>Artigo 18&deg;</strong></small>
+                                    <small><strong>Decreto 5761/2006 *</strong></small>
                                 </label>
                                 <p>
-                                    <input id="artigo_18_sim" type="radio" value="1" name="Artigo18"
-                                           onclick="APPescolherArt_18();"/>
-                                    <label for="artigo_18_sim">Sim</label>
-                                    <input id="artigo_18_nao" type="radio" value="0" name="Artigo18"
-                                           onclick="APPescolherArt_18();"/>
-                                    <label for="artigo_18_nao">N&atilde;o</label>
+                                    <input id="decreto_5761_sim" type="radio" value="1" name="Lei5761"
+                                           onclick="APPescolherDecreto5761();"/>
+                                    <label for="decreto_5761_sim">Sim</label>
+                                    <input id="decreto_5761_nao" type="radio" value="0" name="Lei5761"
+                                           onclick="APPescolherDecreto5761();"/>
+                                    <label for="decreto_5761_nao">N&atilde;o</label>
                                 </p>
                             </div>
-                            <div id="AlineaArtigo18_" class="col s12 m4 l4">
-                                <label for="AlineaArtigo18">
-                                    <small><strong>Alinea Artigo 18</strong></small>
-                                </label>
-                                <input id="AlineaArtigo18" type="text" class="browser-default" name="AlineaArtigo18"/>
-                                <input id="AlineaArt18" type="hidden" name="AlineaArt18"/>
-                            </div>
-                            <div id="Artigo26" class="col s12 m4 l4">
+                            <div id="Artigo27" class="col s12 m4 l4">
                                 <label>
-                                    <small><strong>Artigo 26&deg;</strong></small>
+                                    <small><strong>Artigo 27&deg;</strong></small>
                                 </label>
                                 <p>
-                                    <input id="artigo_26_sim" type="radio" value="1" name="Artigo26"
-                                           onclick="APPescolherArt_26();"/>
-                                    <label for="artigo_26_sim">Sim</label>
-                                    <input id="artigo_26_nao" type="radio" value="0" name="Artigo26"
-                                           onclick="APPescolherArt_26();"/>
-                                    <label for="artigo_26_nao">N&atilde;o</label>
+                                    <input id="artigo_27_sim" type="radio" value="1" name="Artigo27"/>
+                                    <label for="artigo_27_sim">Sim</label>
+                                    <input id="artigo_27_nao" type="radio" value="0" name="Artigo27"/>
+                                    <label for="artigo_27_nao">N&atilde;o</label>
+                                </p>
+
+                            </div>
+                            <div id="IncisoArtigo27" class="col s12 m4 l4">
+                                <label>
+                                    <small><strong>Inciso(s)</strong></small>
+                                </label>
+                                <p>
+                                <span style="margin-right: 15px">
+                                    <input id="IncisoArtigo27_I" type="checkbox" class="filled-in" value="1"
+                                           name="IncisoArtigo27_I"/>
+                                    <label for="IncisoArtigo27_I" style="padding-left: 30px;">I</label>
+                                </span>
+                                    <span style="margin-right: 15px">
+                                    <input id="IncisoArtigo27_II" type="checkbox" class="filled-in" value="1"
+                                           name="IncisoArtigo27_II"/>
+                                    <label for="IncisoArtigo27_II" style="padding-left: 30px;">II</label>
+                                </span>
+                                    <span style="margin-right: 15px">
+                                    <input id="IncisoArtigo27_III" type="checkbox" class="filled-in" value="1"
+                                           name="IncisoArtigo27_III"/>
+                                    <label for="IncisoArtigo27_III" style="padding-left: 30px;">III</label>
+                                </span>
+                                    <span>
+                                    <input id="IncisoArtigo27_IV" type="checkbox" class="filled-in" value="1"
+                                           name="IncisoArtigo27_IV"/>
+                                    <label for="IncisoArtigo27_IV" style="padding-left: 30px;">IV</label>
+                                </span>
                                 </p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 m4 l4">
-                        <label>
-                            <small><strong>Decreto 5761/2006 *</strong></small>
-                        </label>
-                        <p>
-                            <input id="decreto_5761_sim" type="radio" value="1" name="Lei5761"
-                                   onclick="APPescolherDecreto5761();"/>
-                            <label for="decreto_5761_sim">Sim</label>
-                            <input id="decreto_5761_nao" type="radio" value="0" name="Lei5761"
-                                   onclick="APPescolherDecreto5761();"/>
-                            <label for="decreto_5761_nao">N&atilde;o</label>
-                        </p>
-                    </div>
-                    <div id="Artigo27" class="col s12 m4 l4">
-                        <label>
-                            <small><strong>Artigo 27&deg;</strong></small>
-                        </label>
-                        <p>
-                            <input id="artigo_27_sim" type="radio" value="1" name="Artigo27"/>
-                            <label for="artigo_27_sim">Sim</label>
-                            <input id="artigo_27_nao" type="radio" value="0" name="Artigo27"/>
-                            <label for="artigo_27_nao">N&atilde;o</label>
-                        </p>
-
-                    </div>
-                    <div id="IncisoArtigo27" class="col s12 m4 l4">
-                        <label>
-                            <small><strong>Inciso(s)</strong></small>
-                        </label>
-                        <p>
-                        <span style="margin-right: 15px">
-                            <input id="IncisoArtigo27_I" type="checkbox" class="filled-in" value="1"
-                                   name="IncisoArtigo27_I"/>
-                            <label for="IncisoArtigo27_I" style="padding-left: 30px;">I</label>
-                        </span>
-                            <span style="margin-right: 15px">
-                            <input id="IncisoArtigo27_II" type="checkbox" class="filled-in" value="1"
-                                   name="IncisoArtigo27_II"/>
-                            <label for="IncisoArtigo27_II" style="padding-left: 30px;">II</label>
-                        </span>
-                            <span style="margin-right: 15px">
-                            <input id="IncisoArtigo27_III" type="checkbox" class="filled-in" value="1"
-                                   name="IncisoArtigo27_III"/>
-                            <label for="IncisoArtigo27_III" style="padding-left: 30px;">III</label>
-                        </span>
-                            <span>
-                            <input id="IncisoArtigo27_IV" type="checkbox" class="filled-in" value="1"
-                                   name="IncisoArtigo27_IV"/>
-                            <label for="IncisoArtigo27_IV" style="padding-left: 30px;">IV</label>
-                        </span>
-                        </p>
-                    </div>
-                </div>
-            </fieldset>
-        <?php endif; ?>
-        <fieldset>
-            <legend>Parecer</legend>
-            <div class="row">
-                <div class="col s12 m12 l12">
-                    <label>Favor&aacute;vel? *</label>
-                    <p>
-                        <input type="radio" value="1" class="ParecerFavoravel" id="ParecerFavoravel"
-                               name="ParecerFavoravel"
-                               checked="checked"/>
-                        <label for="ParecerFavoravel">Sim</label>
-                        <input type="radio" value="0" class="ParecerFavoravel" id="ParecerDesfavoravel"
-                               name="ParecerFavoravel"/>
-                        <label for="ParecerDesfavoravel">N&atilde;o</label>
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m12 l12">
-                    <label for="ParecerDeConteudo">Conteúdo do Produto *</label>
-                    <textarea id="ParecerDeConteudo" name="ParecerDeConteudo" class="textarea_simples browser-default"
-                              rows="10">
-                    </textarea>
-                </div>
-            </div>
-
-            <div class="row center-align">
-                <?php if ($this->grupoAtivo == 93): ?>
-                <?php else: ?>
-                    <button id="btSalvarAnaliseDeConteudo" value=" " class="btn">
-                        Salvar
-                    </button>
+                    </fieldset>
                 <?php endif; ?>
-            </div>
-        </fieldset>
-    </form>
+                <fieldset>
+                    <legend>Parecer</legend>
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <label>Favor&aacute;vel? *</label>
+                            <p>
+                                <input type="radio" value="1" class="ParecerFavoravel" id="ParecerFavoravel"
+                                       name="ParecerFavoravel"
+                                       checked="checked"/>
+                                <label for="ParecerFavoravel">Sim</label>
+                                <input type="radio" value="0" class="ParecerFavoravel" id="ParecerDesfavoravel"
+                                       name="ParecerFavoravel"/>
+                                <label for="ParecerDesfavoravel">N&atilde;o</label>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <label for="ParecerDeConteudo">Conteúdo do Produto *</label>
+                            <textarea id="ParecerDeConteudo" name="ParecerDeConteudo" class="textarea_simples browser-default"
+                                      rows="10">
+                            </textarea>
+                        </div>
+                    </div>
+
+                    <div class="row center-align">
+                        <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA): ?>
+                            <button id="btSalvarAnaliseDeConteudo" value="" class="btn">
+                                Salvar
+                            </button>
+                        <?php endif; ?>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+    </div>
 </div>

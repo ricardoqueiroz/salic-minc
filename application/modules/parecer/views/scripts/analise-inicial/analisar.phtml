@@ -71,16 +71,14 @@
             <p><b>Situa&ccedil;&atilde;o: </b><?= $this->situacao; ?></p>
         </div>
     </div>
-
+    
     <div class="row">
-        <div class="col s12">
-            <ul class="tabs tabs-fixed-width">
-                <li class="tab">
-                    <a href="#tab-analise-projeto">Analisar conteúdo</a>
-                </li>
-                <li class="tab">
-                    <a href="#tab-analise-custo" class="bt-analisar-custos">Analisar custos</a>
-                </li>
+        <div class="col s12 green">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a href="#tab-analise-projeto">Projeto</a></li>
+                <li class="tab"><a href="#modal-analisar-conteudo" target="_top">Analisar conte&uacute;do</a></li>
+                <li class="tab"><a href="#tab-analise-custo" class="bt-analisar-custos">Analisar custos</a></li>
+
                 <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                     <?php if ($this->existeProdutoSecundario) : ?>
                         <li class="tab">
@@ -89,15 +87,18 @@
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if ($this->projeto->stPrincipal == 1 && 1 == 2) : ?>
+                <?php if ($this->projeto->stPrincipal == 1) : ?>
                     <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
-                        <a class="text-gray grey lighten-2" href="#tab-consolidar-parecer">Consolidar Parecer
-                            T&eacute;cnico</a>
+
+                        <a
+                            target="_top"
+                            class="modal-trigger"
+                            href="#modal-consolidar-parecer-tecnico">
+                            Consolidar Parecer T&eacute;cnico
+                        </a>
                     </li>
                 <?php endif; ?>
-                <li class="tab">
-                    <a href="#tab-finalizar-parecer-tecnico">Finalizar</a>
-                </li>
+                <li class="tab"><a href="#tab-finalizar-parecer-tecnico">Finalizar</a></li>
             </ul>
         </div>
 
@@ -123,14 +124,14 @@
 
         <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
             <?php if ($this->existeProdutoSecundario) : ?>
-                <div id="tab-produtos-secundarios" class="col s12 ">
+                <div id="tab-produtos-secundarios" class="col s12">
                     <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
 
         <?php if ($this->projeto->stPrincipal == 1 && 1 == 2) : ?>
-            <div id="tab-consolidar-parecer" class="col s12 ">
+            <div id="tab-consolidar-parecer" class="col s12">
                 <?php if ($this->produtosSecundariosEmAnalise == 0) : ?>
                     <?php echo $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
                 <?php endif; ?>
@@ -143,15 +144,13 @@
     </div>
 
     <div id="modal-analisar-conteudo" class="modal bottom-sheet">
-        <div class="modal-content">
-            <h4>Analisar conte&uacute;do</h4>
+        <div class="modal-contents">
             <?= $this->partial('analise-inicial/partials/analisar-conteudo.phtml', 'parecer', $this); ?>
         </div>
     </div>
 
     <div id="modal-consolidar-parecer-tecnico" class="modal bottom-sheet">
-        <div class="modal-content">
-            <h4>Consolidar parecer t&eacute;cnico</h4>
+        <div class="modal-contents">
             <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
                 <?= $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
             <?php endif; ?>
@@ -231,7 +230,7 @@
         });
 
         $('.modal').each(function () {
-            $(this).css('min-height', $(window).height() - 94);
+            $(this).css('min-height', $(window).height());
         }).modal({
             dismissible: true,
             opacity: .6,
@@ -253,10 +252,10 @@
                     tinyMCE.triggerSave();
                 }
 
-                if (dadosFormulario != $(modal).find('form').serialize()) {
-                    Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
-                    $(modal).find('form').submit();
-                }
+//                if (dadosFormulario != $(modal).find('form').serialize()) {
+//                    Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
+//                    $(modal).find('form').submit();
+//                }
             }
         });
 
@@ -283,12 +282,15 @@
             jqAjaxLink('/parecer/analise-inicial/finalizar-parecer-tecnico', dados, 'finalizar-parecer-tecnico');
         });
 
-        let options = [{
-            selector: 'body', offset: 200, callback: function () {
-                $("#menu-suspenso a#bt-aciona-menu").trigger('click');
-            }
-        }];
-        Materialize.scrollFire(options);
+        $('.tabs').on('click', 'a', function (e) {
+            e.preventDefault();
+
+            let offset = $(this).offset();
+
+            $('html,body').animate({
+                scrollTop: offset.top - 70
+            }, 700);
+        });
 
     });
 
