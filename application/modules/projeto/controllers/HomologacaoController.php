@@ -81,7 +81,8 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     {
         $dbTable = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
         $this->_helper->layout->disableLayout();
-        $this->view->arrResult = $dbTable->findAll(['idUnidade' => $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']);
+//        $this->view->arrResult = $dbTable->findAll(['idUnidade' => $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']);
+        $this->view->arrResult = $dbTable->findAll([], ['NrReuniao', 'Pronac']);
     }
 
     /**
