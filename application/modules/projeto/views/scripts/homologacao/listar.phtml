@@ -32,7 +32,7 @@
                     <td class="center-align"><?php echo reset(explode(' ', new Zend_Date($arrValue['DtInicioExecucao']))); ?></td>
                     <td class="center-align"><?php echo reset(explode(' ', new Zend_Date($arrValue['DtFimExecucao']))); ?></td>
                     <td class="center-align"><?php echo $arrValue['NrReuniao']; ?></td>
-                    <td class="right-align"><?php echo number_format($arrValue['vlHomologado'], 2, ',', '.') . ' R$'; ?></td>
+                    <td class="right-align"><?php echo 'R$ ' . number_format($arrValue['vlHomologado'], 2, ',', '.'); ?></td>
                     <td class="center-align">
                         <a data-ajax-modal="<?php echo $this->url(array('module' => 'projeto', 'controller' => 'homologacao', 'action' => 'visualizar', 'id' => $arrValue['IdPRONAC']), null, true); ?>"
                             href="javascript:void(0);"

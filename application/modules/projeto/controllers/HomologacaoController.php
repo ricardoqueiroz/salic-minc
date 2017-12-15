@@ -81,7 +81,8 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
     {
         $dbTable = new Projeto_Model_DbTable_VwPainelDeHomologacaoDeProjetos();
         $this->_helper->layout->disableLayout();
-        $this->view->arrResult = $dbTable->findAll(['idUnidade' => $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']);
+//        $this->view->arrResult = $dbTable->findAll(['idUnidade' => $_SESSION['GrupoAtivo']['codOrgao']], ['NrReuniao', 'Pronac']);
+        $this->view->arrResult = $dbTable->findAll([], ['NrReuniao', 'Pronac']);
     }
 
     /**
@@ -208,7 +209,7 @@ class Projeto_HomologacaoController extends Proposta_GenericController {
 //        $arrValue['enquadramentoProjeto'] = $dbTableEnquadramentoProjeto->findBy(17896);
         $arrValue['enquadramentoProjeto'] = $dbTableEnquadramentoProjeto->findBy($intIdPronac);
 //        $arrValue['parecer'] = $dbTableParecer->findBy(17896);
-        $arrValue['parecer'] = $dbTableParecer->findBy($intIdPronac);
+        $arrValue['parecer'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'stAtivo' => '1', 'idTipoAgente' => '1', 'IdPRONAC' => $intIdPronac]);
 //        $arrValue['acaoProjeto'] = $dbTableAcaoProjeto->findBy(['tpAnalise' => '1', 'idPronac' => 201495]); # 3
         $arrValue['acaoProjeto'] = $dbTableAcaoProjeto->findBy(['tpAnalise' => '1', 'idPronac' => $intIdPronac]); # 3
 //        $arrValue['aparicaoComissario'] = $dbTableParecer->findBy(['TipoParecer' => '1', 'stAtivo' => '1', 'idTipoAgente' => '6', 'IdPRONAC' => 131182]); # 4
