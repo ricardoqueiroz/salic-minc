@@ -43,7 +43,12 @@ $(document).ready(function(){
             }
         });
 
-        var texto = CKEDITOR.instances['dsConsolidacao'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+        if (typeof tinyMCE == 'object') {
+            tinyMCE.triggerSave();
+        }
+
+        var texto = $('#dsConsolidacao').val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+
         if (texto == '' || texto == 'Digiteseutextoaqui...'){
             i++;
         }
@@ -65,8 +70,6 @@ $(document).ready(function(){
             });
             $('.ui-dialog-titlebar-close').remove();
 
-        } else {
-            $('#formConsolidacao').submit();
         }
     });
 

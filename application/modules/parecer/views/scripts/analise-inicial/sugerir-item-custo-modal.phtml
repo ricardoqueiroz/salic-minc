@@ -149,10 +149,10 @@ $action = $this->url(
             mascara(this, format_moeda);
         });
         $('#formSalvarItem').find('.inputValor').each(function(){
-            /*$(this).keyup(function(){
-                //calcula_planilha_projeto($(this).attr('idPlanilhaProjeto')); 
-                //valida_val_parec_relat($(this).attr('idPlanilhaProjeto'),$("#vlSolicitado").val()); 
-            });*/
+            $(this).keyup(function(){
+                calcula_planilha_projeto($(this).attr('idPlanilhaProjeto'));
+                validar_val_parec_relat($(this).attr('idPlanilhaProjeto'),$("#vlSolicitado").val());
+            });
             $(this).keyup(function(){
                 if($(this).attr('name') == 'ValorUnitario'){
                     mascara(this, format_moeda);

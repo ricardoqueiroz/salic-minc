@@ -13,9 +13,6 @@ $action = $this->url(
             <a class="btn-floating btn modal-close"><i class="material-icons">close</i></a>
         </div>
         <div class="left"><b>Consolidar parecer t&eacute;cnico</b></div>
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="badges.html">Salvar</a></li>
-        </ul>
     </div>
 </nav>
 
@@ -23,7 +20,7 @@ $action = $this->url(
     <form id="formConsolidacao"
           action="<?= $action ?>"
           method="post">
-        <input type="hidden" name="idPronacP" value="<?= $this->projeto->IdPRONAC; ?>"/>
+        <input type="hidden" name="idPronac" value="<?= $this->projeto->IdPRONAC; ?>"/>
         <input type="hidden" name="AnoProjeto" value="<?= $this->projeto->AnoProjeto; ?>"/>
         <input type="hidden" name="Sequencial" value="<?= $this->projeto->Sequencial; ?>"/>
         <input type="hidden" name="sugeridoReal" value="<?= $this->consolidacao[0]->SugeridoReal; ?>"/>
@@ -181,6 +178,7 @@ $action = $this->url(
             </div>
         <?php endif; ?>
         <div class="row center-align">
+            <a class="btn btn-default modal-close"><i class="material-icons left">close</i> Fechar</a>
             <button type="submit"
                     id="btSalvarConsolidacao"
                     class="waves-effect waves-light btn"

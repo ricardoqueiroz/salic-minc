@@ -140,7 +140,7 @@ function carregarTextAreaCKEditor() {
 
     if (jQuery('#stPrincipal').val() == 1 && jQuery('#produtosSecundariosEmAnalise').val() == 0) {
         if (jQuery('#IN2017').val() == 1 && jQuery('#stPrincipal').val() == 1) {
-            // CKEDITOR.replace( 'dsAcaoAlcanceProduto', { toolbar: [] } );
+            // $(dsAcaoAlcanceProduto)..val().replace( 'dsAcaoAlcanceProduto', { toolbar: [] } );
         }
         // CKEDITOR.replace( 'dsConsolidacao', { toolbar: [] } );
     }
@@ -150,7 +150,7 @@ function carregarAnaliseDeConteudo()
 {
     obj = {
         stAcao: 1,
-        idPRONAC: IdPRONAC,
+        idPronac: IdPRONAC,
         idProduto: idProduto,
         stPrincipal: stPrincipal
     };

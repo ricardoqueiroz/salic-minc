@@ -5,6 +5,24 @@ $isProjetoEnquadrado = $this->IsProjetoEnquadrado($this->projeto->IdPRONAC);
 $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
 ?>
 <div class="padding20">
+
+    <?php if ($this->projeto->stPrincipal == 1) : ?>
+        <ul class="collection">
+            <?php if (!$isProdutosSecundariosAnalisados) : ?>
+                <li class="collection-item">Existem produtos secundários não analisados</li>
+            <?php endif; ?>
+            <?php if ($isProdutosPendentesParecer) : ?>
+                <li class="collection-item">Existem produtos pendentes de parecer</li>
+            <?php endif; ?>
+            <?php if (!$isProjetoEnquadrado) : ?>
+                <li class="collection-item">Este projeto não foi enquadrado</li>
+            <?php endif; ?>
+            <?php if (!$isProjetoComParecer) : ?>
+                <li class="collection-item">Este projeto ainda não possui parecer</li>
+            <?php endif; ?>
+        </ul>
+    <?php endif; ?>
+
     <div class="botoes center-align">
         <?php if ($this->projeto->stPrincipal == 1) : ?>
             <?php if (
@@ -64,7 +82,7 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                                        array(
                                            'module' => 'parecer',
                                            'controller' => 'analise-inicial',
-                                           'action' => 'fechar-parecer'
+                                           'action' => 'salvar-finalizacao-parecer'
                                        )
                                    ) . $parametrosAssinatura ?>"
                                data-position="top"
@@ -110,23 +128,30 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                         </a>
                     <?php endif; ?>
                 <?php else : ?>
-                    <a class="btn waves-effect waves-light cyan tooltipped small"
-                       onclick="redirecionar('<?php echo $this->url(
-                           array(
-                               'module' => 'parecer',
-                               'controller' => 'analise-inicial',
-                               'action' => 'fechar-parecer',
-                               'idPronac' => $this->projeto->IdPRONAC,
-                               'idD' => $this->projeto->idDistribuirParecer,
-                               'idProduto' => $this->projeto->idProduto,
-                               'stPrincipal' => $this->projeto->stPrincipal
-                           )
-                       ); ?>')"
-                       href="javascript:void(0)"
-                       data-tooltip="Concluir An&aacute;lise"
+                    <?php
+                    $parametrosAssinatura = "?idPronac="
+                        . $this->projeto->IdPRONAC
+                        . "&idProduto=" . $this->projeto->idProduto
+                        . "&situacao=" . $this->projeto->situacao
+                        . "&idD=" . $this->projeto->idDistribuirParecer
+                        . "&concluir=1";
+                    ?>
+
+                    <a class="btn waves-effect waves-light tooltipped small btn cyan"
+                       href="#modalConfirmacao"
+                       data-redirect-url="<?php echo $this->url(
+                               array(
+                                   'module' => 'parecer',
+                                   'controller' => 'analise-inicial',
+                                   'action' => 'salvar-finalizacao-parecer'
+                               )
+                           ) . $parametrosAssinatura ?>"
+                       data-position="top"
+                       data-delay="50"
+                       data-tooltip="Fechar parecer"
                     >
-                        <i class="material-icons white-text left">note_add</i>
-                        Concluir An&aacute;lise
+                        <i class="material-icons left">check_circle</i>
+                        Finalizar an&aacute;lise
                     </a>
                 <?php endif; ?>
             <?php else: ?>
@@ -156,7 +181,7 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                            array(
                                'module' => 'parecer',
                                'controller' => 'analise-inicial',
-                               'action' => 'fechar-parecer'
+                               'action' => 'salvar-finalizacao-parecer'
                            )
                        ) . $parametrosAssinatura ?>"
                    data-position="top"
@@ -177,3 +202,34 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
         <?php endif; ?>
     </div>
 </div>
+
+<div id="conteudoDialogoModal">
+    <div id="modalConfirmacao" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Confirma&ccedil;&atilde;o</h4>
+            <p>Tem certeza que deseja concluir a an&aacute;lise do produto do projeto <span class="bold" id="nrPronacConfirmacao"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" id="botaoConfirmacaoEncaminhamento" class="modal-action modal-close waves-effect waves-green btn-flat">Sim</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">N&atilde;o</a>
+        </div>
+    </div>
+</div>
+<script>
+    $3(document).ready(function(){
+        $3('.modal').modal({
+            dismissible: true,
+            opacity: .5,
+            inDuration: 300,
+            outDuration: 200,
+            startingTop: '4%',
+            endingTop: '10%',
+            ready: function(modal, trigger) {
+                console.log($3(trigger).data('redirectUrl'));
+                $(modal).find('#botaoConfirmacaoEncaminhamento').attr('href', $3(trigger).data('redirectUrl'));
+            }
+        });
+    });
+</script>
+
+<div id="confirmacao" style="display: none;"></div>

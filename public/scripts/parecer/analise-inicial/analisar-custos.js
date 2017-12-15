@@ -76,24 +76,28 @@ function AlterarItem(idPlanilhaProjeto, idPronac, idProduto, stPrincipal) {
                                 $('#formSalvarItem').attr('action'),
                                 dados,
                                 function (data) {
-                                    var resposta = data;
-                                    $('#item' + $('#idPlanilhaProjeto').val() + ' .JustParecerista').html($("#justificativa" + $('#idPlanilhaProjeto').val()).val());
-                                    $('#item' + $('#idPlanilhaProjeto').val() + ' .ValorSugerido').html($("#calcular_total" + $('#idPlanilhaProjeto').val()).html());
-                                    somarValores();
+                                    if (data.status == '1') {
+                                        var resposta = data;
+                                        $('#item' + $('#idPlanilhaProjeto').val() + ' .JustParecerista').html($("#justificativa" + $('#idPlanilhaProjeto').val()).val());
+                                        $('#item' + $('#idPlanilhaProjeto').val() + ' .ValorSugerido').html($("#calcular_total" + $('#idPlanilhaProjeto').val()).html());
+                                        somarValores();
 
-                                    //atualiza novo valor possivel de remanejamento
-                                    /* var vlSolicitado = vlSolicitado; */
-                                    var vlTotalSugerido = recuperaTotalSugerido();
-                                    var valorpossivel = vlSolicitado - vlTotalSugerido;
+                                        //atualiza novo valor possivel de remanejamento
+                                        /* var vlSolicitado = vlSolicitado; */
+                                        var vlTotalSugerido = recuperaTotalSugerido();
+                                        var valorpossivel = vlSolicitado - vlTotalSugerido;
 
-                                    $("#valorpossivel").val(valorpossivel);
+                                        $("#valorpossivel").val(valorpossivel);
 
-                                    //atualiza campo de apresentacao do novo valor possivel de remanejamento
-                                    var valorpossivelApresentacao = formatarParaReal(valorpossivel);
-                                    $("#valorpossivelApresentacao").html(valorpossivelApresentacao);
+                                        //atualiza campo de apresentacao do novo valor possivel de remanejamento
+                                        var valorpossivelApresentacao = formatarParaReal(valorpossivel);
+                                        $("#valorpossivelApresentacao").html(valorpossivelApresentacao);
 
-                                    elmSugerirItem.dialog('close');
-                                    janelaAlerta('Informa&ccedil;&otilde;es salvas com sucesso');
+                                        elmSugerirItem.dialog('close');
+                                        Materialize.toast(data.msg, 4000, 'green light-green accent-1 black-text');
+                                    } else {
+                                        Materialize.toast(data.msg, 4000, 'red accent-1');
+                                    }
                                 }
                             );
                         }

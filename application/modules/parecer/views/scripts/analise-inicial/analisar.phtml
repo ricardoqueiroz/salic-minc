@@ -112,7 +112,7 @@
                         data-tooltip="An&aacute;lise de Conte&uacute;do"
                         href="#modal-analisar-conteudo">
                         <i class="material-icons left">playlist_add_check</i>
-                        Parecer do conteúdo
+                        Analisar conte&uacute;do
                     </a>
                 </div>
             </div>
@@ -125,7 +125,7 @@
         <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
             <?php if ($this->existeProdutoSecundario) : ?>
                 <div id="tab-produtos-secundarios" class="col s12">
-                    <?php echo $this->partial('analise-inicial/partials/secundarios.phtml', 'parecer', $this); ?>
+                    <?php echo $this->partial('analise-inicial/partials/produtos-secundarios.phtml', 'parecer', $this); ?>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
@@ -192,7 +192,6 @@
 <script src="/public/scripts/agente/visualizar/salic-agente-proponente.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/autenticacao/index/salic-autenticacao-usuario.vue.js" type="text/javascript"></script>
 
-<!--<script type="text/javascript" src="/public/scripts/parecer/analisarprojetoparecer/produto.js"></script>-->
 <script type="text/javascript" src="/public/scripts/parecer/analise-inicial/analisar-conteudo.js"></script>
 <script type="text/javascript" src="/public/scripts/parecer/analise-inicial/analisar-custos.js"></script>
 <script type="text/javascript" src="/public/scripts/parecer/analise-inicial/consolidar-parecer.js"></script>
@@ -252,20 +251,32 @@
                     tinyMCE.triggerSave();
                 }
 
-//                if (dadosFormulario != $(modal).find('form').serialize()) {
-//                    Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
-//                    $(modal).find('form').submit();
-//                }
+                if (dadosFormulario != $(modal).find('form').serialize()) {
+                    Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
+                    $(modal).find('form').submit();
+                }
             }
         });
 
         elmBody.on('click', '#plano-distribuicao', function () {
             let idRetorno = 'plano-distribuicao';
-            jqAjaxLink('<?php echo $this->url(['module' => 'proposta', 'controller' => 'visualizar-plano-distribuicao', 'action' => 'visualizar', 'idPreProjeto' => $this->projeto->idProjeto]); ?>', '', 'html-plano-distribuicao');
+            jqAjaxLink('<?php echo $this->url(
+                [
+                    'module' => 'proposta',
+                    'controller' => 'visualizar-plano-distribuicao',
+                    'action' => 'visualizar',
+                    'idPreProjeto' => $this->projeto->idProjeto
+                ]); ?>', '', 'html-plano-distribuicao');
         });
 
         elmBody.on('click', '#planilha-orcamentaria', function () {
-            jqAjaxLink('<?php echo $this->Url(array('module' => 'default', 'controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?= $this->projeto->idProjeto; ?>&tipoPlanilha=0', '', 'planilhaOrcamentariaMontada');
+            jqAjaxLink('<?php echo $this->url(
+                [
+                    'module' => 'default',
+                    'controller' => 'index',
+                    'action' => 'montar-planilha-orcamentaria'
+                ]
+            ) ?>?idPronac=<?= $this->projeto->idProjeto; ?>&tipoPlanilha=0', '', 'planilhaOrcamentariaMontada');
         });
 
         let dados = {
@@ -279,18 +290,18 @@
         });
 
         elmBody.on('click', "a[href='#tab-finalizar-parecer-tecnico']", function () {
-            jqAjaxLink('/parecer/analise-inicial/finalizar-parecer-tecnico', dados, 'finalizar-parecer-tecnico');
+            jqAjaxLink('/parecer/analise-inicial/obter-finalizacao-parecer-modal', dados, 'finalizar-parecer-tecnico');
         });
 
-        $('.tabs').on('click', 'a', function (e) {
-            e.preventDefault();
-
-            let offset = $(this).offset();
-
-            $('html,body').animate({
-                scrollTop: offset.top - 70
-            }, 700);
-        });
+//        $('.tabs').on('click', 'a', function (e) {
+//            e.preventDefault();
+//
+//            let offset = $(this).offset();
+//
+//            $('html,body').animate({
+//                scrollTop: offset.top - 70
+//            }, 700);
+//        });
 
     });
 
