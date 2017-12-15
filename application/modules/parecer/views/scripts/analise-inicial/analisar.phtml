@@ -206,6 +206,7 @@
 
         var dadosFormulario = '';
         var elmBody = $('body');
+        var somenteLeitura = parseInt($('#somenteLeitura').val());
 
         elmBody.on('submit', 'form', function () {
 
@@ -243,8 +244,10 @@
                 }
 
                 if (dadosFormulario != $(modal).find('form').serialize()) {
-                    Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
-                    $(modal).find('form').submit();
+                    if(!somenteLeitura) {
+                        Materialize.toast("Salvando altera&ccedil;&otilde;es...", 4000);
+                        $(modal).find('form').submit();
+                    }
                 }
             }
         });

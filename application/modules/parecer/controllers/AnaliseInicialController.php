@@ -9,6 +9,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     private $isIN2017 = false;
     private $somenteLeitura = true;
     private $projeto;
+    private $isProjetoDisponivelParaAssinatura;
 
     private function validarPerfis()
     {
@@ -60,15 +61,15 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 if (($this->grupoAtivo->codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && $pareceristaAtivo) {
 
                     $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
-                    $isProjetoDisponivelParaAssinatura = $objModelDocumentoAssinatura->isProjetoDisponivelParaAssinatura(
+                    $this->isProjetoDisponivelParaAssinatura = $objModelDocumentoAssinatura->isProjetoDisponivelParaAssinatura(
                         $this->idPronac,
                         Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL
                     );
 
                     $this->somenteLeitura = false;
-                    if ($isProjetoDisponivelParaAssinatura) {
-                        $this->somenteLeitura = true;
-                    }
+//                    if ($this->isProjetoDisponivelParaAssinatura) {
+//                        $this->somenteLeitura = true;
+//                    }
                 }
             }
 
@@ -802,7 +803,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     {
         $this->_helper->layout->disableLayout();
 
-        if($this->somenteLeitura) {
+        if($this->somenteLeitura && !$this->isProjetoDisponivelParaAssinatura) {
             $this->_helper->viewRenderer->setNoRender(true);
         }
 
