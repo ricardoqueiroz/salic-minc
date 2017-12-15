@@ -88,11 +88,10 @@
                 <?php endif; ?>
 
                 <?php if ($this->projeto->stPrincipal == 1) : ?>
-                    <li class="tab <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>">
-
+                    <li class="tab">
                         <a
                             target="_top"
-                            class="modal-trigger"
+                            class="modal-trigger <?= ($this->produtosSecundariosEmAnalise == 0) ? '' : 'disabled'; ?>"
                             href="#modal-consolidar-parecer-tecnico">
                             Consolidar Parecer T&eacute;cnico
                         </a>
@@ -122,20 +121,12 @@
             <div id="planilha-analise-de-custos"></div>
         </div>
 
-        <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+        <?php if ($this->projeto->stPrincipal == 1): ?>
             <?php if ($this->existeProdutoSecundario) : ?>
                 <div id="tab-produtos-secundarios" class="col s12">
                     <?php echo $this->partial('analise-inicial/partials/produtos-secundarios.phtml', 'parecer', $this); ?>
                 </div>
             <?php endif; ?>
-        <?php endif; ?>
-
-        <?php if ($this->projeto->stPrincipal == 1 && 1 == 2) : ?>
-            <div id="tab-consolidar-parecer" class="col s12">
-                <?php if ($this->produtosSecundariosEmAnalise == 0) : ?>
-                    <?php echo $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
-                <?php endif; ?>
-            </div>
         <?php endif; ?>
 
         <div id="tab-finalizar-parecer-tecnico" class="col s12">
@@ -151,7 +142,7 @@
 
     <div id="modal-consolidar-parecer-tecnico" class="modal bottom-sheet">
         <div class="modal-contents">
-            <?php if (($this->projeto->stPrincipal == 1) && ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA)): ?>
+            <?php if ($this->projeto->stPrincipal == 1): ?>
                 <?= $this->partial('analise-inicial/partials/consolidar-parecer.phtml', 'parecer', $this); ?>
             <?php endif; ?>
         </div>

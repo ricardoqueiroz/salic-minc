@@ -184,7 +184,7 @@
                     <div class="row">
                         <div class="col s12 m12 l12">
                             <label for="ParecerDeConteudo">Conteúdo do Produto *</label>
-                            <textarea id="ParecerDeConteudo" name="ParecerDeConteudo" class="textarea_simples browser-default"
+                            <textarea id="ParecerDeConteudo" name="ParecerDeConteudo" class="browser-default"
                                       rows="10">
                             </textarea>
                         </div>
@@ -192,7 +192,7 @@
 
                     <div class="row center-align">
                         <a class="btn btn-default modal-close"><i class="material-icons left">close</i> Fechar</a>
-                        <?php if ($this->codGrupo == Autenticacao_Model_Grupos::PARECERISTA): ?>
+                        <?php if (!$this->somenteLeitura): ?>
                             <button id="btSalvarAnaliseDeConteudo" value="" class="waves-effect waves-light btn"
                             >
                                 <i class="material-icons left">send</i>
@@ -203,5 +203,6 @@
                 </fieldset>
             </form>
         </div>
+
     </div>
 </div>

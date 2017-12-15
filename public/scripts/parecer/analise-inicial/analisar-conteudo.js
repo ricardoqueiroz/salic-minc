@@ -8,29 +8,27 @@ baseUrl = jQuery('#baseUrl').val();
 vlSolicitado = jQuery('#vlSolicitado').val();
 idProduto = jQuery('#idProduto').val();
 
-
 $(document).ready(function(){
     // var parecer = null;
     carregarAnaliseDeConteudo();
 
-    // var editorRico = $("#ParecerDeConteudo").editorRico({
-    //     altura: 200,
-    //     // isLimitarCarateres: true,
-    //     // maxchar: limiteMaximo
-    // });
+    var editorRico = $("#ParecerDeConteudo").editorRico({
+        altura: 200,
+        isDesabilitarEdicao: somenteLeitura
+    });
 
     // salvar analise de conteudo
     $('#btSalvarAnaliseDeConteudos').click(function()
     {
         if (!somenteLeitura) {
-            parecer = CKEDITOR.instances['ParecerDeConteudo'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+            parecer = $("#ParecerDeConteudo").val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
             console.log(parecer);
         }
 
         erros = 0;
 
         if (IN2017 && stPrincipal && (produtosSecundariosEmAnalise == 0)){
-            var acoesRelevantes = CKEDITOR.instances['dsAcaoAlcanceProduto'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+            var acoesRelevantes = $('#dsAcaoAlcanceProduto').val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
             if( acoesRelevantes.length  < 11){
                 alertar('As a\xE7\xF5es relevantes devem ter no m\xEDnimo 11 caracteres!');
                 erros ++;
@@ -123,18 +121,18 @@ $(document).ready(function(){
 
 
 function carregarTextAreaCKEditor() {
-    if (jQuery('#somenteLeitura').val() == 0) {
+    if (somenteLeitura == 0) {
         // CKEDITOR.replace( 'ParecerDeConteudo', { toolbar: [] } );
         // console.log('teste1', jQuery('#ParecerDeConteudo').val());
     } else {
         var parecer = $('#ParecerDeConteudo').val();
-        $('#ParecerDeConteudo').before(parecer).remove();
+        // $('#ParecerDeConteudo').before(parecer).remove();
         $('#ParecerFavoravel').attr('disabled', 1);
         $('#ParecerDesfavoravel').attr('disabled', 1);
         $('#btSalvarAnaliseDeConteudo').remove();
         if (jQuery('#IN2017').val() && jQuery('#stPrincipal').val() && jQuery('#produtosSecundariosEmAnalise').val() == 0) {
             var dsAcaoAlcanceProduto = $('#dsAcaoAlcanceProduto').val();
-            $('#dsAcaoAlcanceProduto').before(dsAcaoAlcanceProduto).remove();
+            // $('#dsAcaoAlcanceProduto').before(dsAcaoAlcanceProduto).remove();
         }
     }
 
@@ -188,12 +186,6 @@ function recuperaFormulario(url,params)
                 }
             });
             $('#stAcao').val(2);
-
-            var editorRico = $("#ParecerDeConteudo").editorRico({
-                altura: 200,
-                // isLimitarCarateres: true,
-                // maxchar: limiteMaximo
-            });
         }else{
             $('#stAcao').val(3);
         }

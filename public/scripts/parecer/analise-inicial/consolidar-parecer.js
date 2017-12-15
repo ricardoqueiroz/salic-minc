@@ -1,7 +1,7 @@
 stPrincipal = parseInt(jQuery('#stPrincipal').val());
 IN2017 = parseInt(jQuery('#IN2017').val());
 produtosSecundariosEmAnalise = parseInt(jQuery('#produtosSecundariosEmAnalise').val());
-
+somenteLeitura = parseInt(jQuery('#somenteLeitura').val());
 
 $(document).ready(function(){
 
@@ -11,9 +11,11 @@ $(document).ready(function(){
             altura: 200,
             maxchar: 8000,
             isLimitarCarateres : true,
-            isDesabilitarEdicao: 0
+            isDesabilitarEdicao: somenteLeitura
         });
     });
+
+    desabilitarFormulario(somenteLeitura);
 
     $('#areaCultural').change(function() {
         carregarSegmento();
@@ -99,4 +101,15 @@ function carregarEnquadramento(){
         $('#enquadramentoProjeto').val('1');
         $('#enquadramentoText').html('Artigo 26');
     }
+}
+
+
+function desabilitarFormulario(desabilitar){
+    $('#formConsolidacao').find('input, select, textarea').each(function(key, object){
+        if(desabilitar){
+            $(object).attr('disabled','true');
+        }else{
+            $(object).removeAttr('disabled');
+        }
+    });
 }

@@ -802,6 +802,10 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     {
         $this->_helper->layout->disableLayout();
 
+        if($this->somenteLeitura) {
+            $this->_helper->viewRenderer->setNoRender(true);
+        }
+
         $idPronac = $this->_request->getParam("idPronac");
         $idProduto = $this->_request->getParam("idProduto");
         $stPrincipal = $this->_request->getParam("stPrincipal");
