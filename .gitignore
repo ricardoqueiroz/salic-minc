@@ -26,3 +26,7 @@ tests/log/*
 composer.lock
 .idea
 composer.phar
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
