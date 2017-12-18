@@ -10,7 +10,7 @@ title: Salic-MinC
 email: culturagovbr@cultura.gov.br
 description: > # this means to ignore newlines until "baseurl:"
   Salic MinC é o sistema desenvolvido pelo ministério da cultura para atender a Lei Rouanet.
-baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "https://culturagovbr.github.io/salic-minc" # the subpath of your site, e.g. /blog
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 github_username: culturagovbr 
 
