@@ -12,28 +12,23 @@ $(document).ready(function(){
     // var parecer = null;
     carregarAnaliseDeConteudo();
 
-    var editorRico = $("#ParecerDeConteudo").editorRico({
-        altura: 200,
-        isDesabilitarEdicao: somenteLeitura
-    });
-
     // salvar analise de conteudo
     $('#btSalvarAnaliseDeConteudos').click(function()
     {
         if (!somenteLeitura) {
             parecer = $("#ParecerDeConteudo").val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
-            console.log(parecer);
+            console.log('arecer', parecer);
         }
 
         erros = 0;
 
-        if (IN2017 && stPrincipal && (produtosSecundariosEmAnalise == 0)){
-            var acoesRelevantes = $('#dsAcaoAlcanceProduto').val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
-            if( acoesRelevantes.length  < 11){
-                alertar('As a\xE7\xF5es relevantes devem ter no m\xEDnimo 11 caracteres!');
-                erros ++;
-            }
-        }
+        // if (IN2017 && stPrincipal && (produtosSecundariosEmAnalise == 0)){
+        //     // var acoesRelevantes = $('#dsAcaoAlcanceProduto').val().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,'');
+        //     if( acoesRelevantes.length  < 11){
+        //         alertar('As a\xE7\xF5es relevantes devem ter no m\xEDnimo 11 caracteres!');
+        //         erros ++;
+        //     }
+        // }
 
         if( parecer.length  < 11){
             alertar('O parecer t&eacute;cnico deve ter no m\xEDnimo 11 caracteres!');
@@ -123,7 +118,7 @@ $(document).ready(function(){
 function carregarTextAreaCKEditor() {
     if (somenteLeitura == 0) {
         // CKEDITOR.replace( 'ParecerDeConteudo', { toolbar: [] } );
-        // console.log('teste1', jQuery('#ParecerDeConteudo').val());
+        // console.log('teste1', $('#ParecerDeConteudo').val());
     } else {
         var parecer = $('#ParecerDeConteudo').val();
         // $('#ParecerDeConteudo').before(parecer).remove();
@@ -163,6 +158,10 @@ function recuperaFormulario(url,params)
         params = {};
     }
     var btSalvar = false;
+
+    $('#formAnaliseConteudo').prepend('<div class="loader centro">Aguarde carregando dados...</div>')
+    $('#formAnaliseConteudo').find('fieldset').hide();
+
     $.post(url,params,function(data) {
         // console.log(data);
         if(data){
@@ -181,6 +180,7 @@ function recuperaFormulario(url,params)
                         }
                     }else{
                         btSalvar = true;
+                        console.log(data[$(object).prop('name')]);
                         $(object).val(data[$(object).prop('name')]);
                     }
                 }
@@ -189,6 +189,14 @@ function recuperaFormulario(url,params)
         }else{
             $('#stAcao').val(3);
         }
+
+        var editorRico = $("#ParecerDeConteudo").editorRico({
+            altura: 200,
+            isDesabilitarEdicao: somenteLeitura
+        });
+
+        $("#formAnaliseConteudo div.loader").remove();
+        $('#formAnaliseConteudo').find('fieldset').show();
     },'json');
 }
 

@@ -23,7 +23,7 @@ $action = $this->url(
         <input type="hidden" name="idPronac" value="<?= $this->projeto->IdPRONAC; ?>"/>
         <input type="hidden" name="AnoProjeto" value="<?= $this->projeto->AnoProjeto; ?>"/>
         <input type="hidden" name="Sequencial" value="<?= $this->projeto->Sequencial; ?>"/>
-        <input type="hidden" class="sugeridoReal" name="sugeridoReal" value="<?= $this->consolidacao[0]->SugeridoReal; ?>"/>
+        <input type="hidden" class="sugeridoReal valorTotalSugerido" name="sugeridoReal" value="<?= $this->consolidacao[0]->SugeridoReal; ?>"/>
         <input type="hidden" name="stPrincipal" value="<?= $this->projeto->stPrincipal; ?>"/>
         <input type="hidden" name="idProduto" value="<?= $this->projeto->idProduto; ?>"/>
         <?php if ($this->IN2017) : ?>
@@ -135,7 +135,7 @@ $action = $this->url(
                 <label>
                     <small><b>Valor sugerido</b></small>
                 </label><br>
-                <div class="ValorSugerido">
+                <div class="valorTotalSugerido">
                     <?= isset($this->consolidacao[0]->SugeridoReal) ? $this->formatarReal($this->consolidacao[0]->SugeridoReal) : ''; ?>
                 </div>
             </div>

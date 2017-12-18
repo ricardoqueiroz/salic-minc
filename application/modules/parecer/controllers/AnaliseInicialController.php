@@ -670,6 +670,12 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 throw new Exception("Voc&ecirc; n&atilde;o tem permiss&atilde;o para consolidar este projeto");
             }
 
+            $planilha = self::obterItensOrcamentariosPorProduto($idPronac, $idProduto, $stPrincipal);
+
+            if($planilha) {
+                $sugeridoReal =  Mascara::delMaskMoeda($planilha['totalSugerido']);
+            }
+
             if (!$this->isIN2017) {
 
                 $pa = new paChecarLimitesOrcamentario();

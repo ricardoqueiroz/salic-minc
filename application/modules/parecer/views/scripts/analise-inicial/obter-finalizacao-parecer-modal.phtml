@@ -9,16 +9,16 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
     <?php if ($this->projeto->stPrincipal == 1) : ?>
         <ul class="collection">
             <?php if (!$isProdutosSecundariosAnalisados) : ?>
-                <li class="collection-item">Existem produtos secundários não analisados</li>
+                <li class="collection-item">Existem produtos secundï¿½rios nï¿½o analisados</li>
             <?php endif; ?>
             <?php if ($isProdutosPendentesParecer) : ?>
                 <li class="collection-item">Existem produtos pendentes de parecer</li>
             <?php endif; ?>
             <?php if (!$isProjetoEnquadrado) : ?>
-                <li class="collection-item">Este projeto não foi enquadrado</li>
+                <li class="collection-item">Este projeto nï¿½o foi enquadrado</li>
             <?php endif; ?>
             <?php if (!$isProjetoComParecer) : ?>
-                <li class="collection-item">Este projeto ainda não possui parecer</li>
+                <li class="collection-item">Este projeto ainda nï¿½o possui parecer</li>
             <?php endif; ?>
         </ul>
     <?php endif; ?>
@@ -198,7 +198,7 @@ $isProjetoComParecer = $this->IsProjetoComParecer($this->projeto->IdPRONAC);
                     <i class="material-icons left">check_circle</i>
                     Finalizar an&aacute;lise
                 </a>
-            <? endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </div>
