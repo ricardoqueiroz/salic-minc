@@ -5,37 +5,35 @@ date:   2017-12-26 13:53:00 -0200
 categories: artigos
 ---
 # Missão PHP 7
-Salic é um sistema que tem evoluido para adotar a melhores praticas do mercado, atualmente sendo desenvolvido com backend em PHP 5.6, tinhamos um desejo em comum de evoluir todas as praticas de desenvolvimento dentro do sistema.
-Entre as inumeras propostas [veja aqui](https://github.com/culturagovbr/salic-minc/issues).
+Salic é um sistema que tem evoluído para adotar as melhores práticas do mercado, atualmente é desenvolvido com backend em PHP 5.6, temos um desejo em comum de evoluir todas as práticas de desenvolvimento dentro do sistema.
+Entre as inúmeras propostas [veja aqui](https://github.com/culturagovbr/salic-minc/issues).
 
-Atualizar as dependencias do sistema são as mais importantes, pois são a base onde vamos vamos construir o sistema.
+Atualizar as dependências do sistema são as mais importantes, pois formam a base onde vamos construir o sistema.
 
-Pontos que precisavam ser ajustados:
+Pontos iniciais que precisavam ser ajustados:
 * Atualização do framework PHP usado: Zend Framework 1.10 para 1.12.20.
-* Adicionar o composer para gerenciar as dependencias do sistema.
+* Adicionar o composer para gerenciar as dependências do sistema.
 * Criação de container em Docker para ambientes de desenvolvimento e produção 
 * Retirar o Zend Framework 1 do versionamento do nosso projeto
 
-## Cenario atual
-O suporte da equipe de desenvolvimento do PHP as suas versão não é infinito, assim como descrito [aqui](http://php.net/supported-versions.php) no fim desse suporte de seguança poderiamos entrar no problemas de ter falhas desegurança na linguagem de programação que nunca seriam concertados.
+## Cenário atual
+O suporte da equipe de desenvolvimento do PHP para as suas versões não é infinito, assim como descrito [aqui](http://php.net/supported-versions.php) no fim desse suporte de segurança poderíamos entrar no problemas de ter falhas de segurança na linguagem de programação, que nunca seriam consertados.
 
-O Zend Framework 1 perdeu o suporte em [2016-09-28](https://framework.zend.com/long-term-support), com isso se criou a mesma preocupação que temos com as versões do PHP, temos um agravante em relação ao framework pois tiveram algumas modificações no framework que alteram seu comportamento, criando um problemas para a equipe de desenvolvimento atualizar o codigo do framewok, que estava em versão 1.10.
+O Zend Framework 1 perdeu o suporte em [2016-09-28](https://framework.zend.com/long-term-support), com isso criou-se a mesma preocupação que temos com as versões do PHP. No MinC temos um agravante em relação à versão do ZF1 utilizada, pois o core do framework teve modificações, que alteram seu comportamento, criando problemas para a equipe de desenvolvimento atualizar o código do framewok, que estava em versão 1.10.
 
 ## Soluções
-Primeiramente foi preciso estabelecer uma imagem no [docker](https://github.com/culturagovbr/docker-salic) para nosso projeto, essa é a base para as atualizações que precisavamos fazer no sistema.
-Com a os ambientes de Produção, Homologação e Desenvolvimento rodando a mesma imagem, tivemos exito em manter a equipe com mesmas versões de PHP, criando também mesmo atrito em desenvolvimento e deploy das novas soluções.
+Primeiramente foi preciso estabelecer uma imagem no [docker](https://github.com/culturagovbr/docker-salic) para nosso projeto, essa é a base para as atualizações que precisávamos fazer no sistema.
+Com os ambientes de Produção, Homologação e Desenvolvimento rodando a mesma imagem, tivemos êxito em manter a equipe com as mesmas versões do PHP, criando também mesmo atrito em desenvolvimento e deploy das novas soluções.
 
 Com a imagem do PHP 5.6, tivemos sucesso em migrar essa imagem para PHP 7, sendo aplicado inicialmente no ambiente de  Homologação e Desenvolvimento.
 Usamos essas referencias: https://github.com/vinnyfs89/dockerPHP5.3a7
 
-Com imagem em PHP 7 tivemos que analizar nossa base de codigo e verificar as possiveis incompatibilidade, [php7cc](https://github.com/sstalle/php7cc), nos ajudou nesse trabalho arduo.
+Com imagem em PHP 7 tivemos que analisar nossa base de código e verificar as possíveis incompatibilidade, [php7cc](https://github.com/sstalle/php7cc), nos ajudou nesse trabalho árduo.
 
-Tivemos que retirar de dentro do framework todas as modificações indevidas nas bibliotecas e restaurar a versão correta, para evitar esses problemas no futuro, retiramos da nossa base de codigo o framework e adicionada como dependencia no composer.json.
+Tivemos que retirar de dentro do framework todas as modificações indevidas nas bibliotecas e restaurar a versão correta, para evitar esses problemas no futuro, retiramos da nossa base de código o framework e adicionada como dependência no composer.json.
 
-Feitos os ajustes iniciais, fizemso o deploy da imagem mais o codigo ajustado em ambiente de Homologação.
+Feitos os ajustes iniciais, fizemos o deploy da imagem mais o código ajustado em ambiente de Homologação.
 
 ## Conclusão
 
-As boas praticas de desevolvimento custam caro quando temos que aplicar em projetos já estabelecidos com anos de uso, pois podemos lidar com o impacto em muitas funcionalidades e a parada parcial ou total do funcionamento do sistema, que é algo altamente indesejavel, no entanto, a não aplicação desses ajustes impossibilita evoluções e soluções mais sofisticadas dentro do sistema.
-
-
+As boas praticas de desenvolvimento custam caro quando temos que aplicar em projetos já estabelecidos com anos de uso, pois podemos lidar com o impacto em muitas funcionalidades e a parada parcial ou total do funcionamento do sistema, que é algo altamente indesejável, no entanto, a não aplicação desses ajustes impossibilita evoluções e soluções mais sofisticadas dentro do sistema.
