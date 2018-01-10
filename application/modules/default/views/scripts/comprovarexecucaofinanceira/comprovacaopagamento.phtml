@@ -106,28 +106,34 @@
                             <input type='hidden' name='totalComprovado' id='totalComprovado'
                                    value='<?php echo $this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'; ?>'/>
 
-                            <table id="tabelaItem" class="bordered">
-                                <caption>Vincular Item de Custo</caption>
-                                <thead>
-                                    <tr>
-                                        <th class="">Produto</th>
-                                        <th class="">Etapa</th>
-                                        <th class="">Itens de Custo</th>
-                                        <th class="" id="campoValorAprovado">Valor Aprovado</th>
-                                        <th class="" id="campoValorComprovado">Total Comprovado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><?php echo $this->produto->Sintese; ?></td>
-                                        <td><?php echo $this->etapa->Descricao; ?></td>
-                                        <td><?php echo $this->item->Descricao; ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?></td>
-                                        <td><?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="card z-depth-2">
+                            <div class="card-content">
+                                <table id="tabelaItem" class="bordered">
+                                    <caption>Vincular Item de Custo</caption>
+                                    <thead>
+                                        <tr>
+                                            <th class="">Produto</th>
+                                            <th class="">Etapa</th>
+                                            <th class="">Itens de Custo</th>
+                                            <th class="" id="campoValorAprovado">Valor Aprovado</th>
+                                            <th class="" id="campoValorComprovado">Total Comprovado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><?php echo $this->produto->Sintese; ?></td>
+                                            <td><?php echo $this->etapa->Descricao; ?></td>
+                                            <td><?php echo $this->item->Descricao; ?></td>
+                                            <td><?php echo $this->currency($this->itemPlanilhaAprovacao->valorAprovado); ?></td>
+                                            <td><?php echo $this->currency($this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'); ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
+                        <div class="card z-depth-2">
+                            <div class="card-content">
                                 <div id="tabelaComprovante">
                                     <fieldset>
                                         <legend>Identifica&ccedil;&atilde;o do Contratado</legend>
@@ -205,6 +211,11 @@
                                             </div>
                                         </div>
                                     </fieldset>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="card z-depth-2">
+                                <div class="card-content">
 
                                     <!-- Identificação Nacional -->
                                     <div id="bodyTabelaComprovante">
@@ -443,7 +454,8 @@
                                         <td class="">Desvincular</td>
                                     </tr>
                                 </table>
-
+                            </div>
+                        </div>
                                 <div class="row">
                                     <div class="col s12 center-align">
                                         <?php if (!$this->vrSituacao || !$this->pagCompRecusado) : ?>
