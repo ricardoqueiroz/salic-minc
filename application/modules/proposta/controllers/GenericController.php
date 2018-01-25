@@ -120,11 +120,9 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
         $this->idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
 
-        self::buscarProposta();
-
-        if ($this->_proposta) {
-
-            $this->_proponente = self::buscarProponente($this->_proposta['idagente']);
+        if (!empty($this->idPreProjeto)) {
+            $this->_proposta = $this->buscarProposta($this->idPreProjeto);
+            $this->_proponente = $this->buscarProponente($this->_proposta['idagente']);
 
             $this->view->idPreProjeto = $this->idPreProjeto;
             $this->view->proposta = $this->_proposta;
@@ -144,12 +142,12 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
             // Alterar projeto
             if (!empty($this->view->isEditarProjeto)) {
-
                 $tblProjetos = new Projetos();
                 $projeto = array_change_key_case($tblProjetos->findBy(array('idprojeto = ?' => $this->idPreProjeto)));
 
-                if (!isset($projeto['nrprojeto']))
+                if (!isset($projeto['nrprojeto'])) {
                     $projeto['nrprojeto'] = $projeto['anoprojeto'] . $projeto['sequencial'];
+                }
 
                 $this->view->projeto = $projeto;
 
@@ -188,254 +186,67 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         return false;
     }
 
-    private function buscarProposta()
+    private function buscarProposta($idPreProjeto)
     {
-        if ($this->idPreProjeto) {
-            $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
-            $proposta = $tblPreProjeto->buscar(array('idPreProjeto = ?' => $this->idPreProjeto))->current();
+        $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
+        $proposta = $tblPreProjeto->buscar(array('idPreProjeto = ?' => $idPreProjeto))->current();
 
-            if ($proposta) {
-                $this->_proposta = array_change_key_case($proposta->toArray());
-            }
+        if ($proposta) {
+            $proposta = array_change_key_case($proposta->toArray());
+            return $proposta;
         }
     }
 
     public function isEditarProposta($idPreProjeto)
     {
-
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
         // Verifica se a proposta estah com o minc
         $tbMovimentacao = new Proposta_Model_DbTable_TbMovimentacao();
         $rsStatusAtual = $tbMovimentacao->findBy(array('idprojeto = ?' => $idPreProjeto, 'stestado = ?' => 0));
 
-        if ($rsStatusAtual['Movimentacao'] == $this->_movimentacaoAlterarProposta)
+        if ($rsStatusAtual['Movimentacao'] == $this->_movimentacaoAlterarProposta) {
             return true;
+        }
 
         return false;
     }
 
     public function isEditarProjeto($idPreProjeto)
     {
-
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
         // Verifica se o projeto esta na situacao para editar
         $tblProjetos = new Projetos();
         $projeto = $tblProjetos->findBy(array('idprojeto = ?' => $idPreProjeto));
 
 //        $tblProjetos->verificarLiberacaoParaAdequacao($projeto['IdPRONAC']);
-        if (!$tblProjetos->verificarLiberacaoParaAdequacao($projeto['IdPRONAC']))
+        if (!$tblProjetos->verificarLiberacaoParaAdequacao($projeto['IdPRONAC'])) {
             return false;
+        }
 
-        if ($this->contagemRegressivaSegundos($projeto['DtSituacao'], $this->_diasParaAlterarProjeto) < 0)
+        if ($this->contagemRegressivaSegundos($projeto['DtSituacao'], $this->_diasParaAlterarProjeto) < 0) {
             return false;
+        }
 
-        if ($projeto['Situacao'] == $this->_situacaoAlterarProjeto)
+        if ($projeto['Situacao'] == $this->_situacaoAlterarProjeto) {
             return true;
+        }
 
         return false;
     }
 
     public function isEditavel($idPreProjeto)
     {
-        if (!$this->isEditarProjeto($idPreProjeto) && !$this->isEditarProposta($idPreProjeto))
+        if (!$this->isEditarProjeto($idPreProjeto) && !$this->isEditarProposta($idPreProjeto)) {
             return false;
+        }
 
         return true;
-    }
-
-    public function buscarStatusProposta($idPreProjeto)
-    {
-        if (empty($idPreProjeto))
-            return false;
-
-        $tbMovimentacao = new Proposta_Model_DbTable_TbMovimentacao();
-        $rsStatusAtual = $tbMovimentacao->buscarStatusPropostaNome($idPreProjeto);
-
-        return $rsStatusAtual;
-
-    }
-
-    public function gerarArrayCustosVinculados($idPreProjeto)
-    {
-        $valoresCustosVinculados = array();
-        $TPP = new Proposta_Model_DbTable_Abrangencia();
-        $ufRegionalizacaoPlanilha = $TPP->buscarUfRegionalizacao($idPreProjeto);
-
-        $ModelCV = new Proposta_Model_TbCustosVinculados();
-
-        $itensPlanilhaProduto = new tbItensPlanilhaProduto();
-        $itensCustosVinculados = $itensPlanilhaProduto->buscarItens($ModelCV::ID_ETAPA_CUSTOS_VINCULADOS, null, Zend_DB::FETCH_ASSOC);
-
-        if (!empty($ufRegionalizacaoPlanilha)) { # sudeste e sul
-            $valoresCustosVinculados['percentualDivulgacao'] = $ModelCV::PERCENTUAL_DIVULGACAO_SUL_SUDESTE;
-            $valoresCustosVinculados['percentualRemuneracaoCaptacao'] = $ModelCV::PERCENTUAL_REMUNERACAO_CAPTACAO_DE_RECURSOS_SUL_SUDESTE;
-            $valoresCustosVinculados['limiteRemuneracaoCaptacao'] = $ModelCV::LIMITE_CAPTACAO_DE_RECURSOS_SUL_SUDESTE;
-
-        } else { # demais regiões
-            $valoresCustosVinculados['percentualDivulgacao'] = $ModelCV::PERCENTUAL_DIVULGACAO_OUTRAS_REGIOES;
-            $valoresCustosVinculados['percentualRemuneracaoCaptacao'] = $ModelCV::PERCENTUAL_REMUNERACAO_CAPTACAO_DE_RECURSOS_OUTRAS_REGIOES;
-            $valoresCustosVinculados['limiteRemuneracaoCaptacao'] = $ModelCV::LIMITE_CAPTACAO_DE_RECURSOS_OUTRAS_REGIOES;
-        }
-
-        $CustosMapper = new Proposta_Model_TbCustosVinculadosMapper();
-
-        $custosVinculados = array();
-        foreach ($itensCustosVinculados as $item) {
-
-            switch ($item['idPlanilhaItens']) {
-                case $ModelCV::ID_CUSTO_ADMINISTRATIVO:
-                    $item['Percentual'] = $ModelCV::PERCENTUAL_CUSTO_ADMINISTRATIVO;
-                    break;
-                case $ModelCV::ID_DIVULGACAO:
-                    $item['Percentual'] = $valoresCustosVinculados['percentualDivulgacao'];
-                    break;
-                case $ModelCV::ID_REMUNERACAO_CAPTACAO:
-                    $item['Percentual'] = $valoresCustosVinculados['percentualRemuneracaoCaptacao'];
-                    $item['Limite'] = $valoresCustosVinculados['limiteRemuneracaoCaptacao'];
-                    break;
-                case $ModelCV::ID_CONTROLE_E_AUDITORIA:
-                    $item['Percentual'] = $ModelCV::PERCENTUAL_CONTROLE_E_AUDITORIA;
-                    $item['Limite'] = $ModelCV::LIMITE_CONTROLE_E_AUDITORIA;
-                    break;
-                case $ModelCV::ID_DIREITOS_AUTORAIS:
-                    $item['Percentual'] = $ModelCV::PERCENTUAL_DIREITOS_AUTORAIS;
-                    break;
-            }
-
-            $custoVinculadoProponente = $CustosMapper->findBy(array('idProjeto' => $idPreProjeto, 'idPlanilhaItem' => $item['idPlanilhaItens']));
-
-            if ($custoVinculadoProponente) {
-                $item['PercentualProponente'] = $custoVinculadoProponente['pcCalculo'];
-                $item['idCustosVinculados'] = $custoVinculadoProponente['idCustosVinculados'];
-            }
-
-            $custosVinculados[] = $item;
-        }
-
-        return $custosVinculados;
-    }
-
-    /**
-     * atualizarcustosvinculadosdaplanilha
-     *
-     * @access public
-     * @return void
-     */
-    public function atualizarcustosvinculadosdaplanilha($idPreProjeto)
-    {
-        $idEtapa = '8'; // Custos Vinculados
-        $tipoCusto = 'A';
-
-        if (empty($idPreProjeto))
-            return false;
-
-        $TPP = new Proposta_Model_DbTable_TbPlanilhaProposta();
-        $somaPlanilhaPropostaProdutos = $TPP->somarPlanilhaPropostaProdutos($idPreProjeto, 109);
-
-        if (empty($somaPlanilhaPropostaProdutos['soma']) || (is_numeric($somaPlanilhaPropostaProdutos['soma']) && $somaPlanilhaPropostaProdutos['soma'] <= 0)) {
-            $TPP->excluirCustosVinculados($idPreProjeto);
-            return true;
-        }
-
-        $itens = $this->calcularCustosVinculadosPlanilhaProposta($idPreProjeto, $somaPlanilhaPropostaProdutos['soma']);
-
-        foreach ($itens as $item) {
-
-            $custosVinculados = null;
-
-            //fazer uma nova busca com o essencial para este caso
-            $custosVinculados = $TPP->buscarCustos($idPreProjeto, $tipoCusto, $idEtapa, $item['idplanilhaitem']);
-
-            if (isset($custosVinculados[0]->idItem)) {
-                $where = 'idPlanilhaProposta = ' . $custosVinculados[0]->idPlanilhaProposta;
-                $TPP->update($item, $where);
-            } else {
-                $TPP->insert($item);
-            }
-        }
-    }
-
-    public function calcularCustosVinculadosPlanilhaProposta($idPreProjeto, $valorTotalProdutos = null)
-    {
-
-        if (empty($idPreProjeto))
-            return false;
-
-        $ModelCV = new Proposta_Model_TbCustosVinculados();
-        $idEtapa = $ModelCV::ID_ETAPA_CUSTOS_VINCULADOS;
-        $fonteRecurso = $ModelCV::ID_FONTE_RECURSO_CUSTOS_VINCULADOS;
-        $idUf = 1;
-        $idMunicipio = 1;
-        $dados = array();
-
-        $TPP = new Proposta_Model_DbTable_TbPlanilhaProposta();
-
-        if (empty($valorTotalProdutos)) {
-            $somaPlanilhaPropostaProdutos = $TPP->somarPlanilhaPropostaProdutos($idPreProjeto, 109);
-            $valorTotalProdutos = $somaPlanilhaPropostaProdutos['soma'];
-        }
-
-        if (!is_numeric($valorTotalProdutos)) {
-            return 0;
-        }
-
-        $itensCustosVinculados = $this->gerarArrayCustosVinculados($idPreProjeto);
-
-        foreach ($itensCustosVinculados as $item) {
-
-            if ($item['PercentualProponente'] > 0) {
-                $valorCustoItem = ($valorTotalProdutos * ($item['PercentualProponente'] / 100));
-
-                if (isset($item['Limite']) && $valorCustoItem > $item['Limite']) {
-                    $valorCustoItem = $item['Limite'];
-                }
-            } elseif ($item['PercentualProponente'] == 0) {
-                $valorCustoItem = 0;
-            }
-
-            $dados[] = array(
-                'idprojeto' => $idPreProjeto,
-                'idetapa' => $idEtapa,
-                'idplanilhaitem' => $item['idPlanilhaItens'],
-                'descricao' => '',
-                'unidade' => '1',
-                'quantidade' => '1',
-                'ocorrencia' => '1',
-                'valorunitario' => $valorCustoItem,
-                'qtdedias' => '1',
-                'tipodespesa' => '0',
-                'tipopessoa' => '0',
-                'contrapartida' => '0',
-                'fonterecurso' => $fonteRecurso,
-                'ufdespesa' => $idUf,
-                'municipiodespesa' => $idMunicipio,
-                'idusuario' => 462,
-                'dsjustificativa' => ''
-            );
-        }
-
-        return $dados;
-    }
-
-    public function somarTotalCustosVinculados($idPreProjeto, $valorTotalProdutos = null)
-    {
-        $itens = $this->calcularCustosVinculadosPlanilhaProposta($idPreProjeto, $valorTotalProdutos);
-        $soma = '';
-
-        if ($itens == 0)
-            return 0;
-
-        if ($itens) {
-            $soma = 0;
-            foreach ($itens as $item) {
-                $soma = $item['valorunitario'] + $soma;
-            }
-        }
-        return $soma;
     }
 
     public function contagemRegressivaDias($datainicial = null, $prazo = null)
@@ -470,8 +281,9 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
     {
         $result = $object->findAll($where);
 
-        if (!$result)
+        if (!$result) {
             return false;
+        }
 
         return serialize($result);
     }
@@ -483,12 +295,14 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function unserializarObjeto($object, $idPreProjeto, $metakey = null)
     {
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
         # se não passar o metakey, tenta recuperar a tabela do objeto
-        if (empty($metakey))
+        if (empty($metakey)) {
             $metakey = str_replace('dbo.', '', $object->getTableName());
+        }
 
         $PPM = new Proposta_Model_DbTable_PreProjetoMeta();
         $result = $PPM->buscarMeta($idPreProjeto, $metakey);
@@ -504,14 +318,16 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function salvarObjetoSerializado($object, $idPreProjeto, $metakey = null, $where = null)
     {
-        if (empty($where))
+        if (empty($where)) {
             $where = array('idProjeto' => $idPreProjeto);
+        }
 
         $serializado = $this->serializarObjeto($object, $where);
 
         # se não passar o metakey, salva o nome da tabela do objeto
-        if (empty($metakey))
+        if (empty($metakey)) {
             $metakey = str_replace('dbo.', '', $object->getTableName());
+        }
 
         $PPM = new Proposta_Model_DbTable_PreProjetoMeta();
         return $PPM->salvarMeta($idPreProjeto, $metakey, $serializado);
@@ -525,14 +341,14 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function salvarArraySerializado($array, $idPreProjeto, $metakey)
     {
-        if (empty($metakey))
+        if (empty($metakey)) {
             return false;
+        }
 
         $serializado = serialize($array);
 
         $PPM = new Proposta_Model_DbTable_PreProjetoMeta();
         return $PPM->salvarMeta($idPreProjeto, $metakey, $serializado);
-
     }
 
     /**
@@ -544,24 +360,28 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function restaurarObjetoSerializadoParaTabela($object, $idPreProjeto, $metakey, $whereDelete = null)
     {
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
-        if (empty($metakey))
+        if (empty($metakey)) {
             return false;
+        }
 
         # metakey de backup para o objeto atual
         $tableName = str_replace('dbo.', '', $object->getTableName());
 
-        if ($tableName == 'preprojeto' || $tableName == 'tbplanodistribuicao')
+        if ($tableName == 'preprojeto' || $tableName == 'tbplanodistribuicao') {
             return false;
+        }
 
         # recupera e verifica se os itens existem
         $itens = $this->unserializarObjeto($object, $idPreProjeto, $metakey);
 
         # se não tiver itens, não eh pra restaurar
-        if (empty($itens) || !is_array($itens))
+        if (empty($itens) || !is_array($itens)) {
             return false;
+        }
 
         # metakey de backup para o objeto atual
         $metakeybkp = $metakey . "_bkp";
@@ -571,9 +391,9 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
 
         # excluir itens atuais
         if ($salvarBkp) {
-
-            if (empty($whereDelete))
+            if (empty($whereDelete)) {
                 $whereDelete = array('idProjeto' => $idPreProjeto);
+            }
 
             $delete = $object->deleteBy($whereDelete);
         }
@@ -581,12 +401,12 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         #incluir os novos itens
         if ($delete >= 0) {
             foreach ($itens as $item) {
-
                 $PK = $object->getPrimary();
                 $PK = $PK[1];
 
-                if ($item[$PK])
+                if ($item[$PK]) {
                     unset($item[$PK]);
+                }
 
                 $object->insert($item);
             }
@@ -607,11 +427,13 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function salvarDadosPropostaSerializada($idPreProjeto)
     {
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
-        if (!$this->isEditarProjeto($idPreProjeto))
+        if (!$this->isEditarProjeto($idPreProjeto)) {
             return false;
+        }
 
         $PPM = new Proposta_Model_DbTable_PreProjetoMeta();
 
@@ -622,7 +444,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         # Planilha orcamentaria
         $metaPlanilha = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_tbplanilhaproposta');
         if (!$metaPlanilha) {
-
             $TPP = new Proposta_Model_DbTable_TbPlanilhaProposta();
             $dadosPlanilhaCompleta = $TPP->buscarPlanilhaCompleta($idPreProjeto);
 
@@ -675,7 +496,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         # identificacao da proposta
         $metaIdentificacaoProposta = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_identificacaoproposta');
         if (!$metaIdentificacaoProposta) {
-
             $identificacaoProposta = array(
                 'dtiniciodeexecucao' => $proposta['dtiniciodeexecucaoform'],
                 'dtfinaldeexecucao' => $proposta['dtfinaldeexecucaoform']
@@ -689,7 +509,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         # responsabilidade social
         $metaResponsabilidadeSocial = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_responsabilidadesocial');
         if (!$metaResponsabilidadeSocial) {
-
             $responsabilidadeSocial = array(
                 'Acessibilidade' => $proposta['acessibilidade'],
                 'DemocratizacaoDeAcesso' => $proposta['democratizacaodeacesso'],
@@ -704,7 +523,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         # detalhes técnicos
         $metadetalhesTecnicos = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_detalhestecnicos');
         if (!$metadetalhesTecnicos) {
-
             $detalhesTecnicos = array(
                 'EtapaDeTrabalho' => $proposta['etapadetrabalho'],
                 'FichaTecnica' => $proposta['fichatecnica'],
@@ -719,7 +537,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         # outras informacoes
         $metaOutrasInformacoes = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_outrasinformacoes');
         if (!$metaOutrasInformacoes) {
-
             $outrasInformacoes = array(
                 'EstrategiadeExecucao' => $proposta['estrategiadeexecucao']
             );
@@ -742,8 +559,9 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
      */
     public function restaurarPlanoDistribuicaoDetalhado($idPreProjeto)
     {
-        if (empty($idPreProjeto))
+        if (empty($idPreProjeto)) {
             return false;
+        }
 
         $TPD = new PlanoDistribuicao();
         $produtos = $this->unserializarObjeto($TPD, $idPreProjeto, 'alterarprojeto_planodistribuicaoproduto');
@@ -752,11 +570,13 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
         $detalhamentoProdutos = $this->unserializarObjeto($TPDD, $idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao');
 
         # se não tiver itens, não eh pra restaurar
-        if (empty($produtos) || !is_array($produtos))
+        if (empty($produtos) || !is_array($produtos)) {
             return false;
+        }
 
-        if (empty($detalhamentoProdutos) || !is_array($detalhamentoProdutos))
+        if (empty($detalhamentoProdutos) || !is_array($detalhamentoProdutos)) {
             return false;
+        }
 
         # metakey de backup para os objetos atuais
         $bkpPDP = "alterarprojeto_planodistribuicaoproduto_bkp";

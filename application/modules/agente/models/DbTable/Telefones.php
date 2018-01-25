@@ -90,5 +90,4 @@ class Agente_Model_DbTable_Telefones extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($sql);
     }
-
 }

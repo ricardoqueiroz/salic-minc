@@ -97,18 +97,17 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $idDocumentoAssinatura = $this->getIdDocumentoAssinatura($get['IdPRONAC'], $idTipoDoAtoAdministrativo);
 
                 $this->redirect("/assinatura/index/visualizar-projeto/?idDocumentoAssinatura=" . $idDocumentoAssinatura . "&origin=" . $get['origin']);
-            } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
+            } elseif(isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
                 // ainda nao implementado o encaminhamento de vários para pareceres
             }
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), "/{$this->moduleName}/analise-inicial/index");
         }
-
     }
 
-    function obterServicoDocumentoAssinatura()
+    public function obterServicoDocumentoAssinatura()
     {
-        if (!isset($this->servicoDocumentoAssinatura)) {
+        if(!isset($this->servicoDocumentoAssinatura)) {
             require_once __DIR__ . DIRECTORY_SEPARATOR . "AnaliseInicialDocumentoAssinaturaController.php";
             $this->servicoDocumentoAssinatura = new Parecer_AnaliseInicialDocumentoAssinaturaController($this->getRequest()->getPost());
         }
@@ -199,20 +198,21 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
             $this->view->projeto = $this->projeto;
             $this->view->IN2017 = $this->isIN2017;
-            $this->view->situacao = self::definirSituacaoAnaliseProduto(
+            $this->view->situacao = $this->definirSituacaoAnaliseProduto(
                 $this->projeto->DtDistribuicao,
                 $this->projeto->DtDevolucao,
                 $this->projeto->FecharAnalise,
                 $this->projeto->idAgenteParecerista
             );
 
+
             if ($this->projeto->stPrincipal) {
 
-                $produtosSecundarios = self::obterProdutosSecundarios($this->idPronac);
+                $produtosSecundarios = $this->obterProdutosSecundarios($this->idPronac);
                 $this->view->existeProdutoSecundario = count($produtosSecundarios) > 0 ? true : false;
                 $this->view->produtosSecundarios = $produtosSecundarios;
 
-                self::obterConsolidacaoParecerTecnico();
+                $this->obterConsolidacaoParecerTecnico();
             }
 
         } catch (Exception $e) {
@@ -319,7 +319,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
             $produtosSecundarios[$i]['Produto'] = $ps->Produto;
             $produtosSecundarios[$i]['DescricaoAnalise'] = $ps->DescricaoAnalise;
             $produtosSecundarios[$i]['Obs'] = $ps->Obs;
-            $produtosSecundarios[$i]['Situacao'] = self::definirSituacaoAnaliseProduto(
+            $produtosSecundarios[$i]['Situacao'] = $this->definirSituacaoAnaliseProduto(
                 $ps->DtDistribuicaoPT,
                 $ps->DtDevolucaoPT,
                 $ps->FecharAnalise,
@@ -920,8 +920,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         }
 
         // Validacao do 15%
-        if ($this->stPrincipal == "1") //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
-        {
+        if ($stPrincipal == "1") { //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
             $Situacao = false;
 
             $V1 = '';

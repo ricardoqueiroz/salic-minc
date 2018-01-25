@@ -21,6 +21,8 @@ Para parar o container basta digitar:
 ```
   docker-compose stop
 ```
+## Submodulos
+* Esse projeto contem os manuais e implementações de layout do salic [Layout](https://github.com/culturagovbr/salic-minc-layout)
 
 ## Tecnologias
 * [PHP](http://php.net/)

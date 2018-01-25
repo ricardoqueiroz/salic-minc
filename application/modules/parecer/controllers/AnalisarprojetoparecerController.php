@@ -41,8 +41,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             $this->view->grupoAtivo = $GrupoAtivo->codGrupo; // manda o grupo ativo do usuario para a visao
             $this->view->orgaoAtivo = $GrupoAtivo->codOrgao; // manda o orgao ativo do usuario para a visao
 
-            if (isset($auth->getIdentity()->usu_codigo)) // autenticacao novo salic
-            {
+            if (isset($auth->getIdentity()->usu_codigo)) { // autenticacao novo salic
                 $this->getIdUsuario = UsuarioDAO::getIdUsuario($auth->getIdentity()->usu_codigo);
                 $this->getIdUsuario = ($this->getIdUsuario) ? $this->getIdUsuario["idAgente"] : 0;
             }
@@ -52,7 +51,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             return $this->_helper->redirector->goToRoute(array('module' => 'default', 'controller' => 'index', 'action' => 'logout'), null, true);
         }
 
-        parent::init(); // chama o init() do pai GenericControllerNew
+        parent::init();
     }
 
 
@@ -128,7 +127,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
 
         $limitador = 5;
         $where = array('d.idAgenteParecerista = ?' => $idAgenteParecerista, 'd.idOrgao = ?' => $idOrgao);
-        //$where = array();
         $projeto = new Projetos();
         switch ($nrRelatorio) {
             case 0:
@@ -161,16 +159,16 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         foreach ($resp as $key => $val) {
             $cont++;
 
-            $diligencia = NULL;
-            $tempoRestante = NULL;
-            $tempoDiligencia = NULL;
+            $diligencia = null;
+            $tempoRestante = null;
+            $tempoDiligencia = null;
 
             /* Diligencia */
-            if ($val->DtSolicitacao && $val->DtResposta == NULL) {
+            if ($val->DtSolicitacao && $val->DtResposta == null) {
                 $diligencia = 1;
-            } else if ($val->DtSolicitacao && $val->DtResposta != NULL) {
+            } elseif ($val->DtSolicitacao && $val->DtResposta != null) {
                 $diligencia = 2;
-            } else if ($val->DtSolicitacao && round(data::CompararDatas($val->DtDistribuicao)) > $val->tempoFimDiligencia) {
+            } elseif ($val->DtSolicitacao && round(data::CompararDatas($val->DtDistribuicao)) > $val->tempoFimDiligencia) {
                 $diligencia = 3;
             } else {
                 $diligencia = 0;
@@ -257,17 +255,20 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         $this->intTamPag = $qtInformacao;
         //controlando a paginacao
         $pag = 1;
-        if (isset($post->pag))
+        if (isset($post->pag)) {
             $pag = $post->pag;
-        if (isset($post->tamPag))
+        }
+        if (isset($post->tamPag)) {
             $this->intTamPag = $post->tamPag;
+        }
         $inicio = ($pag > 1) ? ($pag - 1) * $this->intTamPag : 0;
         $fim = $inicio + $this->intTamPag;
 
         $totalPag = (int)(($total % $this->intTamPag == 0) ? ($total / $this->intTamPag) : (($total / $this->intTamPag) + 1));
         $tamanho = ($fim > $total) ? $total - $inicio : $this->intTamPag;
-        if ($fim > $total)
+        if ($fim > $total) {
             $fim = $total;
+        }
 
         $this->view->pag = $pag;
         $this->view->total = $total;
@@ -289,7 +290,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
     {
         $auth = Zend_Auth::getInstance(); // pega a autenticacao
         $idUsuario = $auth->getIdentity()->usu_codigo;
-//      $idUsuario = $this->getIdUsuario;
 
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessao com o grupo ativo
         $idOrgao = $GrupoAtivo->codOrgao; //  orgao ativo na sessao
@@ -308,11 +308,11 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         foreach ($resp as $key => $val) {
             $cont++;
 
-            if ($val->DtSolicitacao && $val->DtResposta == NULL) {
+            if ($val->DtSolicitacao && $val->DtResposta == null) {
                 $diligencia = 1;
-            } else if ($val->DtSolicitacao && $val->DtResposta != NULL) {
+            } elseif ($val->DtSolicitacao && $val->DtResposta != null) {
                 $diligencia = 2;
-            } else if ($val->DtSolicitacao && round(data::CompararDatas($val->DtDistribuicao)) > $val->tempoFimDiligencia) {
+            } elseif ($val->DtSolicitacao && round(data::CompararDatas($val->DtDistribuicao)) > $val->tempoFimDiligencia) {
                 $diligencia = 3;
             } else {
                 $diligencia = 0;
@@ -324,7 +324,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             $Pareceres['pareceres'][$cont]['Observa&ccedil;&otilde;es'] = $val->Observacao;
             $Pareceres['pareceres'][$cont]['Nome do Remetente'] = $val->nmUsuario;
             $Pareceres['pareceres'][$cont]['Nome do Parecerista'] = $val->nmParecerista;
-
         }
         $this->view->Pareceres = $Pareceres;
     }
@@ -373,9 +372,9 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         if (count($analisedeConteudo) > 0) {
             if (($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && ($pareceristaAtivo)) {
                 $this->view->somenteLeitura = false;
-            } else if (($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && (!$pareceristaAtivo)) {
+            } elseif (($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) && (!$pareceristaAtivo)) {
                 $this->view->somenteLeitura = true;
-            } else if ($codGrupo <> Autenticacao_Model_Grupos::PARECERISTA) {
+            } elseif ($codGrupo <> Autenticacao_Model_Grupos::PARECERISTA) {
                 $this->view->somenteLeitura = true;
             }
         } else {
@@ -409,16 +408,15 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             if (($analisedeConteudo[0]->ParecerFavoravel == 1) && ($val->idEtapa != 4)) {
                 if ($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) {
                     $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "<a href='javascript:void(0);' onclick='javascript:AlterarItem({$val->idPlanilhaProjeto},{$idPronac},{$idProduto},{$stPrincipal})'>{$val->Item}</a>";
-                } else if ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
+                } elseif ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
                     $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = $val->Item;
-                }                
-            } else if (($analisedeConteudo[0]->ParecerFavoravel == 1) && ($stPrincipal == 1)) {
+                }
+            } elseif (($analisedeConteudo[0]->ParecerFavoravel == 1) && ($stPrincipal == 1)) {
                 if ($codGrupo == Autenticacao_Model_Grupos::PARECERISTA) {
                     $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "<a href='javascript:void(0);' onclick='javascript:AlterarItem({$val->idPlanilhaProjeto},{$idPronac},{$idProduto},{$stPrincipal})'>{$val->Item}</a>";
-                } else if ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
+                } elseif ($codGrupo == Autenticacao_Model_Grupos::COORDENADOR_DE_PARECERISTA) {
                     $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = $val->Item;
-                }                
-
+                }
             } else {
                 $itensCusto['fonte'][$val->FonteRecurso][$produto][$val->idEtapa . ' - ' . $val->Etapa][$val->UF . ' - ' . $val->Cidade]['itens'][$val->idPlanilhaProjeto]['Item'] = "{$val->Item}";
             }
@@ -438,7 +436,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             foreach ($value as $key2 => $value2) {
                 foreach ($value2 as $key3 => $value3) {
                     foreach ($value3 as $key4 => $value4) {
-
                         if ($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] != 0) {
                             $itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado'] = $this->formatarReal($itensCusto['fonte'][$key][$key2][$key3][$key4]['totalUfSolicitado']);
                         } else {
@@ -575,7 +572,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             if (count($buscarAcaoAlcanceProjeto) > 0) {
                 $this->view->AcoesRelevantes = $buscarAcaoAlcanceProjeto[0]['dsAcaoAlcanceProduto'];
             }
-            $this->view->dadosEnquadramento = $projetos->enquadramentoProjeto($idPronac);               
+            $this->view->dadosEnquadramento = $projetos->enquadramentoProjeto($idPronac);
         }
         
         /***********************************************************************************/
@@ -619,7 +616,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             } else {
                 return "true";
             }
-
         } else {
             return "true";
         }
@@ -650,7 +646,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         $stPrincipal = $this->_request->getParam("stPrincipal");
         $idD = $this->_request->getParam("idD");
 
-        $projetos = new Projetos();                    
+        $projetos = new Projetos();
         $IN2017 = $projetos->verificarIN2017($idPronac);
         
         switch ($stAcao) {
@@ -692,7 +688,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                         $buscaAnaliseConteudo = $analisedeConteudoDAO->buscar($whereB);
                         
                         if ($buscaAnaliseConteudo[0]->ParecerFavoravel == 0) {
-                            $copiaPlanilha = PlanilhaPropostaDAO::parecerFavoravel($idPronac, $idProduto);                            
+                            $copiaPlanilha = PlanilhaPropostaDAO::parecerFavoravel($idPronac, $idProduto);
                         }
                     }
                     
@@ -853,8 +849,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         }
 
         // Validacao do 15%
-        if ($stPrincipal == "1") //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
-        {
+        if ($stPrincipal == "1") { //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
             $Situacao = false;
 
             $V1 = '';
@@ -968,25 +963,21 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                         'stDiligenciado' => null
                     );
 
-                    $where['idDistribuirParecer = ?'] = $idDistribuirParecer;
+                $where['idDistribuirParecer = ?'] = $idDistribuirParecer;
 
-                    $salvar = $tbDistribuirParecer->alterar(array('stEstado' => 1), $where);
+                $salvar = $tbDistribuirParecer->alterar(array('stEstado' => 1), $where);
 
-                    $insere = $tbDistribuirParecer->inserir($dados);
+                $insere = $tbDistribuirParecer->inserir($dados);
 
                 endforeach;
 
                 $tbDistribuirParecer->getAdapter()->commit();
 
                 parent::message("An&aacute;lise conclu&iacute;da com sucesso !", "parecer/analise-inicial", "CONFIRM");
-
             } catch (Zend_Db_Exception $e) {
-
                 $tbDistribuirParecer->getAdapter()->rollBack();
                 parent::message("Error" . $e->getMessage(), "parecer/analise-inicial", "ERROR");
             }
-
-
         } else {
             $idPronac = $this->_request->getParam("idPronac");
             $idProduto = $this->_request->getParam("idProduto");
@@ -1001,7 +992,7 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
         $this->view->idpronac = $idPronac;
     }
 
-    function formatarReal($moeda)
+    public function formatarReal($moeda)
     {
         if (!empty($moeda)) {
             $moeda = number_format($moeda, 2, ',', '.');
@@ -1042,7 +1033,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
 
         $this->view->qtdRegistro = count($resp);
         $this->view->dados = $resp;
-
     }
 
     public function consolidacaoprojetoAction()
@@ -1084,11 +1074,10 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
             if ($i > 0) {
                 $this->view->resultadoCheckList = $resultadoCheckList;
                 $error = true;
-            }            
+            }
         }
         
-        if (!$error) 
-         {
+        if (!$error) {
             $this->_helper->layout->disableLayout();
 
             try {
@@ -1160,7 +1149,6 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                 } else {
                     $insereParecer = $parecerDAO->inserir($dadosParecer);
                     $idParecer = $insereParecer;
-
                 }
                 
                 if ($isIN2017 && $stPrincipal) {
@@ -1178,12 +1166,12 @@ class Parecer_AnalisarprojetoparecerController extends MinC_Controller_Action_Ab
                     );
                     
                     if (count($buscarAcaoAlcanceProjeto) > 0) {
-                            $where = array(
+                        $where = array(
                                 'idPronac = ?' => $idPronac,
                                 'idParecer = ?' => $idParecer
                             );
                             
-                            $tbAcaoAlcanceProjeto->update($dados, $where);
+                        $tbAcaoAlcanceProjeto->update($dados, $where);
                     } else {
                         $tbAcaoAlcanceProjeto->insert($dados);
                     }
