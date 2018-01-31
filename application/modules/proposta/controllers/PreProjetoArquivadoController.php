@@ -31,6 +31,63 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $this->events->attach('email', $this->email('teste'));
     }
 
+    public function indexAction()
+    {
+        $idAgente = $this->getRequest()->getParam('idagente');
+        $stEstado = $this->getRequest()->getParam('stestado');
+        $start = $this->getRequest()->getParam('start');
+        $length = $this->getRequest()->getParam('length');
+        $draw = (int)$this->getRequest()->getParam('draw');
+        $search = $this->getRequest()->getParam('search');
+        $order = $this->getRequest()->getParam('order');
+        $columns = $this->getRequest()->getParam('columns');
+        //$order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
+        
+        $idAgente = ((int)$idAgente == 0) ? $this->idAgente : (int)$idAgente;
+
+        if (empty($idAgente)) {
+            $this->_helper->json(array(
+                "data" => 0,
+                'recordsTotal' => 0,
+                'draw' => 0,
+                'recordsFiltered' => 0));
+        }
+
+        $tblPreProjetoArquivado = new Proposta_Model_PreProjetoArquivado();
+
+        $rsPreProjetoArquivado = $tblPreProjetoArquivado->listar(
+            $this->idAgente,
+            $this->idResponsavel,
+            $idAgente,
+            array(),
+            $order,
+            $start,
+            $length,
+            $search,
+            $stEstado
+        );
+
+        $recordsTotal = 0;
+        $recordsFiltered = 0;
+        $aux = array();
+        if (!empty($rsPreProjetoArquivado)) {
+            foreach ($rsPreProjetoArquivado as $key => $proposta) {
+                $proposta->nomeproponente = utf8_encode($proposta->nomeproponente);
+                $proposta->nomeprojeto = utf8_encode($proposta->nomeprojeto);
+                
+                $aux[$key] = $proposta;
+            }
+            //            $recordsFiltered = $tblPreProjetoArquivado->propostasTotal($this->idAgente, $this->idResponsavel, $idAgente, array(), null, null, null, $search);
+            //            $recordsTotal = $tblPreProjetoArquivado->propostasTotal($this->idAgente, $this->idResponsavel, $idAgente);
+        }
+        
+        $this->_helper->json(array(
+            "data" => !empty($aux) ? $aux : 0,
+            'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
+            'draw' => $draw,
+            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0));
+    }
+    
     public function verificaPermissaoAcessoProposta($idPreProjeto)
     {
         $tblProposta = new Proposta_Model_DbTable_PreProjeto();
@@ -83,6 +140,39 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         );
     }
 
+    public function updateAction()
+    {
+        $message = null;
+        $success = true;
+
+        $idPreProjeto = $this->getRequest()->getParam("idPreProjeto");
+        $SolicitacaoDesarquivamento = $this->getRequest()->getParam("SolicitacaoDesarquivamento");
+
+        $arquivar = new Proposta_Model_PreProjetoArquivado();
+
+        $data = [
+            'SolicitacaoDesarquivamento' => $SolicitacaoDesarquivamento,
+            'dtSolicitacaoDesarquivamento' => new Zend_Db_Expr('getdate()'),
+
+        ];
+
+        try {
+            $arquivar->update($data, ['idPreProjeto = ?' => $idPreProjeto]);
+            $message = 'Solicitação enviada!';
+        } catch(Exception $e){
+            $message = $e->getMessage();
+            $success = false;
+        }
+
+        $this->_helper->json(
+            [
+                'data' => $data,
+                'success' => $success,
+                'message' => $message
+            ]
+        );
+    }
+
     private function email($texto)
     {
         return function($e) {
@@ -100,5 +190,5 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             $mail->setSubject($email->subject);
             $mail->send($transport);
         };
-    }
+    }    
 }

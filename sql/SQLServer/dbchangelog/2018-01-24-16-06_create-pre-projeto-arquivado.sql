@@ -1,5 +1,5 @@
 CREATE TABLE sac.dbo.PreProjetoArquivado (
-       idPropostaArquivada int NOT NULL IDENTITY(1,1),
+       idPreProjetoArquivado int NOT NULL IDENTITY(1,1)
        idPreProjeto int NOT NULL,
        MotivoArquivamento varchar(MAX),
        SolicitacaoDesarquivamento varchar(MAX),
