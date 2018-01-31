@@ -100,7 +100,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
         foreach ($planilhaOrcamentaria as $item) {
             $row = [];
 
-            $produto = !empty($item['idProduto']) ? $item['DescricaoProduto'] : utf8_encode('Administra&ccedil;&atilde;o do Projeto');
+            $produto = !empty($item['idProduto']) ? $item['DescricaoProduto'] : html_entity_decode('Administra&ccedil;&atilde;o do Projeto');
 
             $row["Seq"] = $i;
             $row["idPlanilhaProposta"] = $item['idPlanilhaProposta'];
@@ -119,8 +119,7 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $row['stCustoPraticado'] = $item['stCustoPraticado'];
 
             foreach ($row as $cel => $val) {
-                $planilha[$row['FonteRecurso']][$produto][$row['idEtapa'] . ' - '
-                . $row['Etapa']][$row['UF'] . ' - '
+                $planilha[$row['FonteRecurso']][$produto][$row['Etapa']][$row['UF'] . ' - '
                 . $row['Municipio']][$count][$cel] = $val;
             }
             $count++;
@@ -265,20 +264,34 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->layout->disableLayout();
 
         $deslocamentos = new Proposta_Model_TbDeslocamentoMapper();
-        $dados = $deslocamentos->getDbTable()->buscarDeslocamento($idPreProjeto, $id);
+        $dados = $deslocamentos->getDbTable()->buscarDeslocamento($idPreProjeto);
 
         $dados = [];
 
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function obterPlanilhaOrcamentariaPropostaAction($idPreProjeto)
+    public function obterPlanilhaOrcamentariaPropostaAction()
     {
         $this->_helper->layout->disableLayout();
 
-        $dados = [];
+        $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+        try {
+
+            if (empty($idPreProjeto)) {
+                throw new Exception("N&uacute;mero da proposta &eacute; obrigat&oacute;ria");
+            }
+            $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
+            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPreProjeto, 0);
+            $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, 0);
+
+            //@todo, falta converter para utf8
+
+            $this->_helper->json(array('data' => $planilha, 'success' => 'true'));
+        } catch (Exception $e) {
+            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
+        }
     }
 
     public function obterPlanoDeDivulgacaoAction($idPreProjeto)
