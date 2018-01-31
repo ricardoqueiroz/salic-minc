@@ -7,8 +7,9 @@
  */
 class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Table_Abstract
 {
-    protected $_schema    = 'sac';
-    protected $_name      = 'vwPainelAvaliarPropostas';
+    protected $_schema = 'sac';
+    protected $_name = 'vwPainelAvaliarPropostas';
+    protected $_primary = 'idProjeto';
 
     public function propostas($where = array(), $order = array(), $start = 0, $limit = 10, $search = null)
     {
@@ -16,15 +17,14 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
 
         $sql = $db->select()
-            ->from('vwPainelAvaliarPropostas', '*', $this->_schema)
-            ;
+            ->from('vwPainelAvaliarPropostas', '*', $this->_schema);
 
-        foreach ($where as $coluna=>$valor) {
+        foreach ($where as $coluna => $valor) {
             $sql->where($coluna, $valor);
         }
 
         if (!empty($search['value'])) {
-            $sql->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', '%'.$search['value'].'%');
+            $sql->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', '%' . $search['value'] . '%');
         }
 
         $sql->order($order);
@@ -38,21 +38,104 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
         return $db->fetchAll($sql);
     }
 
+    public function obterPropostasParaAvaliacao(
+        $where = [],
+        $order = [],
+        $start = 0,
+        $limit = 10,
+        $search = null,
+        Admissibilidade_Model_DistribuicaoAvaliacaoProposta $distribuicaoAvaliacaoProposta = null
+    )
+    {
+        $db = $this->getAdapter();
+        $db->setFetchMode(Zend_DB :: FETCH_OBJ);
+
+
+        if (!is_null($distribuicaoAvaliacaoProposta)
+            && $distribuicaoAvaliacaoProposta->getIdPerfil()
+            && $distribuicaoAvaliacaoProposta->getIdOrgaoSuperior()) {
+            $selectDistribuicaoAvaliacao = $this->select();
+            $selectDistribuicaoAvaliacao->setIntegrityCheck(false);
+            $selectDistribuicaoAvaliacao->from(
+                'distribuicao_avaliacao_proposta',
+                [],
+                $this->getSchema('sac')
+            );
+
+            $selectDistribuicaoAvaliacao->where(
+                'distribuicao_avaliacao_proposta.id_preprojeto = vwPainelAvaliarPropostas.idProjeto'
+            );
+
+            $selectDistribuicaoAvaliacao->where(
+                'distribuicao_avaliacao_proposta.id_orgao_superior = ?',
+                $distribuicaoAvaliacaoProposta->getIdOrgaoSuperior()
+            );
+
+            $selectDistribuicaoAvaliacao->where(
+                'distribuicao_avaliacao_proposta.id_orgao_superior = vwPainelAvaliarPropostas.idSecretaria'
+            );
+
+            $selectQuantidadeAvaliacoes = clone $selectDistribuicaoAvaliacao;
+            $selectQuantidadeAvaliacoes->columns(new Zend_Db_Expr('count(avaliacao_atual)'));
+            $selectDistribuicaoAvaliacao->columns(new Zend_Db_Expr('avaliacao_atual'));
+
+            $perfis = [
+                $distribuicaoAvaliacaoProposta->getIdPerfil()
+            ];
+
+            if ($distribuicaoAvaliacaoProposta->getIdPerfil() == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
+                $perfis[] = Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE;
+            }
+
+            $selectDistribuicaoAvaliacao->where(
+                'distribuicao_avaliacao_proposta.id_perfil in (?)',
+                $perfis
+            );
+        }
+
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from('vwPainelAvaliarPropostas',
+            [
+                '*',
+                'avaliacao_atual' => new Zend_Db_Expr("({$selectDistribuicaoAvaliacao})"),
+                'quantidade_distribuicoes' => new Zend_Db_Expr("({$selectQuantidadeAvaliacoes})"),
+            ],
+            $this->_schema);
+
+        foreach ($where as $coluna => $valor) {
+            $select->where($coluna, $valor);
+        }
+
+        if (!empty($search['value'])) {
+            $select->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', "%{$search['value']}%");
+        }
+
+        $select->order($order);
+
+        if (!is_null($start) && $limit) {
+            $start = (int)$start;
+            $limit = (int)$limit;
+            $select->limitPage($start, $limit);
+        }
+
+        return $db->fetchAll($select);
+    }
+
     public function propostasTotal($where = array(), $order = array(), $start = null, $limit = null, $search = null)
     {
         $db = $this->getAdapter();
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
 
         $sql = $db->select()
-            ->from('vwPainelAvaliarPropostas', 'count(*) as total', $this->_schema)
-            ;
+            ->from('vwPainelAvaliarPropostas', 'count(*) as total', $this->_schema);
 
-        foreach ($where as $coluna=>$valor) {
+        foreach ($where as $coluna => $valor) {
             $sql->where($coluna, $valor);
         }
 
         if (!empty($search['value'])) {
-            $sql->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', '%'.$search['value'].'%');
+            $sql->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', '%' . $search['value'] . '%');
         }
 
         $sql->order($order);

@@ -1,5 +1,9 @@
 <div class="container-fluid">
-<?php echo $this->grupoAtivo->codGrupo ?>
+    <input type="hidden" id="perfil_atual" value="<?php echo $this->grupo ?>"/>
+    <input type="hidden" id="perfil_tecnico_admissibilidade"
+           value="<?php echo Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE ?>"/>
+    <input type="hidden" id="perfil_coordenador_admissibilidade"
+           value="<?php echo Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE ?>"/>
     <div class="row">
         <?php echo $this->partial("admissibilidade/inc/menu.inc.php", $this); ?>
         <div class="col s10 m10 l10">
@@ -12,8 +16,9 @@
             <table>
                 <tr>
                     <td class="center-align">
-                        <button class="black-text btn waves-effect waves-dark white tooltipped" data-tooltip="Imprimir" name="imprimir"  id="imprimir" type="button">
-                                Imprimir<i class="material-icons right">print</i>
+                        <button class="black-text btn waves-effect waves-dark white tooltipped" data-tooltip="Imprimir"
+                                name="imprimir" id="imprimir" type="button">
+                            Imprimir<i class="material-icons right">print</i>
                         </button>
                     </td>
                 </tr>
@@ -22,8 +27,8 @@
             <table class="bordered striped conteudoImprimivel" id="tabelaAnaliseFinal">
                 <thead>
                 <tr>
-                    <th  title="Clique aqui para ordenar">Nr. Proposta</th>
-                    <th  title="Clique aqui para ordenar">Nome da Proposta</th>
+                    <th title="Clique aqui para ordenar">Nr. Proposta</th>
+                    <th title="Clique aqui para ordenar">Nome da Proposta</th>
                     <th>Dt. Admiss&atilde;o</th>
                     <th>Dias em An&aacute;lise</th>
                     <th>Outras Propostas</th>
@@ -34,21 +39,21 @@
                     <?php
                     if ($this->liberarEncaminhamento === true) : ?>
                         <th>Encaminhar</th>
-                    <?php
+                        <?php
                     endif;
                     ?>
                 </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    if ($propostaFinal->diasCorridos < 11) {
-                        $cor = 'style = "color: #228B22"';
-                    } else if ($propostaFinal->diasCorridos > 10 && $propostaFinal->diasCorridos < 21) {
-                        $cor = 'style = "color: #FFD700"';
-                    } else {
-                        $cor = 'style = "color: #FF0000"';
-                    }
-                    ?>
+                <?php
+                if ($propostaFinal->diasCorridos < 11) {
+                    $cor = 'style = "color: #228B22"';
+                } else if ($propostaFinal->diasCorridos > 10 && $propostaFinal->diasCorridos < 21) {
+                    $cor = 'style = "color: #FFD700"';
+                } else {
+                    $cor = 'style = "color: #FF0000"';
+                }
+                ?>
                 </tbody>
             </table>
         </div>
@@ -72,169 +77,264 @@
     </div>
 </div>
 
+<div id="dialogEncaminharProposta" class="modal bottom-sheet">
+    <form method="post"
+          action="<?php echo $this->url(
+              [
+                  'module' => 'admissibilidade',
+                  'controller' => 'distribuicao-avaliacao-proposta',
+                  'action' => 'encaminhar-proposta-ajax'
+              ]
+          ); ?>" onsubmit="return false">
+        <div class="modal-content">
+            <h4>Proposta Nr. <span id="span_id_preprojeto"></span> - Encaminhar Avalia&ccedil;&atilde;o</h4>
+            <div class="input-field col s12" style="margin-top: 35px">
+                <select id="id_perfil" name="id_perfil">
+                    <?php foreach ($this->perfis as $perfil) { ?>
+                        <option value="<?php echo $perfil['gru_codigo'] ?>"><?php echo $perfil['gru_nome'] ?></option>
+                    <?php } ?>
+                </select>
+                <label>Selecione o pr&oacute;ximo perfil avaliador</label>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <input type="hidden" id="id_preprojeto" name="id_preprojeto"/>
+            <a class="btn waves-effect waves-dark red-text white modal-close">
+                Cancelar
+            </a>
+            <button class="btn waves-effect waves-light "
+                    id="botaoEnviarAvaliacaoProposta"
+                    type="button">
+                Enviar
+            </button>
+        </div>
+    </form>
+</div>
+
+
 <br clear="all"/>
 <iframe name="gerarPDF" style="display: none;"></iframe>
 
-<input id="PROPOSTA_EM_ANALISE_FINAL" type="hidden" value="<?php echo Agente_Model_DbTable_Verificacao::PROPOSTA_EM_ANALISE_FINAL ?>">
-<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+<input id="PROPOSTA_EM_ANALISE_FINAL" type="hidden"
+       value="<?php echo Agente_Model_DbTable_Verificacao::PROPOSTA_EM_ANALISE_FINAL ?>">
+<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+        crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/datatables.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.13/datatables.min.css"/>
-    <script type="text/javascript" >
-        (function ($) {
-            $(document).ready(function () {
-                $('#tabelaAnaliseFinal').DataTable(
+<script type="text/javascript">
+    (function ($) {
+        $(document).ready(function () {
+            $('#tabelaAnaliseFinal').DataTable(
+                {
+                    'language': {
+                        'url': 'https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json'
+                    }
+                    , 'order': [0, 1]
+                    , 'searching': true
+                    , 'lengthChange': true
+                    , columnDefs: [
                     {
-                        "language": {
-                            "url": "https://cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+                        targets: [0, 1],
+                        //className: 'mdl-data-table__cell--non-numeric'
+                    }
+                ]
+                    ,
+                    'aoColumnDefs': [
+                        {'bSortable': false, 'aTargets': [4, 6, 7]}
+                    ]
+                    , 'ajax': {
+                    url: '/admissibilidade/admissibilidade/listar-propostas-ajax',
+                    type: 'POST'
+                },
+                    'processing': true,
+                    'serverSide': true,
+                    'createdRow': function (row, data, index) {
+                        if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()) {
+                            $(row).addClass('green lighten-5')
                         }
-                        , "order": [0, 1]
-                        , "searching": true
-                        , "lengthChange": true
-                        , columnDefs: [
-                            {
-                                targets: [0, 1],
-                                //className: 'mdl-data-table__cell--non-numeric'
+                    },
+                    'columns': [
+                        {
+                            data: null,
+                            name: 'idProjeto',
+                            render: function (data, type, row) {
+                                return '<a class="waves-effect waves-dark btn white black-text" href="/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto=' + data.idProjeto + '">'
+                                    + data.idProjeto + ' </a>'
                             }
-                        ]
-                        ,
-                        "aoColumnDefs": [
-                            {'bSortable': false, 'aTargets': [4,6,7]}
-                        ]
-                        , "ajax": {
-                            url : "/admissibilidade/admissibilidade/listar-propostas-ajax",
-                            type: "POST"
                         },
-                        "processing": true,
-                        "serverSide": true,
-                        "createdRow": function ( row, data, index ) {
-                                    if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()) {
-                                        $(row).addClass('green lighten-5');
-                                    }
+                        {
+                            'name': 'NomeProposta',
+                            'data': 'NomeProposta'
+
                         },
-                        "columns": [
-                            {
-                                data: null,
-                                name: 'idProjeto',
-                                render: function ( data, type, row ) {
-                                   return  '<a class="waves-effect waves-dark btn white black-text" href="/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto='+data.idProjeto+'">'
-                                             +data.idProjeto+' </a>';
+                        {
+                            'name': 'DtMovimentacao',
+                            'data': 'DtMovimentacao'
+                        },
+                        {
+                            'name': 'diasCorridos',
+                            'data': 'diasCorridos'
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return '<a class="btn waves-effect waves-darrk white black-text" href="<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/proposta-por-proponente?agente=' + data.idAgente + '">'
+                                    + '<i class="material-icons"'
+                                    + 'title="Vizualizar outras Propostas deste Proponente" alt="Vizualizar outras Propostas deste Proponente">search</i> </a>'
+                            }
+                        },
+                        {
+                            'name': 'Tecnico',
+                            'data': 'Tecnico'
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()) {
+                                    return '<i class="material-icons">done</i>' +
+                                        ''
                                 }
-                            },
-                            {
-                                "name": "NomeProposta",
-                                "data": "NomeProposta"
-
-                            },
-                            {
-                                "name": "DtMovimentacao",
-                                "data": "DtMovimentacao"
-                            },
-                            {
-                                "name": "diasCorridos",
-                                "data": "diasCorridos"
-                            },
-                            {
-                                data: null,
-                                render: function ( data, type, row ) {
-                                   return  '<a class="btn waves-effect waves-darrk white black-text" href="<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/proposta-por-proponente?agente='+data.idAgente+'">'
-                                        +'<i class="material-icons"'
-                                             +'title="Vizualizar outras Propostas deste Proponente" alt="Vizualizar outras Propostas deste Proponente">search</i> </a>';
+                                return ''
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                if (data.isEnquadrada == true) {
+                                    return '<i class="material-icons">done</i>' +
+                                        ''
                                 }
-                            },
-                            {
-                                "name": "Tecnico",
-                                "data": "Tecnico"
-                            },
-                            {
-                                data: null,
-                                render: function ( data, type, row ) {
-                                    if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()) {
-                                        return '<i class="material-icons">done</i>'+
-                                             '';
-                                    }
-                                    return '';
+                                return ''
+                            }
+                        },
+
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return '<a class="btn waves-effect waves-darrk white black-text" href="<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto=' + data.idProjeto + '&realizar_analise=sim">'
+                                    + '<i class="material-icons" '
+                                    + 'title="Fazer An&aacute;lise Visual da Proposta" alt="Fazer An&aacute;lise Visual da Proposta">visibility</i></a>'
+                            }
+                        },
+                        <?php
+                        if ($this->liberarEncaminhamento === true) : ?>
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+
+                                if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()
+                                    && (
+                                        parseInt(data.quantidade_distribuicoes, 10) == 0 && $('#perfil_atual').val() == $('#perfil_tecnico_admissibilidade').val()
+                                        || (parseInt(data.quantidade_distribuicoes, 10) > 0 && parseInt(data.avaliacao_atual, 10) == 1)
+                                    )
+                                ) {
+                                    return '<a class="waves-effect waves-light btn modal-trigger" data-id_preprojeto="' + data.idProjeto + '" href="#dialogEncaminharProposta">'
+                                        + '<i class="material-icons" '
+                                        + ' title="Encaminhar An&aacute;lise de Proposta" '
+                                        + ' alt="Encaminhar An&aacute;lise de Proposta">forward</i></button>'
+                                        + ' </a>'
                                 }
-                            },
-                            {
-                                data: null,
-                                render: function ( data, type, row ) {
-                                    if (data.isEnquadrada == true){
-                                        return '<i class="material-icons">done</i>'+
-                                             '';
-                                    }
-                                    return '';
-                                }
-                            },
 
-                            {
-                                data: null,
-                                render: function ( data, type, row ) {
-                                    return '<a class="btn waves-effect waves-darrk white black-text" href="<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto='+data.idProjeto+'&realizar_analise=sim">'
-                                            +'<i class="material-icons" '
-                                            +'title="Fazer An&aacute;lise Visual da Proposta" alt="Fazer An&aacute;lise Visual da Proposta">visibility</i></a>'
-                                }
-                            },
-                            <?php
-                            if ($this->liberarEncaminhamento === true) : ?>
-                            {
-                                data: null,
-                                render: function ( data, type, row ) {
-                                    return '<a class="btn waves-effect waves-darrk white black-text" href="#">'
-                                        +'<i class="material-icons" '
-                                        +'title="Encaminhar An&aacute;lise de Proposta" alt="Encaminhar An&aacute;lise de Proposta">forward</i></a>'
-                                }
-                            },
-                            <?php
-                            endif;
-                            ?>
-                        ]
-                    }
-                );
-            });
-        }($.noConflict(true)));
-    </script>
-    <script type="text/javascript">
-
-        $3("#imprimir").on('click', function(){
-            console.log('teste');
-            $3("#conteudoImprimir").val($3(".conteudoImprimivel").html());
-            $3("#formGerarPdf").submit();
-        });
-
-                $("#tabelaAnaliseFinal").ready(function () {
-
-                    $3("#modalTransformarProposta").modal();
-                    $3("tbody").on('click', '.transformarPropostaEmProjeto', function () {
-                        $3("#idPreProjeto").html($3(this).data("id-pre-projeto"));
-                        $3("#modalTransformarProposta").modal('open');
-                    });
-
-                    $("#botaoTransformarPropostaEmProjeto").click(function () {
-                        var idPreProjeto = parseInt($("#idPreProjeto").html(), 10);
-
-                        Materialize.toast('Gerando PRONAC...', 2000, '', function () {
-                            $.post('<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/transformar-proposta-em-projeto?idPreProjeto=' + idPreProjeto,
-                                {},
-                                function (data) {
-                                    Materialize.toast('PRONAC gerado com sucesso.', 2000, '', function () {
-                                        window.location = "";
-                                    });
-                                }
-                            );
-                        });
-                    });
-                });
-
-                function abrirDinamico(elemento, obj) {
-                    if ($(elemento).css('display') == 'none') {
-                        $(elemento).fadeIn('fast', function () {
-                            $('img', $(obj)).attr('src', '<?php echo $this->baseUrl();?>/public/img/navigation-right.png');
-                        });
-                    } else {
-                        $(elemento).fadeOut('fast', function () {
-                            $('img', $(obj)).attr('src', '<?php echo $this->baseUrl();?>/public/img/navigation-baixo.PNG');
-                        });
-                    }
+                                return ''
+                            }
+                        },
+                        <?php
+                        endif;
+                        ?>
+                    ]
                 }
+            )
 
-            </script>
+        })
+    }($.noConflict(true)))
+
+    $3('#imprimir').on('click', function () {
+        $3('#conteudoImprimir').val($3('.conteudoImprimivel').html())
+        $3('#formGerarPdf').submit()
+    })
+
+    $3(document).ready(function () {
+
+        $3('.modal').modal()
+        $3('#id_perfil').material_select()
+        $3('#dialogEncaminharProposta').modal(
+            {
+                dismissible: true,
+                opacity: .5,
+                inDuration: 300,
+                outDuration: 200,
+                startingTop: '4%',
+                endingTop: '10%',
+                ready: function (modal, trigger) {
+                    $3('#id_preprojeto').val($3(trigger).data('id_preprojeto'))
+                    $3('#span_id_preprojeto').html($3(trigger).data('id_preprojeto'))
+                },
+                complete: function () {
+                }
+            }
+        )
+
+        $3('#botaoEnviarAvaliacaoProposta').click(function () {
+            var parametros = {}
+            $3('#dialogEncaminharProposta form').serializeArray().map(function (x) {
+                parametros[x.name] = x.value
+            })
+
+            $3('#botaoEnviarAvaliacaoProposta').prop('disabled', true)
+            $3.ajax({
+                type: 'POST',
+                url: $('#dialogEncaminharProposta form').attr('action'),
+                data: parametros,
+                success: function (data) {
+                    var callback = function () {}
+                    if (data.resposta) {
+                        callback = function () {
+                            window.location.reload()
+                        }
+                        $3('#dialogEncaminharProposta').modal('close')
+                    }
+                    Materialize.toast(data.mensagem, 4000, '', callback)
+                    $3('#botaoEnviarAvaliacaoProposta').prop('disabled', false)
+                }
+            })
+        })
+    })
+
+    $('#tabelaAnaliseFinal').ready(function () {
+
+        $3('#modalTransformarProposta').modal()
+        $3('tbody').on('click', '.transformarPropostaEmProjeto', function () {
+            $3('#idPreProjeto').html($3(this).data('id-pre-projeto'))
+            $3('#modalTransformarProposta').modal('open')
+        })
+
+        $('#botaoTransformarPropostaEmProjeto').click(function () {
+            var idPreProjeto = parseInt($('#idPreProjeto').html(), 10)
+
+            Materialize.toast('Gerando PRONAC...', 2000, '', function () {
+                $.post('<?php echo $this->baseUrl(); ?>/admissibilidade/admissibilidade/transformar-proposta-em-projeto?idPreProjeto=' + idPreProjeto,
+                    {},
+                    function (data) {
+                        Materialize.toast('PRONAC gerado com sucesso.', 2000, '', function () {
+                            window.location = ''
+                        })
+                    }
+                )
+            })
+        })
+    })
+
+    function abrirDinamico (elemento, obj) {
+        if ($(elemento).css('display') == 'none') {
+            $(elemento).fadeIn('fast', function () {
+                $('img', $(obj)).attr('src', '<?php echo $this->baseUrl();?>/public/img/navigation-right.png')
+            })
+        } else {
+            $(elemento).fadeOut('fast', function () {
+                $('img', $(obj)).attr('src', '<?php echo $this->baseUrl();?>/public/img/navigation-baixo.PNG')
+            })
+        }
+    }
+
+</script>

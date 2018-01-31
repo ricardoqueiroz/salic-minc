@@ -8,6 +8,25 @@ class Admissibilidade_Model_DistribuicaoAvaliacaoProposta extends MinC_Db_Model
     protected $_id_orgao_superior;
     protected $_id_perfil;
     protected $_data_distribuicao;
+    protected $_avaliacao_atual;
+
+    /**
+     * @return mixed
+     */
+    public function getAvaliacaoAtual()
+    {
+        return $this->_avaliacao_atual;
+    }
+
+    /**
+     * @param mixed $avaliacao_atual
+     * @return Admissibilidade_Model_DistribuicaoAvaliacaoProposta
+     */
+    public function setAvaliacaoAtual($avaliacao_atual)
+    {
+        $this->_avaliacao_atual = $avaliacao_atual;
+        return $this;
+    }
 
     /**
      * @return mixed

@@ -2,7 +2,7 @@
 
 class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
 {
-    protected $_name = 'usuarios';
+    protected $_name = 'Grupos';
     protected $_schema = 'tabelas';
     protected $_primary = 'gru_codigo';
 
@@ -59,4 +59,34 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
 
     const COORDENADOR_DO_PRONAC = 137;
     const COORDENADOR_DE_CONVENIO = 142;
+
+    public function obterPerfisEncaminhamentoAvaliacaoProposta($id_perfil)
+    {
+
+        $perfis = [];
+        if ($id_perfil == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ABMISSIBILIDADE;
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
+        }
+
+        if ($id_perfil == Autenticacao_Model_Grupos::COORDENADOR_ABMISSIBILIDADE) {
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_CNIC;
+        }
+
+        if ($id_perfil == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO) {
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ABMISSIBILIDADE;
+            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_CNIC;
+        }
+
+
+        if($perfis) {
+            return $this->findAll(
+                [
+                    'gru_codigo in (?)' => $perfis,
+                    'gru_status' => true
+                ]
+            );
+        }
+    }
 }
