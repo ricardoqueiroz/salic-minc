@@ -370,8 +370,7 @@ Vue.component('visualizar-plano-distribuicao', {
                 url:url
             }).done(function(data) {
                     vue.$data.produtos = data.data;
-            })
-            .fail(function(){ alert('Erro ao buscar detalhamento'); });
+            });
 
         },
         converterParaMoedaAmericana: function(valor) {

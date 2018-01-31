@@ -82,7 +82,7 @@ x - TABELAS (legado)
 }
 
 #conteudo .tabela_busca { /* tabela para consulta de dados centralizada na tela */
-    margin: 100px auto;
+    margin: 15px auto;
 }
 
 #conteudo .titulo_tabela { /* titulos de tabelas */

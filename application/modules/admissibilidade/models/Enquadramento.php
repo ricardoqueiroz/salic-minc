@@ -88,7 +88,7 @@ class Admissibilidade_Model_Enquadramento extends MinC_Db_Table_Abstract
 
         $queryMensagensNaoRespondidas = $this->select();
         $queryMensagensNaoRespondidas->setIntegrityCheck(false);
-        $queryMensagensNaoRespondidas->from(array('tbMensagemProjeto' => 'tbMensagemProjeto'), 'count(*) as quantidade', $this->getSchema("BDCORPORATIVO.scsac"));
+        $queryMensagensNaoRespondidas->from(array('tbMensagemProjeto' => 'tbMensagemProjeto'), new Zend_Db_Expr('count(*) as quantidade'), $this->getSchema("BDCORPORATIVO.scsac"));
         $queryMensagensNaoRespondidas->where("Projetos.IdPRONAC = tbMensagemProjeto.IdPRONAC");
         $queryMensagensNaoRespondidas->where("tbMensagemProjeto.idMensagemOrigem IS NULL");
 
@@ -271,7 +271,7 @@ class Admissibilidade_Model_Enquadramento extends MinC_Db_Table_Abstract
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(PDO::FETCH_ASSOC);
 
-        $select = $db->select()->from($this->_name, "*, cast( Observacao as TEXT) as Observacao", $this->_schema);
+        $select = $db->select()->from($this->_name, new Zend_Db_Expr("*, cast( Observacao as TEXT) as Observacao"), $this->_schema);
         self::setWhere($select, $where);
 
         $result = $db->fetchRow($select);

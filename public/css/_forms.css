@@ -19,12 +19,18 @@ div.dataTables_wrapper div.dataTables_filter input
     margin-bottom: 5px;
 }
 
+#conteudo .textarea_simples {
+    height: 200px;
+}
+
 #conteudo .input_simples2 {
     width: 80px;
 }
-
+.tabela .select_simples,
+.container-fluid .select_simples,
 #conteudo .select_simples {
     background: #f8f8f8;
+    display: block;
 }
 
 #conteudo .input_simples:hover,

@@ -249,8 +249,8 @@ footer.page-footer {
     color: #2d2d2d;
 }
 
-#qm0.qmmc > a:first-child,
-#qm0.qmmc > a:first-child:hover,
+.consultardadosprojeto #qm0.qmmc > a:first-child,
+.consultardadosprojeto #qm0.qmmc > a:first-child:hover,
 #sidenav .sidebar-info,
 .small-menu #sidenav > li.sidebar-info:hover div {
     background-color: #0A420E;

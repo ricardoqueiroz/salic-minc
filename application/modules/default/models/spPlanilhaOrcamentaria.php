@@ -178,7 +178,7 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
             ->where('a.idpronac = ? ', $idPronac)
             ->order("x.Descricao")
             ->order("c.Descricao DESC")
-            ->order("CONVERT(VARCHAR(8),d.idPlanilhaEtapa) $concat ' - '$concat  d.Descricao")
+            ->order(new Zend_Db_Expr("CONVERT(VARCHAR(8),d.idPlanilhaEtapa) $concat ' - '$concat  d.Descricao"))
             ->order('f.UF')
             ->order('f.Municipio')
             ->order('i.Descricao');
@@ -312,10 +312,10 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
                     ($subSQLB)
             END as vlComprovado"),
         new Zend_Db_Expr("CASE WHEN k.idProduto = 0 THEN 'Administra&ccedil;&atilde;o do Projeto' ELSE c.Descricao END as Produto"),
-        'CONVERT(varchar(max), k.dsJustificativa) as JustComponente',
-        'ROUND((b.Quantidade * b.Ocorrencia * b.ValorUnitario),2) as vlSugerido',
-        'ROUND((k.QtItem * k.nrOcorrencia * k.VlUnitario),2) as vlAprovado',
-        'ROUND((z.Quantidade * z.Ocorrencia * z.ValorUnitario),2) as vlSolicitado',
+        new Zend_Db_Expr('CONVERT(varchar(max), k.dsJustificativa) as JustComponente'),
+        new Zend_Db_Expr('ROUND((b.Quantidade * b.Ocorrencia * b.ValorUnitario),2) as vlSugerido'),
+        new Zend_Db_Expr('ROUND((k.QtItem * k.nrOcorrencia * k.VlUnitario),2) as vlAprovado'),
+        new Zend_Db_Expr('ROUND((z.Quantidade * z.Ocorrencia * z.ValorUnitario),2) as vlSolicitado'),
         new Zend_Db_Expr('a.AnoProjeto+a.Sequencial as PRONAC'),
         'a.NomeProjeto',
         'a.idPronac',
@@ -382,17 +382,17 @@ class spPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
 
         $a = array(
             new Zend_Db_Expr("CASE WHEN k.idProduto = 0 THEN 'Administra&ccedil;&atilde;o do Projeto' ELSE c.Descricao END as Produto"),
-            'ROUND((b.Quantidade * b.Ocorrencia * b.ValorUnitario),2) as vlSugerido',
-            'ROUND((k.QtItem * k.nrOcorrencia * k.VlUnitario),2) as vlAprovado',
-            'ROUND((z.Quantidade * z.Ocorrencia * z.ValorUnitario),2) as vlSolicitado',
+            new Zend_Db_Expr('ROUND((b.Quantidade * b.Ocorrencia * b.ValorUnitario),2) as vlSugerido'),
+            new Zend_Db_Expr('ROUND((k.QtItem * k.nrOcorrencia * k.VlUnitario),2) as vlAprovado'),
+            new Zend_Db_Expr('ROUND((z.Quantidade * z.Ocorrencia * z.ValorUnitario),2) as vlSolicitado'),
             new Zend_Db_Expr('a.AnoProjeto+a.Sequencial as PRONAC'),
             'a.NomeProjeto',
             'a.idPronac',
             'b.idEtapa',
             'b.idPlanilhaProjeto',
-            'convert(varchar(max),k.dsJustificativa) as JustComponente',
-            'convert(varchar(max),b.Justificativa) as JustParecerista',
-            'convert(varchar(max),z.dsJustificativa) as JustProponente',
+            new Zend_Db_Expr('convert(varchar(max),k.dsJustificativa) as JustComponente'),
+            new Zend_Db_Expr('convert(varchar(max),b.Justificativa) as JustParecerista'),
+            new Zend_Db_Expr('convert(varchar(max),z.dsJustificativa) as JustProponente'),
             'd.Descricao as Etapa',
             'e.Descricao as Unidade',
             'f.Municipio',

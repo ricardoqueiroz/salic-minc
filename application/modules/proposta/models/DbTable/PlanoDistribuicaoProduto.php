@@ -212,7 +212,7 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $select->where('p.idProjeto = ?', $idPreProjeto);
         return $this->fetchAll($select);
     }
-    
+
     public function validatePlanoDistribuicao($idPreProjeto)
     {
         $select = $this->select();

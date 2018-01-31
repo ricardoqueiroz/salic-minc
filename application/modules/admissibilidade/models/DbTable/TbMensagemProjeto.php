@@ -27,14 +27,14 @@ class Admissibilidade_Model_DbTable_TbMensagemProjeto extends MinC_Db_Table_Abst
                         $this->_name,
                         array('idMensagemProjeto',
                               'dtMensagem',
-                              'dtMensagemTreated' => $this->getExpressionToChar($this->_name . '.dtMensagem') . $this->getExpressionConcat() . " ' ' " . $this->getExpressionConcat()  .  $this->getExpressionToChar($this->_name . '.dtMensagem', 108),
+                              'dtMensagemTreated' => new Zend_Db_Expr($this->getExpressionToChar($this->_name . '.dtMensagem') . $this->getExpressionConcat() . " ' ' " . $this->getExpressionConcat()  .  $this->getExpressionToChar($this->_name . '.dtMensagem', 108)),
                               'dsMensagem',
                               'stAtivo',
                               'cdTipoMensagem',
                               'idDestinatario',
                               'idRemetente',
                               'IdPRONAC',
-                              'qtdResposta' => "(SELECT count(tmp2.idMensagemOrigem) FROM {$this->_schema}.{$this->_name} tmp2 WHERE tmp2.idMensagemOrigem = {$this->_name}.idMensagemProjeto)",
+                              'qtdResposta' => new Zend_Db_Expr("(SELECT count(tmp2.idMensagemOrigem) FROM {$this->_schema}.{$this->_name} tmp2 WHERE tmp2.idMensagemOrigem = {$this->_name}.idMensagemProjeto)"),
                               'idMensagemOrigem'),
                         $this->_schema
                     )
