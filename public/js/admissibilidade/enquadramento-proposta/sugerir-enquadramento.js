@@ -33,16 +33,25 @@ jQuery(function ($) {
         maxchar: limiteMaximo
     });
 
-    $('#botaoSugestoesEnquadramento').click(function () {
-        $("#dialog-sugestoes-enquadramento").dialog({
-            title :'Hist&oacute;rico de Sugest&otilde;es de Enquadramento.',
-            resizable: false,
-            width:'95%',
-            height: 450,
-            modal: true,
-            autoOpen:false
-        });
-        $("#dialog-sugestoes-enquadramento").dialog('open');
+    // $('#botaoSugestoesEnquadramento').click(function () {
+    //     $("#dialog-sugestoes-enquadramento").dialog({
+    //         title :'Hist&oacute;rico de Sugest&otilde;es de Enquadramento.',
+    //         resizable: false,
+    //         width:'95%',
+    //         height: 450,
+    //         modal: true,
+    //         autoOpen:false
+    //     });
+    //     $("#dialog-sugestoes-enquadramento").dialog('open');
+    // });
+    $3('.modal').modal({
+        dismissible: true,
+        opacity: .5,
+        inDuration: 300,
+        outDuration: 200,
+        startingTop: '4%',
+        endingTop: '10%',
+        width: '100%'
     });
 
     $3('#id_area').change(function () {
