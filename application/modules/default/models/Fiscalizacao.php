@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of Projetos
- *
- * @author Andr� Nogueira Pereira
- */
 class Fiscalizacao extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbFiscalizacao';
@@ -21,7 +16,7 @@ class Fiscalizacao extends MinC_Db_Table_Abstract
                       ,'Fisc.dtInicioFiscalizacaoProjeto'
                       ,'Fisc.dtFimFiscalizacaoProjeto'
                       ,'Fisc.dtRespostaSolicitada'
-                      ,'CAST(Fisc.dsFiscalizacaoProjeto AS TEXT) as dsFiscalizacaoProjeto'
+                      ,new Zend_Db_Expr('CAST(Fisc.dsFiscalizacaoProjeto AS TEXT) as dsFiscalizacaoProjeto')
                       ,'Fisc.tpDemandante'
                       ,'Fisc.stFiscalizacaoProjeto'
                       ,'Fisc.idAgente'
@@ -60,7 +55,6 @@ class Fiscalizacao extends MinC_Db_Table_Abstract
                 array($this->_name),
                 array('IdPRONAC')
         );
-        //$select->where("tbFiscalizacao.stFiscalizacaoProjeto = 'S'");
         $select->Where("tbFiscalizacao.stFiscalizacaoProjeto = '0'");
         $select->orWhere("tbFiscalizacao.stFiscalizacaoProjeto = '1'");
 

@@ -288,9 +288,9 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         $select->where("c.idPronac = ?", $idPronac);
 
-        $select->order("Agentes.dbo.fnUFAgente(idFornecedor)");
-        $select->order("Agentes.dbo.fnMunicipioAgente(idFornecedor)");
-        $select->group("Agentes.dbo.fnUFAgente(idFornecedor), Agentes.dbo.fnMunicipioAgente(idFornecedor)");
+        $select->order(new Zend_Db_Expr("Agentes.dbo.fnUFAgente(idFornecedor)"));
+        $select->order(new Zend_Db_Expr("Agentes.dbo.fnMunicipioAgente(idFornecedor)"));
+        $select->group(new Zend_Db_Expr("Agentes.dbo.fnUFAgente(idFornecedor), Agentes.dbo.fnMunicipioAgente(idFornecedor)"));
         
         return $this->fetchAll($select);
     }
@@ -443,7 +443,7 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
                 array(),
             'AGENTES.dbo'
         );
-        $a->where('a.AnoProjeto+a.Sequencial = (SELECT x.Anoprojeto+x.Sequencial FROM SAC.dbo.Projetos x WHERE x.idPronac = ? )', $idPronac);
+        $a->where(new Zend_Db_Expr('a.AnoProjeto+a.Sequencial = (SELECT x.Anoprojeto+x.Sequencial FROM SAC.dbo.Projetos x WHERE x.idPronac = ? ))', $idPronac);
         $a->group(array('a.CgcCpfMecena','c.Descricao'));
         $a->order(array('2','3'));
 
@@ -577,7 +577,7 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
             'BDCORPORATIVO.scSAC'
         );
         if (is_array($idPlanilhaAprovacao)) {
-            $select->where('a.idPlanilhaAprovacao IN (?)', $idPlanilhaAprovacao);
+            $select->where(new Zend_Db_Expr('a.idPlanilhaAprovacao IN (?)'), $idPlanilhaAprovacao);
         } else {
             $select->where('a.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
         }

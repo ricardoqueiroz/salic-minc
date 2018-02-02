@@ -25,9 +25,9 @@ class tbTipoReadequacao extends MinC_Db_Table_Abstract
         );
 
         $select->where('stReadequacao = ?', 0);
-        $select->orWhere("stReadequacao = 1 and idTipoReadequacao not in (
+        $select->orWhere(new Zend_Db_Expr("stReadequacao = 1 and idTipoReadequacao not in (
             select idTipoReadequacao from SAC.dbo.tbReadequacao where idPronac = $idPronac AND siEncaminhamento != 12
-        )");
+        )"));
 
         $select->order('2');
 

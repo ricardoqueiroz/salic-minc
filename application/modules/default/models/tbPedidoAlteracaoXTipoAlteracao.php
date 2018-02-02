@@ -1,23 +1,9 @@
 <?php
-/**
- * DAO tbPedidoAlteracaoXTipoAlteracao
- * @author emanuel.sampaio <emanuelonline@gmail.com>
- * @since 11/04/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2012 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
- */
-
 class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
     protected $_banco   = "BDCORPORATIVO";
     protected $_schema  = "BDCORPORATIVO.scSAC";
     protected $_name    = "tbPedidoAlteracaoXTipoAlteracao";
-
-
 
     /**
      * Busca as justificativas dos pedidos de readequa��o
@@ -35,7 +21,7 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
             array('x.idPedidoAlteracaoXTipoAlteracao AS idTipoAlteracao'
                 ,'x.idPedidoAlteracao'
                 ,'x.tpAlteracaoProjeto'
-                ,'CAST(x.dsJustificativa AS TEXT) AS dsJustificativa'
+                ,new Zend_Db_Expr('CAST(x.dsJustificativa AS TEXT) AS dsJustificativa')
                 ,'x.stVerificacao AS stVerificacaoTipo')
         );
         $select->joinInner(
@@ -43,8 +29,8 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
             'p.idPedidoAlteracao = x.idPedidoAlteracao',
             array('p.IdPRONAC'
                 ,'p.idSolicitante'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao'
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao')
                 ,'p.stPedidoAlteracao'
                 ,'p.siVerificacao'),
             'BDCORPORATIVO.scSAC'
@@ -59,9 +45,7 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
         $select->order($order);
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarPedido()
-
-
+    }
 
     /**
      * Busca os pedidos de readequa��o do checklist
@@ -79,7 +63,7 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
             array('x.idPedidoAlteracaoXTipoAlteracao AS idTipoAlteracao'
                 ,'x.idPedidoAlteracao'
                 ,'x.tpAlteracaoProjeto'
-                ,'CAST(x.dsJustificativa AS TEXT) AS dsJustificativa'
+                ,new Zend_Db_Expr('CAST(x.dsJustificativa AS TEXT) AS dsJustificativa')
                 ,'x.stVerificacao AS stVerificacaoTipo')
         );
         $select->joinInner(
@@ -87,8 +71,8 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
             'p.idPedidoAlteracao = x.idPedidoAlteracao',
             array('p.IdPRONAC'
                 ,'p.idSolicitante'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao'
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao')
                 ,'p.stPedidoAlteracao'
                 ,'p.siVerificacao'),
             'BDCORPORATIVO.scSAC'
@@ -115,5 +99,5 @@ class tbPedidoAlteracaoXTipoAlteracao extends MinC_Db_Table_Abstract
         $select->order($order);
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarPedidoChecklist()
-} // fecha class
+    }
+}

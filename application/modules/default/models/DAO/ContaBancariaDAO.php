@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ContaBancariaDao
- *
- * @author 01129075125
- */
 class ContaBancariaDao extends Zend_Db_Table
 {
     public static function buscarDadosContaBancaria($idPronac)

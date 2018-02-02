@@ -102,7 +102,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
             /*if($recebidoPost->stAprovacao == 'RT')
             {
@@ -199,7 +199,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
         }
 
@@ -247,9 +247,6 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
         $this->view->resultParecerTecnico   = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);*/
     }
 
-    /*
-    *  View: Solicita��o de Altera��o do Nome do Proponente
-    */
     public function solaltnomprpAction()
     {
         if ($_POST) {
@@ -266,7 +263,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
             
             
@@ -313,7 +310,6 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             $this->view->dados = $dados[0];
             $idPedidoAlt = $dados[0]->idAvaliacaoItemPedidoAlteracao;
 
-            //VERIFICA O STATUS DA SOLICITA��O
             $sqlStatusReadequacao = ReadequacaoProjetos::alteraStatusReadequacao($idPedidoAlt);
 
             $this->view->stResult = $db->fetchAll($sqlStatusReadequacao);
@@ -372,7 +368,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
         }
 
@@ -459,7 +455,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
         }
 
@@ -551,7 +547,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
         }
 
@@ -647,7 +643,7 @@ class VerificarAlteracaoCoordenadorController extends MinC_Controller_Action_Abs
             if (PedidoAlteracaoDAO::salvarComentarioAlteracaoProj($dados)) {
                 parent::message("Os dados foram salvos com sucesso!", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "CONFIRM");
             } else {
-                parent::message("Erro na opera��o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
+                parent::message("Erro na opera&ccedil;&atilde;o", "verificarreadequacaodeprojeto/verificarreadequacaodeprojetocoordacompanhamento", "ERROR");
             }
         }
 

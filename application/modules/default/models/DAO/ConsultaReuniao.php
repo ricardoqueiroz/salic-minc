@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ConstultaReuniao
- *
- * @author 01373930160
- */
 class ConsultaReuniao
 {
     public static function listaReuniao()
@@ -36,6 +26,4 @@ class ConsultaReuniao
         return $db->fetchAll($sql);
     }
 }
-
-?>
 

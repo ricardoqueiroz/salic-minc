@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of ArquivoPagamentoParecerista
- *
- * @author Tarcisio Angelo
- */
 class PagarParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbPagarParecerista';
@@ -64,8 +59,6 @@ class PagarParecerista extends MinC_Db_Table_Abstract
             $select->where($coluna, $valor);
         }
 
-        //x($select->assemble());
-
         return $this->fetchAll($select);
     }
 
@@ -81,8 +74,6 @@ class PagarParecerista extends MinC_Db_Table_Abstract
         foreach ($where as $coluna => $valor) {
             $select->where($coluna, $valor);
         }
-
-
 
         return $this->fetchAll($select);
     }
@@ -114,7 +105,6 @@ class PagarParecerista extends MinC_Db_Table_Abstract
         foreach ($where as $coluna => $valor) {
             $select->where($coluna, $valor);
         }
-
 
         $select->order('nm.Descricao');
 

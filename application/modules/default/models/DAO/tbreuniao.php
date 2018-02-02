@@ -1,14 +1,5 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of tbreuniao
- *
- * @author 01155078179
- */
 class tbreuniao extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';
@@ -30,12 +21,10 @@ class tbreuniao extends MinC_Db_Table_Abstract
                 array('v2.descricao as str_Mecanismo')
         );
 
-        //adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) {
             $slct->where($coluna, $valor);
         }
 
-        //adicionando linha order ao select
         $slct->order($order);
         // paginacao
         if ($tamanho > -1) {
@@ -46,7 +35,6 @@ class tbreuniao extends MinC_Db_Table_Abstract
             $slct->limit($tamanho, $tmpInicio);
         }
 
-        //SETANDO A QUANTIDADE DE REGISTROS
         $this->_totalRegistros = $this->pegaTotal($where, $order);
         
 
@@ -69,7 +57,7 @@ class tbreuniao extends MinC_Db_Table_Abstract
         } else {
             return false;
         }
-    } // fecha m�todo atualizarreuniao()
+    }
 
 
     public function pegaTotal($where=array(), $order=array())
@@ -90,12 +78,10 @@ class tbreuniao extends MinC_Db_Table_Abstract
                 array('v2.descricao as str_Mecanismo')
         );
 
-        // adicionando clausulas where
         foreach ($where as $coluna=>$valor) {
             $slct->where($coluna, $valor);
         }
 
-        // adicionando linha order ao select
         $slct->order($order);
 
         $rows = $this->fetchAll($slct);
@@ -115,5 +101,5 @@ class tbreuniao extends MinC_Db_Table_Abstract
         } else {
             return false;
         }
-    } // fecha m�todo salvareuniao()
+    }
 }

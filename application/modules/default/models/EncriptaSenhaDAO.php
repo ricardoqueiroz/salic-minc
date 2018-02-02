@@ -1,17 +1,7 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- * Description of EncriptaSenhaDAO
- *
- * @author tisomar
- */
 class EncriptaSenhaDAO extends Zend_Db_Table
 {
-
     /**
      * funcao do banco de dados do sql server no formato PHP.
      *

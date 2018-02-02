@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of FichaTecnicaDAO
- *
- * @author 01129075125
- */
 class FichaTecnicaDAO
 {
     public static function buscarFichaTecnica($idPronac, $idPedidoAlteracao = null)

@@ -18,19 +18,10 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscarProjetos()
-
-
+    }
 
     public function compararInserirAbrangencia($idProjeto, $idPedidoAlteracao)
     {
-        /*$sql = "insert into sac.dbo.tbAbrangencia(tpAbrangencia,idPais,idUF,idMunicipioIBGE,tpAcao,idAbrangenciaAntiga,idPedidoAlteracao,dtRegistro)
-             select 'SA',a.idPais,a.idUF,a.idMunicipioIBGE,'N',a.idAbrangencia,'$idPedidoAlteracao',GETDATE()
-             from SAC.dbo.Abrangencia a
-             inner join SAC.dbo.Projetos pr on pr.idProjeto = a.idProjeto
-             where
-             (select COUNT(*) from SAC.dbo.tbAbrangencia ab where a.idAbrangencia = ab.idAbrangenciaAntiga) = 0
-             and pr.idProjeto = $idProjeto";*/
         $sql = "insert into sac.dbo.tbAbrangencia(tpAbrangencia,idPais,idUF,idMunicipioIBGE,tpAcao,idAbrangenciaAntiga,idPedidoAlteracao,dtRegistro)
         		SELECT 'SA',a.idPais,a.idUF,a.idMunicipioIBGE,'N',a.idAbrangencia,'$idPedidoAlteracao',GETDATE()
             FROM SAC.dbo.Abrangencia a
@@ -40,9 +31,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
         return $db->fetchAll($sql);
-    } // fecha m�todo compararInserirAbrangencia()
-
-
+    } 
 
     public function buscartbPedidoAlteracaoXTipoAlteracao($idPedidoAlteracao, $status)
     {
@@ -58,7 +47,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscartbPedidoAlteracaoXTipoAlteracao()
+    }
 
     public function buscartbPedidoAlteracaoXTipoAlteracaoGeral($idPedidoAlteracao)
     {
@@ -74,8 +63,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscartbPedidoAlteracaoXTipoAlteracao()
-
+    }
 
     public function buscartbPedidoAlteracaoXTipoAlteracaoGeralJustificativa($idPedidoAlteracao)
     {
@@ -91,8 +79,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscartbPedidoAlteracaoXTipoAlteracao()
-
+    }
 
     public function buscarTrocaProponente($idPedidoAlteracao)
     {
@@ -101,9 +88,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscartbPedidoAlteracaoXTipoAlteracao()
-
-
+    }
 
     public function updatetbPedidoAlteracaoXTipoAlteracao($idPedidoAlteracao, $dsJustificativa, $status)
     {
@@ -113,9 +98,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo updatetbPedidoAlteracaoXTipoAlteracao()
-
-
+    }
 
     public function buscatbProposta($idPedidoAlteracao)
     {
@@ -155,9 +138,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscatbProposta()
-
-
+    }
 
     public function inserttbProposta($idPedidoAlteracao, $coluna, $value)
     {
@@ -166,9 +147,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo inserttbProposta()
-
-
+    }
 
     public function updatetbProposta($idPedidoAlteracao, $coluna, $value)
     {
@@ -178,9 +157,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo updatetbProposta()
-
-
+    }
 
     public function buscarProposta2($idPedidoAlteracao)
     {
@@ -191,9 +168,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscarProposta2()
-
-
+    }
 
     public function buscarNomeProposta($idPedidoAlteracao)
     {
@@ -202,9 +177,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscarNomeProposta()
-
-
+    }
 
     public function buscarRazaoSocial($idPedidoAlteracao)
     {
@@ -213,9 +186,7 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db = Zend_Registry::get('db');
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo buscarRazaoSocial()
-
-
+    }
 
     public function insertRazaoSocial($idPedidoAlteracao, $CNPJCPF=null, $razaosocial)
     {
@@ -227,8 +198,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         return $db->fetchAll($sql);
     } // fecha m�todo insertRazaoSocial()
 
-
-
     public function updateRazaoSocial($idPedidoAlteracao, $CNPJCPF=null, $razaosocial)
     {
         $sql = "update BDCORPORATIVO.scSAC.tbAlteracaoNomeProponente set nmProponente = '$razaosocial', nrCNPJCPF = '$CNPJCPF' 
@@ -238,8 +207,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     } // fecha m�todo updateRazaoSocial()
-
-
 
     public function buscaNomeProponente($idPedidoAlteracao)
     {
@@ -251,8 +218,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         return $db->fetchAll($sql);
     } // fecha m�todo buscaNomeProponente()
 
-
-
     public function updateNomeProponente($idPedidoAlteracao, $CNPJCPF, $Proponente)
     {
         $sql = "update BDCORPORATIVO.scSAC.tbAlteracaoNomeProponente set nrCNPJCPF = '$CNPJCPF',nmProponente = '$Proponente'
@@ -262,8 +227,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     } // fecha m�todo updateNomeProponente()
-
-
 
     public function insertNomeProponente($idPedidoAlteracao, $CNPJCPF, $Proponente)
     {
@@ -275,8 +238,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         return $db->fetchAll($sql);
     } // fecha m�todo insertNomeProponente()
 
-
-
     public function insertArquivo($idArquivo, $idPedidoAlteracao, $status)
     {
         $sql = "insert into BDCORPORATIVO.scSAC.tbPedidoAltProjetoXArquivo (idArquivo,idPedidoAlteracao,tpAlteracaoProjeto)
@@ -286,8 +247,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     } // fecha m�todo insertArquivo()
-
-
 
     public function buscarArquivo($idPedidoAlteracao, $status)
     {
@@ -312,8 +271,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     } // fecha m�todo insertArquivo()
-
-
 
     /**
      * M�todo para excluir o arquivo fisicamente
@@ -341,8 +298,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         $excluir = $db->fetchAll($sql);
     } // fecha m�todo excluirArquivo()
 
-
-
     /**
      * M�todo para verificar se o usuario existe na tabela Interessados e na tabela Agentes
      * @access public
@@ -365,8 +320,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         }
     } // fecha m�todo verificarInteressadosAgentes()
 
-
-
     public static function excluirArquivoDuplicado($idPedidoAlteracao, $Pais, $UF, $Cidade)
     {
         $sql = " DELETE FROM SAC.dbo.tbAbrangencia WHERE idPedidoAlteracao = $idPedidoAlteracao AND (tpAcao = 'I' OR tpAcao = 'N') AND idPais = $Pais AND idUF = $UF AND idMunicipioIBGE = $Cidade";
@@ -381,8 +334,6 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         }
     } // fecha fun��o excluirArquivoDuplicado()
 
-
-
     public static function alterarJustificativaPrimeiroArquivo($idPedidoAlteracao, $Pais, $UF, $Cidade, $dsJustificativaExclusao)
     {
         $sql = "UPDATE SAC.dbo.tbAbrangencia SET dsExclusao='".$dsJustificativaExclusao."' WHERE idPedidoAlteracao = $idPedidoAlteracao AND tpAcao = 'E' AND idPais = $Pais AND idUF = $UF AND idMunicipioIBGE = $Cidade";
@@ -395,5 +346,5 @@ class SolicitarAlteracaoDAO extends Zend_Db_Table
         } else {
             return false;
         }
-    } // fecha fun��o excluirArquivoDuplicado()
-} // fecha class
+    }
+}

@@ -1,9 +1,4 @@
 <?php
-/**
- * Modelo Estado
- * @since 29/03/2010
- */
-
 class EstadoDAO extends MinC_Db_Table_Abstract
 {
     protected $_name = 'uf'; // nome da tabela

@@ -1,11 +1,4 @@
 <?php
-
-/**
- * spVisualizarPlanilhaOrcamentaria
- *
- * @uses GenericModel
- * @author
- */
 class spVisualizarPlanilhaOrcamentaria extends MinC_Db_Table_Abstract
 {
     protected $_schema = 'sac';

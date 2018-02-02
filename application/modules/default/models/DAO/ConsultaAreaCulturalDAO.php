@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of consultaAreaCultural
- *
- * @author 01373930160
- */
 class ConsultaAreaCulturalDAO extends Zend_Db_Table
 {
     public static function consultaAreaCultural()

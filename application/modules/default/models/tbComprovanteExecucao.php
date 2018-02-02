@@ -189,7 +189,7 @@ class tbComprovanteExecucao extends MinC_Db_Table_Abstract
 
         $select->where('d.idPRONAC = ?', $idpronac);
         $select->where('d.tpRelatorio = ?', $tpRelatorio);
-        $select->where('f.stRelatorioTrimestral in (5,7)');
+        $select->where(new Zend_Db_Expr('f.stRelatorioTrimestral in (5,7)'));
         return $this->fetchAll($select);
     }
 

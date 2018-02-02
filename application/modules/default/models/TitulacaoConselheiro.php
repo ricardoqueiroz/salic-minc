@@ -82,13 +82,13 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
         $select->from(
             array('T' => $this->_name),
             array("T.idAgente",
-                    "(SELECT COUNT(SDPC.idPronac) as QTD
+                new Zend_Db_Expr("(SELECT COUNT(SDPC.idPronac) as QTD
                               FROM BDCORPORATIVO.scSAC.tbDistribuicaoProjetoComissao SDPC
                               INNER JOIN SAC.dbo.projetos pr on pr.IdPRONAC = SDPC.idPronac
                               WHERE pr.Situacao = 'C10' and SDPC.idAgente = T.idAgente
                               and SDPC.idPronac not in (select idpronac from BDCORPORATIVO.scSAC.tbPauta)
                       )  as QTD
-                     ",
+                     "),
                 "T.cdArea"
                 )
         );
@@ -141,7 +141,7 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
         );
         $select->where('H.stConselheiro = ?', 'I');
         $select->where('C.stConselheiro = ?', 'I');
-        $select->where('H.dtHistorico in (select top 1 dtHistorico from BDCORPORATIVO.scAGENTES.tbHistoricoConselheiro where idConselheiro = C.idAgente order by dtHistorico desc )');
+        $select->where(new Zend_Db_Expr('H.dtHistorico in (select top 1 dtHistorico from BDCORPORATIVO.scAGENTES.tbHistoricoConselheiro where idConselheiro = C.idAgente order by dtHistorico desc )'));
         return $this->fetchAll($select);
     }
 
@@ -152,13 +152,13 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
         $select->from(
             array('T' => $this->_name),
             array("T.idAgente",
-                    "(SELECT COUNT(SDPC.idPronac) as QTD
+                new Zend_Db_Expr("(SELECT COUNT(SDPC.idPronac) as QTD
                               FROM BDCORPORATIVO.scSAC.tbDistribuicaoProjetoComissao SDPC
                               INNER JOIN SAC.dbo.projetos pr on pr.IdPRONAC = SDPC.idPronac
                               WHERE pr.Situacao = 'C10' and SDPC.idAgente = T.idAgente
                               and SDPC.idPronac not in (select idpronac from BDCORPORATIVO.scSAC.tbPauta)
                       )  as QTD
-                     ",
+                     "),
                 "T.cdArea"
                 )
         );

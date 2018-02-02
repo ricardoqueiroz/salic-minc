@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of Consolidacaovotacao
- *
- * @author augusto
- */
 class Consolidacaovotacao extends MinC_Db_Table_Abstract
 {
     protected $_banco  = 'BDCORPORATIVO';

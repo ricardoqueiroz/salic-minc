@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Description of spTipoDeReadequacaoOrcamentaria
- * Criado em 22/02/2016 - Fernao Lara
- */
 class spTipoDeReadequacaoOrcamentaria extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';

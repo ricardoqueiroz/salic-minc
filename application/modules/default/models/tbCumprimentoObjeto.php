@@ -285,10 +285,10 @@ class tbCumprimentoObjeto extends MinC_Db_Table_Abstract
     private function validarCadastrar()
     {
         if (!$this->idPronac) {
-            throw new InvalidArgumentException('Necess�rio fornecer o Pronac');
+            throw new InvalidArgumentException('Necess&aacute;rio fornecer o Pronac');
         }
         if (!$this->idUsuario) {
-            throw new InvalidArgumentException('Necess�rio fornecer o usu�rio logado no sistema');
+            throw new InvalidArgumentException('Necess&aacute;rio fornecer o usu&aacute;rio logado no sistema');
         }
     }
 

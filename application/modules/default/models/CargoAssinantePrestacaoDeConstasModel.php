@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of CargoAssinantePrestacaoDeConstas
- *
- * @author Mikhail Cavalcanti <mikhail.leite@xti.com.br>
- */
 class CargoAssinantePrestacaoDeConstasModel implements ModelInterface
 {
 

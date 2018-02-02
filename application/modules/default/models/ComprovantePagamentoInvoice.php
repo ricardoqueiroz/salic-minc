@@ -1,14 +1,8 @@
 <?php
-/**
- * @author Caio Lucena <caioflucena@gmail.com>
- */
 class ComprovantePagamentoInvoice extends ComprovantePagamento
 {
     protected $nif;
 
-    /**
-     * Zend Table
-     */
     protected $_banco = 'bdcorporativo';
     protected $_schema = 'bdcorporativo.scSAC';
     protected $_name = 'tbComprovantePagamento';

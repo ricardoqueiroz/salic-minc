@@ -22,6 +22,7 @@ class Votante extends MinC_Db_Table_Abstract
         );
         $select->where('tbv.idreuniao = ?', $idreuniao);
         $select->order('nm.descricao asc');
+
         return $this->fetchAll($select);
     }
 }

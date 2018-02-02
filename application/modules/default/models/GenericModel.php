@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of GenericModel
- *
- * @author augusto
- */
 require_once 'Zend/Db/Table/Abstract.php';
 
 class GenericModel extends Zend_Db_Table_Abstract

@@ -11,9 +11,9 @@
 
 class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
+    protected $_banco = "SAC";
     protected $_schema = "SAC";
-    protected $_name   = "tbComprovanteTrimestral";
+    protected $_name = "tbComprovanteTrimestral";
 
     /**
      * M�todo para cadastrar
@@ -47,18 +47,18 @@ class tbComprovanteTrimestral extends MinC_Db_Table_Abstract
         $slct = $this->select();
         $slct->from(
             $this->_name,
-                array('idComprovanteTrimestral', 'IdPRONAC', 'dtComprovante','dtInicioPeriodo', 'dtFimPeriodo',
-                    'CAST(dsEtapasExecutadas AS TEXT) AS dsEtapasExecutadas',
-                    'CAST(dsAcessibilidade AS TEXT) AS dsAcessibilidade',
-                    'CAST(dsDemocratizacaoAcesso AS TEXT) AS dsDemocratizacaoAcesso',
-                    'CAST(dsImpactoAmbiental AS TEXT) AS dsImpactoAmbiental',
-                    'siComprovanteTrimestral', 'nrComprovanteTrimestral', 'idCadastrador',
-                    'CAST(dsParecerTecnico AS TEXT) AS dsParecerTecnico',
-                    'CAST(dsRecomendacao AS TEXT) AS dsRecomendacao','idTecnicoAvaliador')
+            array('idComprovanteTrimestral', 'IdPRONAC', 'dtComprovante', 'dtInicioPeriodo', 'dtFimPeriodo',
+                new Zend_Db_Expr('CAST(dsEtapasExecutadas AS TEXT) AS dsEtapasExecutadas'),
+                new Zend_Db_Expr('CAST(dsAcessibilidade AS TEXT) AS dsAcessibilidade'),
+                new Zend_Db_Expr('CAST(dsDemocratizacaoAcesso AS TEXT) AS dsDemocratizacaoAcesso'),
+                new Zend_Db_Expr('CAST(dsImpactoAmbiental AS TEXT) AS dsImpactoAmbiental'),
+                'siComprovanteTrimestral', 'nrComprovanteTrimestral', 'idCadastrador',
+                new Zend_Db_Expr('CAST(dsParecerTecnico AS TEXT) AS dsParecerTecnico'),
+                new Zend_Db_Expr('CAST(dsRecomendacao AS TEXT) AS dsRecomendacao'), 'idTecnicoAvaliador')
         );
 
         // adicionando clausulas where
-        foreach ($where as $coluna=>$valor) {
+        foreach ($where as $coluna => $valor) {
             $slct->where($coluna, $valor);
         }
 

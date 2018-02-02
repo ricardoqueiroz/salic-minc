@@ -39,12 +39,12 @@ class Mensagem extends GenericModel
     public function montarFiltrosListarDeDispositivo($consulta, stdClass $objParam)
     {
         $consulta
-            ->where('m.dtExclusao IS NULL')
-            ->where('md.dtExclusao IS NULL')
+            ->where(new Zend_Db_Expr('m.dtExclusao IS NULL'))
+            ->where(new Zend_Db_Expr('md.dtExclusao IS NULL'))
             ->where('d.idRegistration = ?', $objParam->idRegistration? $objParam->idRegistration: '');
 
         if ($objParam->new) {
-            $consulta->where('m.dtAcesso IS NULL');
+            $consulta->where(new Zend_Db_Expr('m.dtAcesso IS NULL'));
         }
 
         return $consulta;

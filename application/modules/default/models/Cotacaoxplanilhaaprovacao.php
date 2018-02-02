@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Cotacaoxplanilhaaprovacao
- *
- * @author 01610881125
- */
 class Cotacaoxplanilhaaprovacao extends MinC_Db_Table_Abstract
 {
     protected $_banco   = 'bdcorporativo';

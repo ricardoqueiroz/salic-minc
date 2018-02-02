@@ -1,10 +1,4 @@
 <?php
-
-/**
- * Modelo que representa a tabela SAC.dbo.ContaBancaria
- *
- * @author Danilo Lisboa
- */
 class ContaBancaria extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';
@@ -277,7 +271,6 @@ class ContaBancaria extends MinC_Db_Table_Abstract
             }
             $select->limit($tamanho, $tmpInicio);
         }
-
         
         return $this->fetchAll($select);
     }

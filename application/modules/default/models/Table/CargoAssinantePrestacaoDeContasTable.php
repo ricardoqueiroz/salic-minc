@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of CargoAssinantePrestacaoDeContasTable
- *
- * @author Mikhail Cavalcanti <mikhail.leite@xti.com.br
- */
 class CargoAssinantePrestacaoDeContasTable extends Zend_Db_Table
 {
 

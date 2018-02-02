@@ -1,21 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Cotacao
- *
- * @author augusto
- */
 class Cotacao extends MinC_Db_Table_Abstract
 {
     protected $_banco   = 'bdcorporativo';
     protected $_name    = 'tbCotacao';
     protected $_schema  = 'bdcorporativo.scSAC';
-
-
 
     public function inserirCotacao($data)
     {
@@ -42,7 +30,10 @@ class Cotacao extends MinC_Db_Table_Abstract
         $select->from(
                         array('cot'=>$this->_name),
                         array(
-                                'cot.idCotacao','cot.nrCotacao','CAST(cot.dsCotacao AS TEXT) AS dsCotacao','cot.dtCotacao'
+                            'cot.idCotacao',
+                            'cot.nrCotacao',
+                            new Zend_Db_Expr('CAST(cot.dsCotacao AS TEXT) AS dsCotacao'),
+                            'cot.dtCotacao'
                               )
                       );
 

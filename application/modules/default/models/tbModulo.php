@@ -1,25 +1,9 @@
 <?php 
-/*
- * Classe: tbModulo
- * Modulo: Editais
- * Criado por: Emanuel Melo
- */
 class tbModulo extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';
     protected $_name = 'tbModulo';
 
-    /*
-     * Metodo: buscarComposicaoEdital
-     * Entrada: void
-     * Saida: Array de Composi��es
-    */
-    //  public function buscarModulo(){
-//        $select = $this->select();
-//        $select->setIntegrityCheck(false);
-//        return $this->fetchAll($select);
-//    }
-    
     public function buscarModulo($idEdital)
     {
         $select = $this->select()

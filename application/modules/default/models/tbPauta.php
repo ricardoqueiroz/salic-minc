@@ -112,7 +112,6 @@ class tbPauta extends MinC_Db_Table_Abstract
             $slctVlSolicitado->where("idPronac = p.idPronac AND idProduto <> '206' AND tpPlanilha = 'SR'");
         }
 
-
         //=============== VALOR SUGERIDO ======================//
         if (!$bln_readequacao) {
             $slctVlSugerido = $this->select();
@@ -234,7 +233,6 @@ class tbPauta extends MinC_Db_Table_Abstract
             foreach ($where as $coluna => $valor) {
                 $slct2->where($coluna, $valor);
             }
-
 
             $rs = $this->fetchAll($slct2)->current();
             if ($rs) {
@@ -875,7 +873,8 @@ class tbPauta extends MinC_Db_Table_Abstract
             'p.stEnvioPlenario',
             'r.NrReuniao',
             'r.DtFinal',
-            "round( (Select sum(qtItem * nrOcorrencia * vlUnitario) From sac.dbo.tbPlanilhaAprovacao y where y.idPronac = x.idPronac and y.stAtivo = 'S') ,2) AS valor" ];
+            new Zend_Db_Expr("round( (Select sum(qtItem * nrOcorrencia * vlUnitario) From sac.dbo.tbPlanilhaAprovacao y where y.idPronac = x.idPronac and y.stAtivo = 'S') ,2) AS valor")
+        ];
 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);

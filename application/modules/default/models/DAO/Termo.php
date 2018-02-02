@@ -60,10 +60,10 @@ class Termo extends Zend_Db_Table
 		    ap.AprovadoReal,
 		    ap.ResumoAprovacao,
               case
-		    when ap.TipoAprovacao = 1 then 'Aprova��o Inicial'
-		    when ap.TipoAprovacao = 2 then 'Complementa��o'
-		    when ap.TipoAprovacao = 3 then 'Prorroga��o de Prazo'
-		    when ap.TipoAprovacao = 4 then 'Redu��o'
+		    when ap.TipoAprovacao = 1 then 'Aprova&ccedil;&atilde;o Inicial'
+		    when ap.TipoAprovacao = 2 then 'Complementa&ccedil;&atilde;o'
+		    when ap.TipoAprovacao = 3 then 'Prorroga&ccedil;&atilde;o de Prazo'
+		    when ap.TipoAprovacao = 4 then 'Redu&ccedil;&atilde;o'
 		    end as tipoaprovacao
       		FROM SAC.dbo.Projetos pr
 		    INNER JOIN BDCORPORATIVO.scSAC.tbPauta tp ON pr.IdPRONAC = tp.IdPRONAC

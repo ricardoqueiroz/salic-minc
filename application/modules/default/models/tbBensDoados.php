@@ -46,7 +46,7 @@ class tbBensDoados extends MinC_Db_Table_Abstract
 
         $slct->from(
                 array('a' => $this->_name),
-                array('idBensDoados','idPronac','tpBem','qtBensDoados','CAST(dsObservacao AS TEXT) AS dsObservacao')
+                array('idBensDoados','idPronac','tpBem','qtBensDoados', new Zend_Db_Expr('CAST(dsObservacao AS TEXT) AS dsObservacao'))
         );
         $slct->joinLeft(
                 array('b' => 'tbPlanilhaItens'),

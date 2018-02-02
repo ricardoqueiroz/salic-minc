@@ -445,7 +445,7 @@ class Vinculo extends MinC_Db_Table_Abstract
         if ($rsPreProjeto->save()) {
             parent::message("Exclus&atilde;o realizada com sucesso!", "/manterpropostaincentivofiscal/listar-propostas", "CONFIRM");
         } else {
-            parent::message("N&atilde;o foi poss�vel realizar a opera&ccedil;&atilde;o!", "/manterpropostaincentivofiscal/listar-propostas", "ERROR");
+            parent::message("N&atilde;o foi possivel realizar a opera&ccedil;&atilde;o!", "/manterpropostaincentivofiscal/listar-propostas", "ERROR");
         }
     }
 
@@ -466,7 +466,7 @@ class Vinculo extends MinC_Db_Table_Abstract
                 "erro" => $arrResultado['erro'],
                 "resultado" => $arrResultado));
         } else {
-            parent::message("Necess�rio informar o n�mero da proposta.", "/manterpropostaincentivofiscal/index", "ERROR");
+            parent::message("Necessario informar o numero da proposta.", "/manterpropostaincentivofiscal/index", "ERROR");
         }
     }
 

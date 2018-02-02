@@ -2,7 +2,7 @@
 /**
  * DAO tbPlanoDistribuicao
  * OBS:
- * 	-> A tabela SAC.dbo.PlanoDistribuicaoProduto armazena os produtos do projeto originais (aprovados)
+ *    -> A tabela SAC.dbo.PlanoDistribuicaoProduto armazena os produtos do projeto originais (aprovados)
  *  -> A tabela SAC.dbo.tbPlanoDistribuicao armazena os produtos do projeto que foram solicitados na readequa��o
  * @author emanuel.sampaio <emanuelonline@gmail.com>
  * @since 20/04/2012
@@ -13,9 +13,9 @@
 class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
 {
     /* dados da tabela */
-    protected $_banco  = "SAC";
+    protected $_banco = "SAC";
     protected $_schema = "SAC";
-    protected $_name   = "tbPlanoDistribuicao";
+    protected $_name = "tbPlanoDistribuicao";
 
     /**
      * Busca os produtos originais (aprovados)
@@ -31,20 +31,20 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->from(
             array('p' => $this->_schema . '.PlanoDistribuicaoProduto'),
             array('p.idPlanoDistribuicao'
-                ,'p.idProduto'
-                ,'p.Area AS cdArea'
-                ,'p.Segmento AS cdSegmento'
-                ,'p.idPosicaoDaLogo AS idPosicaoLogo'
-                ,'p.QtdeProduzida AS qtdProduzida'
-                ,'p.QtdePatrocinador AS qtdPatrocinador'
-                ,'p.QtdeProponente AS qtdProponente'
-                ,'p.QtdeOutros AS qtdOutros'
-                ,'p.QtdeVendaNormal AS qtdVendaNormal'
-                ,'p.QtdeVendaPromocional AS qtdVendaPromocional'
-                ,'p.PrecoUnitarioNormal AS vlUnitarioNormal'
-                ,'p.PrecoUnitarioPromocional AS vlUnitarioPromocional'
-                ,'p.stPrincipal'
-                ,'CAST(p.dsJustificativaPosicaoLogo AS TEXT) AS dsPosicaoLogo')
+            , 'p.idProduto'
+            , 'p.Area AS cdArea'
+            , 'p.Segmento AS cdSegmento'
+            , 'p.idPosicaoDaLogo AS idPosicaoLogo'
+            , 'p.QtdeProduzida AS qtdProduzida'
+            , 'p.QtdePatrocinador AS qtdPatrocinador'
+            , 'p.QtdeProponente AS qtdProponente'
+            , 'p.QtdeOutros AS qtdOutros'
+            , 'p.QtdeVendaNormal AS qtdVendaNormal'
+            , 'p.QtdeVendaPromocional AS qtdVendaPromocional'
+            , 'p.PrecoUnitarioNormal AS vlUnitarioNormal'
+            , 'p.PrecoUnitarioPromocional AS vlUnitarioPromocional'
+            , 'p.stPrincipal'
+            , new Zend_Db_Expr('CAST(p.dsJustificativaPosicaoLogo AS TEXT) AS dsPosicaoLogo'))
         );
         $select->joinInner(
             array('d' => 'Produto'),
@@ -54,25 +54,15 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         );
         $select->where("p.stPlanoDistribuicaoProduto = ?", "1");
 
-        // adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) :
             $select->where($coluna, $valor);
         endforeach;
 
-        // adicionando linha order ao select
         $select->order($order);
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarProdutosAprovados()
+    }
 
-
-    /**
-     * Busca os produtos solicitados (readequa��o)
-     * @access public
-     * @param array $where (filtros)
-     * @param array $order (ordena��o)
-     * @return object
-     */
     public function buscarProdutosSolicitados($where = array(), $order = array())
     {
         $select = $this->select();
@@ -80,24 +70,24 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->from(
             array('p' => $this->_name),
             array('p.idPlano'
-                ,'p.idPlanoDistribuicao'
-                ,'p.idProduto'
-                ,'p.cdArea'
-                ,'p.cdSegmento'
-                ,'p.idPosicaoLogo'
-                ,'p.qtProduzida AS qtdProduzida'
-                ,'p.qtPatrocinador AS qtdPatrocinador'
-                ,'p.qtOutros AS qtdOutros'
-                ,'p.qtVendaNormal AS qtdVendaNormal'
-                ,'p.qtVendaPromocional AS qtdVendaPromocional'
-                ,'p.vlUnitarioNormal'
-                ,'p.vlUnitarioPromocional'
-                ,'p.stPrincipal'
-                ,'p.tpAcao'
-                ,'p.tpPlanoDistribuicao'
-                ,'CONVERT(CHAR(10), p.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao'
-                ,'CONVERT(CHAR(10), p.dtPlanoDistribuicao, 108) AS hrPlanoDistribuicao'
-                ,'CAST(p.dsjustificativa AS TEXT) AS dsJustificativa')
+            , 'p.idPlanoDistribuicao'
+            , 'p.idProduto'
+            , 'p.cdArea'
+            , 'p.cdSegmento'
+            , 'p.idPosicaoLogo'
+            , 'p.qtProduzida AS qtdProduzida'
+            , 'p.qtPatrocinador AS qtdPatrocinador'
+            , 'p.qtOutros AS qtdOutros'
+            , 'p.qtVendaNormal AS qtdVendaNormal'
+            , 'p.qtVendaPromocional AS qtdVendaPromocional'
+            , 'p.vlUnitarioNormal'
+            , 'p.vlUnitarioPromocional'
+            , 'p.stPrincipal'
+            , 'p.tpAcao'
+            , 'p.tpPlanoDistribuicao'
+            , new Zend_Db_Expr('CONVERT(CHAR(10), p.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao')
+            , new Zend_Db_Expr('CONVERT(CHAR(10), p.dtPlanoDistribuicao, 108) AS hrPlanoDistribuicao')
+            , new Zend_Db_Expr('CAST(p.dsjustificativa AS TEXT) AS dsJustificativa'))
         );
         $select->joinInner(
             array('d' => 'Produto'),
@@ -106,25 +96,15 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
 
-        // adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) :
             $select->where($coluna, $valor);
         endforeach;
 
-        // adicionando linha order ao select
         $select->order($order);
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarProdutosSolicitados()
+    }
 
-
-    /**
-     * Busca o hist�rico de readequa��o
-     * @access public
-     * @param array $where (filtros)
-     * @param array $order (ordena��o)
-     * @return object
-     */
     public function historicoReadequacao($where = array(), $order = array())
     {
         $select = $this->select();
@@ -132,24 +112,24 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->from(
             array('h' => $this->_name),
             array('h.idPlano'
-                ,'h.idPlanoDistribuicao'
-                ,'h.idProduto'
-                ,'h.cdArea'
-                ,'h.cdSegmento'
-                ,'h.idPosicaoLogo'
-                ,'h.qtProduzida AS qtdProduzida'
-                ,'h.qtPatrocinador AS qtdPatrocinador'
-                ,'h.qtOutros AS qtdOutros'
-                ,'h.qtVendaNormal AS qtdVendaNormal'
-                ,'h.qtVendaPromocional AS qtdVendaPromocional'
-                ,'h.vlUnitarioNormal'
-                ,'h.vlUnitarioPromocional'
-                ,'h.stPrincipal'
-                ,'h.tpAcao'
-                ,'h.tpPlanoDistribuicao'
-                ,'CONVERT(CHAR(10), h.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao'
-                ,'CONVERT(CHAR(10), h.dtPlanoDistribuicao, 108) AS hrPlanoDistribuicao'
-                ,'CAST(h.dsjustificativa AS TEXT) AS dsJustificativa')
+            , 'h.idPlanoDistribuicao'
+            , 'h.idProduto'
+            , 'h.cdArea'
+            , 'h.cdSegmento'
+            , 'h.idPosicaoLogo'
+            , 'h.qtProduzida AS qtdProduzida'
+            , 'h.qtPatrocinador AS qtdPatrocinador'
+            , 'h.qtOutros AS qtdOutros'
+            , 'h.qtVendaNormal AS qtdVendaNormal'
+            , 'h.qtVendaPromocional AS qtdVendaPromocional'
+            , 'h.vlUnitarioNormal'
+            , 'h.vlUnitarioPromocional'
+            , 'h.stPrincipal'
+            , 'h.tpAcao'
+            , 'h.tpPlanoDistribuicao'
+            , new Zend_Db_Expr('CONVERT(CHAR(10), h.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao')new Zend_Db_Expr(
+        , new Zend_Db_Expr('CONVERT(CHAR(10), h.dtPlanoDistribuicao, 108) AS hrPlanoDistribuicao')
+        , new Zend_Db_Expr('CAST(h.dsjustificativa AS TEXT) AS dsJustificativa'))
         );
         $select->joinInner(
             array('pro' => 'Produto'),
@@ -172,7 +152,7 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->joinInner(
             array('ver' => 'Verificacao'),
             'ver.idVerificacao = h.idPosicaoLogo AND ver.idTipo = 3',
-            array('LTRIM(ver.Descricao) AS PosicaoLogo'),
+            array(new Zend_Db_Expr('LTRIM(ver.Descricao) AS PosicaoLogo')),
             'SAC.dbo'
         );
         $select->joinInner(
@@ -180,22 +160,20 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
             'p.idPedidoAlteracao = h.idPedidoAlteracao',
             array(
                 'p.idPedidoAlteracao'
-                ,'p.idSolicitante'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao'),
+            , 'p.idSolicitante'
+            , new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao')
+            , new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao')),
             'BDCORPORATIVO.scSAC'
         );
 
-        // adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) :
             $select->where($coluna, $valor);
         endforeach;
 
-        // adicionando linha order ao select
         $select->order($order);
                 
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 
 
     /**
@@ -234,7 +212,7 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->where('c.stAvaliacaoSubItemPedidoAlteracao = ?', 'D');
 
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 
 
     /*
@@ -317,7 +295,6 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->where('a.IdPRONAC = ?', $idPronac);
 
 
-        
         return $this->fetchAll($select);
     }
 
@@ -365,7 +342,7 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
         $select->where('b.idReadequacao = ?', $idReadequacao);
 
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 
 
     public function buscarDadosPlanosDistribuicaoAtual($where = array())
@@ -380,12 +357,10 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
 
-        // adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) :
             $select->where($coluna, $valor);
         endforeach;
 
-        
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 }

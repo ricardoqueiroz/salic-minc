@@ -73,7 +73,7 @@ class Documentosanexados extends Zend_Db_Table
     {
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
-        $idGerado = $db->fetchOne("SELECT MAX(idArquivo) as id from BDCORPORATIVO.scCorp.tbArquivo");
+        $idGerado = $db->fetchOne(new Zend_Db_Expr("SELECT MAX(idArquivo) as id from BDCORPORATIVO.scCorp.tbArquivo"));
         return $idGerado;
     }
 }

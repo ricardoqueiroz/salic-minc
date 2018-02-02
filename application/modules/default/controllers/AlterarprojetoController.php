@@ -1516,7 +1516,7 @@ class AlterarprojetoController extends MinC_Controller_Action_Abstract
                 $ag = $Agentes->buscar(array('CNPJCPF = ?' => Mascara::delMaskCPFCNPJ($post->CGCCPF)))->current();
                 $docs = $tbDocumentosAgentes->buscarDocumentos(array('a.idAgente = ?' => $ag->idAgente));
                 if (count($docs) == 0) {
-                    parent::message("Os documentos do novo proponente n�o est�o cadastrados no sistema. Favor anexar os documentos!", "alterarprojeto/" . $post->pagina . "?pronac=" . Seguranca::encrypt($dadosProjeto->pronac) . "&menu=" . $post->menu, "ALERT");
+                    parent::message("Os documentos do novo proponente n&atilde;o est&atilde;o cadastrados no sistema. Favor anexar os documentos!", "alterarprojeto/" . $post->pagina . "?pronac=" . Seguranca::encrypt($dadosProjeto->pronac) . "&menu=" . $post->menu, "ALERT");
                 }
             }
 

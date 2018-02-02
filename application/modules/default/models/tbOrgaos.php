@@ -1,11 +1,4 @@
 <?php
-/**
- * DAO Orgaos
- * @since 16/03/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
-
 class tbOrgaos extends MinC_Db_Table_Abstract
 {
     protected $_banco  = "tabelas";

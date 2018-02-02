@@ -2485,10 +2485,6 @@ class ReadequacaoProjetos extends Zend_Db_Table
         return $sql;
     }
 
-
-
-
-
     public static function retornaSQLInclusaoItem($idPedidoAlteracao, $idAgenteAvaliador)
     {
         $sql = "INSERT BDCORPORATIVO.scSAC.tbAvaliacaoItemPedidoAlteracao
@@ -2514,17 +2510,13 @@ class ReadequacaoProjetos extends Zend_Db_Table
                 WHERE idAcaoAvaliacaoItemPedidoAlteracao = $idAcaoAvaliacao AND stAtivo = 0 ";
         return $sql;
     }
+
     public static function retornaSQLAtualizaUltimoPedidoParecerista($idAvaliacao)
     {
         $sql = "UPDATE BDCORPORATIVO.scSAC.tbAcaoAvaliacaoItemPedidoAlteracao SET stAtivo = 1
                 WHERE idAvaliacaoItemPedidoAlteracao = $idAvaliacao ";
         return $sql;
     }
-
-    
-
-
-
 
     public static function retornaSQLfinalizarPar($idPedidoAlteracao, $situacao, $justificativa)
     {

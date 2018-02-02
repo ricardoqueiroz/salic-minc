@@ -1,14 +1,4 @@
 <?php
-/**
- * Modelo Cidade
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @link http://www.cultura.gov.br
- *
- * @todo colocar em um modulo e no formato com DbTable, Model e Mapper.
- */
 class Cidade extends MinC_Db_Table_Abstract
 {
     protected $_name = 'municipios';

@@ -33,8 +33,8 @@ class tbProrrogacaoPrazo extends MinC_Db_Table_Abstract
             array("p" => $this->_name),
             array("p.idPedidoAlteracao"
                 ,"p.tpProrrogacao"
-                ,"CONVERT(CHAR(10), p.dtInicioNovoPrazo,103) AS dtInicioNovoPrazo"
-                ,"CONVERT(CHAR(10), p.dtFimNovoPrazo,103) AS dtFimNovoPrazo"),
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10), p.dtInicioNovoPrazo,103) AS dtInicioNovoPrazo")
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10), p.dtFimNovoPrazo,103) AS dtFimNovoPrazo")),
             $this->_banco . "." . $this->_schema
         );
         $select->joinInner(
@@ -79,8 +79,8 @@ class tbProrrogacaoPrazo extends MinC_Db_Table_Abstract
             array('h' => $this->_name),
             array('h.idPedidoAlteracao'
                 ,'h.tpProrrogacao'
-                ,'CONVERT(CHAR(10), h.dtInicioNovoPrazo,103) AS dtInicioNovoPrazo'
-                ,'CONVERT(CHAR(10), h.dtFimNovoPrazo,103) AS dtFimNovoPrazo')
+                  ,new Zend_Db_Expr('CONVERT(CHAR(10), h.dtInicioNovoPrazo,103) AS dtInicioNovoPrazo')
+                  ,new Zend_Db_Expr('CONVERT(CHAR(10), h.dtFimNovoPrazo,103) AS dtFimNovoPrazo'))
         );
         $select->joinInner(
             array('p' => 'tbPedidoAlteracaoProjeto'),
@@ -88,15 +88,15 @@ class tbProrrogacaoPrazo extends MinC_Db_Table_Abstract
             array(
                 'p.idPedidoAlteracao'
                 ,'p.idSolicitante'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao'),
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao')),
             'BDCORPORATIVO.scSAC'
         );
         $select->joinInner(
             array('j' => 'tbPedidoAlteracaoXTipoAlteracao'),
             'p.idPedidoAlteracao = j.idPedidoAlteracao',
             array(
-                'CAST(j.dsJustificativa AS TEXT) AS dsProponente'
+                new Zend_Db_Expr('CAST(j.dsJustificativa AS TEXT) AS dsProponente')
                 ,'j.tpAlteracaoProjeto'),
             'BDCORPORATIVO.scSAC'
         );
@@ -105,12 +105,12 @@ class tbProrrogacaoPrazo extends MinC_Db_Table_Abstract
             'p.idPedidoAlteracao = a.idPedidoAlteracao AND j.tpAlteracaoProjeto = a.tpAlteracaoProjeto',
             array(
                 'a.idAgenteAvaliador'
-                ,'CONVERT(CHAR(10), a.dtInicioAvaliacao, 103) AS dtInicioAvaliacao'
-                ,'CONVERT(CHAR(10), a.dtInicioAvaliacao, 108) AS hrInicioAvaliacao'
-                ,'CONVERT(CHAR(10), a.dtFimAvaliacao, 103) AS dtFimAvaliacao'
-                ,'CONVERT(CHAR(10), a.dtFimAvaliacao, 108) AS hrFimAvaliacao'
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), a.dtInicioAvaliacao, 103) AS dtInicioAvaliacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), a.dtInicioAvaliacao, 108) AS hrInicioAvaliacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), a.dtFimAvaliacao, 103) AS dtFimAvaliacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), a.dtFimAvaliacao, 108) AS hrFimAvaliacao')
                 ,'a.stAvaliacaoItemPedidoAlteracao AS stAvaliacao'
-                ,'CAST(a.dsAvaliacao AS TEXT) AS dsAvaliacao'),
+                ,new Zend_Db_Expr('CAST(a.dsAvaliacao AS TEXT) AS dsAvaliacao')),
             'BDCORPORATIVO.scSAC'
         );
 

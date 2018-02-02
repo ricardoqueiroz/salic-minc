@@ -43,7 +43,7 @@ class tbBeneficiario extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
                     array('a' => $this->_name),
-                    array('a.idRelatorio', 'CAST(a.dsBeneficiario AS TEXT) AS dsBeneficiario', 'a.tpBeneficiario', 'tpBeneficiario', 'a.nrCNPJ', 'a.nrCPF', 'CAST(a.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'CAST(a.dsEntrega AS TEXT) AS dsEntrega')
+                    array('a.idRelatorio', new Zend_Db_Expr('CAST(a.dsBeneficiario AS TEXT) AS dsBeneficiario'), 'a.tpBeneficiario', 'tpBeneficiario', 'a.nrCNPJ', 'a.nrCPF', 'CAST(a.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'CAST(a.dsEntrega AS TEXT) AS dsEntrega')
             );
         $select->where('a.idRelatorio = ?', $idRelatorio);
     
@@ -61,13 +61,13 @@ class tbBeneficiario extends MinC_Db_Table_Abstract
                             'a.nrCNPJ',
                             'a.nrCPF',
                             'a.dsBeneficiario',
-                            'CAST(a.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo',
-                            'CAST(a.dsEntrega AS TEXT) AS dsEntrega',
+                        new Zend_Db_Expr('CAST(a.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo'),
+                            new Zend_Db_Expr('CAST(a.dsEntrega AS TEXT) AS dsEntrega'),
                             'a.tpBeneficiario',
                             'a.stCNPJ',
                             'a.stCPF',
                             'a.stPublicoAlvo',
-                            'CAST(a.dsJustificativaAcompanhamento AS TEXT) AS dsJustificativaAcompanhamento',
+                                new Zend_Db_Expr('CAST(a.dsJustificativaAcompanhamento AS TEXT) AS dsJustificativaAcompanhamento'),
                         )
             );
         $select->where('a.idRelatorio = ?', $idRelatorio);

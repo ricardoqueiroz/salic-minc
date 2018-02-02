@@ -1,20 +1,7 @@
 <?php
-/**
- * Modelo Regiao
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class Regiao extends Zend_Db_Table
 {
     protected $_name = 'AGENTES.dbo.UF.Regiao'; // nome da tabela
-
-
 
     /**
      * M�todo para buscar as regi�es
@@ -34,5 +21,5 @@ class Regiao extends Zend_Db_Table
         }
 
         return $db->fetchAll($sql);
-    } // fecha buscar()
-} // fecha class
+    }
+}

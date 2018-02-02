@@ -31,8 +31,8 @@ class Proponente extends MinC_Db_Table_Abstract
         $sql = "SELECT a.idAgente, a.CNPJCPF,n.Descricao AS Proponente,
 						   CASE
 						     WHEN LEN(a.CNPJCPF) = 11
-						       THEN 'F�sica'
-						     ELSE 'Jur�dica'
+						       THEN 'F&iacute;sica'
+						     ELSE 'Jur&iacute;dica'
 						   END AS TipoPessoa,
 						   v1.Descricao + ' - ' + v2.Descricao + ' - ' + e.Logradouro + ' - ' + e.Numero + ' - ' + e.Bairro + ' - ' +
 						   e.Complemento Logradouro,
@@ -41,7 +41,7 @@ class Proponente extends MinC_Db_Table_Abstract
 						   e.Cep,
 						   CASE
 						      WHEN Direito = 1
-						           THEN 'Direito P�blico'
+						           THEN 'Direito P&uacute;blico'
 						      WHEN Direito = 2 or Direito = 35
 						           THEN 'Direito Privado'
 						      end as Direito,
@@ -68,12 +68,12 @@ class Proponente extends MinC_Db_Table_Abstract
 						   SAC.dbo.fnNomeResponsavel(a.Usuario) as Responsavel,
 						   CASE
 						      WHEN e.Divulgar = 0
-						        THEN 'N�o'
+						        THEN 'N&atilde;o'
 						        ELSE 'Sim'
 						      END AS DivulgarEndereco,
 						   CASE
 						      WHEN e.Status = 0
-						        THEN 'N�o'
+						        THEN 'N&atilde;o'
 						        ELSE 'Sim'
 						      END AS Correspondencia,
 						   a.idAgente,e.idEndereco

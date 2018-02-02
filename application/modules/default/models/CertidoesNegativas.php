@@ -1,15 +1,4 @@
 <?php
-/**
- * DAO CertidoesNegativas
- * @author emanuel.sampaio - Politec
- * @since 07/09/2011
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class CertidoesNegativas extends MinC_Db_Table_Abstract
 {
     /* dados da tabela */
@@ -33,10 +22,10 @@ class CertidoesNegativas extends MinC_Db_Table_Abstract
             array("(c.AnoProjeto+c.Sequencial) AS pronac"
                 ,"c.CgcCpf"
                 ,"c.CodigoCertidao"
-                ,"CONVERT(VARCHAR(10), c.DtEmissao, 103) AS dtEmissao"
-                ,"CONVERT(VARCHAR(10), c.DtEmissao, 108) AS hrEmissao"
-                ,"CONVERT(VARCHAR(10), c.DtValidade, 103) AS dtValidade"
-                ,"CONVERT(VARCHAR(10), c.DtValidade, 108) AS hrValidade"
+                ,new Zend_Db_Expr("CONVERT(VARCHAR(10), c.DtEmissao, 103) AS dtEmissao")
+                ,new Zend_Db_Expr("CONVERT(VARCHAR(10), c.DtEmissao, 108) AS hrEmissao")
+                ,new Zend_Db_Expr("CONVERT(VARCHAR(10), c.DtValidade, 103) AS dtValidade")
+                ,new Zend_Db_Expr("CONVERT(VARCHAR(10), c.DtValidade, 108) AS hrValidade")
                 ,"c.Logon"
                 ,"c.idCertidoesnegativas"
                 ,"c.cdProtocoloNegativa"

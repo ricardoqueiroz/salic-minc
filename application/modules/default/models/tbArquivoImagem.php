@@ -92,7 +92,7 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
 
         $slct->from(
                         array('ai' => $this->_name),
-                        array("dtEnvioForm"=>"CONVERT(CHAR(10),dtEnvio,103)"),
+                        array("dtEnvioForm"=> new Zend_Db_Expr("CONVERT(CHAR(10),dtEnvio,103)")),
                               "BDCORPORATIVO.scCorp"
             );
 
@@ -112,7 +112,7 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
                             array('d'=>'tbDocumento'),
                             "a.idArquivo = d.idArquivo",
                             array("d.idDocumento",
-                                  "CAST(d.dsDocumento AS TEXT) AS dsDocumento"),
+                                new Zend_Db_Expr("CAST(d.dsDocumento AS TEXT) AS dsDocumento")),
                             "BDCORPORATIVO.scCorp"
                           );
 
@@ -182,7 +182,7 @@ class tbArquivoImagem extends MinC_Db_Table_Abstract
         $slct->joinInner(
                             array('d'=>'tbDocumento'),
                 "a.idArquivo = d.idArquivo",
-                            array('idDocumento', 'CAST(dsDocumento AS TEXT) AS dsDocumento'),
+                            array('idDocumento', new Zend_Db_Expr('CAST(dsDocumento AS TEXT) AS dsDocumento')),
                 "BDCORPORATIVO.scCorp"
                           );
         $slct->joinInner(

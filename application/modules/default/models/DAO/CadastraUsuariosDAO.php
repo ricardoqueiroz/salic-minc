@@ -1,15 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of CadastraUsuariosDAO
- *
- * @author tisomar
- */
 class CadastraUsuariosDAO extends Zend_Db_Table
 {
     public static function cadastraUsuario($idUsuario, $idPessoa, $cpf, $nome, $nomeUsuario, $orgao)

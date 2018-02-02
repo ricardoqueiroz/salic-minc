@@ -39,8 +39,8 @@ class tbComunicados extends MinC_Db_Table_Abstract
                       "stestado",
                       "dtiniciovigencia",
                       "dtterminovigencia",
-                      "dtiniciovigencia AS dtiniciovigenciapt",
-                      "dtterminovigencia AS dtterminovigenciapt"),
+                      new Zend_Db_Expr("dtiniciovigencia AS dtiniciovigenciapt"),
+                          new Zend_Db_Expr("dtterminovigencia AS dtterminovigenciapt")),
                 $this->_schema
 //					  "CONVERT(CHAR(10),dtInicioVigencia,103) AS dtInicioVigenciaPT",
 //					  "CONVERT(CHAR(10),dtTerminoVigencia, 103) AS dtTerminoVigenciaPT")

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of CumprimentoObjetoXArquivo
- *
- * @author xti
- */
 class CumprimentoObjetoXArquivo extends MinC_Db_Table_Abstract
 {
     const ACESSIBILIDADE_FISICA = 0;

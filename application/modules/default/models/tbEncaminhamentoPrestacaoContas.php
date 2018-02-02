@@ -143,7 +143,7 @@ class tbEncaminhamentoPrestacaoContas extends MinC_Db_Table_Abstract
         $select->from(
             array('a'=>$this->_name),
                         array(
-                           'b.AnoProjeto+b.Sequencial as PRONAC',
+                            new Zend_Db_Expr('b.AnoProjeto+b.Sequencial as PRONAC'),
                            'b.NomeProjeto',
                            new Zend_Db_Expr('CONVERT(CHAR(10), a.dtInicioEncaminhamento, 101) AS dtInicioEncaminhamento'),
                            'a.dsJustificativa',

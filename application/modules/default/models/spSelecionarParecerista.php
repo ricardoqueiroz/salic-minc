@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Description of spSelecionarParecerista
- *
- */
 class spSelecionarParecerista extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';

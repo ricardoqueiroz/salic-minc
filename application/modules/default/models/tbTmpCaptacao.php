@@ -33,12 +33,12 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
 //                $select->distinct();
         $select->from(
             array("t" => $this->_name),
-            array("(t.nrAnoProjeto+t.nrSequencial) AS pronac"
-                ,"CONVERT(CHAR(10), t.dtChegadaRecibo, 103) AS dtChegadaRecibo"
+            array(new Zend_Db_Expr("(t.nrAnoProjeto+t.nrSequencial) AS pronac")
+                ,new Zend_Db_Expr("CONVERT(CHAR(10), t.dtChegadaRecibo, 103) AS dtChegadaRecibo")
                 ,"t.nrCpfCnpjProponente"
                 ,"t.nrCpfCnpjIncentivador"
                 //,"t.NomeIncentivador" SAC.dbo.Interessado
-                ,"CONVERT(CHAR(10), t.dtCredito, 103) AS dtCredito"
+                ,new Zend_Db_Expr("CONVERT(CHAR(10), t.dtCredito, 103) AS dtCredito")
                 ,"t.vlValorCredito"
                 ,"t.cdPatrocinio"
                 ,"p.NomeProjeto"
@@ -126,7 +126,7 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
         } // fecha if data do recibo
 
         //$select->order("t.idTipoInconsistencia");
-        $select->order("(t.nrAnoProjeto+t.nrSequencial)");
+        $select->order(new Zend_Db_Expr("(t.nrAnoProjeto+t.nrSequencial)"));
         $select->order("t.dtChegadaRecibo");
         $select->order("t.dtCredito");
 
@@ -140,7 +140,7 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
                 ->from(
                         array("tmpCaptacao" => $this->_name),
                     array(
-                            'pronac' => 'CONVERT(INT, (tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial))',
+                            'pronac' => new Zend_Db_Expr('CONVERT(INT, (tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial))'),
                             'nrCpfCnpjProponente',
                         )
                 )
@@ -158,7 +158,7 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
                 ->where('tmpCaptacao.tpValidacao in ?', new Zend_Db_Expr('(2, 3, 4, 5, 6, 7, 8, 9)'))
                 ->group(
                     array(
-                    '(tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial)',
+                    new Zend_Db_Expr('(tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial)'),
                     'tmpCaptacao.nrCpfCnpjProponente',
                     'projetos.IdPRONAC',
                     'projetos.NomeProjeto',
@@ -169,9 +169,9 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
                 ->order($order);
 
         if ($idPronac) {
-            $select->where('CONVERT(INT, (tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial)) = ?', $idPronac);
+            $select->where(new Zend_Db_Expr('CONVERT(INT, (tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial)) = ?'), $idPronac);
         } else {
-            $select->where('tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial IS NOT NULL');
+            $select->where(new Zend_Db_Expr('tmpCaptacao.nrAnoProjeto+tmpCaptacao.nrSequencial IS NOT NULL'));
         }
 
         // paginacao
@@ -203,8 +203,8 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
         $select->from(
                 array("t" => $this->_name),
             array(
-                        "CONVERT(INT, (t.nrAnoProjeto+t.nrSequencial)) AS pronac",
-                        "CONVERT(CHAR(10), t.dtChegadaRecibo, 103) AS dtChegadaRecibo",
+                        new Zend_Db_Expr("CONVERT(INT, (t.nrAnoProjeto+t.nrSequencial)) AS pronac"),
+                        new Zend_Db_Expr("CONVERT(CHAR(10), t.dtChegadaRecibo, 103) AS dtChegadaRecibo"),
                         'nrCpfCnpjProponente' => new Zend_Db_Expr("CASE
                             WHEN SUBSTRING(nrCpfCnpjProponente,1,3)='000' AND TABELAS.dbo.fnCNPJValido(SUBSTRING(nrCpfCnpjProponente,4,11))=0
                             THEN SUBSTRING(nrCpfCnpjProponente,4,11)
@@ -217,7 +217,7 @@ class tbTmpCaptacao extends MinC_Db_Table_Abstract
                                 ELSE nrCpfCnpjIncentivador
                                 END"
                         ),
-                        "CONVERT(CHAR(10), t.dtCredito, 103) AS dtCredito",
+                        new Zend_Db_Expr("CONVERT(CHAR(10), t.dtCredito, 103) AS dtCredito"),
                         "t.vlValorCredito",
                         "t.cdPatrocinio",
                         "t.tpValidacao",

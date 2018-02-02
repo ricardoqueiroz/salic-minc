@@ -1,17 +1,10 @@
 <?php
-/**
- * tbProcuracao
- * @author jefferson.silva - XTI
- * @since 25/10/2012
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbProcuracao extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "AGENTES";
+    protected $_banco = "AGENTES";
     protected $_schema = "AGENTES";
-    protected $_name   = "tbProcuracao";
+    protected $_name = "tbProcuracao";
 
     public function listarProcuracoesPendentes()
     {
@@ -19,26 +12,26 @@ class tbProcuracao extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
             array('a' => $this->_name),
-            array('idProcuracao','dtProcuracao','dsJustificativa')
-    );
+            array('idProcuracao', 'dtProcuracao', 'dsJustificativa')
+        );
         $select->joinInner(
             array('b' => 'Agentes'),
-        "a.idAgente = b.idAgente",
+            "a.idAgente = b.idAgente",
             array('idAgente'),
-        'AGENTES.dbo'
-    );
+            'AGENTES.dbo'
+        );
         $select->joinInner(
             array('c' => 'Nomes'),
-        "b.idAgente = c.idAgente",
+            "b.idAgente = c.idAgente",
             array('Descricao as Procurador'),
-        'AGENTES.dbo'
-    );
+            'AGENTES.dbo'
+        );
         $select->joinInner(
             array('d' => 'tbDocumento'),
-        "d.idDocumento = a.idDocumento",
+            "d.idDocumento = a.idDocumento",
             array('idArquivo'),
-        'BDCORPORATIVO.scCorp'
-    );
+            'BDCORPORATIVO.scCorp'
+        );
 
         $select->where('a.siProcuracao = ?', 0);
         return $this->fetchAll($select);

@@ -20,7 +20,7 @@ class AvaliacaoFiscalizacao extends MinC_Db_Table_Abstract
                 ,'af.idRelatorioFiscalizacao'
                 ,'af.idAvaliador'
                 ,'af.dtAvaliacaoFiscalizacao'
-                ,'CAST(af.dsParecer AS TEXT) as dsParecer')
+                      , new Zend_Db_Expr('CAST(af.dsParecer AS TEXT) as dsParecer'))
         );
 
         $select->where('af.idRelatorioFiscalizacao = ?', $idRelatorioFiscalizacao);

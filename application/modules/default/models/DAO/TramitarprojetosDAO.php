@@ -1,15 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Desciption of TramitarprojetosDAO
- *
- * @author tisomar
- */
 class TramitarprojetosDAO extends Zend_Db_Table
 {
     public static function buscaOrgao($idOrigem = null)
@@ -18,16 +8,6 @@ class TramitarprojetosDAO extends Zend_Db_Table
 		where Codigo = $idOrigem
 		";
 
-        /*
-          $sql = "select Sigla from SAC.dbo.Orgaos o
-          INNER JOIN  SAC.dbo.tbHistoricoDocumento th ON  th.Acao  != 6 AND th.idPronac != '' AND th.idDocumento is NUll
-          where o.Codigo = $idOrigem
-          ";
-
-
-         */
-
-        
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
@@ -113,7 +93,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao Arquivar: " . $e->getMessage();
+            xd("Erro ao Arquivar: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -124,13 +104,12 @@ class TramitarprojetosDAO extends Zend_Db_Table
 					SET stEstado = 0 
 				WHERE idPronac =  $idPronac and stEstado = 1";
 
-        //print_r($sql);die;
-        
+
         try {
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao Arquivar: " . $e->getMessage();
+            xd("Erro ao Arquivar: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);
@@ -159,13 +138,11 @@ class TramitarprojetosDAO extends Zend_Db_Table
             }
         }
 
-        //print_r($sql);die;
-        
         try {
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao Arquivar: " . $e->getMessage();
+            xd("Erro ao Arquivar: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -262,7 +239,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -278,13 +255,11 @@ class TramitarprojetosDAO extends Zend_Db_Table
 				WHERE org.sis_codigo = 21 AND org.uog_status = 1
 				ORDER BY Sigla";
 
-        //$sql .= "ORDER BY org_siglaautorizado";
-
         try {
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -304,8 +279,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
 					WHERE (h.Acao = $situacao or h.Acao = 4) and h.stEstado = 1";
 
         $sql .= "ORDER BY siglaDestino";
-        //print_r($sql);die();
-        
+
         $db= Zend_Db_Table::getDefaultAdapter();
 
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -331,8 +305,6 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $sql .= " AND(h.Acao = $situacao1 OR h.Acao = $situacao2)";
         }
 
-        //print_r($sql);die();
-        //die($sql);
         $db= Zend_Db_Table::getDefaultAdapter();
 
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -394,7 +366,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);
@@ -418,7 +390,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);
@@ -439,7 +411,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         //die($sql);
         return $db->fetchAll($sql);
@@ -453,7 +425,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -471,7 +443,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -484,7 +456,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -497,7 +469,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -520,7 +492,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);
@@ -546,7 +518,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -562,7 +534,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         //die($sql);
         $db->fetchAll($sql);
@@ -578,7 +550,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         //die($sql);
         return $db->fetchAll($sql);
@@ -593,7 +565,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         //die($sql);
         return $db->fetchAll($sql);
@@ -608,7 +580,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         //die($sql);
         return $db->fetchAll($sql);
@@ -627,7 +599,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         //die($sql);
         return $db->fetchAll($sql);
@@ -725,7 +697,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -756,7 +728,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);
@@ -775,7 +747,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
@@ -796,7 +768,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+            xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
         return $db->fetchAll($sql);
     }
@@ -823,7 +795,7 @@ class TramitarprojetosDAO extends Zend_Db_Table
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Projetos: " . $e->getMessage();
+            xd("Erro ao buscar Projetos: " . $e->getMessage());
         }
         
         return $db->fetchAll($sql);

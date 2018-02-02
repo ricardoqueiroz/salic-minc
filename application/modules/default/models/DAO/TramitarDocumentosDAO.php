@@ -1,10 +1,7 @@
 <?php
 
-
 class TramitarDocumentosDAO extends Zend_Db_Table
 {
-    
-    /** CCONSULTS *************************************************************************************/
     
     public static function buscarDocumentos($idUsuario, $idOrgao, $idDestino)
     {
@@ -165,7 +162,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         if ($acao) {
             $sql .=" AND hd.Acao = ".$acao;
         }
-//
 
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -366,7 +362,7 @@ class TramitarDocumentosDAO extends Zend_Db_Table
 					INNER JOIN SAC.dbo.tbDocumento doc ON hd.idDocumento = doc.idDocumento
 					INNER JOIN SAC.dbo.Projetos pro ON hd.idPronac = pro.IdPRONAC
 						WHERE Acao = 4 AND hd.stEstado = 1 AND hd.idDocumento <> 0 AND doc.idUnidadeCadastro=".$codOrgao;
-//
+
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
     
@@ -390,7 +386,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
             $sql .= " and h.idLote = $lote";
         }
         
-        //
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
     
@@ -422,9 +417,8 @@ class TramitarDocumentosDAO extends Zend_Db_Table
             $db = Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+           xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
-//
         return $db->fetchAll($sql);
     }
     
@@ -443,9 +437,8 @@ class TramitarDocumentosDAO extends Zend_Db_Table
             $db = Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao salvar Projeto: " . $e->getMessage();
+           xd("Erro ao salvar Projeto: " . $e->getMessage());
         }
-//
         return $db->fetchAll($sql);
     }
     
@@ -719,11 +712,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
 
     public static function buscaProjeto($pronac)
     {
-        /*$sql = "select SAC.dbo.fnFormataProcesso(idPronac) + ' - ' + nomeprojeto as processonome,
-                            TABELAS.dbo.fnEstruturaOrgao(orgao,0) localizacao, Orgao, IdPRONAC
-                          from sac.dbo.projetos
-                          where (anoprojeto+sequencial) = '".$pronac."'";*/
-
         $sql = "select Processo, nomeprojeto , TABELAS.dbo.fnEstruturaOrgao(orgao,0) localizacao, Orgao, IdPRONAC
 				from sac.dbo.projetos p
 				where anoprojeto+sequencial = '$pronac'";
@@ -767,7 +755,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         }
         
         
-//
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
@@ -859,7 +846,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         
         $sql .= " order by h.idOrigem";
         
-//
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
@@ -880,8 +866,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     }
-
-    /** CADASTROS **************************************************************************************/
 
     public static function cadDocumento($dados)
     {
@@ -917,8 +901,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         return $db->insert('SAC.dbo.tbHistoricoDocumento', $dados);
     }
 
-    /** ATUALIZA��ES ***********************************************************************************/
-
     public static function MudaEstado($idDocumento)
     {
         $sql = "UPDATE SAC.dbo.tbHistoricoDocumento SET stEstado = 0 WHERE stEstado = 1 and idDocumento = ".$idDocumento;
@@ -929,8 +911,6 @@ class TramitarDocumentosDAO extends Zend_Db_Table
         return $db->fetchAll($sql);
     }
     
-    /** EXCLUS�O ***************************************************************************************/
-
     public static function ExcluirDoc($idDocumento, $tabela)
     {
         $sql  = "DELETE FROM " .$tabela. " WHERE  idDocumento = ".$idDocumento;

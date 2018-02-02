@@ -1,16 +1,4 @@
 <?php
-
-/**
- * Description of Segmento
- *
- * @name Segmento
- * @package default
- * @subpackage models
- *
- * @author 01610881125
- * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
- * @since  17/08/2016
- */
 class Segmento extends MinC_Db_Table_Abstract
 {
     protected $_schema = 'sac';

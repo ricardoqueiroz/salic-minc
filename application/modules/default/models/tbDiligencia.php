@@ -73,7 +73,7 @@ class tbDiligencia extends MinC_Db_Table_Abstract
         $select->joinInner(
                 array('p'=>'Projetos'),
             'd.idPronac = p.IdPRONAC',
-                array('(p.AnoProjeto + p.Sequencial) AS PRONAC',
+                array(new Zend_Db_Expr('(p.AnoProjeto + p.Sequencial) AS PRONAC'),
                       'p.NomeProjeto')
         );
 

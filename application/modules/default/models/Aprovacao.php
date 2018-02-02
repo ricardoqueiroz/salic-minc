@@ -90,10 +90,10 @@ class Aprovacao extends MinC_Db_Table_Abstract
                     array("DtAprovacao"=>"CONVERT(CHAR(20),a.DtAprovacao, 120)",
                           "a.ResumoAprovacao",
                           "a.PortariaAprovacao",
-                          "DtPortariaAprovacao"=>"CONVERT(CHAR(20),a.DtPortariaAprovacao, 120)",
-                          "DtPublicacaoAprovacao"=>"CONVERT(CHAR(20),a.DtPublicacaoAprovacao, 120)",
-                          "DtInicioCaptacao"=>"CONVERT(CHAR(20),a.DtInicioCaptacao, 120)",
-                          "DtFimCaptacao"=>"CONVERT(CHAR(20),a.DtFimCaptacao, 120)",
+                          "DtPortariaAprovacao"=> new Zend_Db_Expr("CONVERT(CHAR(20),a.DtPortariaAprovacao, 120)"),
+                          "DtPublicacaoAprovacao"=> new Zend_Db_Expr("CONVERT(CHAR(20),a.DtPublicacaoAprovacao, 120)"),
+                          "DtInicioCaptacao"=> new Zend_Db_Expr("CONVERT(CHAR(20),a.DtInicioCaptacao, 120)"),
+                          "DtFimCaptacao"=> new Zend_Db_Expr("CONVERT(CHAR(20),a.DtFimCaptacao, 120)"),
                           "a.AprovadoReal",
                           "a.ConcedidoCusteioReal",
                           "a.ConcedidoCapitalReal",
@@ -274,7 +274,8 @@ class Aprovacao extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
                 array('r' => 'tbReadequacao'),
-                array('idReadequacao', 'CAST(r.dsSolicitacao AS TEXT) AS dsSolicitacao'),
+                array('idReadequacao',
+                      new Zend_Db_Expr('CAST(r.dsSolicitacao AS TEXT) AS dsSolicitacao')),
             'SAC.dbo'
         );
         $select->joinInner(
@@ -404,7 +405,7 @@ class Aprovacao extends MinC_Db_Table_Abstract
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = $e->getMessage();
+            throw $e->getMessage();
         }
             
         return $db->fetchAll($select);
@@ -417,7 +418,7 @@ class Aprovacao extends MinC_Db_Table_Abstract
         $select->from(
                 array('ap' => $this->_name),
                 array(
-                    "CONVERT(CHAR(10), ap.DtAprovacao, 103) AS DtAprovacao",
+                    new Zend_Db_Expr("CONVERT(CHAR(10), ap.DtAprovacao, 103) AS DtAprovacao"),
                     'ap.ResumoAprovacao as ResumoAprovacao',
                     'ap.TipoAprovacao'
                 )

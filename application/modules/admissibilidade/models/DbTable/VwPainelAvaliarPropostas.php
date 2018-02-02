@@ -50,6 +50,8 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
         $db = $this->getAdapter();
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
 
+        $selectDistribuicaoAvaliacao = '0';
+        $selectQuantidadeAvaliacoes = '0';
 
         if (!is_null($distribuicaoAvaliacaoProposta)
             && $distribuicaoAvaliacaoProposta->getIdPerfil()
@@ -93,9 +95,9 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
             );
         }
 
-        $select = $this->select();
-        $select->setIntegrityCheck(false);
-        $select->from('vwPainelAvaliarPropostas',
+        $subSelect = $this->select();
+        $subSelect->setIntegrityCheck(false);
+        $subSelect->from('vwPainelAvaliarPropostas',
             [
                 '*',
                 'avaliacao_atual' => new Zend_Db_Expr("({$selectDistribuicaoAvaliacao})"),
@@ -104,22 +106,37 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
             $this->_schema);
 
         foreach ($where as $coluna => $valor) {
-            $select->where($coluna, $valor);
+            $subSelect->where($coluna, $valor);
         }
 
         if (!empty($search['value'])) {
-            $select->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', "%{$search['value']}%");
+            $subSelect->where('idProjeto like ? OR NomeProposta like ? OR Tecnico like ?', "%{$search['value']}%");
         }
-
-        $select->order($order);
 
         if (!is_null($start) && $limit) {
             $start = (int)$start;
             $limit = (int)$limit;
-            $select->limitPage($start, $limit);
+            $subSelect->limitPage($start, $limit);
         }
 
-        return $db->fetchAll($select);
+        $selectFinal = $this->select();
+        $selectFinal->setIntegrityCheck(false);
+        $selectFinal->isUseSchema(false);
+        $selectFinal->from(
+            ['tabela_temporaria' => new Zend_Db_Expr("($subSelect)")],
+            '*'
+        );
+        if($order) {
+            $selectFinal->order($order);
+        }
+
+        $selectFinal->where('avaliacao_atual is null');
+        $selectFinal->where('quantidade_distribuicoes = 0');
+        if ($distribuicaoAvaliacaoProposta->getIdPerfil() != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            $selectFinal->orWhere('avaliacao_atual = 1 and quantidade_distribuicoes > 0');
+        }
+
+        return $db->fetchAll($selectFinal);
     }
 
     public function propostasTotal($where = array(), $order = array(), $start = null, $limit = null, $search = null)

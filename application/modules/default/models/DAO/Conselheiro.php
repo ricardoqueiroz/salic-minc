@@ -1,25 +1,12 @@
 <?php
-/**
- * Modelo Conselheiro
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class Conselheiro extends Zend_Db_Table
 {
     protected $_name = 'AGENTES.dbo.Agentes'; // nome da tabela
 
-
-
     /**
-     * M�todo para buscar proponentes
-     * @access public
-     * @param integer $id (c�digo do proponente)
+     * Metodo para buscar proponentes
+     * @param integer $id (codigo do proponente)
      * @param string $cpf (cpf do proponente)
      * @return object $db->fetchAll($sql)
      */
@@ -84,11 +71,11 @@ class Conselheiro extends Zend_Db_Table
             $db = Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Proponente: " . $e->getMessage();
+            xd("Erro ao buscar Proponente: " . $e->getMessage());
         }
 
         return $db->fetchAll($sql);
-    } // fecha buscar();
+    }
 
     
     public function alterar($sql = array(), $cond)
@@ -101,24 +88,11 @@ class Conselheiro extends Zend_Db_Table
     }
     
 
-    /**
-     * M�todo para cadastrar proponentes
-     * @access public
-     * @param datatype paramname
-     * @return datatype description
-     */
     public static function cadastrar()
     {
-    } // fecha cadastrar()
+    }
 
 
-
-    /**
-     * M�todo para alterar proponentes
-     * @access public
-     * @param datatype paramname
-     * @return datatype description
-     */
     public function alteraConselheiro($tabela, $dados, $id)
     {
         $conselheiro = new Conselheiro();
@@ -132,19 +106,10 @@ class Conselheiro extends Zend_Db_Table
         $n = $db->update($tabela, $dados, $where);
         $db->closeConnection();
     }
-    
-    
 
-
-    /**
-     * M�todo para excluir proponentes
-     * @access public
-     * @param datatype paramname
-     * @return datatype description
-     */
     public static function excluir()
     {
-    } // fecha excluir()
+    }
 
     public static function consultarNomeAgente($cnpjcpf)
     {
@@ -172,7 +137,7 @@ class Conselheiro extends Zend_Db_Table
             $db->setFetchMode(Zend_DB::FETCH_ASSOC);
             return $db->fetchAll($sql);
         } catch (Zend_Exception_Db $e) {
-            $this->view->message = "Erro ao buscar Nome de Agente: " . $e->getMessage();
+            xd("Erro ao buscar Nome de Agente: " . $e->getMessage());
         }
     }
-} // fecha class
+}

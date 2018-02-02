@@ -1,9 +1,4 @@
 <?php
-/**
- * DAO tbParecerConsolidado
- * @since 16/03/2011
- * @link http://www.cultura.gov.br
- */
 class tbParecerConsolidado extends MinC_Db_Table_Abstract
 {
     protected $_banco  = "SAC";
@@ -44,8 +39,6 @@ class tbParecerConsolidado extends MinC_Db_Table_Abstract
             $tmpTblParecerConsolidado->idAvaliador = $dados['idAvaliador'];
         }
 
-        //echo "<pre>";
-        //print_r($tmpRsVinculo);
         //SALVANDO O OBJETO CRIADO
         $id = $tmpRsVinculo->save();
 
@@ -64,7 +57,7 @@ class tbParecerConsolidado extends MinC_Db_Table_Abstract
                 array('D' => $this->_name),
                 array(
                     'idParecerConsolidado',
-                    'CAST(D.dsParecer AS TEXT) AS dsParecer',
+                    new Zend_Db_Expr('CAST(D.dsParecer AS TEXT) AS dsParecer'),
                     'idUsuario',
                     'idDocumento',
                     'idRelatorioConsolidado',
@@ -149,7 +142,6 @@ class tbParecerConsolidado extends MinC_Db_Table_Abstract
                            );
 
         $select->where('rel.idPRONAC = ?', $idPronac);
-        //$select->where('usu.usu_codigo <> ?', $idusuario);
         return $this->fetchAll($select);
     }
 }

@@ -6,6 +6,7 @@ x - CONTEÚDO (legado)
     /*margin-bottom: 20px;*/
     /*box-shadow: none;*/
     /*border: none;*/
+    overflow-y: auto;
 }
 
 #conteudo a {

@@ -1,25 +1,11 @@
 <?php
 
-
-/**
- * DAO RecursoXPlanilhaAprovacao
- * @author Equipe RUP - Politec
- * @since 27/07/2010
- * @version 1.0
- * @package application
- * @subpackage application.model.DAO
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class RecursoXPlanilhaAprovacaoDAO extends Zend_Db_Table
 {
     /* dados da tabela */
     protected $_schema  = "";
     protected $_name    = "SAC.dbo.tbRecursoXPlanilhaAprovacao";
     protected $_primary = "idRecurso";
-
-
 
     /**
      * M�todo para cadastrar informa��es dos recursos na planilha de aprova��o
@@ -40,14 +26,7 @@ class RecursoXPlanilhaAprovacaoDAO extends Zend_Db_Table
         } else {
             return false;
         }
-    } // fecha m�todo cadastrar()
-
-
-
-    
-    
-    
-    
+    }
     
     /**
      * M�todo para alterar informa��es dos recursos na planilha de aprova��o
@@ -70,5 +49,5 @@ class RecursoXPlanilhaAprovacaoDAO extends Zend_Db_Table
         } else {
             return false;
         }
-    } // fecha m�todo alterar()
-} // fecha class RecursoXPlanilhaAprovacaoDAO
+    }
+} 

@@ -1,15 +1,4 @@
 <?php
-/**
- * Modelo Execucaofisicaprojeto
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright © 2010 - Ministério da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class Execucaofisicaprojeto extends Zend_Db_Table
 {
     /**
@@ -53,9 +42,7 @@ class Execucaofisicaprojeto extends Zend_Db_Table
         } catch (Zend_Exception_Db $e) {
             $this->view->message = "Erro ao buscar Comprovantes: " . $e->getMessage();
         }
-    } // fecha método buscar()
-
-
+    }
 
     /**
      * Método para cadastrar documentos do PRONAC
@@ -65,11 +52,7 @@ class Execucaofisicaprojeto extends Zend_Db_Table
      */
     public static function cadastrar($dados)
     {
-        /*$sql = "INSERT INTO BDCORPORATIVO.scSAC.tbComprovanteExecucao ";
-        $sql.= "VALUES ($dados['idPRONAC'], $dados['idTipoDocumento'], $dados['nmComprovante'], $dados['dsComprovante'], $dados['idArquivo'], $dados['idSolicitante'], $dados['dtEnvioComprovante'], $dados['stComprovante'], $dados['stComprovante'], $dados['idComprovanteAnterior'])";*/
-    } // fecha método cadastrar()
-
-
+    }
 
     /**
      * Método para alterar documentos do PRONAC
@@ -79,9 +62,7 @@ class Execucaofisicaprojeto extends Zend_Db_Table
      */
     public static function alterar()
     {
-    } // fecha método alterar()
-
-
+    } 
 
     /**
      * Método para excluir documentos do PRONAC
@@ -92,4 +73,4 @@ class Execucaofisicaprojeto extends Zend_Db_Table
     public static function excluir()
     {
     } // fecha método excluir()
-} // fecha class
+}

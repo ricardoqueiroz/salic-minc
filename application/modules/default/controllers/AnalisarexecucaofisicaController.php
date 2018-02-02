@@ -355,7 +355,7 @@ class AnalisarexecucaofisicaController extends MinC_Controller_Action_Abstract
         $DadosRelatorio = $tbComprovanteTrimestral->buscarComprovantes(array('IdPRONAC = ?' => $idpronac, 'nrComprovanteTrimestral=?'=>$nrrelatorio, 'siComprovanteTrimestral in (?)'=>array(2,5)));
         $this->view->DadosRelatorio = $DadosRelatorio;
         if (count($DadosRelatorio)==0) {
-            parent::message("Relat�rio n�o encontrado!", "analisarexecucaofisica/projetos", "ERROR");
+            parent::message("Relat&oacute;rio n&atilde;o encontrado!", "analisarexecucaofisica/projetos", "ERROR");
         }
 
         $LocaisDeRealizacao = $projetos->buscarLocaisDeRealizacao($idpronac);
@@ -567,7 +567,7 @@ class AnalisarexecucaofisicaController extends MinC_Controller_Action_Abstract
         $buscarRelatorios = $r->buscarRelatorioTrimestrais($idPronac);
 
         if (!$this->verificarOrgao($idPronac)) {
-            parent::message('Voc� n�o tem permiss�o para visualizar esse Relat�rio!', "analisarexecucaofisica/filtroconsulta", "ALERT");
+            parent::message('Voc&ecirc; n&atilde;o tem permiss&atilde;o para visualizar esse Relat&oacute;rio!', "analisarexecucaofisica/filtroconsulta", "ALERT");
         }
 
         $p = new Projetos();

@@ -1,20 +1,7 @@
 <?php
-/**
- * Modelo Estado
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class ReuniaoDAO extends Zend_Db_Table
 {
     protected $_name = 'sac.dbo.tbreuniao'; // nome da tabela
-
-
 
     /**
      * M�todo para buscar a reuni�o em aberto
@@ -33,5 +20,5 @@ class ReuniaoDAO extends Zend_Db_Table
         }
 
         return $db->fetchRow($sql);
-    } // fecha buscar()
-} // fecha class
+    }
+}

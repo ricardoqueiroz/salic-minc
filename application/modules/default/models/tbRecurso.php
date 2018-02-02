@@ -23,22 +23,22 @@ class tbRecurso extends MinC_Db_Table_Abstract
         $select->from(
             array("r" => $this->_name),
             array("r.idRecurso"
-                ,"CONVERT(CHAR(10), r.dtSolicitacaoRecurso,103) + ' ' + CONVERT(CHAR(8), r.dtSolicitacaoRecurso,108) AS dtSolicitacaoRecurso"
-                ,"CAST(r.dsSolicitacaoRecurso AS TEXT) AS dsSolicitacaoRecurso"
-                ,"proponente.CNPJCPF AS CNPJCPFProponente"
-                ,"nmProponente.Descricao AS Proponente"
-                ,"CONVERT(CHAR(10), r.dtAvaliacao,103) + ' ' + CONVERT(CHAR(8), r.dtAvaliacao,108) AS dtAvaliacao"
-                ,"CAST(r.dsAvaliacao AS TEXT) AS dsAvaliacao"
-                ,"r.stAtendimento"
-                ,"r.tpSolicitacao"
-                ,"ministro.CNPJCPF AS CNPJCPFMinistro"
-                ,"nmMinistro.Descricao AS Ministro"
-                ,"rx.idPlanilhaAprovacao"
-                ,"rx.stRecursoAprovacao"
-                ,"CAST(rx.dsJustificativa AS TEXT) AS dsJustificativaProponente"
-                ,"CAST(papm.dsJustificativa AS TEXT) AS dsJustificativaMinistro"
-                ,"pi.Descricao AS Item"
-                )
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10), r.dtSolicitacaoRecurso,103) + ' ' + CONVERT(CHAR(8), r.dtSolicitacaoRecurso,108) AS dtSolicitacaoRecurso")
+                  ,new Zend_Db_Expr("CAST(r.dsSolicitacaoRecurso AS TEXT) AS dsSolicitacaoRecurso")
+                  ,"proponente.CNPJCPF AS CNPJCPFProponente"
+                  ,"nmProponente.Descricao AS Proponente"
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10), r.dtAvaliacao,103) + ' ' + CONVERT(CHAR(8), r.dtAvaliacao,108) AS dtAvaliacao")
+                  ,new Zend_Db_Expr("CAST(r.dsAvaliacao AS TEXT) AS dsAvaliacao")
+                  ,"r.stAtendimento"
+                  ,"r.tpSolicitacao"
+                  ,"ministro.CNPJCPF AS CNPJCPFMinistro"
+                  ,"nmMinistro.Descricao AS Ministro"
+                  ,"rx.idPlanilhaAprovacao"
+                  ,"rx.stRecursoAprovacao"
+                  ,new Zend_Db_Expr("CAST(rx.dsJustificativa AS TEXT) AS dsJustificativaProponente")
+                  ,new Zend_Db_Expr("CAST(papm.dsJustificativa AS TEXT) AS dsJustificativaMinistro")
+                  ,"pi.Descricao AS Item"
+            )
         );
 
         $select->joinLeft(
@@ -170,28 +170,28 @@ class tbRecurso extends MinC_Db_Table_Abstract
         $select->from(
             array("rec" => $this->_name),
             array("Pr.IdPRONAC"
-                ,"(Pr.AnoProjeto+Pr.Sequencial) AS pronac"
-                ,"Rec.idRecurso"
-                ,"Rec.dsSolicitacaoRecurso"
-                ,"CONVERT(CHAR(10),Rec.dtSolicitacaoRecurso,103) + ' ' + CONVERT(CHAR(10),Rec.dtSolicitacaoRecurso,108) AS dtSolicitacaoRecurso"
-                ,"Pr.IdPRONAC"
-                ,"Pr.CgcCpf"
-                ,"Pr.NomeProjeto"
-                ,"Ar.Descricao AS Area"
-                ,"Seg.Descricao AS Segmento"
-                ,"CONVERT(CHAR(10),Pr.DtInicioExecucao,103) AS DataInicio"
-                ,"CONVERT(CHAR(10),Pr.DtFimExecucao,103) AS DataFim"
-                ,"NomeProponente" => new Zend_Db_Expr("
+                  ,new Zend_Db_Expr("(Pr.AnoProjeto+Pr.Sequencial) AS pronac")
+                  ,"Rec.idRecurso"
+                  ,"Rec.dsSolicitacaoRecurso"
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10),Rec.dtSolicitacaoRecurso,103) + ' ' + CONVERT(CHAR(10),Rec.dtSolicitacaoRecurso,108) AS dtSolicitacaoRecurso")
+                  ,"Pr.IdPRONAC"
+                  ,"Pr.CgcCpf"
+                  ,"Pr.NomeProjeto"
+                  ,"Ar.Descricao AS Area"
+                  ,"Seg.Descricao AS Segmento"
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10),Pr.DtInicioExecucao,103) AS DataInicio")
+                  ,new Zend_Db_Expr("CONVERT(CHAR(10),Pr.DtFimExecucao,103) AS DataFim")
+                  ,"NomeProponente" => new Zend_Db_Expr("
 					CASE
 						WHEN N.Descricao IS NULL
 							THEN I.Nome
 						ELSE N.Descricao
 					END")
-                ,"(mun.Descricao +' - '+ uf.Sigla) AS Cidade"
-                ,"Rec.stAtendimento"
-                ,"Rec.tpSolicitacao"
-                ,"Enq.IdEnquadramento AS idEnquadramento"
-                ,"Enq.Enquadramento")
+                  ,"(mun.Descricao +' - '+ uf.Sigla) AS Cidade"
+                  ,"Rec.stAtendimento"
+                  ,"Rec.tpSolicitacao"
+                  ,"Enq.IdEnquadramento AS idEnquadramento"
+                  ,"Enq.Enquadramento")
         );
 
         $select->joinInner(
@@ -326,7 +326,7 @@ class tbRecurso extends MinC_Db_Table_Abstract
         );
         $select->joinLeft(
             array("par" => "Parecer"),
-            "par.IdPRONAC = tp.IdPRONAC AND par.DtParecer = (SELECT TOP 1 max(DtParecer) from SAC..Parecer where IdPRONAC = pr.IdPRONAC)",
+            new Zend_Db_Expr("par.IdPRONAC = tp.IdPRONAC AND par.DtParecer = (SELECT TOP 1 max(DtParecer) from SAC..Parecer where IdPRONAC = pr.IdPRONAC)"),
             array(),
             'SAC.dbo'
         );
@@ -342,7 +342,7 @@ class tbRecurso extends MinC_Db_Table_Abstract
         $select->where("tp.siRecurso = ?", 8);
         $select->where("par.stAtivo = ?", 1);
         $select->where("par.TipoParecer = ?", 7);
-        $select->where("NOT EXISTS(SELECT TOP 1 * FROM BDCORPORATIVO.scSAC.tbConsolidacaoVotacao AS cv WHERE tp.idNrReuniao = cv.idNrReuniao and tp.IdPRONAC = cv.IdPRONAC)", '');
+        $select->where(new Zend_Db_Expr("NOT EXISTS(SELECT TOP 1 * FROM BDCORPORATIVO.scSAC.tbConsolidacaoVotacao AS cv WHERE tp.idNrReuniao = cv.idNrReuniao and tp.IdPRONAC = cv.IdPRONAC)"), '');
         $select->order(array(8,2));
 
         

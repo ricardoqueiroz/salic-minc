@@ -1,15 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of GerenciarPautaReuniao
- *
- * @author 01373930160
- */
 class ConsultaProjetosPautaReuniaoDAO extends Zend_Db_Table
 {
     public static function consultaqtdprojeto($idnrreuniao, $condicao=null)
@@ -76,7 +66,7 @@ class ConsultaProjetosPautaReuniaoDAO extends Zend_Db_Table
         } else {
             $sql .=" order by 6 desc";
         }
-//        die('<pre>'.$sql);
+
         try {
             $db= Zend_Db_Table::getDefaultAdapter();
             $db->setFetchMode(Zend_DB::FETCH_OBJ);

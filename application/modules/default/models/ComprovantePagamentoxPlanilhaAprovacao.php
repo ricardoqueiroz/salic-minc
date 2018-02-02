@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of ItemCustoxComprovantePagamento
- *
- * @author 01610881125
- */
 class ComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
 {
     protected $_name    = 'tbComprovantePagamentoxPlanilhaAprovacao';

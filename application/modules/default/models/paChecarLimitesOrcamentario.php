@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Description of paChecarLimitesOrcamentario
- *
- */
 class paChecarLimitesOrcamentario extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';

@@ -108,10 +108,6 @@ class Parecer_AnaliseCnicDocumentoAssinaturaController implements MinC_Assinatur
         $view->dadosDiligencias = $dadosProjeto['diligencias'];
         $view->IN2017 = $projetos->verificarIN2017($this->idPronac);
         
-        if ($view->IN2017) {
-            $view->dadosAlcance = $dadosProjeto['alcance'][0];
-        }
-        
         $view->dadosParecer = $dadosProjeto['parecer'];
         
         return $view->render('documento-assinatura.phtml');

@@ -1,23 +1,10 @@
 <?php
 
-/**
- * Description of tbRelatorioTrimestral
- *
- * @author 01129075125
- */
 class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
 {
     protected $_schema = 'SAC';
     protected $_name = 'tbRelatorioTrimestral';
 
-
-    /**
-     * Metodo para consultar se existe algum registro para o idRelatorio
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function buscarDadosRelatorio($idRelatorio)
     {
         $select = $this->select();
@@ -41,8 +28,8 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
             array('a' => $this->_name),
             array('idRelatorioTrimestral',
                 'idRelatorio',
-                'CAST(dsParecer AS TEXT) AS dsParecer',
-                'CAST(dsObjetivosMetas AS TEXT) AS dsObjetivosMetas',
+                new Zend_Db_Expr('CAST(dsParecer AS TEXT) AS dsParecer'),
+                new Zend_Db_Expr('CAST(dsObjetivosMetas AS TEXT) AS dsObjetivosMetas'),
                 'dtCadastro',
                 'stRelatorioTrimestral',
                 'nrRelatorioTrimestral')
@@ -52,13 +39,6 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-
-    /**
-     * Metodo para buscar o relatario trimestral - Habilitar Menu
-     * @access public
-     * @param array $dados
-     * @return array dos dados cadastrados
-     */
     public function buscarTodosRelatoriosTrimestrais($idpronac)
     {
         $select = $this->select();
@@ -80,13 +60,6 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-
-    /**
-     * Metodo para buscar o relatario trimestral
-     * @access public
-     * @param array $dados
-     * @return array dos dados cadastrados
-     */
     public function buscarRelatorioPronac($idpronac, $status = 1)
     {
         $select = $this->select();
@@ -109,13 +82,6 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-
-    /**
-     * Metodo para buscar o relatario trimestral
-     * @access public
-     * @param array $dados
-     * @return array dos dados cadastrados
-     */
     public function buscarUltimoNrRel($idpronac)
     {
         $select = $this->select();
@@ -135,12 +101,6 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    /**
-     * Metodo para buscar o relatario trimestral
-     * @access public
-     * @param array $dados
-     * @return array dos dados cadastrados
-     */
     public function buscarstRel($idRelatorio)
     {
         $select = $this->select();
@@ -166,19 +126,21 @@ class tbRelatorioTrimestral extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
             array('a' => $this->_name),
-            array('a.idRelatorioTrimestral', 'a.idRelatorio', 'CAST(a.dsParecer AS TEXT) AS dsParecer', 'CAST(a.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas', 'a.dtCadastro', 'a.stRelatorioTrimestral', 'a.nrRelatorioTrimestral')
+            array(
+                'a.idRelatorioTrimestral',
+                'a.idRelatorio',
+                new Zend_Db_Expr('CAST(a.dsParecer AS TEXT) AS dsParecer'),
+                new Zend_Db_Expr('CAST(a.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas'),
+                'a.dtCadastro',
+                'a.stRelatorioTrimestral',
+                'a.nrRelatorioTrimestral'
+            )
         );
         $select->where('a.idRelatorioTrimestral = ?', $idRelatorioTrimestral);
 
         return $this->fetchAll($select);
     }
 
-    /**
-     * Metodo para buscar o relatario trimestral - Habilitar Menu
-     * @access public
-     * @param array $dados
-     * @return array dos dados cadastrados
-     */
     public function buscarRelatorioMenu($idpronac)
     {
         $select = $this->select();

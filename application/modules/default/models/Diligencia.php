@@ -124,10 +124,10 @@ class Diligencia extends MinC_Db_Table_Abstract
         $select->joinInner(
                 array('Pa' => 'Parecer'),
                 'Pa.IdPRONAC = D.idPronac',
-                array("CASE WHEN Pa.ParecerFavoravel in ('2','3')
+                array(new Zend_Db_Expr("CASE WHEN Pa.ParecerFavoravel in ('2','3')
 				  THEN 'Sim'
-				  ELSE 'N�o'
-				  End AS ParecerFavoravel"
+				  ELSE 'Nao'
+				  End AS ParecerFavoravel")
                 ),
                 'SAC.dbo'
         );
@@ -170,12 +170,12 @@ class Diligencia extends MinC_Db_Table_Abstract
             "SAC.dbo"
         );
 
-        $select->where('((((DATEDIFF(day, DtSolicitacao, GETDATE()) > 20');
+        $select->where(new Zend_Db_Expr('((((DATEDIFF(day, DtSolicitacao, GETDATE()) > 20'));
         $select->where("stProrrogacao =?)", 'N');
-        $select->orWhere('(DATEDIFF(day, DtSolicitacao, GETDATE()) > 40');
+        $select->orWhere(new Zend_Db_Expr('(DATEDIFF(day, DtSolicitacao, GETDATE()) > 40'));
         $select->where("stProrrogacao =?))", 'S');
         $select->where("idTipoDiligencia =?)", 124);
-        $select->orWhere('(DATEDIFF(day, DtSolicitacao, GETDATE()) > 30');
+        $select->orWhere(new Zend_Db_Expr('(DATEDIFF(day, DtSolicitacao, GETDATE()) > 30'));
         $select->where("idTipoDiligencia != ?))", 124);
         $select->where('DtResposta is null');
 
@@ -213,11 +213,11 @@ class Diligencia extends MinC_Db_Table_Abstract
         );
         $select->joinInner(
                 array('Pa' => 'Parecer'),
-                'Pa.IdPRONAC = D.idPronac  AND Pa.DtParecer = (SELECT TOP 1 max(DtParecer) from SAC..Parecer where IdPRONAC = Pr.IdPRONAC)',
-                array("CASE WHEN Pa.ParecerFavoravel in ('2','3')
+                new Zend_Db_Expr('Pa.IdPRONAC = D.idPronac  AND Pa.DtParecer = (SELECT TOP 1 max(DtParecer) from SAC..Parecer where IdPRONAC = Pr.IdPRONAC)'),
+                array(new Zend_Db_Expr("CASE WHEN Pa.ParecerFavoravel in ('2','3')
 				  THEN 'Sim'
-				  ELSE 'N�o'
-				  End AS ParecerFavoravel"
+				  ELSE 'Nao'
+				  End AS ParecerFavoravel")
                 ),
                 'SAC.dbo'
         );

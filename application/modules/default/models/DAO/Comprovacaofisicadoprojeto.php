@@ -1,14 +1,4 @@
 <?php
-/**
- * Modelo Comprovacaofisicadoprojeto
- * @author Equipe RUP - Politec
- * @since 12/05/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright © 2010 - Ministério da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class Comprovacaofisicadoprojeto extends Zend_Db_Table
 {
@@ -612,5 +602,5 @@ class Comprovacaofisicadoprojeto extends Zend_Db_Table
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
         return $db->query($sql);
-    } // fecha visualizarcomprovantesubstituido()
-} // fecha class
+    }
+} 

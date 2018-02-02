@@ -1,21 +1,12 @@
 <?php 
-/**
- *
- */
 class RespostaModel
 {
-    /**
-     *
-     */
     const TEXT = 4;
     const TEXTAREA = 5;
     const RADIO = 6;
     const CHECKBOX = 7;
     const ANEXO = 9;
 
-    /**
-     *
-     */
     protected $resposta;
     protected $tipoResposta;
     protected $questao;
@@ -144,9 +135,6 @@ class RespostaModel
         return $this->table->fetchAll($select)->toArray();
     }
 
-    /**
-     *
-     */
     public function toStdClass()
     {
         $obj = new stdClass();

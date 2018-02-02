@@ -44,7 +44,7 @@ class Orgaos extends MinC_Db_Table_Abstract
                 'Tabelas.dbo'
         );
         $select->where('o.Status = ?', 0);
-        $select->where('o.idSecretaria IS NOT NULL');
+        $select->where(new Zend_Db_Expr('o.idSecretaria IS NOT NULL'));
 //        $select->order('o.Codigo ASC');
         $select->order('2');
 

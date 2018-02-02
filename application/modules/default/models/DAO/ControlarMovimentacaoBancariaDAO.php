@@ -1,14 +1,4 @@
 <?php
-/**
- * DAO ControlarMovimentacaoBancariaDAO
- * @author Equipe RUP - Politec
- * @since 22/01/2011
- * @version 1.0
- * @package application
- * @subpackage application.model.DAO
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class ControlarMovimentacaoBancariaDAO extends Zend_Db_Table
 {

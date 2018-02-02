@@ -1,16 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Desciption of TramitarprojetosDAO
- *
- * @author Gabriela
- */
-
 class ConsultarPareceristasDAO extends Zend_Db_Table
 {
     public static function buscarPronacs($idPronac, $area = null, $segmento = null)

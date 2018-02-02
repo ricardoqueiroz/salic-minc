@@ -40,7 +40,7 @@ class Zend_View_Helper_IsProjetoJaAssinado
                 'idOrgaoSuperiorDoAssinante = ?' => $codOrgaoSuperior
             )
         );
-        
+
         $idUltimaAssinatura = (end($assinaturas)->idOrdemDaAssinatura) ? end($assinaturas)->idOrdemDaAssinatura : 0;
         
         if ($idUltimaAssinatura <= count($assinaturasNecessarias)) {

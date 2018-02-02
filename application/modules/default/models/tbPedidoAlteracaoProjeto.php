@@ -1,16 +1,10 @@
 <?php
-/**
- * Description of tbPedidoAlteracaoProjeto
- *
- * @author 01610881125
- */
 class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
 {
     /* dados da tabela */
     protected $_banco   = "BDCORPORATIVO";
     protected $_schema  = "BDCORPORATIVO.scSAC";
     protected $_name    = "tbPedidoAlteracaoProjeto";
-
 
     public function buscarAtoresReadequacao($idPronac)
     {
@@ -19,7 +13,8 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
 
         $select->from(
                 array('pap'=>$this->_name),
-                array('Perfil3'=>new Zend_Db_Expr("'Coordenador de Acompanhamento'"),'cdPerfil3'=>new Zend_Db_Expr("'122'"))
+                array('Perfil3'=>new Zend_Db_Expr("'Coordenador de Acompanhamento'"),
+                'cdPerfil3'=>new Zend_Db_Expr("'122'"))
         );
 
         $select->joinInner(
@@ -113,11 +108,9 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
         //adicionando linha order ao select
         $select->order($order);
 
-        
+
         return $this->fetchAll($select);
     }
-
-
 
     /**
      * Model com os Projetos enviados para o checklist
@@ -259,7 +252,7 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
             $slct->limit($tamanho, $tmpInicio);
         }
 
-        
+
         return $this->fetchAll($slct);
     } // fecha m�todo buscarProjetosCheckList()
 
@@ -288,7 +281,7 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
         $select->where('c.tpAlteracaoProjeto = ?', 7);
         $select->where('b.tpAcao = ?', 'I');
         $select->where(new Zend_Db_Expr("NOT EXISTS(SELECT TOP 1 * FROM SAC.DBO.tbPlanilhaAprovacao d WHERE d.tpPlanilha = 'SR' AND d.stAtivo = 'N' AND b.idProduto = d.idProduto AND a.idPronac = d.idPronac)"));
-        
+
         return $this->fetchAll($select);
     }
 
@@ -352,7 +345,7 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
             $select->limit($tamanho, $tmpInicio);
         }
 
-        
+
         return $this->fetchAll($select);
     }
 
@@ -419,7 +412,7 @@ class tbPedidoAlteracaoProjeto extends MinC_Db_Table_Abstract
             }
             $select->limit($tamanho, $tmpInicio);
         }
-        
+
         return $this->fetchAll($select);
     }
 } // fecha class

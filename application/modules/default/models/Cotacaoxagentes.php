@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Cotacaoxagentes
- *
- * @author 01610881125
- */
 class Cotacaoxagentes extends MinC_Db_Table_Abstract
 {
     protected $_banco   = 'bdcorporativo';

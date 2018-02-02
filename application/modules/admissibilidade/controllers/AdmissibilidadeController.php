@@ -1792,7 +1792,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $arrDados['liberarEncaminhamento'] = true;
         }
 
-        if($this->codGrupo) {
+        if ($this->codGrupo) {
             $gruposDbTable = new Autenticacao_Model_Grupos();
             $this->view->perfis = $gruposDbTable->obterPerfisEncaminhamentoAvaliacaoProposta($this->codGrupo);
         }
@@ -2653,7 +2653,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
 
-        $order = ($order[0]['dir'] != 1) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtAvaliacao DESC");
+        $order = (is_array($order)
+            && $order[0]['column']
+            && $order[0]['dir']
+            && $order[0]['dir'] != 1)
+            ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtAvaliacao DESC");
 
         $vwPainelAvaliar = new Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas();
 
@@ -2892,7 +2896,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->view->idPreProjeto = $idPreProjeto;
             $this->view->tipo = $this->getRequest()->getParam('tipo', 'diligencia');
 
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             parent::message($e->getMessage(), "/admissibilidade/admissibilidade/listar-propostas", "INFO");
         }
     }

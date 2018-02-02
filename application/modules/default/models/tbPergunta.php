@@ -1,20 +1,9 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of tbPergunta
- *
- * @author tisomar
- */
 class tbPergunta extends MinC_Db_Table_Abstract
 {
     protected $_banco   = "BDCORPORATIVO";
     protected $_schema  = "BDCORPORATIVO.scQuiz";
     protected $_name = 'tbPergunta';
-
 
     public function procurarPergunta($nrPergunta)
     {
@@ -28,7 +17,7 @@ class tbPergunta extends MinC_Db_Table_Abstract
                      );
 
         $select->where('p.nrPergunta=?', $nrPergunta);
-        
+
         return $this->fetchRow($select);
     }
 
@@ -96,9 +85,9 @@ class tbPergunta extends MinC_Db_Table_Abstract
         }
 
         $select->order($order);
-        
+
         return $this->fetchAll($select);
-    } // fecha m�todo buscarDados
+    }
 
     public function montarQuestionario($nrFormDocumento, $nrVersaoDocumento, $nrPergunta = '')
     {
@@ -173,11 +162,7 @@ class tbPergunta extends MinC_Db_Table_Abstract
 
         $select->order($order);
         return $this->fetchAll($select);
-    } // fecha m�todo buscarDados
-
-
-
-
+    }
 
     public function listaCompleta($where=array(), $order=array())
     {
@@ -190,7 +175,8 @@ class tbPergunta extends MinC_Db_Table_Abstract
         $select->joinInner(
                     array("b" => $this->_schema ."."."tbPerguntaFormDocto"),
                 "b.nrPergunta = a.nrPergunta",
-                array('b.dsLabelPergunta as dsLabelPergunta','b.nrFormDocumento','b.nrVersaoDocumento','b.nrPeso','b.nrOrdemPergunta')
+                array('b.dsLabelPergunta as dsLabelPergunta','b.nrFormDocumento',
+                'b.nrVersaoDocumento','b.nrPeso','b.nrOrdemPergunta')
             );
 
         $select->joinInner(
@@ -206,7 +192,8 @@ class tbPergunta extends MinC_Db_Table_Abstract
         $select->joinInner(
                     array("d" => $this->_schema ."."."tbOpcaoRespostaVariavel"),
                 "d.nropcao = c.nropcao and d.nrPergunta = a.nrPergunta and d.nrVersaoDocumento = d.nrVersaoDocumento and d.nrFormDocumento = b.nrFormDocumento",
-                array('d.vlMinOpcao as nrNotaInicio','d.vlMaxOpcao as nrNotaFim','d.vlVariacaoOpcao as nrNotaVariacao')
+                array('d.vlMinOpcao as nrNotaInicio',
+                'd.vlMaxOpcao as nrNotaFim','d.vlVariacaoOpcao as nrNotaVariacao')
             );
         $select->joinLeft(
                     array("r" => $this->_schema ."."."tbResposta"),
@@ -220,7 +207,7 @@ class tbPergunta extends MinC_Db_Table_Abstract
         }
 
         $select->order($order);
-            
+
         return $this->fetchAll($select);
     }
 }

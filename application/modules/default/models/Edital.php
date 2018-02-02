@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of Agentes
- *
- * @author augusto
- */
 class Edital extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';
@@ -14,8 +9,6 @@ class Edital extends MinC_Db_Table_Abstract
     {
         //INSTANCIANDO UM OBJETO DE ACESSO AOS DADOS DA TABELA
         $tmpTblEdital = new Edital();
-
-
 
         if (isset($dados['idEdital'])) {
             $tmpRsEdital = $tmpTblEdital->find($dados['idEdital'])->current();
@@ -111,13 +104,17 @@ class Edital extends MinC_Db_Table_Abstract
         $slct->setIntegrityCheck(false);
         $slct->from(
                 array('edi' => $this->_name),
-                array('CONVERT(CHAR(10), edi.DtEdital, 103) AS DtEdital', 'edi.Objeto', 'edi.CelulaOrcamentaria', 'edi.idOrgao',
+                array(
+                    new Zend_Db_Expr('CONVERT(CHAR(10), edi.DtEdital, 103) AS DtEdital'),
+                    'edi.Objeto', 'edi.CelulaOrcamentaria', 'edi.idOrgao',
                 'edi.cdTipoFundo', 'edi.Logon', 'edi.NrEdital', 'edi.qtAvaliador', 'edi.idAti')
         );
         $slct->joinInner(
                 array('tfd' => 'tbFormDocumento'),
                 'tfd.idEdital = edi.idEdital',
-                array('tfd.nmFormDocumento', 'tfd.stModalidadeDocumento','tfd.idClassificaDocumento', 'tfd.nrFormDocumento', 'tfd.nrVersaoDocumento'  ),
+                array('tfd.nmFormDocumento', 
+                'tfd.stModalidadeDocumento','tfd.idClassificaDocumento', 
+                'tfd.nrFormDocumento', 'tfd.nrVersaoDocumento'  ),
                 'BDCORPORATIVO.scQuiz'
         );
         $slct->joinInner(
@@ -129,10 +126,10 @@ class Edital extends MinC_Db_Table_Abstract
         $slct->joinInner(
                 array('ati' => 'atividade'),
                 'ati.atiid = edi.idAti',
-                array("ati.atianopi + RIGHT('00000' + CONVERT(VARCHAR(5),ati.atiseqpi),5) as pi"),
+                array(new Zend_Db_Expr("ati.atianopi + RIGHT('00000' + CONVERT(VARCHAR(5),ati.atiseqpi),5) as pi")),
                 'BDSIMEC.pde'
         );
-        $slct->where('tfd.idClassificaDocumento not in (23,24,25)');
+        $slct->where(new Zend_Db_Expr('tfd.idClassificaDocumento not in (23,24,25)'));
         $slct->where('exf.idFaseEdital = 1');
         $slct->where('edi.Logon = ?', $idusuario);
         if (!empty($idEdital)) {
@@ -142,11 +139,9 @@ class Edital extends MinC_Db_Table_Abstract
         return $this->fetchAll($slct);
     }
 
-
     public function buscar($where=array(), $order=array(), $tamanho=-1, $inicio=-1)
     {
         $slct = $this->select();
-
 
         //adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) {
@@ -187,8 +182,6 @@ class Edital extends MinC_Db_Table_Abstract
 				WHERE
 					ed.idAti=$idAti";
 
-//
-
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
@@ -201,8 +194,6 @@ class Edital extends MinC_Db_Table_Abstract
     public static function recuperaValorPi($idAti)
     {
         $sql = "SELECT ati.atiorcamento/100 as valor FROM BDSIMEC.pde.atividade ati WHERE ati.atiid = $idAti";
-
-//
 
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -238,8 +229,6 @@ class Edital extends MinC_Db_Table_Abstract
     public static function buscarIdPi($idEdital)
     {
         $sql = "SELECT idAti FROM SAC.dbo.Edital where idEdital = $idEdital";
-
-//
 
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of Contrato
- *
- * @author 01610881125
- */
 class Contrato extends MinC_Db_Table_Abstract
 {
     protected $_banco   = 'bdcorporativo';

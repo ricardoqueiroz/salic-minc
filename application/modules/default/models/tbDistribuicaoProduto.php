@@ -34,7 +34,7 @@ class tbDistribuicaoProduto extends MinC_Db_Table_Abstract
                             'dp.idPlanoDistribuicao = pdp.idPlanoDistribuicao AND pdp.stPlanoDistribuicaoProduto = 1',
                             array(
                                     'pdp.QtdeProduzida',
-                                    '(pdp.QtdePatrocinador+pdp.QtdeProponente+pdp.QtdeProponente) as DistribuicaoGratuita'
+                                    new Zend_Db_Expr('(pdp.QtdePatrocinador+pdp.QtdeProponente+pdp.QtdeProponente) as DistribuicaoGratuita')
                                  )
                             );
         $slct->joinInner(
@@ -67,10 +67,10 @@ class tbDistribuicaoProduto extends MinC_Db_Table_Abstract
                         );
         $slct->joinInner(
                             array('pdp'=>'PlanoDistribuicaoProduto'),
-                            'dp.idPlanoDistribuicao = pdp.idPlanoDistribuicao AND pdp.stPlanoDistribuicaoProduto = 1',
+            new Zend_Db_Expr('dp.idPlanoDistribuicao = pdp.idPlanoDistribuicao AND pdp.stPlanoDistribuicaoProduto = 1'),
                             array(
                                     'pdp.QtdeProduzida',
-                                    '(pdp.QtdePatrocinador+pdp.QtdeProponente+pdp.QtdeProponente) as DistribuicaoGratuita'
+                                new Zend_Db_Expr('(pdp.QtdePatrocinador+pdp.QtdeProponente+pdp.QtdeProponente) as DistribuicaoGratuita')
                                  )
                             );
         $slct->joinInner(

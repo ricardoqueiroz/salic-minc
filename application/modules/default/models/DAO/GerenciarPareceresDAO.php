@@ -1,11 +1,6 @@
 <?php
-
-
 class GerenciarPareceresDAO extends Zend_Db_Table
 {
-    
-    /** CCONSULTAS *************************************************************************************/
-    
     public static function projetosConsolidados($idPronac =  null, $pronac = null, $nometc = null, $nomeP = null, $dtI = null, $dtF = null, $sutuacaotc = null, $situacao = null, $idSecretaria = null)
     {
         $sql = "SELECT    p.IdPRONAC, p.AnoProjeto + p.Sequencial AS PRONAC, p.NomeProjeto, p.Situacao AS CodSituacao, s.Descricao AS Situacao, o.idSecretaria, 
@@ -32,8 +27,6 @@ class GerenciarPareceresDAO extends Zend_Db_Table
 				            LEFT JOIN SAC.dbo.Enquadramento e ON (p.idPronac = e.idPronac)
 				WHERE     (p.Situacao IN ('C09', 'C20', 'C25')) AND (p.AnoProjeto > '08') AND (p.Mecanismo = '1') ";
         
-        //AND idSecretaria = 251 (Obs: n�o pode ser mais fixo
-                
         if ($idPronac) {
             $sql .= " AND p.IdPRONAC = ".$idPronac;
         }
@@ -472,20 +465,6 @@ FROM         SAC.dbo.Projetos AS a
     
     public static function buscarUnidades($usu_codigo)
     {
-        /*		$sql = "SELECT usu_orgao
-                            ,usu_orgaolotacao
-                            ,uog_orgao
-                            ,org_siglaautorizado
-                            ,org_nomeautorizado
-                            ,gru_codigo
-                            ,gru_nome
-                            ,org_superior
-                            ,uog_status
-        
-                        FROM TABELAS.dbo.vwUsuariosOrgaosGrupos
-        
-                        WHERE usu_codigo = $usu_codigo ";
-        */
         $sql = "SELECT usu_orgao
 					,usu_orgaolotacao
 					,uog_orgao
@@ -553,11 +532,7 @@ FROM         SAC.dbo.Projetos AS a
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->query($sql);
     }
-    
             
-    
-    /** EXCLUS�ES **************************************************************************************/
-
     // Excluir o parecer t�cnico do projeto
     public static function delPerecer($idpronac)
     {
@@ -578,14 +553,6 @@ FROM         SAC.dbo.Projetos AS a
         return $db->query($sql);
     }
 
-        
-    
-    /** CADASTROS **************************************************************************************/
-
-
-
-    /** EXEC *******************************************************************************************/
-    
     public static function execPareceres()
     {
         $sql = "EXEC SAC.dbo.paConsolidarParecer";

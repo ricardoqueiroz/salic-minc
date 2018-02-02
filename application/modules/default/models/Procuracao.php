@@ -33,7 +33,7 @@ class Procuracao extends MinC_Db_Table_Abstract
         $s->joinLeft(
                 array('pr' => 'Projetos'),
             "pr.idProjeto = vprp.idPreProjeto",
-                array(	'(pr.AnoProjeto+pr.Sequencial) as pronac',
+                array(	new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                         'pr.OrgaoOrigem',
                         'NomeProjeto'),
                 $this->getSchema('sac')
@@ -153,7 +153,7 @@ class Procuracao extends MinC_Db_Table_Abstract
         $s->joinInner(
                 array('pr' => 'Projetos'),
             "pr.idProjeto = vprp.idPreProjeto",
-                array(	'(pr.AnoProjeto+pr.Sequencial) as pronac',
+                array(	new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                         'pr.OrgaoOrigem',
                         'NomeProjeto'),
             'SAC.dbo'

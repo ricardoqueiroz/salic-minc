@@ -63,7 +63,7 @@ class tbAgentesxVerificacao extends MinC_Db_Table_Abstract
             $slct2->setIntegrityCheck(false);
             $slct2->from(
                             array("c"=>$this->_name),
-                            array('total'=>"count(*)")
+                            array('total'=> new Zend_Db_Expr("count(*)"))
                          );
             //adiciona quantos filtros foram enviados
             foreach ($where as $coluna => $valor) {
@@ -111,9 +111,9 @@ class tbAgentesxVerificacao extends MinC_Db_Table_Abstract
         );
 
         $slct->where('idDirigente = ?', $idAgente);
-        $slct->where("'{$dtInicio}' BETWEEN dtInicioMandato AND dtFimMandato");
+        $slct->where(new Zend_Db_Expr("'{$dtInicio}' BETWEEN dtInicioMandato AND dtFimMandato"));
         //$slct->orWhere('idAgente = ?',$idAgente);
-        $slct->where("'{$dtFim}' BETWEEN dtInicioMandato AND dtFimMandato");
+        $slct->where(new Zend_Db_Expr("'{$dtFim}' BETWEEN dtInicioMandato AND dtFimMandato"));
         $slct->where('stMandato = ?', '0');
 
 

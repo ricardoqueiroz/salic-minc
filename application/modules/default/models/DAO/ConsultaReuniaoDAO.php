@@ -1,15 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ConstultaReuniao
- *
- * @author 01373930160
- */
 class ConsultaReuniaoDAO
 {
     public static function listaReuniao($idreuniao=null)
@@ -131,9 +120,6 @@ class ConsultaReuniaoDAO
             $this->view->message = "Erro: " . $e->getMessage();
         }
 
-//        return $sql; die;
         return $db->fetchAll($sql);
     }
 }
-?>
-

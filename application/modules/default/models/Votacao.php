@@ -22,7 +22,7 @@ class Votacao extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
                 $this,
-                array('count(stVoto) as qtdvotos')
+                array(new Zend_Db_Expr('count(stVoto) as qtdvotos'))
         );
         $select->where('idNrReuniao = ?', $idNrReuniao);
         $select->where('idPRONAC = ?', $idPRONAC);
@@ -42,7 +42,7 @@ class Votacao extends MinC_Db_Table_Abstract
         $select->from(
                     array('tv'=>$this->_name),
                     array(
-                            '(cast(tv.dsJustificativa AS TEXT)) as justificativa',
+                            new Zend_Db_Expr('(cast(tv.dsJustificativa AS TEXT)) as justificativa'),
                             'tv.stVoto'
                         )
                     );

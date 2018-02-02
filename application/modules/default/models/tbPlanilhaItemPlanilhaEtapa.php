@@ -17,7 +17,6 @@ class tbPlanilhaItemPlanilhaEtapa extends MinC_Db_Table_Abstract
     
     public function salvarPlanilhaEtapaPlanilhaItem($dadosPlanilhaItemPlanilhaEtapa)
     {
-        $this->insert($dadosPlanilhaItemPlanilhaEtapa);
-        return $insert;
+        return $this->insert($dadosPlanilhaItemPlanilhaEtapa);
     }
 }

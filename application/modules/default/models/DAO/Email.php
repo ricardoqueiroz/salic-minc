@@ -1,12 +1,4 @@
 <?php
-/**
- * Modelo Email
- * @author wouerner <wouerner@gmail.com>
- * @since 29/03/2010
- * @link http://www.cultura.gov.br
- * @todo unificar metodos de e-mail nessa model
- */
-
 class Agente_Model_Email extends MinC_Db_Table_Abstract
 {
     protected $_name = 'internet';

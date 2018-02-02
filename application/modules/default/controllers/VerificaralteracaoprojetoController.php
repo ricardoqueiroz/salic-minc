@@ -1,47 +1,34 @@
 <?php
 
-
 class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstract
 {
 
-    /**
-     * Reescreve o m�todo init()
-     * @access public
-     * @param void
-     * @return void
-     */
     public function init()
     {
-        $this->view->title = "Salic - Sistema de Apoio �s Leis de Incentivo � Cultura"; // t�tulo da p�gina
-        $auth = Zend_Auth::getInstance(); // pega a autentica��o
-        $Usuario = new UsuarioDAO(); // objeto usu�rio
+        $this->view->title = "Salic - Sistema de Apoio &agrave;s Leis de Incentivo &agrave; Cultura"; // t�tulo da p�gina
+        $auth = Zend_Auth::getInstance();
+        $Usuario = new UsuarioDAO();
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sess�o com o grupo ativo
 
-        if ($auth->hasIdentity()) { // caso o usu�rio esteja autenticado
-            // verifica as permiss�es
+        if ($auth->hasIdentity()) {
             $PermissoesGrupo = array();
             $PermissoesGrupo[] = 93;
             $PermissoesGrupo[] = 103;
-            // $PermissoesGrupo[] = 119;
-            // $PermissoesGrupo[] = 120;
-            if (!in_array($GrupoAtivo->codGrupo, $PermissoesGrupo)) { // verifica se o grupo ativo est� no array de permiss�es
-                parent::message("Voc� n�o tem permiss�o para acessar essa �rea do sistema!", "principal/index", "ALERT");
+            if (!in_array($GrupoAtivo->codGrupo, $PermissoesGrupo)) {
+                parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal/index", "ALERT");
             }
 
-            // pega as unidades autorizadas, org�os e grupos do usu�rio (pega todos os grupos)
             $grupos = $Usuario->buscarUnidades($auth->getIdentity()->usu_codigo, 21);
 
-            // manda os dados para a vis�o
-            $this->view->usuario = $auth->getIdentity(); // manda os dados do usu�rio para a vis�o
-            $this->view->arrayGrupos = $grupos; // manda todos os grupos do usu�rio para a vis�o
-            $this->view->grupoAtivo = $GrupoAtivo->codGrupo; // manda o grupo ativo do usu�rio para a vis�o
-            $this->view->orgaoAtivo = $GrupoAtivo->codOrgao; // manda o �rg�o ativo do usu�rio para a vis�o
-        } // fecha if
-        else { // caso o usu�rio n�o esteja autenticado
+            $this->view->usuario = $auth->getIdentity();
+            $this->view->arrayGrupos = $grupos;
+            $this->view->grupoAtivo = $GrupoAtivo->codGrupo;
+            $this->view->orgaoAtivo = $GrupoAtivo->codOrgao;
+        } else {
             return $this->_helper->redirector->goToRoute(array('controller' => 'index', 'action' => 'logout'), null, true);
         }
 
-        parent::init(); // chama o init() do pai GenericControllerNew
+        parent::init();
     }
 
     public function paineltecnicoAction()
@@ -57,42 +44,36 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
 
         foreach ($resultadobusca as $ResultAltBusca) {
             switch ($ResultAltBusca->tpAlteracaoProjeto) {
-                case 1:
-                    {
-                        $Result['NomeProponente'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 2:
-                    {
-                        $Result['RazaoSocial'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 3:
-                    {
-                        $Result['FichaTecnica'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 4:
-                    {
-                        $Result['LocalRealizacao'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 5:
-                    {
-                        $Result['NomeProjeto'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 9:
-                    {
-                        $Result['ProrrogacaoPrazoCaptacao'][] = $ResultAltBusca;
-                        break;
-                    }
-                case 10:
-                    {
-                        $Result['ProrrogacaoPrazoExecucao'][] = $ResultAltBusca;
-                        break;
-                    }
-                default: break;
+                case 1: {
+                    $Result['NomeProponente'][] = $ResultAltBusca;
+                    break;
+                }
+                case 2: {
+                    $Result['RazaoSocial'][] = $ResultAltBusca;
+                    break;
+                }
+                case 3: {
+                    $Result['FichaTecnica'][] = $ResultAltBusca;
+                    break;
+                }
+                case 4: {
+                    $Result['LocalRealizacao'][] = $ResultAltBusca;
+                    break;
+                }
+                case 5: {
+                    $Result['NomeProjeto'][] = $ResultAltBusca;
+                    break;
+                }
+                case 9: {
+                    $Result['ProrrogacaoPrazoCaptacao'][] = $ResultAltBusca;
+                    break;
+                }
+                case 10: {
+                    $Result['ProrrogacaoPrazoExecucao'][] = $ResultAltBusca;
+                    break;
+                }
+                default:
+                    break;
             }
         }
         $Total['NomeProponente'] = count($Result['NomeProponente']);
@@ -102,14 +83,10 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $Total['NomeProjeto'] = count($Result['NomeProjeto']);
         $Total['ProrrogacaoPrazoCaptacao'] = count($Result['ProrrogacaoPrazoCaptacao']);
         $Total['ProrrogacaoPrazoExecucao'] = count($Result['ProrrogacaoPrazoExecucao']);
-//        echo "<pre>"; print_r($Total); die;
         $this->view->resultBusca = $Result;
         $this->view->resultTotal = $Total;
     }
 
-    /*
-     *  View: Solicita��o de Altera��o do Nome do Projeto
-     */
 
     public function nomeprojetoAction()
     {
@@ -136,10 +113,6 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $this->view->resultConsulta = $resultadoBuscaPedidoAlteracao;
     }
 
-    /*
-     *  View: Solicita��o de Altera��o Raz�o Social
-     */
-
     public function solaltrazsocAction()
     {
         if ($_POST) {
@@ -158,15 +131,11 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $recebidoGet = Zend_Registry::get('get');
         $idpedidoalteracao = $recebidoGet->idpedidoalteracao;
         $resultadoBuscaPedidoAlteracao = tbPedidoAlteracaoProjetoDAO::buscarDadosPedidoAlteracao($idpedidoalteracao);
-        
+
         $this->view->resultConsulta = $resultadoBuscaPedidoAlteracao;
         $this->view->resultArquivo = tbpedidoaltprojetoxarquivoDAO::buscarArquivos($idpedidoalteracao);
         $this->view->resultParecerTecnico = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);
     }
-
-    /*
-     *  View: Solicita��o de Altera��o do Nome do Proponente
-     */
 
     public function solaltnomprpAction()
     {
@@ -191,10 +160,6 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $this->view->resultProjeto = tbalteracaonomeproponenteDAO::buscarProjPorProp($resultadoBuscaPedidoAlteracao[0]->CgcCpf);
         $this->view->resultParecerTecnico = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);
     }
-
-    /*
-     *  View: Solicita��o de Altera��o do Local de Realiza��o
-     */
 
     public function solaltlocrelAction()
     {
@@ -222,10 +187,6 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $this->view->resultParecerTecnico = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);
     }
 
-    /*
-     *  View: Solicita��o de Altera��o da Ficha t�cnica
-     */
-
     public function solaltfictecAction()
     {
         if ($_POST) {
@@ -243,10 +204,6 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $this->view->resultArquivo = tbpedidoaltprojetoxarquivoDAO::buscarArquivos($idpedidoalteracao);
         $this->view->resultParecerTecnico = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);
     }
-
-    /*
-     *  View: Solicita��o de Prorrogacao de Prazos - Capta��o
-     */
 
     public function solaltprogprazcapAction()
     {
@@ -277,10 +234,6 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
         $this->view->resultArquivo = tbpedidoaltprojetoxarquivoDAO::buscarArquivos($idpedidoalteracao);
         $this->view->resultParecerTecnico = tbalteracaonomeprojetoDAO::buscarDadosParecerTecnico($idpedidoalteracao);
     }
-
-    /*
-     *  View: Solicita��o de Prorrogacao de Prazos - Execu��o
-     */
 
     public function solaltprogprazexecAction()
     {
@@ -354,14 +307,12 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
     {
         $qtdcarecteres = strlen($dado);
         switch ($qtdcarecteres) {
-            case 11:
-                {
-                    $retorno = Mascara::addMaskCPF($dado);
-                }
-            case 14:
-                {
-                    $retorno = Mascara::addMaskCNPJ($dado);
-                }
+            case 11: {
+                $retorno = Mascara::addMaskCPF($dado);
+            }
+            case 14: {
+                $retorno = Mascara::addMaskCNPJ($dado);
+            }
         }
         return $retorno;
     }
@@ -369,31 +320,26 @@ class VerificarAlteracaoProjetoController extends MinC_Controller_Action_Abstrac
     public static function BuscarDadosTabelasAlt($idpedidoalteracao, $tpalteracao)
     {
         switch ($tpalteracao) {
-            case 1:
-                {
-                    $nomProp = tbalteracaonomeproponenteDAO::buscarDadosAltNomProp($idpedidoalteracao);
-                    return $nomProp[0];
-                }
-            case 2:
-                {
-                    $altRazSoc = tbalteracaoaltrazDAO::buscarDadosAltRaz($idpedidoalteracao);
-                    return $altRazSoc[0];
-                }
-            case 3:
-                {
-                    $altFicTec = tbalteracaofictecDAO::buscarDadosFicTec($idpedidoalteracao);
-                    return $altFicTec[0];
-                }
-            case 4:
-                {
-                    $altLolRel = tbalteracaolocalrealizacaoDAO::buscarDadosAltLocRel($idpedidoalteracao);
-                    return $altLolRel[0];
-                }
-            case 5:
-                {
-                    $altNomProj = tbalteracaonomeprojetoDAO::buscarDadosNmProj($idpedidoalteracao);
-                    return $altNomProj[0];
-                }
+            case 1: {
+                $nomProp = tbalteracaonomeproponenteDAO::buscarDadosAltNomProp($idpedidoalteracao);
+                return $nomProp[0];
+            }
+            case 2: {
+                $altRazSoc = tbalteracaoaltrazDAO::buscarDadosAltRaz($idpedidoalteracao);
+                return $altRazSoc[0];
+            }
+            case 3: {
+                $altFicTec = tbalteracaofictecDAO::buscarDadosFicTec($idpedidoalteracao);
+                return $altFicTec[0];
+            }
+            case 4: {
+                $altLolRel = tbalteracaolocalrealizacaoDAO::buscarDadosAltLocRel($idpedidoalteracao);
+                return $altLolRel[0];
+            }
+            case 5: {
+                $altNomProj = tbalteracaonomeprojetoDAO::buscarDadosNmProj($idpedidoalteracao);
+                return $altNomProj[0];
+            }
         }
     }
 }

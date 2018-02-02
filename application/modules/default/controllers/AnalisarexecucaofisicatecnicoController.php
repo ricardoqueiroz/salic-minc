@@ -157,7 +157,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         $this->view->DadosRelatorio = $DadosRelatorio;
@@ -200,7 +200,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         $tbComprovanteTrimestral = new tbComprovanteTrimestral();
@@ -240,7 +240,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -281,7 +281,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -322,7 +322,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -368,7 +368,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -410,7 +410,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -451,7 +451,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         //****** Dados do Projeto - Cabecalho *****//
@@ -492,18 +492,18 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         $DadosRelatorio = $vw->listaRelatorios($where, array(), null, null, false);
 
         if (count($DadosRelatorio)==0) {
-            parent::message('Relat�rio n�o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
+            parent::message('Relat&oacute;rio n&atilde;o encontrado!', "analisarexecucaofisicatecnico", "ALERT");
         }
 
         $tbComprovante = new tbComprovanteTrimestral();
         $dadosRel = $tbComprovante->buscarComprovantes(array('IdPRONAC=?'=>$idpronac,'nrComprovanteTrimestral=?'=>$DadosRelatorio[0]->nrComprovanteTrimestral,'idTecnicoAvaliador=?'=>$idusuario));
         
         $siComprovante = 4;
-        $msg = 'Relat�rio salvo com sucesso!';
+        $msg = 'Relat&oacute;rio salvo com sucesso!';
         $controller = "analisarexecucaofisicatecnico/parecer-tecnico?idpronac=".$idpronac."&relatorio=".$DadosRelatorio[0]->nrComprovanteTrimestral;
         if (isset($_POST['finalizar']) && !empty($_POST['finalizar'])) {
             $siComprovante = 5;
-            $msg = 'Relat�rio finalizado com sucesso!';
+            $msg = 'Relat&oacute;rio finalizado com sucesso!';
             $controller = 'analisarexecucaofisicatecnico/';
         }
 
@@ -518,7 +518,7 @@ class AnalisarexecucaofisicatecnicoController extends MinC_Controller_Action_Abs
         if ($resultado) {
             parent::message($msg, $controller, "CONFIRM");
         } else {
-            parent::message('N�o foi poss�vel salvar o relat�rio!', "analisarexecucaofisicatecnico", "ERROR");
+            parent::message('N&atilde;o foi poss&iacute;vel salvar o relat&oacute;rio!', "analisarexecucaofisicatecnico", "ERROR");
         }
     }
 

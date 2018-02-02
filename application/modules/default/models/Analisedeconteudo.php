@@ -39,7 +39,7 @@ class Analisedeconteudo extends MinC_Db_Table_Abstract
                 'IncisoArtigo27_III',
                 'IncisoArtigo27_IV',
                 'ParecerFavoravel',
-                'cast(ParecerDeConteudo as TEXT) as ParecerDeConteudo'
+                new Zend_Db_Expr('cast(ParecerDeConteudo as TEXT) as ParecerDeConteudo')
                 )
         );
         if ($idpronac) {

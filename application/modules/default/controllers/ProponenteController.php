@@ -12,7 +12,7 @@ class ProponenteController extends MinC_Controller_Action_Abstract
      */
     public function init()
     {
-        Zend_Layout::startMvc(array('layout' => 'layout_scriptcase'));
+//        Zend_Layout::startMvc(array('layout' => 'layout_scriptcase'));
         $this->view->title = "Salic - Sistema de Apoio &agrave;s Leis de Incentivo &agrave; Cultura"; // titulo da pagina
         $auth = Zend_Auth::getInstance(); // pega a autenticao
         $Usuario = new UsuarioDAO(); // objeto usuario

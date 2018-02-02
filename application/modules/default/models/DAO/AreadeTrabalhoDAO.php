@@ -3,8 +3,6 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
 {
     protected $_name    = 'SAC.dbo.Projetos';
 
-
-
     public function buscarAnalise($idagente)
     {
         $sql = "
@@ -13,7 +11,7 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
 						,Pr.NomeProjeto
 						,CASE WHEN Pa.ParecerFavoravel in ('2','3')
 							THEN 'Sim'
-							ELSE 'N�o'
+							ELSE 'N&atilde;o'
 						  End AS ParecerFavoravel
 						 ,CONVERT(CHAR(10),DPC.dtDistribuicao,103) AS DataRecebimento
 
@@ -36,8 +34,6 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
         return $resultado;
     }
 
-
-
     public function buscarResposta($idagente)
     {
         $sql1 = "SELECT Pr.idPRONAC
@@ -45,7 +41,7 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
 						,Pr.NomeProjeto
 						,CASE WHEN Pa.ParecerFavoravel in ('2','3')
 							THEN 'Sim'
-							ELSE 'N�o'
+							ELSE 'N&atilde;o'
 						  End AS ParecerFavoravel
 						 ,CONVERT(CHAR(10),D.DtResposta,103) AS DtResposta
 					FROM SAC.dbo.Projetos Pr
@@ -57,7 +53,6 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
                                         And D.DtResposta is not null
 			";
         //AND d.idSolicitante = idParametro";
-//                die('<pre>'.$sql1);
 
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
@@ -66,8 +61,6 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
         return $resultado1;
     }
 
-
-
     public function buscarDiligencia($idagente)
     {
         $sql2 = "SELECT Pr.idPRONAC
@@ -75,7 +68,7 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
 						,Pr.NomeProjeto
 						,CASE WHEN Pa.ParecerFavoravel in ('2','3')
 							THEN 'Sim'
-							ELSE 'N�o'
+							ELSE 'N&atilde;o'
 						End AS ParecerFavoravel
 						,CONVERT(CHAR(10),d.dtSolicitacao,103) AS dtSolicitacao
 
@@ -87,16 +80,13 @@ class AreadeTrabalhoDAO extends Zend_Db_Table
 					AND Pr.Situacao = 'B14'
 			";
         //AND d.idSolicitante = idParametro";
-        //die('<pre>'.$sql2);
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $resultado2 = $db->fetchAll($sql2);
 
         return $resultado2;
     }
-           
-           
-           
+
     public function mostrar()
     {
     }

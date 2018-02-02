@@ -1,22 +1,11 @@
 <?php
-/**
- * DAO tbPlanoDivulgacao
- * @author jeffersonassilva@gmail.com - XTI
- * @since 28/03/2014
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 
 class tbPlanoDivulgacao extends MinC_Db_Table_Abstract
 {
-    protected $_banco  = "SAC";
+    protected $_banco = "SAC";
     protected $_schema = "SAC";
-    protected $_name   = "tbPlanoDivulgacao";
+    protected $_name = "tbPlanoDivulgacao";
 
-    /*
-     * Criada em 03/14
-     * @author: Jefferson Alessandro
-     */
     public function buscarPlanosDivulgacaoReadequacao($idPronac, $tabela = 'PlanoDeDivulgacao')
     {
         $select = $this->select();
@@ -57,7 +46,7 @@ class tbPlanoDivulgacao extends MinC_Db_Table_Abstract
 
         $select->where('a.IdPRONAC = ?', $idPronac);
 
-        
+
         return $this->fetchAll($select);
     }
 
@@ -75,7 +64,7 @@ class tbPlanoDivulgacao extends MinC_Db_Table_Abstract
         $select->joinInner(
             array('b' => 'tbPlanoDivulgacao'),
             "a.idPronac = b.idPronac",
-            array('b.tpSolicitacao','b.tpAnaliseTecnica','b.tpAnaliseComissao'),
+            array('b.tpSolicitacao', 'b.tpAnaliseTecnica', 'b.tpAnaliseComissao'),
             'SAC.dbo'
         );
         $select->joinLeft(
@@ -94,7 +83,7 @@ class tbPlanoDivulgacao extends MinC_Db_Table_Abstract
         $select->where('b.idReadequacao = ?', $idReadequacao);
 
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 
     public function buscarDadosPlanosDivulgacaoAtual($where = array())
     {
@@ -108,12 +97,10 @@ class tbPlanoDivulgacao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
 
-        // adiciona quantos filtros foram enviados
         foreach ($where as $coluna => $valor) :
             $select->where($coluna, $valor);
         endforeach;
 
-        
         return $this->fetchAll($select);
-    } // fecha m�todo historicoReadequacao()
+    }
 }

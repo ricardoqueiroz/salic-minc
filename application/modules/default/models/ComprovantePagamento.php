@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Caio Lucena <caioflucena@gmail.com>
- */
 class ComprovantePagamento extends MinC_Db_Table_Abstract
 {
     protected $comprovantePagamento;
@@ -19,16 +16,10 @@ class ComprovantePagamento extends MinC_Db_Table_Abstract
     protected $comprovanteNumero;
     protected $comprovanteJustificativa;
 
-    /**
-     * Zend Table
-     */
     protected $_banco = 'bdcorporativo';
     protected $_schema = 'bdcorporativo.scSAC';
     protected $_name = 'tbComprovantePagamento';
 
-    /**
-     *
-     */
     public function __construct(
         $comprovantePagamento = null,
         $fornecedor = null,

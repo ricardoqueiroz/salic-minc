@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of GerarPagamentoParecerista
- *
- * @author Tarcisio Angelo
- */
 class GerarPagamentoParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbGerarPagamentoParecerista';
@@ -176,9 +171,6 @@ class GerarPagamentoParecerista extends MinC_Db_Table_Abstract
             }
             $select->limit($tamanho, $tmpInicio);
         }
-
-
-
 
         return $this->fetchAll($select);
     }

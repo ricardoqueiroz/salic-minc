@@ -1,24 +1,11 @@
 <?php
 
-/**
- * DAO tbRelatorio
- * @since 16/03/2011
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
 class tbRelatorio extends MinC_Db_Table_Abstract
 {
     protected $_banco = "SAC";
     protected $_schema = "SAC";
     protected $_name = "tbRelatorio";
 
-    /**
-     * M�todo para consultar se existe algum registro para o idPRONAC
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function buscarDadosRelatorioPronac($idpronac)
     {
         $select = $this->select();
@@ -47,15 +34,15 @@ class tbRelatorio extends MinC_Db_Table_Abstract
                 array('pr' => 'Projetos'),
             'pr.IdPRONAC = r.idPRONAC',
             array(
-            'SAC.dbo.fnchecarDiligencia(pr.IdPRONAC) AS Diligencia',
+            new Zend_Db_Expr('SAC.dbo.fnchecarDiligencia(pr.IdPRONAC) AS Diligencia'),
             'pr.IdPRONAC',
             'pr.AnoProjeto',
             'pr.Sequencial',
             'pr.NomeProjeto',
             'pr.UfProjeto',
             'pr.CgcCpf',
-            'dtInicioExecucao' => '(convert(varchar(30),pr.dtInicioExecucao, 103 ))',
-            'dtFimExecucao' => '(convert(varchar(30),pr.dtFimExecucao, 103 ))'
+            'dtInicioExecucao' => new Zend_Db_Expr('(convert(varchar(30),pr.dtInicioExecucao, 103 ))'),
+            'dtFimExecucao' => new Zend_Db_Expr('(convert(varchar(30),pr.dtFimExecucao, 103 ))')
                 )
         );
         $select->joinLeft(
@@ -98,13 +85,6 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    /**
-     * M�todo para consultar se existe algum idDistribuicaoProduto para o idPRONAC
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function buscarDistribuicaoProduto($idpronac, $idProduto)
     {
         $select = $this->select();
@@ -122,13 +102,6 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    /**
-     * M�todo para consultar os dados principais do relatorio cadastrado
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function dadosGerais($idpronac)
     {
         $select = $this->select();
@@ -141,13 +114,19 @@ class tbRelatorio extends MinC_Db_Table_Abstract
                 array('b' => 'tbRelatorioTrimestral'),
             'b.idRelatorio = a.idRelatorio',
             array(
-                    "CAST(b.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas", 'b.stRelatorioTrimestral'),
+                new Zend_Db_Expr("CAST(b.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas", 'b.stRelatorioTrimestral')),
             'SAC.dbo'
         );
         $select->joinLeft(
                 array('c' => 'tbBeneficiario'),
             'c.idRelatorio = a.idRelatorio',
-            array('c.dsBeneficiario', 'c.tpBeneficiario', 'c.nrCNPJ', 'c.nrCPF', 'CAST(c.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'CAST(c.dsEntrega AS TEXT) AS dsEntrega'),
+            array(
+                'c.dsBeneficiario',
+                'c.tpBeneficiario',
+                'c.nrCNPJ',
+                'c.nrCPF',
+                new Zend_Db_Expr('CAST(c.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo'),
+                new Zend_Db_Expr('CAST(c.dsEntrega AS TEXT) AS dsEntrega')),
             'SAC.dbo'
         );
         $select->where("a.idPRONAC = '" . $idpronac . "'");
@@ -157,14 +136,6 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-
-    /**
-     * M�todo para consultar os dados principais do relatorio cadastrado
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function dadosGerais2($idpronac)
     {
         $select = $this->select();
@@ -192,13 +163,6 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    /**
-     * M�todo para consultar os dados do relatorio cadastrado
-     * @access public
-     * @param array $dados
-     * @param integer $where
-     * @return integer (quantidade de registros alterados)
-     */
     public function DadosAcesso($idpronac, $tpAcesso)
     {
         $select = $this->select();
@@ -216,7 +180,22 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         $select->joinInner(
                 array('c' => 'tbAcesso'),
             'c.idRelatorio = a.idRelatorio',
-            array('c.idAcesso', 'c.idRelatorio', 'CAST(c.dsAcesso AS TEXT) AS dsAcesso', 'CAST(c.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'c.qtPessoa', 'CAST(c.dsLocal AS TEXT) AS dsLocal', 'CAST(c.dsEstruturaSolucao AS TEXT) AS dsEstruturaSolucao', 'c.tpAcesso', 'c.stAcesso', 'c.stQtPessoa', 'c.stPublicoAlvo', 'c.stLocal', 'c.stEstrutura', 'c.dsJustificativaAcesso'),
+            array(
+                'c.idAcesso',
+                'c.idRelatorio',
+                new Zend_Db_Expr('CAST(c.dsAcesso AS TEXT) AS dsAcesso'),
+                new Zend_Db_Expr('CAST(c.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo'),
+                'c.qtPessoa',
+                new Zend_Db_Expr('CAST(c.dsLocal AS TEXT) AS dsLocal'),
+                new Zend_Db_Expr('CAST(c.dsEstruturaSolucao AS TEXT) AS dsEstruturaSolucao'),
+                'c.tpAcesso',
+                'c.stAcesso',
+                'c.stQtPessoa',
+                'c.stPublicoAlvo',
+                'c.stLocal',
+                'c.stEstrutura',
+                'c.dsJustificativaAcesso'
+            ),
             'SAC.dbo'
         );
         $select->where("a.idPRONAC = '" . $idpronac . "'");
@@ -349,7 +328,14 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         $select->joinInner(
                             array('c'=>'tbRelatorioTrimestral'),
                             'a.idRelatorio = c.idRelatorio',
-                            array('c.idRelatorioTrimestral', 'c.idRelatorio', 'CAST(c.dsParecer AS TEXT) AS dsParecer', 'CAST(c.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas', 'c.dtCadastro', 'c.stRelatorioTrimestral', 'c.nrRelatorioTrimestral'),
+                            array(
+                                'c.idRelatorioTrimestral',
+                                'c.idRelatorio',
+                                new Zend_Db_Expr('CAST(c.dsParecer AS TEXT) AS dsParecer'),
+                                new Zend_Db_Expr('CAST(c.dsObjetivosMetas AS TEXT) AS dsObjetivosMetas'),
+                                'c.dtCadastro',
+                                'c.stRelatorioTrimestral',
+                                'c.nrRelatorioTrimestral'),
                             'SAC.dbo'
                            );
         $select->where('a.IdPRONAC = ?', $idPronac);
@@ -370,7 +356,22 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         $select->joinInner(
                             array('b'=>'tbAcesso'),
                             'a.idRelatorio = b.idRelatorio',
-                             array('b.idAcesso', 'b.idRelatorio', 'CAST(b.dsAcesso AS TEXT) AS dsAcesso', 'CAST(b.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'convert(varchar(10),b.qtPessoa) as qtPessoa', 'CAST(b.dsLocal AS TEXT) AS dsLocal', 'CAST(b.dsEstruturaSolucao AS TEXT) AS dsEstruturaSolucao', 'b.tpAcesso', 'b.stAcesso', 'b.stQtPessoa', 'b.stPublicoAlvo', 'b.stLocal', 'b.stEstrutura', 'b.dsJustificativaAcesso'),
+                             array(
+                                 'b.idAcesso',
+                                 'b.idRelatorio',
+                                 new Zend_Db_Expr('CAST(b.dsAcesso AS TEXT) AS dsAcesso'),
+                                 new Zend_Db_Expr('CAST(b.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo'),
+                                 new Zend_Db_Expr('convert(varchar(10),b.qtPessoa) as qtPessoa'),
+                                 new Zend_Db_Expr('CAST(b.dsLocal AS TEXT) AS dsLocal'),
+                                 new Zend_Db_Expr('CAST(b.dsEstruturaSolucao AS TEXT) AS dsEstruturaSolucao'),
+                                 'b.tpAcesso',
+                                 'b.stAcesso',
+                                 'b.stQtPessoa',
+                                 'b.stPublicoAlvo',
+                                 'b.stLocal',
+                                 'b.stEstrutura',
+                                 'b.dsJustificativaAcesso'
+                             ),
                             'SAC.dbo'
                            );
         $select->where('a.idPRONAC = ?', $idPronac);
@@ -390,7 +391,14 @@ class tbRelatorio extends MinC_Db_Table_Abstract
         $select->joinInner(
                             array('b'=>'tbBeneficiario'),
                             'a.idRelatorio = b.idRelatorio',
-                            array('b.idRelatorio', 'b.dsBeneficiario', 'b.tpBeneficiario', 'b.nrCNPJ', 'b.nrCPF', 'CAST(b.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo', 'CAST(b.dsEntrega AS TEXT) AS dsEntrega'),
+                            array(
+                                'b.idRelatorio',
+                                'b.dsBeneficiario',
+                                'b.tpBeneficiario',
+                                'b.nrCNPJ',
+                                'b.nrCPF',
+                                new Zend_Db_Expr('CAST(b.dsPublicoAlvo AS TEXT) AS dsPublicoAlvo'),
+                                new Zend_Db_Expr('CAST(b.dsEntrega AS TEXT) AS dsEntrega')),
                             'SAC.dbo'
                            );
         $select->where('a.idPRONAC = ?', $idPronac);

@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of tbModeloTermoDecisao
- *
- * @author Tiago
- */
 class tbModeloTermoDecisao extends MinC_Db_Table_Abstract
 {
     protected $_banco = "SAC";
@@ -20,12 +15,12 @@ class tbModeloTermoDecisao extends MinC_Db_Table_Abstract
                       'ttd.idOrgao',
                       'ttd.idVerificacao',
                       'ttd.stModeloTermoDecisao',
-                      'CAST(ttd.meModeloTermoDecisao AS TEXT) AS meModeloTermoDecisao',
+                      new Zend_Db_Expr('CAST(ttd.meModeloTermoDecisao AS TEXT) AS meModeloTermoDecisao'),
            )
         );
         $select->joinInner(
-                array('o' => 'Orgaos'),
-            'ttd.idOrgao = o.Codigo',
+            array('o' => 'Orgaos'),
+                'ttd.idOrgao = o.Codigo',
                 array('o.Codigo', 'o.Sigla')
         );
         if (!empty($where)) {
@@ -33,7 +28,7 @@ class tbModeloTermoDecisao extends MinC_Db_Table_Abstract
                 $select->where($coluna, $valor);
             }
         }
-        
+
         return $this->fetchAll($select);
     }
 }

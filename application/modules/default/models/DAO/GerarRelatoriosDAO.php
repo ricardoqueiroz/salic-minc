@@ -2,9 +2,6 @@
 
 class GerarRelatoriosDAO extends Zend_Db_Table
 {
-
-    /** CCONSULTAS ************************************************************************************ */
-    /* Todas propostas cadastradas */
     public static function relatorio1($idEdital = null, $idUf = null, $idMunicipio = null, $idFundo = null, $idClassificacao = null)
     {
         $sql = "select
@@ -308,9 +305,4 @@ class GerarRelatoriosDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
     }
-
-    /** ALTERA��ES ************************************************************************************ */
-    /** EXCLUS�ES ************************************************************************************* */
-    /** CADASTROS ************************************************************************************* */
-    /** EXEC ****************************************************************************************** */
 }

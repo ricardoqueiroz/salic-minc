@@ -1,14 +1,6 @@
 <?php
 class EmailDAO extends Zend_Db_Table
 {
-    /**
-     * M�todo para envio de e-mail
-     * @access public
-     * @static
-     * @param string $email
-     * @param string $texto
-     * @return object
-     */
     public static function enviarEmail($email, $assunto, $texto, $perfil = 'PerfilGrupoPRONAC')
     {
         $config = new Zend_Config_Ini(APPLICATION_PATH .'/configs/application.ini', APPLICATION_ENV);

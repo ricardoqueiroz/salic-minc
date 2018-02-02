@@ -20,7 +20,7 @@ class HistoricoDevolucaoFiscalizacao extends MinC_Db_Table_Abstract
             array(
             'rf.idHistoricoDevolucao',
             'rf.idRelatorioFiscalizacao',
-            'CAST(rf.dsJustificativaDevolucao AS TEXT) as dsJustificativaDevolucao',
+                new Zend_Db_Expr('CAST(rf.dsJustificativaDevolucao AS TEXT) as dsJustificativaDevolucao'),
             'rf.dtEnvioDevolucao',
             'rf.stDevolucao'
                 )

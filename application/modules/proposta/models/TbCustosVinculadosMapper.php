@@ -126,8 +126,9 @@ class Proposta_Model_TbCustosVinculadosMapper extends MinC_Db_Mapper
             if (!empty($valorDoProjeto)) {
                 $item['valorDoProjeto'] = $valorDoProjeto;
             }
-            $item['idUF'] = $idUFLocalizacao;
-            $item['idMunicipio'] = $idMunicipioLocalizacao;
+
+            $item['idUF'] = !empty($idUFLocalizacao) ? $idUFLocalizacao : 1;
+            $item['idMunicipio'] = !empty($idMunicipioLocalizacao) ? $idMunicipioLocalizacao : 1;
 
             $custosVinculados[] = $item;
         }

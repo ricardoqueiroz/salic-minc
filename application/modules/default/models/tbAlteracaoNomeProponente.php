@@ -73,15 +73,15 @@ class tbAlteracaoNomeProponente extends MinC_Db_Table_Abstract
             array(
                 'p.idPedidoAlteracao'
                 ,'p.idSolicitante'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao'
-                ,'CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao'),
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 103) AS dtSolicitacao')
+                ,new Zend_Db_Expr('CONVERT(CHAR(10), p.dtSolicitacao, 108) AS hrSolicitacao')),
             'BDCORPORATIVO.scSAC'
         );
         $select->joinInner(
             array('j' => 'tbPedidoAlteracaoXTipoAlteracao'),
             'p.idPedidoAlteracao = j.idPedidoAlteracao',
             array(
-                'CAST(j.dsJustificativa AS TEXT) AS dsProponente'
+                new Zend_Db_Expr('CAST(j.dsJustificativa AS TEXT) AS dsProponente')
                 ,'j.tpAlteracaoProjeto'),
             'BDCORPORATIVO.scSAC'
         );

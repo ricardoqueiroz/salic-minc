@@ -1,12 +1,4 @@
 <?php
-/**
- * DAO Convenio
- * @author jefferson.silva - XTI
- * @since 15/01/2014
- * @version 1.0
- * @link http://www.cultura.gov.br
- */
-
 class Convenio extends MinC_Db_Table_Abstract
 {
     protected $_banco  = "SAC";

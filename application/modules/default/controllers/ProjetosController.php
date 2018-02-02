@@ -45,6 +45,7 @@ class ProjetosController extends MinC_Controller_Action_Abstract
      */
     public function balancearAction()
     {
+
         $auth 		 = Zend_Auth::getInstance(); // pega a autenticacao
         $idPronac 	 = $this->_request->getParam("idpronac"); // pega o id do pronac via get
         $servico 	 = $this->_request->getParam("servico"); // pega o id do pronac via get
@@ -58,14 +59,14 @@ class ProjetosController extends MinC_Controller_Action_Abstract
         $w2['a.stEstado = ?'] = 0;
         $w2['a.FecharAnalise in (?)'] = array(1,2);
         $qntdProdValidados = $tbDistParecer->QntdProdutosXValidados($w2);
-        
-        if ($qntdProdValidados != $qntdProd) { //Se não houver validação para cada produto, o sistema não deixa continuar.
-            parent::message("Produto sem validação do Coordenador da Vinculada!", "gerenciarpareceres/index", "ERROR");
+
+        if ($qntdProdValidados != $qntdProd) { //Se nï¿½o houver validaï¿½ï¿½o para cada produto, o sistema nï¿½o deixa continuar.
+            parent::message("Produto sem valida&ccedil;&atilde;o do Coordenador da Vinculada!", "gerenciarpareceres/index", "ERROR");
         }
                 
         $planilhaAprovacao = new PlanilhaAprovacao();
         $buscarplanilhaaprovacao = $planilhaAprovacao->buscar(array("IdPRONAC = ?" => $idPronac, "tpPlanilha = ?"=>"CO"))->current();
-        
+
         if (count($buscarplanilhaaprovacao) == 0) {
             try {
                 // copia as tabelas
@@ -76,7 +77,7 @@ class ProjetosController extends MinC_Controller_Action_Abstract
                 $Distribuicao 		= new DistribuicaoProjetoComissao();
                 $titulacaoConselheiro 	= new TitulacaoConselheiro();
                 $arrParecerProduto      = array();
-                
+
                 //ANALISE DE CONTEUDO
                 $RanaliseConteudo = $analiseConteudo->dadosAnaliseconteudo($idPronac);
                 foreach ($RanaliseConteudo as $resu) {
@@ -187,14 +188,16 @@ class ProjetosController extends MinC_Controller_Action_Abstract
                 $projetos->alterar($data, $where);
                 //echo 'Conselheiro = ' . $Rtitulacao->idAgente . '<br/>';
                 
-                parent::message("Projeto encaminhado para o Componente da Comissão. Conselheiro: ".$Rtitulacao->Nome, "gerenciarpareceres/index", "CONFIRM");
+                parent::message("Projeto encaminhado para o Componente da Comiss&atilde;o. Conselheiro: ".$Rtitulacao->Nome, "gerenciarpareceres/index", "CONFIRM");
             } // fecha try
             catch (Exception $e) {
+
                 parent::message("Error: ".$e->getMessage(), "gerenciarpareceres/index", "ERROR");
                 die($e->getMessage());
             }
+
         } else {
-            parent::message("Planilhas já copiadas.", "gerenciarpareceres/index", "ALERT");
+            parent::message("Planilhas j&aacute; copiadas.", "gerenciarpareceres/index", "ALERT");
         }
         
         // colocar um else aqui!!!
@@ -216,6 +219,7 @@ class ProjetosController extends MinC_Controller_Action_Abstract
         }
         //die('fim');
         */
+
     }
 
     // fecha metodo balancearAction()
@@ -229,7 +233,7 @@ class ProjetosController extends MinC_Controller_Action_Abstract
     public function aprovacaodiretaAction()
     {
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sess?o com o grupo ativo
-            $codOrgao = $GrupoAtivo->codOrgao; //  Órg?o ativo na sess?o
+            $codOrgao = $GrupoAtivo->codOrgao; //  ï¿½rg?o ativo na sess?o
             $this->view->codOrgao = $codOrgao;
 
         $idPronac = $_POST['idpronac'];
@@ -238,9 +242,9 @@ class ProjetosController extends MinC_Controller_Action_Abstract
         //$cod_ect = $_POST['cod_ect'];
         $cod_ect = null;
 
-        //pega as informaç?es do arquivo
+        //pega as informaï¿½?es do arquivo
             $arquivoNome 	= $_FILES['documento']['name']; // nome
-            $arquivoTemp 	= $_FILES['documento']['tmp_name']; // nome temporário
+            $arquivoTemp 	= $_FILES['documento']['tmp_name']; // nome temporï¿½rio
             $arquivoTipo 	= $_FILES['documento']['type']; // tipo
             $arquivoTamanho     = $_FILES['documento']['size']; // tamanho
 
@@ -248,7 +252,7 @@ class ProjetosController extends MinC_Controller_Action_Abstract
                 $arquivoExtensao = Upload::getExtensao($arquivoNome); // extens?o
             }
         if (!empty($arquivoTemp)) {
-            $arquivoBinario = Upload::setBinario($arquivoTemp); // binário
+            $arquivoBinario = Upload::setBinario($arquivoTemp); // binï¿½rio
                 $arquivoHash 	= Upload::setHash($arquivoTemp); // hash
         }
 

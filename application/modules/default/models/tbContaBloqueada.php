@@ -50,7 +50,7 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
 
         $slct->joinInner(
             array('pr'=>'Projetos'),
-                           "pr.IdPRONAC = cb.IdPRONAC
+                           new Zend_Db_Expr("pr.IdPRONAC = cb.IdPRONAC
                                 AND pr.CgcCpf NOT IN(SELECT TOP 1 CgcCpf FROM SAC..Inabilitado WHERE Habilitado='N' and CgcCpf=pr.CgcCpf)
                                 AND cb.IdPRONAC IN
                                     (
@@ -62,22 +62,22 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
                                             ELSE
                                                     NULL
                                             END
-                                     )",
-                           array('(pr.AnoProjeto + pr.Sequencial) AS PRONAC',
+                                     )"),
+                           array(new Zend_Db_Expr('(pr.AnoProjeto + pr.Sequencial) AS PRONAC'),
                                  'pr.NomeProjeto',
                                  'pr.DtInicioExecucao',
                                  'pr.DtFimExecucao')
                            );
         $slct->joinInner(
             array("ap"=>"Aprovacao"),
-                            "ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)",
+            new Zend_Db_Expr("ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)"),
                             array(
                                     'ap.DtInicioCaptacao',
                                     'ap.DtFimCaptacao')
                           );
         $slct->joinLeft(
             array("inb"=>"Inabilitado"),
-                            "inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)",
+            new Zend_Db_Expr("inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)"),
                             array("Habilitado")
                           );
         //adiciona quantos filtros foram enviados
@@ -114,7 +114,7 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
 
         $slct->joinInner(
             array('b'=>'Projetos'),
-                           "b.IdPRONAC = b.IdPRONAC
+            new Zend_Db_Expr("b.IdPRONAC = b.IdPRONAC
                                 AND b.CgcCpf NOT IN(SELECT TOP 1 CgcCpf FROM SAC..Inabilitado WHERE Habilitado='N' and CgcCpf=b.CgcCpf)
                                 AND a.IdPRONAC IN
                                     (
@@ -126,7 +126,7 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
                                             ELSE
                                                     NULL
                                             END
-                                     )",
+                                     )"),
                            array()
                            );
 
@@ -165,20 +165,20 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
         $slct->joinInner(
             array('pr'=>'Projetos'),
                            "pr.IdPRONAC = cb.IdPRONAC",
-                           array('(pr.AnoProjeto + pr.Sequencial) AS PRONAC',
+                           array(new Zend_Db_Expr('(pr.AnoProjeto + pr.Sequencial) AS PRONAC'),
                                  'pr.NomeProjeto',
                                  'pr.DtInicioExecucao',
                                  'pr.DtFimExecucao')
                            );
         $slct->joinInner(
             array("ap"=>"Aprovacao"),
-                            "ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)",
+            new Zend_Db_Expr("ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)"),
                             array('ap.DtInicioCaptacao',
                                   'ap.DtFimCaptacao')
                           );
         $slct->joinLeft(
             array("inb"=>"Inabilitado"),
-                            "inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)",
+            new Zend_Db_Expr("inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)"),
                             array("Habilitado")
                           );
 
@@ -218,21 +218,21 @@ class tbContaBloqueada extends MinC_Db_Table_Abstract
         $slct->joinInner(
             array('pr'=>'Projetos'),
                            "pr.IdPRONAC = cb.IdPRONAC",
-                           array('(pr.AnoProjeto + pr.Sequencial) AS PRONAC',
+                           array(new Zend_Db_Expr('(pr.AnoProjeto + pr.Sequencial) AS PRONAC'),
                                  'pr.NomeProjeto',
                                  'pr.DtInicioExecucao',
                                  'pr.DtFimExecucao')
                            );
         $slct->joinInner(
             array("ap"=>"Aprovacao"),
-                            "ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)",
+            new Zend_Db_Expr("ap.idPronac = pr.idPronac AND ap.DtAprovacao in (select TOP 1 max(DtAprovacao) from SAC..Aprovacao where IdPRONAC = pr.IdPRONAC AND DtInicioCaptacao IS NOT NULL)"),
                             array(
                                     'ap.DtInicioCaptacao',
                                     'ap.DtFimCaptacao')
                           );
         $slct->joinLeft(
             array("inb"=>"Inabilitado"),
-                            "inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)",
+            new Zend_Db_Expr("inb.CgcCpf = pr.CgcCpf AND inb.AnoProjeto in (select TOP 1 max(AnoProjeto) from SAC..Inabilitado where CgcCpf = pr.CgcCpf)"),
                             array("Habilitado")
                           );
         //$slct->where("cb.idContaBloqueada not in ({$slcContasDesbloqueioSistemico})");

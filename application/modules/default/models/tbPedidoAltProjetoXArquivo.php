@@ -1,23 +1,9 @@
 <?php
-/**
- * DAO tbPedidoAltProjetoXArquivo
- * @author emanuel.sampaio <emanuelonline@gmail.com>
- * @since 12/04/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2012 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://salic.cultura.gov.br
- */
-
 class tbPedidoAltProjetoXArquivo extends MinC_Db_Table_Abstract
 {
-    /* dados da tabela */
     protected $_banco   = "BDCORPORATIVO";
     protected $_schema  = "BDCORPORATIVO.scSAC";
     protected $_name    = "tbPedidoAltProjetoXArquivo";
-
-
 
     /**
      * Busca os arquivos da solicita��o de readequa��o
@@ -51,5 +37,5 @@ class tbPedidoAltProjetoXArquivo extends MinC_Db_Table_Abstract
         $select->order($order);
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarArquivos()
-} // fecha class
+    }
+}

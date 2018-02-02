@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of Sgcacesso
- *
- * @author augusto
- */
 
 class CaptacaoQuotas extends MinC_Db_Table_Abstract
 {
@@ -17,7 +12,7 @@ class CaptacaoQuotas extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from($this);
         return $this->fetchAll($select);
-    } // fecha m�todo buscarCaptacaoQuotas()
+    } 
 
     public function BuscarTotalCaptadoQuotas($retornaSelect = false)
     {
@@ -28,7 +23,7 @@ class CaptacaoQuotas extends MinC_Db_Table_Abstract
                 array(
                 'CaptacaoQuotas.AnoProjeto',
                 'CaptacaoQuotas.Sequencial',
-                'Art1'=> 'isnull(SUM(CaptacaoQuotas.QtdQuotasIntegr*QuotasCav.VlQuota),0)'
+                'Art1'=> new Zend_Db_Expr('isnull(SUM(CaptacaoQuotas.QtdQuotasIntegr*QuotasCav.VlQuota),0)')
                 )
         );
         $select->joinInner(
@@ -70,7 +65,6 @@ class CaptacaoQuotas extends MinC_Db_Table_Abstract
 
         $select->where('c.AnoProjeto = ?', $AnoProjeto, 'c.Sequencial = ?', $Sequencial);
 
-            
         return $this->fetchAll($select);
-    } // fecha m�todo listasituacao()
-} // fecha class
+    } 
+} 

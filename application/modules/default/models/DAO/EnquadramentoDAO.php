@@ -1,15 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of EnquadramentoDAO
- *
- * @author 01129075125
- */
 class EnquadramentoDAO extends Zend_Db_Table
 {
     public static function AlterarEnquadramento($dados, $idpronac)

@@ -47,10 +47,10 @@ class AvaliacaoProposta extends MinC_Db_Table_Abstract
                     )
         );
 
-        $select->where('((DATEDIFF(day, DtAvaliacao, GETDATE()) > 20');
+        $select->where(new Zend_Db_Expr('((DATEDIFF(day, DtAvaliacao, GETDATE()) > 20'));
         $select->where("stProrrogacao =?)", 'N');
 
-        $select->orWhere('(DATEDIFF(day, DtAvaliacao, GETDATE()) > 40');
+        $select->orWhere(new Zend_Db_Expr('(DATEDIFF(day, DtAvaliacao, GETDATE()) > 40'));
         $select->where("stProrrogacao =?))", 'S');
         $select->where('stEnviado =?', 'N');
 

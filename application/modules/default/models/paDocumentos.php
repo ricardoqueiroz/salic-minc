@@ -1,7 +1,4 @@
 <?php
-/**
- * Description of paDocumentos
- */
 class paDocumentos extends MinC_Db_Table_Abstract
 {
     protected $_schema = 'SAC';

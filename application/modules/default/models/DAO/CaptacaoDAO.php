@@ -1,14 +1,4 @@
 <?php
-/**
- * DAO Captacao
- * @author Equipe RUP - Politec
- * @since 28/04/2010
- * @version 1.0
- * @package application
- * @subpackage application.model.DAO
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class CaptacaoDAO extends Zend_Db_Table
 {
@@ -18,15 +8,6 @@ class CaptacaoDAO extends Zend_Db_Table
     protected $_nome    = "Captacao";
     protected $_primary = "IdCaptacao";
 
-
-
-    /**
-     * M�todo para cadastrar
-     * @access public
-     * @static
-     * @param array $dados
-     * @return bool
-     */
     public static function cadastrar($dados)
     {
         $db= Zend_Db_Table::getDefaultAdapter();
@@ -238,5 +219,5 @@ class CaptacaoDAO extends Zend_Db_Table
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         return $db->fetchAll($sql);
-    } // fecha m�todo gerarRelatorioErro()
-} // fecha class CaptacaoDAO
+    } 
+} 

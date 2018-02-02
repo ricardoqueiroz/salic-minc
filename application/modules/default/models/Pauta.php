@@ -62,7 +62,7 @@ class Pauta extends MinC_Db_Table_Abstract
         $select->joinLeft(
                 array('cv' => 'tbConsolidacaoVotacao'),
                 'cv.IdPRONAC = pr.IdPRONAC',
-                array('Cast(cv.dsConsolidacao as TEXT) as dsConsolidacao'),
+                array(new Zend_Db_Expr('Cast(cv.dsConsolidacao as TEXT) as dsConsolidacao')),
                 'BDCORPORATIVO.scSAC'
         );
         $select->joinLeft(
@@ -98,7 +98,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('pr' => 'Projetos'),
                 "pr.IdPRONAC = tp.IdPRONAC",
                 array(
-                    '(pr.AnoProjeto+pr.Sequencial) as pronac',
+                    new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.IdPRONAC'
                 ),
@@ -159,7 +159,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('pr' => 'projetos'),
                 'pr.IdPRONAC = tp.idPRONAC',
                 array(
-                    '(pr.AnoProjeto+pr.Sequencial) as pronac',
+                    new Zend_Db_Expr'(pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.IdPRONAC'
                 ),
@@ -185,7 +185,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('b' => 'projetos'),
                 'a.IdPRONAC = b.idPRONAC',
                 array(
-                    '(b.AnoProjeto+b.Sequencial) as pronac',
+                    new Zend_Db_Expr'(b.AnoProjeto+b.Sequencial) as pronac'),
                     'b.NomeProjeto',
                     'b.IdPRONAC'
                 ),
@@ -211,7 +211,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('b' => 'projetos'),
                 'a.IdPRONAC = b.idPRONAC',
                 array(
-                    '(b.AnoProjeto+b.Sequencial) as pronac',
+                    new Zend_Db_Expr'(b.AnoProjeto+b.Sequencial) as pronac'),
                     'b.NomeProjeto',
                     'b.IdPRONAC'
                 ),
@@ -294,7 +294,7 @@ class Pauta extends MinC_Db_Table_Abstract
         $select->joinLeft(
                 array('cv' => 'tbConsolidacaoVotacao'),
                 "cv.IdPRONAC = pt.IdPRONAC and cv.IdNrReuniao = pt.IdNrReuniao",
-                array('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao'),
+                array(new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao')),
                 "BDCORPORATIVO.scSAC"
         );
         foreach ($idpronac as $resu) {
@@ -334,7 +334,7 @@ class Pauta extends MinC_Db_Table_Abstract
         $slct->from(
                 array($this->_name),
                 array('*',
-                    'CAST(dsAnalise AS TEXT) AS dsAnalise'
+                      new Zend_Db_Expr('CAST(dsAnalise AS TEXT) AS dsAnalise')
                 )
         );
         //adiciona quantos filtros foram enviados

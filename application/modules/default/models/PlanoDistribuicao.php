@@ -105,24 +105,24 @@ class PlanoDistribuicao extends MinC_Db_Table_Abstract
         $slct->setIntegrityCheck(false);
 
         $cols = array_merge($this->_getCols(), array(
-                "FORMAT(a.QtdeProponente, '0,0','pt-br') as QtdeProponente",
-                "FORMAT(a.QtdeProduzida, '0,0','pt-br') as QtdeProduzida",
-                "FORMAT(a.QtdePatrocinador, '0,0','pt-br') as QtdePatrocinador",
-                "FORMAT(a.QtdeOutros, '0,0','pt-br') as QtdeOutros",
-                "FORMAT(a.QtdeVendaPopularPromocional, '0,0','pt-br') as QtdeVendaPopularPromocional",
-                "FORMAT(a.QtdeVendaNormal, '0,0','pt-br') as QtdeVendaNormal",
-                "FORMAT(a.QtdeVendaPromocional, '0,0','pt-br') as QtdeVendaPromocional",
-                "FORMAT(a.QtdeVendaPopularNormal, '0,0','pt-br') as QtdeVendaPopularNormal",
-                "FORMAT(a.vlUnitarioPopularNormal, 'N','pt-br') as vlUnitarioPopularNormal",
-                "FORMAT( a.vlUnitarioNormal, 'N','pt-br') AS vlUnitarioNormal",
-                "FORMAT( a.ReceitaPopularNormal, 'N','pt-br') AS ReceitaPopularNormal",
-                "FORMAT( a.ReceitaPopularPromocional, 'N','pt-br') AS ReceitaPopularPromocional",
-                "FORMAT( a.PrecoUnitarioPromocional, 'N','pt-br') AS PrecoUnitarioPromocional",
-                "FORMAT( a.PrecoUnitarioNormal, 'N', 'pt-br') AS PrecoUnitarioNormal",
-                "FORMAT( a.vlReceitaTotalPrevista, 'N', 'pt-br') AS Receita",
-                "FORMAT( a.ReceitaPopularNormal, 'N', 'pt-br') AS ValorMedioPopular",
-                "FORMAT( a.ReceitaPopularPromocional, 'N', 'pt-br') AS ValorMedioProponente"
-            ));
+            new Zend_Db_Expr("FORMAT(a.QtdeProponente, '0,0','pt-br') as QtdeProponente"),
+            new Zend_Db_Expr("FORMAT(a.QtdeProduzida, '0,0','pt-br') as QtdeProduzida"),
+            new Zend_Db_Expr("FORMAT(a.QtdePatrocinador, '0,0','pt-br') as QtdePatrocinador"),
+            new Zend_Db_Expr("FORMAT(a.QtdeOutros, '0,0','pt-br') as QtdeOutros"),
+            new Zend_Db_Expr("FORMAT(a.QtdeVendaPopularPromocional, '0,0','pt-br') as QtdeVendaPopularPromocional"),
+            new Zend_Db_Expr("FORMAT(a.QtdeVendaNormal, '0,0','pt-br') as QtdeVendaNormal"),
+            new Zend_Db_Expr("FORMAT(a.QtdeVendaPromocional, '0,0','pt-br') as QtdeVendaPromocional"),
+            new Zend_Db_Expr("FORMAT(a.QtdeVendaPopularNormal, '0,0','pt-br') as QtdeVendaPopularNormal"),
+            new Zend_Db_Expr("FORMAT(a.vlUnitarioPopularNormal, 'N','pt-br') as vlUnitarioPopularNormal"),
+            new Zend_Db_Expr("FORMAT( a.vlUnitarioNormal, 'N','pt-br') AS vlUnitarioNormal"),
+            new Zend_Db_Expr("FORMAT( a.ReceitaPopularNormal, 'N','pt-br') AS ReceitaPopularNormal"),
+            new Zend_Db_Expr("FORMAT( a.ReceitaPopularPromocional, 'N','pt-br') AS ReceitaPopularPromocional"),
+            new Zend_Db_Expr("FORMAT( a.PrecoUnitarioPromocional, 'N','pt-br') AS PrecoUnitarioPromocional"),
+            new Zend_Db_Expr("FORMAT( a.PrecoUnitarioNormal, 'N', 'pt-br') AS PrecoUnitarioNormal"),
+            new Zend_Db_Expr("FORMAT( a.vlReceitaTotalPrevista, 'N', 'pt-br') AS Receita"),
+            new Zend_Db_Expr("FORMAT( a.ReceitaPopularNormal, 'N', 'pt-br') AS ValorMedioPopular"),
+            new Zend_Db_Expr("FORMAT( a.ReceitaPopularPromocional, 'N', 'pt-br') AS ValorMedioProponente")
+        ));
 
         $slct->from(array("a"=> $this->_name), $cols, $this->_schema);
         $slct->joinInner(
@@ -201,7 +201,7 @@ class PlanoDistribuicao extends MinC_Db_Table_Abstract
                     'a.PrecoUnitarioPromocional',
                     'a.stPrincipal',
                     'a.Usuario',
-                    'CAST(a.dsJustificativaPosicaoLogo AS TEXT) AS dsJustificativaPosicaoLogo',
+                    new Zend_Db_Expr('CAST(a.dsJustificativaPosicaoLogo AS TEXT) AS dsJustificativaPosicaoLogo'),
                     'a.Usuario',
                     'a.canalAberto'
                 ),
@@ -359,19 +359,19 @@ class PlanoDistribuicao extends MinC_Db_Table_Abstract
     public function updateConsolidacaoPlanoDeDistribuicao($idPlanoDistribuicao)
     {
         $cols = array(
-            'COALESCE(sum(qtExemplares),0) as QtdeProduzida',
-            'COALESCE(sum(qtGratuitaDivulgacao), 0) as QtdeProponente',
-            'COALESCE(sum(qtGratuitaPatrocinador), 0) as QtdePatrocinador',
-            'COALESCE(sum(qtGratuitaPopulacao), 0) as QtdeOutros',
-            'COALESCE(sum(qtPopularIntegral), 0) as QtdeVendaPopularNormal',
-            'COALESCE(sum(qtPopularParcial), 0) as QtdeVendaPopularPromocional',
-            'COALESCE(avg(vlUnitarioPopularIntegral), 0) as vlUnitarioPopularNormal',
-            'COALESCE(sum(vlReceitaPopularIntegral + vlReceitaPopularParcial) / nullif((sum(qtPopularIntegral + qtPopularParcial)), 0), 0) AS ReceitaPopularNormal', #valor médio ponderado do preco popular
-            'COALESCE(sum(vlReceitaProponenteIntegral + vlReceitaProponenteParcial) / nullif((sum(qtProponenteIntegral + qtProponenteParcial)), 0), 0) AS PrecoUnitarioNormal', # valor médio ponderado do proponente
-            'COALESCE(sum(qtProponenteIntegral), 0) as QtdeVendaNormal',
-            'COALESCE(sum(qtProponenteParcial), 0) as QtdeVendaPromocional',
-            'COALESCE(avg(vlUnitarioProponenteIntegral),0) as vlUnitarioNormal',
-            'COALESCE(sum(vlReceitaPrevista), 0) as  vlReceitaTotalPrevista'
+            new Zend_Db_Expr('COALESCE(sum(qtExemplares),0) as QtdeProduzida'),
+            new Zend_Db_Expr('COALESCE(sum(qtGratuitaDivulgacao), 0) as QtdeProponente'),
+            new Zend_Db_Expr('COALESCE(sum(qtGratuitaPatrocinador), 0) as QtdePatrocinador'),
+            new Zend_Db_Expr('COALESCE(sum(qtGratuitaPopulacao), 0) as QtdeOutros'),
+            new Zend_Db_Expr('COALESCE(sum(qtPopularIntegral), 0) as QtdeVendaPopularNormal'),
+            new Zend_Db_Expr('COALESCE(sum(qtPopularParcial), 0) as QtdeVendaPopularPromocional'),
+            new Zend_Db_Expr('COALESCE(avg(vlUnitarioPopularIntegral), 0) as vlUnitarioPopularNormal'),
+            new Zend_Db_Expr('COALESCE(sum(vlReceitaPopularIntegral + vlReceitaPopularParcial) / nullif((sum(qtPopularIntegral + qtPopularParcial)), 0), 0) AS ReceitaPopularNormal'), #valor médio ponderado do preco popular
+            new Zend_Db_Expr('COALESCE(sum(vlReceitaProponenteIntegral + vlReceitaProponenteParcial) / nullif((sum(qtProponenteIntegral + qtProponenteParcial)), 0), 0) AS PrecoUnitarioNormal'), # valor médio ponderado do proponente
+            new Zend_Db_Expr('COALESCE(sum(qtProponenteIntegral), 0) as QtdeVendaNormal'),
+            new Zend_Db_Expr('COALESCE(sum(qtProponenteParcial), 0) as QtdeVendaPromocional'),
+            new Zend_Db_Expr('COALESCE(avg(vlUnitarioProponenteIntegral),0) as vlUnitarioNormal'),
+            new Zend_Db_Expr('COALESCE(sum(vlReceitaPrevista), 0) as  vlReceitaTotalPrevista')
         );
 
         $sql = $this->select()

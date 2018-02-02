@@ -62,7 +62,7 @@ class Licitacao extends MinC_Db_Table_Abstract
                           'tpLicitacao',
                           'nrProcesso',
                           'nrLicitacao',
-                          'CAST(dsObjeto as TEXT) as dsObjeto',
+                        new Zend_Db_Expr('CAST(dsObjeto as TEXT) as dsObjeto'),
                           'dsFundamentoLegal',
                           'dtPublicacaoEdital',
                           'dtAberturaLicitacao',
@@ -71,7 +71,7 @@ class Licitacao extends MinC_Db_Table_Abstract
                           'dtHomologacao',
                           'cdMunicipio',
                           'UF',
-                          'CAST(dsJustificativa AS TEXT) as dsJustificativa'
+                        new Zend_Db_Expr('CAST(dsJustificativa AS TEXT) as dsJustificativa')
                         )
                    );
         $slct->joinInner(

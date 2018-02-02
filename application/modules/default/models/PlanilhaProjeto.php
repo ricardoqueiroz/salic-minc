@@ -20,7 +20,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
 
         $buscar->from(
             $this,
-                array('sum(Quantidade*Ocorrencia*ValorUnitario) as valor')
+                array(new Zend_Db_Expr('sum(Quantidade*Ocorrencia*ValorUnitario) as valor'))
         );
         $buscar->joinInner(
                 array('tbPlanilhaItens'),
@@ -40,7 +40,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $slct->setIntegrityCheck(false);
         $slct->from(
                 array('pp' => $this->_name),
-                array('SUM(pp.ValorUnitario) as valorTotal')
+                array(new Zend_Db_Expr('SUM(pp.ValorUnitario) as valorTotal'))
         );
         
         $slct->where('pp.idPRONAC = ? ', $idPronac);
@@ -55,7 +55,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $somar->from(
             $this,
             array(
-                    'sum(Quantidade*Ocorrencia*ValorUnitario) as soma'
+                new Zend_Db_Expr('sum(Quantidade*Ocorrencia*ValorUnitario) as soma')
                         )
                 )
                 ->where('IdPRONAC = ?', $idpronac)
@@ -81,7 +81,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $somar->from(
             $this,
             array(
-                    'sum(Quantidade*Ocorrencia*ValorUnitario) as soma'
+                new Zend_Db_Expr('sum(Quantidade*Ocorrencia*ValorUnitario) as soma')
                         )
                 );
 
@@ -102,7 +102,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $somar->from(
             $this,
             array(
-                    'sum(Quantidade*Ocorrencia*ValorUnitario) as soma'
+                new Zend_Db_Expr('sum(Quantidade*Ocorrencia*ValorUnitario) as soma')
                         )
                 )
                 ->where('IdPRONAC = ?', $idpronac);
@@ -130,18 +130,18 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $somar->from(
         
             array('PAP' => $this->_name),
-                     array('sum(PAP.Quantidade*PAP.Ocorrencia*PAP.ValorUnitario) as soma')
+                     array(new Zend_Db_Expr('sum(PAP.Quantidade*PAP.Ocorrencia*PAP.ValorUnitario) as soma'))
         
         )
         ->joinLeft(
                      array('aa' => 'tbAnaliseAprovacao'),
-            "aa.idPronac = PAP.idPronac and PAP.idProduto = aa.idProduto and aa.tpAnalise = '{$tpPlanilha}'",
+            new Zend_Db_Expr("aa.idPronac = PAP.idPronac and PAP.idProduto = aa.idProduto and aa.tpAnalise = '{$tpPlanilha}'"),
             array()
                   )
                 ->where('PAP.IdPRONAC = ?', $idpronac)
                 ->where('PAP.FonteRecurso = ?', '109');
                 
-        $somar->where('CASE WHEN PAP.idPRODUTO <> 0 THEN aa.stAvaliacao ELSE 1 END  = ?', 1);
+        $somar->where(new Zend_Db_Expr('CASE WHEN PAP.idPRODUTO <> 0 THEN aa.stAvaliacao ELSE 1 END  = ?'), 1);
         
         if ($elaboracao) {
             $somar->where('PAP.idPlanilhaItem <> ? ', $elaboracao);
@@ -162,13 +162,13 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
         $somar = $this->select();
         $somar->from(
             array('PAP' => $this->_name),
-                     array('sum(PAP.Quantidade*PAP.Ocorrencia*PAP.ValorUnitario) as soma')
+                     array(new Zend_Db_Expr('sum(PAP.Quantidade*PAP.Ocorrencia*PAP.ValorUnitario) as soma'))
         )
                      
-        ->joinLeft(array('aa' => 'tbAnaliseDeConteudo'), 'aa.idPronac = PAP.idPronac and PAP.idProduto = aa.idProduto', array())
+        ->joinLeft(array('aa' => 'tbAnaliseDeConteudo'), new Zend_Db_Expr('aa.idPronac = PAP.idPronac and PAP.idProduto = aa.idProduto'), array())
         ->where('PAP.FonteRecurso = ?', '109');
         
-        $somar->where('CASE WHEN PAP.idPRODUTO <> 0 THEN aa.ParecerFavoravel ELSE 1 END  = ?', 1);
+        $somar->where(new Zend_Db_Expr('CASE WHEN PAP.idPRODUTO <> 0 THEN aa.ParecerFavoravel ELSE 1 END  = ?'), 1);
         
         foreach ($dados as $key => $valor) {
             $somar->where($key, $valor);
@@ -203,7 +203,7 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
             'FonteRecurso',
             'UfDespesa',
             'MunicipioDespesa',
-            'Cast(Justificativa as TEXT) as Justificativa'
+            new Zend_Db_Expr('Cast(Justificativa as TEXT) as Justificativa')
                 )
         );
         $select->where('idPRONAC = ?', $idpronac);
@@ -239,8 +239,8 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
             'PPJ.FonteRecurso as FR',
             'PPJ.idUnidade',
             'PPJ.idEtapa',
-            '(PPJ.Quantidade * PPJ.Ocorrencia * PPJ.ValorUnitario) AS VlSugeridoParecerista',
-            'CAST(PPJ.Justificativa as TEXT) as dsJustificativaParecerista',
+                new Zend_Db_Expr('(PPJ.Quantidade * PPJ.Ocorrencia * PPJ.ValorUnitario) AS VlSugeridoParecerista'),
+                new Zend_Db_Expr('CAST(PPJ.Justificativa as TEXT) as dsJustificativaParecerista'),
             'PPJ.Quantidade AS quantidadeparc',
             'PPJ.Ocorrencia AS ocorrenciaparc',
             'PPJ.ValorUnitario AS valorUnitarioparc',
@@ -252,8 +252,8 @@ class PlanilhaProjeto extends MinC_Db_Table_Abstract
                 array('PP' => 'tbPlanilhaProposta'),
             new Zend_Db_Expr('PPJ.idPlanilhaProposta = PP.idPlanilhaProposta'),
             array(
-            '(PP.Quantidade * PP.Ocorrencia * PP.ValorUnitario) AS VlSolicitado',
-            'CAST(PP.dsJustificativa as TEXT) as justificitivaproponente',
+            new Zend_Db_Expr('(PP.Quantidade * PP.Ocorrencia * PP.ValorUnitario) AS VlSolicitado'),
+            new Zend_Db_Expr('CAST(PP.dsJustificativa as TEXT) as justificitivaproponente'),
             'PP.Quantidade AS quantidadeprop',
             'PP.Ocorrencia AS ocorrenciaprop',
             'PP.ValorUnitario AS valorUnitarioprop',

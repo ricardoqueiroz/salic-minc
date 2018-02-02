@@ -90,7 +90,7 @@ class Liberacao extends MinC_Db_Table_Abstract
                 array('p' => 'Projetos'),
             array(
             'Pronac' => new Zend_Db_Expr('p.AnoProjeto+p.Sequencial'), "p.IdPRONAC", "p.NomeProjeto", "p.Situacao",
-            "sac.dbo.fnPercentualCaptado(p.AnoProjeto, p.Sequencial) as captacao"
+                new Zend_Db_Expr("sac.dbo.fnPercentualCaptado(p.AnoProjeto, p.Sequencial) as captacao")
                 )
         );
 
@@ -98,7 +98,7 @@ class Liberacao extends MinC_Db_Table_Abstract
                 array('i' => 'Inabilitado'),
             'i.AnoProjeto+i.Sequencial = p.AnoProjeto+p.Sequencial',
             array(
-            "i.Habilitado as Status", "i.Orgao as idOrgao", "TABELAS.dbo.fnEstruturaOrgao(i.Orgao, 0) AS Orgao", "i.CgcCpf"
+            "i.Habilitado as Status", "i.Orgao as idOrgao", new Zend_Db_Expr("TABELAS.dbo.fnEstruturaOrgao(i.Orgao, 0) AS Orgao"), "i.CgcCpf"
                 ),
             array(),
             'SAC.dbo'

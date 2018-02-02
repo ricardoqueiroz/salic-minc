@@ -14,14 +14,23 @@ class Prorrogacao extends MinC_Db_Table_Abstract
     {
         $slct = $this->select();
         $slct->setIntegrityCheck(false);
-        $slctQtdeMeses = "(SELECT DATEDIFF(MONTH,(SELECT max(DtRecibo) FROM SAC.dbo.Captacao WHERE Anoprojeto = pr.AnoProjeto and Sequencial = pr.Sequencial), getdate()) as qtdeMeses WHERE (SELECT max(DtRecibo) FROM SAC.dbo.Captacao WHERE Anoprojeto = pr.AnoProjeto and Sequencial = pr.Sequencial)<>'1900-01-01 00:00:00.000')";
+        $slctQtdeMeses = new Zend_Db_Expr("(SELECT DATEDIFF(MONTH,(SELECT max(DtRecibo) FROM SAC.dbo.Captacao WHERE Anoprojeto = pr.AnoProjeto and Sequencial = pr.Sequencial), getdate()) as qtdeMeses WHERE (SELECT max(DtRecibo) FROM SAC.dbo.Captacao WHERE Anoprojeto = pr.AnoProjeto and Sequencial = pr.Sequencial)<>'1900-01-01 00:00:00.000')");
         $slct->from(
                 array('pr'=>$this->_name),
-                array("idProrrogacao", "AnoProjeto", "Sequencial", "Atendimento", "DtInicio"=>"CONVERT(CHAR(20),DtInicio, 120)", "DtFinal"=>"CONVERT(CHAR(20),DtFinal, 120)", "DtPedido"=>"CONVERT(CHAR(20),DtPedido, 120)", "qtdeMeses"=>new Zend_Db_Expr($slctQtdeMeses), "Percentual"=>new Zend_Db_Expr("SAC.dbo.fnPercentualCaptado(pr.AnoProjeto, pr.Sequencial)"))
+                array(
+                    "idProrrogacao",
+                    "AnoProjeto",
+                    "Sequencial",
+                    "Atendimento",
+                    "DtInicio"=>new Zend_Db_Expr("CONVERT(CHAR(20),DtInicio, 120)"),
+                    "DtFinal"=>new Zend_Db_Expr("CONVERT(CHAR(20),DtFinal, 120)"),
+                    "DtPedido"=>new Zend_Db_Expr("CONVERT(CHAR(20),DtPedido, 120)"),
+                    "qtdeMeses"=>new Zend_Db_Expr($slctQtdeMeses),
+                    "Percentual"=>new Zend_Db_Expr("SAC.dbo.fnPercentualCaptado(pr.AnoProjeto, pr.Sequencial)"))
         );
         $slct->joinInner(
                 array('p'=>'projetos'),
-                'pr.AnoProjeto+pr.Sequencial=p.AnoProjeto+p.Sequencial',
+                new Zend_Db_Expr('pr.AnoProjeto+pr.Sequencial=p.AnoProjeto+p.Sequencial'),
                 array("NomeProjeto")
         );
 
@@ -56,7 +65,7 @@ class Prorrogacao extends MinC_Db_Table_Abstract
         );
         $slct->joinInner(
                 array('p'=>'projetos'),
-                'pr.AnoProjeto+pr.Sequencial=p.AnoProjeto+p.Sequencial',
+                new Zend_Db_Expr('pr.AnoProjeto+pr.Sequencial=p.AnoProjeto+p.Sequencial'),
                 array()
         );
 

@@ -19,8 +19,9 @@ class TbEscolaridade extends MinC_Db_Table_Abstract
 
         $select->from(
             array('E'=>$this->_name),
-                      array('*','CONVERT(CHAR(10), dtInicioCurso, 103) as dtInicio',
-                                'CONVERT(CHAR(10), dtFimCurso, 103) as dtFim'),
+                      array('*',
+                          new Zend_Db_Expr('CONVERT(CHAR(10), dtInicioCurso, 103) as dtInicio'),
+                          new Zend_Db_Expr('CONVERT(CHAR(10), dtFimCurso, 103) as dtFim')),
             'AGENTES.dbo'
         );
 
@@ -109,9 +110,6 @@ class TbEscolaridade extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
-
-
-
 
     public function inserirEscolaridade($dados)
     {

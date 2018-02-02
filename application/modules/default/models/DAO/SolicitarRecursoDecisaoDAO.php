@@ -1,15 +1,4 @@
 <?php
-/**
- * Solicitar Recurso da Decis�o
- * @author Equipe RUP - Politec
- * @since 21/07/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
 class SolicitarRecursoDecisaoDAO extends Zend_Db_Table
 {
     /**
@@ -121,25 +110,7 @@ class SolicitarRecursoDecisaoDAO extends Zend_Db_Table
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $resultado = $db->fetchAll($sql);
         return $resultado;
-    } // fecha m�todo buscarPlanilhaOrcamento()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    } 
 
     public static function buscarproponentes($cpf)
     {
@@ -161,8 +132,6 @@ class SolicitarRecursoDecisaoDAO extends Zend_Db_Table
         $resultado = $db->fetchAll($sql);
         return $resultado;
     } // fecha m�todo buscarproponentes()
-
-
 
     public static function buscaprojetosaprovados($idpronac = null, $cpf = null)
     {
@@ -274,9 +243,6 @@ class SolicitarRecursoDecisaoDAO extends Zend_Db_Table
         return $resultado;
     }
 
-
-
-
     public function planilhaproposta($idplanilha)
     {
         $sql = "SELECT     (tbPlanilhaProposta.Quantidade * tbPlanilhaProposta.Ocorrencia * tbPlanilhaProposta.ValorUnitario) AS Total, tbPlanilhaItens.Descricao AS Itens,
@@ -296,42 +262,9 @@ FROM         tbPlanilhaProposta INNER JOIN
         }
     }
 
-
-
-
-
     public function planilhaorcamento()
     {
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * M�todo para recuperar os projetos em an�lise. (CONSELHEIRO)
@@ -411,10 +344,6 @@ FROM         tbPlanilhaProposta INNER JOIN
         return $resultado;
     } // fecha m�todo analiseDeConta()
 
-
-
-
-
     public static function analiseDeCustosBuscarProduto($idPronac)
     {
         $sql = "SELECT DISTINCT PD.Descricao,
@@ -452,8 +381,6 @@ FROM         tbPlanilhaProposta INNER JOIN
         $resultado = $db->fetchAll($sql);
         return $resultado;
     } // fecha m�todo analiseDeCustosBuscarProduto()
-
-
 
     /**
      * M�todo que busca as etapas dos projetos da an�lise de custos
@@ -496,5 +423,5 @@ FROM         tbPlanilhaProposta INNER JOIN
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $resultado = $db->fetchAll($sql);
         return $resultado;
-    } // fecha m�todo analiseDeCustosBuscarEtapa()
+    }
 }

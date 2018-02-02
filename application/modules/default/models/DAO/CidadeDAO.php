@@ -1,20 +1,8 @@
 <?php
-/**
- * Modelo Cidade
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.models
- * @copyright � 2010 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 
 class CidadeDAO extends Zend_Db_Table
 {
     protected $_name = 'AGENTES.dbo.Municipios'; // nome da tabela
-
-
 
     /**
      * M�todo para buscar as cidades de um determinado estado
@@ -45,5 +33,5 @@ class CidadeDAO extends Zend_Db_Table
         throw new Exception('Método Transferido para Agente Model DbTable Municipios');
         
         return $db->fetchAll($sql);
-    } // fecha buscar()
-} // fecha class
+    }
+}

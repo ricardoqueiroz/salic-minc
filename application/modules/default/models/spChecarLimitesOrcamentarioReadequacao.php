@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Description of spChecarLimitesOrcamentarioReadequacao
- *
- */
 class spChecarLimitesOrcamentarioReadequacao extends GenericModel
 {
     protected $_banco = 'SAC';

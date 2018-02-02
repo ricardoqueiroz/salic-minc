@@ -1,9 +1,4 @@
 <?php
-/**
- * Description of GerarPagamentoParecerista
- *
- * @author Tarcisio Angelo
- */
 class ConfigurarPagamentoParecerista extends MinC_Db_Table_Abstract
 {
     protected $_name = 'tbConfigurarPagamento';
@@ -19,7 +14,7 @@ class ConfigurarPagamentoParecerista extends MinC_Db_Table_Abstract
                         array('c.idConfigurarPagamento',
                                 'c.nrDespachoInicial',
                                 'c.nrDespachoFinal',
-                                'CONVERT(VARCHAR(10), c.dtConfiguracaoPagamento ,103) as dtConfiguracaoPagamento',
+                                new Zend_Db_Expr('CONVERT(VARCHAR(10), c.dtConfiguracaoPagamento ,103) as dtConfiguracaoPagamento'),
                                 'c.stEstado',
                                 'c.idUsuario')
         );

@@ -38,8 +38,8 @@ class ProponenteDAO extends Zend_Db_Table
                 array('pr' => 'Projetos'),
                 array(new Zend_Db_Expr('
                     case
-                        when ag.tipoPessoa = 0 then \'Pessoa F�sica\'
-                        when ag.tipoPessoa = 1 then \'Pessoa Jur�dica\'
+                        when ag.tipoPessoa = 0 then \'Pessoa F&iacute;sica\'
+                        when ag.tipoPessoa = 1 then \'Pessoa Jur&iacute;dica\'
                     end as tipoPessoa')),
                 'SAC.dbo'
             )
@@ -134,7 +134,7 @@ class ProponenteDAO extends Zend_Db_Table
                         WHEN Telefones.Divulgar = 1
                             THEN 'Sim'
                         WHEN Telefones.Divulgar = 0
-                            THEN 'N�o'
+                            THEN 'N&atilde;o'
                     end as Divulgar
                 ")),
                 'AGENTES.dbo'

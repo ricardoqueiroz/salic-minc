@@ -40,7 +40,7 @@ class OrgaoFiscalizador extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
                         array('tbOF'=>$this->_name),
-                        array('CAST(tbOF.dsObservacao as TEXT) as dsObservacao')
+                        array(new Zend_Db_Expr('CAST(tbOF.dsObservacao as TEXT) as dsObservacao'))
                      );
         $select->joinLeft(
                             array('org'=>'Orgaos'),
@@ -56,7 +56,7 @@ class OrgaoFiscalizador extends MinC_Db_Table_Abstract
         $select->joinLeft(
                             array('tbNmOF'=>'Nomes'),
                             "tbOF.idParecerista = tbNmOF.idAgente",
-                            array('CAST(tbNmOF.Descricao AS TEXT) as Descricao'),
+                            array(new Zend_Db_Expr('CAST(tbNmOF.Descricao AS TEXT) as Descricao')),
                             'AGENTES.dbo'
                           );
         foreach ($where as $coluna => $valor) {

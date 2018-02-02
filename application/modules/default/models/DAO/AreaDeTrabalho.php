@@ -8,7 +8,7 @@ class AreadeTrabalho extends Zend_Db_Table
         $sql = "
        		select Pr.idPRONAC, Pr.NomeProjeto,
        		CASE WHEN Pa.ParecerFavoravel in ('2','3') THEN 'Sim'
-            ELSE 'N�o' End AS ParecerFavoravel,
+            ELSE 'N&atilde;o' End AS ParecerFavoravel,
        		CONVERT(CHAR(10),DPC.dtDistribuicao,103) AS DataRecebimento
  			from SAC.dbo.Projetos Pr, SAC.dbo.Parecer Pa, BDCORPORATIVO.scSAC.tbDistribuicaoProjetoComissao DPC
 			where Pa.idPRONAC = Pr.idPRONAC
@@ -25,7 +25,7 @@ class AreadeTrabalho extends Zend_Db_Table
         $sql1 = "
        		select Pr.idPRONAC, Pr.NomeProjeto,
        		CASE WHEN Pa.ParecerFavoravel in ('2','3') THEN 'Sim'
-            ELSE 'N�o' End AS ParecerFavoravel,
+            ELSE 'N&atilde;o' End AS ParecerFavoravel,
        		CONVERT(CHAR(10),d.dtSolicitacao,103) AS DataSolicitacao
  			from SAC.dbo.Projetos Pr, SAC.dbo.Parecer Pa, SAC.dbo.tbDiligencia D
 			where Pa.idPRONAC = Pr.idPRONAC
@@ -45,7 +45,7 @@ class AreadeTrabalho extends Zend_Db_Table
         $sql2 = "
        		select Pr.idPRONAC, Pr.NomeProjeto,
        		CASE WHEN Pa.ParecerFavoravel in ('2','3') THEN 'Sim'
-            ELSE 'N�o' End AS ParecerFavoravel,
+            ELSE 'N&atilde;o' End AS ParecerFavoravel,
        		CONVERT(CHAR(10),d.dtResposta,103) AS DataResposta
  			from SAC.dbo.Projetos Pr, SAC.dbo.Parecer Pa, SAC.dbo.tbDiligencia D
 			where Pa.idPRONAC = Pr.idPRONAC

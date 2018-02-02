@@ -45,7 +45,7 @@ class AnaliseAprovacao extends MinC_Db_Table_Abstract
                     'aa.stIncisoArtigo27_IV',
                     'aa.stAvaliacao',
                     'aa.tpAnalise',
-                    '(Cast(aa.dsAvaliacao as TEXT)) as dsAvaliacao',
+                    new Zend_Db_Expr('(Cast(aa.dsAvaliacao as TEXT)) as dsAvaliacao'),
                 )
         );
         $select->joinInner(
@@ -82,9 +82,9 @@ class AnaliseAprovacao extends MinC_Db_Table_Abstract
                     'AC.IncisoArtigo27_III AS stIncisoArtigo27_III_Antigo',
                     'AC.IncisoArtigo27_IV AS stIncisoArtigo27_IV_Antigo',
                     'AC.ParecerFavoravel AS stAvaliacao_Antigo',
-                    'Cast(AC.ParecerDeConteudo as Text)  AS dsAvaliacao_Antigo',
+                    new Zend_Db_Expr('Cast(AC.ParecerDeConteudo as Text)  AS dsAvaliacao_Antigo'),
                     'AC.idUsuario AS idAgente_Antigo',
-                    'SAC.dbo.fnNomeParecerista(AC.idUsuario) AS Parecerista'
+                    new Zend_Db_Expr('SAC.dbo.fnNomeParecerista(AC.idUsuario) AS Parecerista')
                 )
         );
         $select->where('aa.tpAnalise = ?', $tpanalise);
@@ -186,7 +186,7 @@ class AnaliseAprovacao extends MinC_Db_Table_Abstract
                     'stIncisoArtigo27_IV',
                     'stAvaliacao',
                     'tpAnalise',
-                    '(Cast(aa.dsAvaliacao as TEXT)) as dsAvaliacao',
+                    new Zend_Db_Expr('(Cast(aa.dsAvaliacao as TEXT)) as dsAvaliacao'),
                 )
         );
         $select->joinInner(
@@ -226,7 +226,7 @@ class AnaliseAprovacao extends MinC_Db_Table_Abstract
                     'IncisoArtigo27_III AS stIncisoArtigo27_III_Antigo',
                     'IncisoArtigo27_IV AS stIncisoArtigo27_IV_Antigo',
                     'ParecerFavoravel AS stAvaliacao_Antigo',
-                    'Cast(AC.ParecerDeConteudo as Text)  AS dsAvaliacao_Antigo',
+                    new Zend_Db_Expr('Cast(AC.ParecerDeConteudo as Text)  AS dsAvaliacao_Antigo'),
                     'idUsuario AS idAgente_Antigo'
                 )
         );

@@ -39,7 +39,7 @@ class Dispensalicitacao extends MinC_Db_Table_Abstract
         $select->setIntegrityCheck(false);
         $select->from(
             array('dis'=>$this->_name),
-                            array('dis.idDispensaLicitacao','dis.nrDispensaLicitacao','CAST(dis.dsDispensaLicitacao as TEXT) as dsDispensaLicitacao','dis.dtContrato')
+            array('dis.idDispensaLicitacao','dis.nrDispensaLicitacao',new Zend_Db_Expr('CAST(dis.dsDispensaLicitacao as TEXT) as dsDispensaLicitacao'),'dis.dtContrato')
                           );
 
         $select->joinInner(
@@ -71,7 +71,7 @@ class Dispensalicitacao extends MinC_Db_Table_Abstract
         $select->from(
                         array('dis'=>$this->_name),
                         array(
-                                'dis.idDispensaLicitacao','dis.nrDispensaLicitacao','CAST(dis.dsDispensaLicitacao as TEXT) as dsDispensaLicitacao','dis.dtContrato','dis.vlContratado'
+                            'dis.idDispensaLicitacao','dis.nrDispensaLicitacao',new Zend_Db_Expr('CAST(dis.dsDispensaLicitacao as TEXT) as dsDispensaLicitacao'),'dis.dtContrato','dis.vlContratado'
                               )
                       );
 

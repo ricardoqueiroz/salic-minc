@@ -1,14 +1,4 @@
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of Regularidade
- *
- * @author 00794800122
- */
 class Regularidade extends Zend_Db_Table
 {
     public static function buscarSalic($CgcCpf)
@@ -18,10 +8,9 @@ class Regularidade extends Zend_Db_Table
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
-
-
         return $db->fetchAll($sql);
     }
+
     public static function buscarCQTE($CgcCpf)
     {
         $sql = "select DtValidade from SAC.dbo.CertidoesNegativas where CgcCpf = '$CgcCpf' and CodigoCertidao = 70 ";
@@ -32,6 +21,7 @@ class Regularidade extends Zend_Db_Table
 
         return $db->fetchAll($sql);
     }
+
     public static function buscarCQTF($CgcCpf)
     {
         $sql = "select DtValidade from SAC.dbo.CertidoesNegativas where CgcCpf = '$CgcCpf' and CodigoCertidao = 49 ";
@@ -39,10 +29,9 @@ class Regularidade extends Zend_Db_Table
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
-
-
         return $db->fetchAll($sql);
     }
+
     public static function buscarFGTS($CgcCpf)
     {
         $sql = "select DtValidade from SAC.dbo.CertidoesNegativas where CgcCpf = '$CgcCpf 'and CodigoCertidao = 51 ";
@@ -50,10 +39,9 @@ class Regularidade extends Zend_Db_Table
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
-
-
         return $db->fetchAll($sql);
     }
+
     public static function buscarINSS($CgcCpf)
     {
         $sql = "select DtValidade,cdSituacaoCertidao from SAC.dbo.CertidoesNegativas where CgcCpf = '$CgcCpf' and CodigoCertidao = 52 ";
@@ -61,10 +49,9 @@ class Regularidade extends Zend_Db_Table
         $db = Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
 
-
-
         return $db->fetchAll($sql);
     }
+
     public static function buscarCADIN($CgcCpf)
     {
         $sql = "select DtEmissao,  cdSituacaoCertidao from SAC.dbo.CertidoesNegativas where CgcCpf = '$CgcCpf' and CodigoCertidao = 244";

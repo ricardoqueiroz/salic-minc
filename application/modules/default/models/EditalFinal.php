@@ -1,14 +1,8 @@
 <?php 
-/*
- * Classe: EditalComposi��o
- * Modulo: Editais
- * Criado por: Emanuel Melo
- */
 class EditalFinal extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'SAC';
     protected $_name = 'tbTextoEdital';
-
   
     public function buscarEditalFinal($idEdital)
     {

@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
- */
 class FornecedorInvoice extends MinC_Db_Table_Abstract
 {
     private $id = null;

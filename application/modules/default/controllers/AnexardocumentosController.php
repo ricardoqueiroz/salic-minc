@@ -37,7 +37,7 @@ class AnexardocumentosController extends MinC_Controller_Action_Abstract
             //$PermissoesGrupo[] = 119; // Presidente da Mesa
             //$PermissoesGrupo[] = 120; // Coordenador Administrativo CNIC
             if (!in_array($GrupoAtivo->codGrupo, $PermissoesGrupo)) { // verifica se o grupo ativo est� no array de permiss�es
-                parent::message("Voc� n�o tem permiss�o para acessar essa �rea do sistema!", "principal/index", "ALERT");
+                parent::message("Voc&ecirc; n&atilde;o tem permiss&atilde;o para acessar essa &aacute;rea do sistema!", "principal/index", "ALERT");
             }
 
             // pega as unidades autorizadas, org�os e grupos do usu�rio (pega todos os grupos)
@@ -91,7 +91,7 @@ class AnexardocumentosController extends MinC_Controller_Action_Abstract
                 }
             }
         } else {
-            parent::message("N�o existe CNIC aberta no momento. Favor aguardar!", "principal/index", "ERROR");
+            parent::message("N&atilde;o existe CNIC aberta no momento. Favor aguardar!", "principal/index", "ERROR");
         }
     }
 
@@ -114,7 +114,7 @@ class AnexardocumentosController extends MinC_Controller_Action_Abstract
             }
             // valida o n�mero do pronac
             elseif (!is_numeric($idpronac) || strlen($idpronac) > 20) {
-                throw new Exception("O N� do PRONAC � inv�lido!");
+                throw new Exception("O N&uacute;mero do PRONAC &eacute; inv&aacute;lido!");
             } else {
 //                        die('fasdfasd');
                 // integra��o MODELO e VIS�O
@@ -124,7 +124,7 @@ class AnexardocumentosController extends MinC_Controller_Action_Abstract
 
                 // caso o PRONAC n�o esteja cadastrado
                 if (!$resultPronac) {
-                    throw new Exception("Registro n�o encontrado!");
+                    throw new Exception("Registro n&atilde;o encontrado!");
                 }
                 // caso o PRONAC esteja cadastrado, vai para a p�gina de busca
                 // dos seus documentos (comprovantes)

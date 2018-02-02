@@ -1,15 +1,4 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of GerenciarPautaReuniao
- *
- * @author 01373930160
- */
 class GerenciarPautaReuniaoDAO
 {
     public static function consultaAgenteUsuario($usu_codigo)
