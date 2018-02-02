@@ -159,7 +159,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('pr' => 'projetos'),
                 'pr.IdPRONAC = tp.idPRONAC',
                 array(
-                    new Zend_Db_Expr'(pr.AnoProjeto+pr.Sequencial) as pronac'),
+                    new Zend_Db_Expr('pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.IdPRONAC'
                 ),
