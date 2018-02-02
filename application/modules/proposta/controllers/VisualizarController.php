@@ -49,8 +49,13 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $propostaCulturalAtual = $tbPreProjetoMapper->obterPropostaCulturalCompleta($idPreProjeto);
 
             $propostaCulturalAtual = $this->prepararArrayParaJson($propostaCulturalAtual);
+
             $propostaCulturalAtual['tbplanilhaproposta'] = $this->montarPlanilhaProposta(
                 $propostaCulturalAtual['tbplanilhaproposta']
+            );
+
+            $propostaCulturalAtual['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
+                $propostaCulturalAtual['tbdetalhaplanodistribuicao']
             );
 
             $propostaAtual = array_merge(
@@ -72,6 +77,11 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $propostaCulturalHistorico['tbplanilhaproposta'] = $this->montarPlanilhaProposta(
                 $propostaCulturalHistorico['tbplanilhaproposta']
             );
+
+            $propostaCulturalHistorico['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
+                $propostaCulturalHistorico['tbdetalhaplanodistribuicao']
+            );
+
             $propostaHistorico = array_merge(
                 $propostaCulturalHistorico['responsabilidadesocial'],
                 $propostaCulturalHistorico['detalhestecnicos'],
@@ -127,6 +137,18 @@ class Proposta_VisualizarController extends Proposta_GenericController
         }
 
         return $planilha;
+    }
+
+    public function montarArrayDetalhamentoPlanoDistribuicao($detalhamentos) {
+
+        $arrayDetalhamentos = [];
+
+        foreach ($detalhamentos as $key => $item) {
+            $arrayDetalhamentos[$item['idPlanoDistribuicao']][$item['DescricaoUf'] . ' - '
+                . $item['DescricaoMunicipio']][] = $item;
+        }
+
+        return $arrayDetalhamentos;
     }
 
     public function prepararArrayParaJson($dados)

@@ -98,6 +98,8 @@ x - Elementos básicos
 .no-margin { margin: 0px !important; }
 .margin0 { margin: 0px; }
 .margin5 { margin: 5px; }
+.margin10 { margin: 10px; }
+.margin20 { margin: 20px; }
 .margin-bottom20 { margin-bottom: 20px; }
 .margin-bottom30 { margin-bottom: 30px }
 
@@ -264,7 +266,7 @@ x - MODAL
     height: auto;
 }
 
-
+.scroll-x,
 .collapsible-body .scroll .card-content {
     overflow-x: auto;
     overflow-y: hidden;

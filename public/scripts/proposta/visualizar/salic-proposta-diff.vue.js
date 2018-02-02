@@ -36,8 +36,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.FichaTecnica"></td>
-                                    <td class="changed" v-html="dadosAtuais.FichaTecnica"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.FichaTecnica"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.FichaTecnica"></td>
                                 </tr>
                             </table>
                         </div>
@@ -49,8 +49,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.ResumoDoProjeto"></td>
-                                    <td class="changed" v-html="dadosAtuais.ResumoDoProjeto"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.ResumoDoProjeto"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.ResumoDoProjeto"></td>
                                 </tr>
                             </table>
                         </div>
@@ -62,8 +62,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.Objetivos"></td>
-                                    <td class="changed" v-html="dadosAtuais.Objetivos"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.Objetivos"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.Objetivos"></td>
                                 </tr>
                             </table>
                         </div>
@@ -75,8 +75,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.EtapaDeTrabalho"></td>
-                                    <td class="changed" v-html="dadosAtuais.EtapaDeTrabalho"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.EtapaDeTrabalho"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.EtapaDeTrabalho"></td>
                                 </tr>
                             </table>
                         </div>
@@ -88,8 +88,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.Acessibilidade"></td>
-                                    <td class="changed" v-html="dadosAtuais.Acessibilidade"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.Acessibilidade"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.Acessibilidade"></td>
                                 </tr>
                             </table>
                         </div>
@@ -102,8 +102,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.EspecificacaoTecnica"></td>
-                                    <td class="changed" v-html="dadosAtuais.EspecificacaoTecnica"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.EspecificacaoTecnica"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.EspecificacaoTecnica"></td>
                                 </tr>
                             </table>
                         </div>
@@ -115,8 +115,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.Sinopse"></td>
-                                    <td class="changed" v-html="dadosAtuais.Sinopse"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.Sinopse"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.Sinopse"></td>
                                 </tr>
                             </table>
                         </div>
@@ -128,8 +128,8 @@ Vue.component('salic-proposta-diff', {
                          <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.ImpactoAmbiental"></td>
-                                    <td class="changed" v-html="dadosAtuais.ImpactoAmbiental"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.ImpactoAmbiental"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.ImpactoAmbiental"></td>
                                 </tr>
                             </table>
                         </div>
@@ -141,8 +141,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.Justificativa"></td>
-                                    <td class="changed" v-html="dadosAtuais.Justificativa"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.Justificativa"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.Justificativa"></td>
                                 </tr>
                             </table>
                         </div>
@@ -154,8 +154,8 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original" v-html="dadosHistorico.DescricaoAtividade"></td>
-                                    <td class="changed" v-html="dadosAtuais.DescricaoAtividade"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.DescricaoAtividade"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.DescricaoAtividade"></td>
                                 </tr>
                             </table>
                         </div>
@@ -191,24 +191,24 @@ Vue.component('salic-proposta-diff', {
                     </div>
                 </li>
                 <li>
-                    <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico</div>
-                    <div class="collapsible-body padding20">
-                        <salic-proposta-historico-avaliacoes :idpreprojeto="dadosAtuais.idPreProjeto"
-                                                             v-bind:proposta="dadosAtuais"></salic-proposta-historico-avaliacoes>
-                    </div>
-                </li>
-                <li>
-                    <div id="plano-distribuicao" class="collapsible-header"><i class="material-icons">equalizer</i>Plano
+                    <div id="plano-distribuicao" class="collapsible-header active"><i class="material-icons">equalizer</i>Plano
                         Distribui&ccedil;&atilde;o
                     </div>
-                    <div class="collapsible-body padding20">
-                        <div id="html-plano-distribuicao"></div>
-                    </div>
-                </li>
-                <li>
-                    <div class="collapsible-header"><i class="material-icons">history</i>Fonte de Recurso</div>
-                    <div class="collapsible-body padding20">
-                        <salic-proposta-fontes-de-recursos :idpreprojeto="idpreprojeto"></salic-proposta-fontes-de-recursos>
+                    <div class="collapsible-body padding20 active">
+                        <div class="row">
+                            <div class="col s12 m6 l6 scroll">
+                                <salic-proposta-plano-distribuicao
+                                    :arrayProdutos="dadosAtuais.planodistribuicaoproduto"
+                                    :arrayDetalhamentos="dadosAtuais.tbdetalhaplanodistribuicao"
+                                ></salic-proposta-plano-distribuicao>
+                            </div>
+                             <div class="col s12 m6 l6 scroll">
+                                <salic-proposta-plano-distribuicao
+                                    :arrayProdutos="dadosHistorico.planodistribuicaoproduto"
+                                    :arrayDetalhamentos="dadosHistorico.tbdetalhaplanodistribuicao"
+                                ></salic-proposta-plano-distribuicao>
+                            </div>
+                        </div>
                     </div>
                 </li>
                <li>

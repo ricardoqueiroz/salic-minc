@@ -19,6 +19,7 @@ x - RESET - Ajustes para compatibilidade com materialize
     display: none;
 }
 
+
 .conteudoImprimir table,
 #conteudo table.tabela {
     background: #fff;
