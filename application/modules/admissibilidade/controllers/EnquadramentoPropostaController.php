@@ -51,8 +51,9 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
             throw new Exception("N&atilde;o foram encontradas &Aacute;reas Culturais para o PRONAC informado.");
         }
 
-        $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-        $this->view->historicoEnquadramento = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento($preprojeto['idPreProjeto']);
+//        $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+//        $this->view->historicoEnquadramento = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento($preprojeto['idPreProjeto']);
+        $this->view->historicoEnquadramento = $this->obterHistoricoSugestaoEnquadramento($preprojeto['idPreProjeto']);
     }
 
     private function salvarSugestaoEnquadramento()
@@ -106,5 +107,14 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), "/admissibilidade/enquadramento-proposta/sugerir-enquadramento?id_preprojeto={$get['id_preprojeto']}");
         }
+    }
+
+    private function obterHistoricoSugestaoEnquadramento($id_preprojeto) {
+        $view = new Zend_View();
+        $view->setScriptPath(__DIR__ . DIRECTORY_SEPARATOR . '../views/scripts/enquadramento-proposta');
+
+        $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+        $view->historicoEnquadramento = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento($id_preprojeto);
+        return $view->render('historico-sugestao-enquadramento.phtml');
     }
 }

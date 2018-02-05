@@ -28,62 +28,24 @@
                     </div>
 
                     <?php
-                    if (count($this->historicoEnquadramento) > 0):
+                    if (!empty($this->historicoEnquadramento)):
                         ?>
 
                         <div class="row">
                             <div class="input-field col s12 m12 center" style="margin-bottom:80px">
-                                <a class="waves-effect waves-light btn modal-trigger" href="#dialog-sugestoes-enquadramento">
-                                <button class="btn waves-effect waves-light enquadrarProposta"
-                                        type="button" id="botaoSugestoesEnquadramento">
-                                    Visualizar Hist&oacute;rico
-                                </button>
+                                <a class="waves-effect waves-light btn modal-trigger"
+                                   href="#dialog-sugestoes-enquadramento">
+                                    <button class="btn waves-effect waves-light enquadrarProposta"
+                                            type="button" id="botaoSugestoesEnquadramento">
+                                        Visualizar Hist&oacute;rico
+                                    </button>
                                 </a>
                             </div>
                         </div>
-                        <div class="conteudoImprimir modal modal-fixed-footer" id="dialog-sugestoes-enquadramento" align="center" style="width: 1150px;">
+                        <div class="conteudoImprimir modal modal-fixed-footer" id="dialog-sugestoes-enquadramento"
+                             align="center" style="width: 1150px;">
                             <div class="modal-content">
-                                <h4>Hist&oacute;rico de Sugest&otilde;es de Enquadramento.</h4>
-                                <div class="row">
-                                    <table class="tabela striped" id="historicoSugestoes" style="border: 0px solid gray">
-                                        <thead>
-                                        <tr class="destacar">
-                                            <td class="center" width="10%"><b>N&uacute;mero</b></td>
-                                            <td class="center" width="10%"><b>Data</b></td>
-                                            <td class="center" width="20%"><b>Avaliador</b></td>
-                                            <td class="center" width="20%"><b>Unidade</b></td>
-                                            <td class="center" width="10%"><b>&Aacute;rea</b></td>
-                                            <td class="center" width="10%"><b>Segmento</b></td>
-                                            <td class="center" width="10%"><b>Enquadramento</b></td>
-                                            <td class="center"><b>Parecer</b></td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-                                        foreach ($this->historicoEnquadramento as $indice => $enquadramentoProposta) :
-                                            ?>
-                                            <tr>
-                                                <td align="left"><?php echo ++$indice ?></td>
-                                                <td align="left"><?php echo Data::dataBrasileira($enquadramentoProposta['data_avaliacao']) ?></td>
-                                                <td align="left"><?php echo $enquadramentoProposta['usu_nome'] ?></td>
-                                                <td align="left"><?php echo "{$enquadramentoProposta['org_sigla']} - {$enquadramentoProposta['gru_nome']}" ?></td>
-                                                <?php
-                                                $artigoEnquadramento = " - ";
-                                                if($enquadramentoProposta['tp_enquadramento']) {
-                                                    $artigoEnquadramento = ($enquadramentoProposta['tp_enquadramento'] == 1) ? 'Artigo 26' : 'Artigo 18';
-                                                }
-                                                ?>
-                                                <td align="center" class="center"><?php echo $enquadramentoProposta['area'] ?></td>
-                                                <td align="center" class="center"><?php echo $enquadramentoProposta['segmento'] ?></td>
-                                                <td align="center" class="center"><?php echo $artigoEnquadramento ?></td>
-                                                <td align="left" nowrap><?php echo $enquadramentoProposta['descricao_motivacao'] ?></td>
-                                            </tr>
-                                            <?php
-                                        endforeach;
-                                        ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <?php echo $this->historicoEnquadramento ?>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn waves-effect waves-light modal-action modal-close "
@@ -91,7 +53,6 @@
                                     Fechar
                                 </button>
                             </div>
-
                         </div>
                         <?php
                     endif;
@@ -104,7 +65,7 @@
                                 <option value=""> - Selecione -</option>
                                 <?php foreach ($this->comboareasculturais as $key => $value) { ?>
                                     <option
-                                        value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                            value="<?php echo $key; ?>"><?php echo $value; ?></option>
                                 <?php } ?>
                             </select>
                             <label>&Aacute;rea Cultural</label>
