@@ -41,7 +41,8 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $search = $this->getRequest()->getParam('search');
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
-        //$order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
+        $order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
+        $where = array();
         
         $idAgente = ((int)$idAgente == 0) ? $this->idAgente : (int)$idAgente;
 
@@ -59,7 +60,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             $this->idAgente,
             $this->idResponsavel,
             $idAgente,
-            array(),
+            $where,
             $order,
             $start,
             $length,
@@ -145,20 +146,20 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $message = null;
         $success = true;
 
-        $idPreProjeto = $this->getRequest()->getParam("idPreProjeto");
+        $idPreProjeto = $this->getRequest()->getParam("idpreprojeto");
         $SolicitacaoDesarquivamento = $this->getRequest()->getParam("SolicitacaoDesarquivamento");
-
+        
         $arquivar = new Proposta_Model_PreProjetoArquivado();
 
         $data = [
             'SolicitacaoDesarquivamento' => $SolicitacaoDesarquivamento,
-            'dtSolicitacaoDesarquivamento' => new Zend_Db_Expr('getdate()'),
-
+            'dtSolicitacaoDesarquivamento' => new Zend_Db_Expr('GETDATE()'),
         ];
-
+        
         try {
-            $arquivar->update($data, ['idPreProjeto = ?' => $idPreProjeto]);
-            $message = 'Solicitação enviada!';
+            $arquivar->update($data, array('idPreProjeto = ?' => $idPreProjeto));
+            $message = $data['dtSolicitacaoDesarquivamento'];
+            $message = 'Solicitação enviada!' . $idPreProjeto;
         } catch(Exception $e){
             $message = $e->getMessage();
             $success = false;

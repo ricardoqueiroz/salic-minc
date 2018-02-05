@@ -157,38 +157,6 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         return $db->fetchAll($select);
     }
 
-    public function insertConsolidacaoPlanoDeDistribuicao($idPlanoDistribuicao)
-    {
-        $cols = array(
-            'sum(qtExemplares) as QtdeProduzida',
-            'sum(qtGratuitaDivulgacao) as qQtdeProponente',
-            'sum(qtGratuitaPatrocinador) as QtdePatrocinador',
-            'sum(qtGratuitaPopulacao) as QtdeOutros',
-            'sum(qtPopularIntegral) as QtdeVendaPopularNormal',
-            'sum(qtPopularParcial) as QtdeVendaPopularPromocional',
-            'sum(vlUnitarioPopularIntegral) as vlUnitarioPopularNormal',
-            'sum(vlReceitaPopularIntegral) ReceitaPopularNormal',
-            'sum(vlReceitaPopularParcial) as ReceitaPopularPromocional',
-            'sum(qtProponenteIntegral) as QtdeVendaNormal',
-            'sum(qtProponenteParcial) as QtdeVendaPromocional',
-            'avg(vlUnitarioProponenteIntegral) vlUnitarioNormal',
-            'sum(vlReceitaProponenteIntegral) as PrecoUnitarioNormal',
-            'sum(vlReceitaProponenteParcial) as PrecoUnitarioPromocional',
-            '(sum(vlReceitaPopularParcial) + sum(vlReceitaPopularIntegral)+  sum(vlReceitaProponenteIntegral)+ sum(vlReceitaProponenteParcial)) as  PrecoUnitarioPromocional'
-        );
-
-        $sql = $this->select()
-            ->from(
-                array('tbDetalhaPlanoDistribuicao'),
-                $cols,
-                'sac.dbo'
-            )
-            ->where('idPlanoDistribuicao = ?', $idPlanoDistribuicao);
-        echo $sql;
-        die;
-        return $this->fetchRow($sql);
-    }
-
     public function obterUfsMunicipiosDoDetalhamento($idPreProjeto) {
         $select = $this->select();
         $select->setIntegrityCheck(false);
