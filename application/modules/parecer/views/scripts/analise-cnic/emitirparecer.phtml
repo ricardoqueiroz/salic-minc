@@ -306,8 +306,14 @@
             <input type="hidden" name="idPronac" id="idPronac" value="<?php echo $this->idpronac; ?>" />
             <div style="margin-top: 2.8em ;margin-left: 3em;">
                 <p style="font-weight: 600; font-size:1.3em; float: left; ">Posicionamento:</p>
-    <p style="font-weight: 600; text-align: center; font-size: 1.1em; text-align: left; margin-left: 15em;"><input type="radio" id="desAprovar" name="decisao" value="AC"/><label for="desAprovar"> Aprovar</label></p>
-                <p style="font-weight: 600; font-size: 1.1em; margin-left: 15em"><input type="radio" id="desIndeferir" name="decisao" value="IC"/><label for="desIndeferir"> Indeferir</label></p>
+		<p style="font-weight: 600; text-align: center; font-size: 1.1em; text-align: left; margin-left: 15em;">
+		    <input type="radio" id="desAprovar" name="decisao" value="AC"/>
+		    <label for="desAprovar"> Aprovar</label>
+		</p>
+                <p style="font-weight: 600; font-size: 1.1em; margin-left: 15em">
+		    <input type="radio" id="desIndeferir" name="decisao" value="IC"/>
+		    <label for="desIndeferir"> Indeferir</label>
+		</p>
                 <p style="font-weight: 600; text-align: center;">
                     <select class="input_simples" name="situacao" id="situacao" style="display: none;">
                         <option value="">Selecione</option>
@@ -339,8 +345,8 @@
 	<?php elseif ($this->IN2017) : ?>
         <form id="formEnviar" action="<?php echo $this->url(array('module' => 'parecer', 'controller' => 'analise-cnic', 'action' => 'emitirparecer')); ?>" method="post">
             <input type="hidden" name="idpronac" value="<?php echo $this->idpronac; ?>" />
-            <input type="hidden" id="desAprovar" name="decisao" value=""/>
-<input type="hidden" name="situacao" value="" />
+            <input type="hidden" name="decisao" value=""/>
+	    <input type="hidden" name="situacao" value="" />
             <input name="reuniaoaberta" type="hidden" value="<?php echo $this->plenariaatual; ?>"/>
             <input name="stEnvioPlenaria" type="hidden" value="" />
             <input name="stPlanoAnual" type="hidden" value="<?php echo $this->stPlanoAnual; ?>" />
@@ -528,9 +534,13 @@
 		    <div style="margin-left: 3em;">
                       <p style="font-weight: 600; font-size:1.3em; float: left; ">Posicionamento:</p>
                       <p style="font-weight: 600; text-align: center; font-size: 1.1em; text-align: left; margin-left: 15em;">
-			<span style="margin-right: 100px"><input type="radio" id="desAprovar" name="decisao" value="AC"<?php if ($this->parecerFavoravel == 2) { echo 'checked'; }; ?>/><label for="desAprovar"> Aprovar</label></span>
+			  <span style="margin-right: 100px">
+			      <input type="radio" id="desAprovar" name="decisao" value="AC"<?php if ($this->parecerFavoravel == 2) { echo 'checked'; }; ?>/>
+			      <label for="desAprovar"> Aprovar</label>
+			  </span>
 			<span style="">
-			<input type="radio" id="desIndeferir" name="decisao" value="IC" <?php if ($this->parecerFavoravel == 1) { echo 'checked'; }; ?>/><label for="desIndeferir"> Indeferir</label>
+			    <input type="radio" id="desIndeferir" name="decisao" value="IC" <?php if ($this->parecerFavoravel == 1) { echo 'checked'; }; ?>/>
+			    <label for="desIndeferir"> Indeferir</label>
 		      </p>
                       <p style="font-weight: 600; text-align: center;">
 			<select class="input_simples" name="situacao" id="situacao" style="display: none;">

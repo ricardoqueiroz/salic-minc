@@ -31,7 +31,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 'pr.IdPRONAC = tp.IdPRONAC',
                 array(
                     'pr.Area',
-                    '(pr.AnoProjeto+pr.Sequencial) as pronac',
+                    new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.DtProtocolo',
                     new Zend_Db_Expr('SAC.dbo.fnDtAprovacao(pr.AnoProjeto,pr.Sequencial) as DtAprovacao')
@@ -62,13 +62,17 @@ class Pauta extends MinC_Db_Table_Abstract
         $select->joinLeft(
                 array('cv' => 'tbConsolidacaoVotacao'),
                 'cv.IdPRONAC = pr.IdPRONAC',
-                array(new Zend_Db_Expr('Cast(cv.dsConsolidacao as TEXT) as dsConsolidacao')),
+                array(
+                    new Zend_Db_Expr('Cast(cv.dsConsolidacao as TEXT) as dsConsolidacao')
+                ),
                 'BDCORPORATIVO.scSAC'
         );
         $select->joinLeft(
                 array('ap' => 'aprovacao'),
                 'ap.IdPRONAC = tp.IdPRONAC',
-                array('ap.AprovadoReal'),
+                array(
+                    'ap.AprovadoReal'
+                ),
                 'SAC.dbo'
         );
         $select->where('tp.idNrReuniao = ?', $idNrReuniao);
@@ -159,7 +163,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('pr' => 'projetos'),
                 'pr.IdPRONAC = tp.idPRONAC',
                 array(
-                    new Zend_Db_Expr('pr.AnoProjeto+pr.Sequencial) as pronac'),
+                    new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.IdPRONAC'
                 ),
@@ -185,7 +189,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('b' => 'projetos'),
                 'a.IdPRONAC = b.idPRONAC',
                 array(
-                    new Zend_Db_Expr'(b.AnoProjeto+b.Sequencial) as pronac'),
+                    new Zend_Db_Expr('(b.AnoProjeto+b.Sequencial) as pronac'),
                     'b.NomeProjeto',
                     'b.IdPRONAC'
                 ),
@@ -211,7 +215,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('b' => 'projetos'),
                 'a.IdPRONAC = b.idPRONAC',
                 array(
-                    new Zend_Db_Expr'(b.AnoProjeto+b.Sequencial) as pronac'),
+                    new Zend_Db_Expr('(b.AnoProjeto+b.Sequencial) as pronac'),
                     'b.NomeProjeto',
                     'b.IdPRONAC'
                 ),
@@ -230,6 +234,7 @@ class Pauta extends MinC_Db_Table_Abstract
         
         return $this->fetchRow($slctUnion);
     }
+    
 
     public function buscarpautacomponente($idAgente, $aprovacao=false)
     {
@@ -247,7 +252,7 @@ class Pauta extends MinC_Db_Table_Abstract
         );
         $select->where("dp.idAgente = ?", $idAgente);
         if ($aprovacao) {
-            $select->where('(tp.idPRONAC not in (select idpronac from sac.dbo.aprovacao where idpronac = tp.idPRONAC))', '');
+            $select->where(new Zend_Db_Expr('(tp.idPRONAC not in (select idpronac from sac.dbo.aprovacao where idpronac = tp.idPRONAC))'), '');
         }
 
         return $this->fetchAll($select);
@@ -268,7 +273,7 @@ class Pauta extends MinC_Db_Table_Abstract
                 array('pr' => 'Projetos'),
                 "pt.IdPRONAC = pr.IdPRONAC",
                 array(
-                    '(pr.AnoProjeto+pr.Sequencial) as pronac',
+                    new Zend_Db_Expr('(pr.AnoProjeto+pr.Sequencial) as pronac'),
                     'pr.NomeProjeto',
                     'pr.Orgao',
                     'pr.Area'
@@ -292,10 +297,12 @@ class Pauta extends MinC_Db_Table_Abstract
                 'SAC.dbo'
         );
         $select->joinLeft(
-                array('cv' => 'tbConsolidacaoVotacao'),
-                "cv.IdPRONAC = pt.IdPRONAC and cv.IdNrReuniao = pt.IdNrReuniao",
-                array(new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao')),
+            array('cv' => 'tbConsolidacaoVotacao'),
+            "cv.IdPRONAC = pt.IdPRONAC and cv.IdNrReuniao = pt.IdNrReuniao",
+            array(
+                new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao'),
                 "BDCORPORATIVO.scSAC"
+            )
         );
         foreach ($idpronac as $resu) {
             $select->orwhere('pt.IdPRONAC = ?', $resu);

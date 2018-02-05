@@ -2893,43 +2893,37 @@ class Projetos extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    // fecha metodo buscarPeriodoCaptacao()
-
     public function enquadramentoProjeto($idpronac)
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
+
         $select->from(
-            array('p' => 'vwEnquadramentoDoProjeto'),
+            array("p" => $this->_name),
             array(
-                'p.IdPRONAC',
-                'p.Pronac',
-                'p.NomeProjeto',
-                'p.CNPJCPF',
-                'p.Proponente',
-                'p.Area',
-                'p.Segmento',
-                'p.UfProjeto',
-                'p.DtInicioExecucao',
-                'p.DtFimExecucao',
                 'p.ResumoProjeto',
-                'p.VlSolicitado',
-                'p.VlOutrasFontes',
-                'p.VlProjeto',
-                'p.CustoProjeto',
-                'p.VlOutrasFontesAprovado',
-                'p.CustoTotal',
-                'p.Enquadramento',
-                'p.DtEnquadramento',
-                'p.AvaliacaoTecnica',
-                'p.IdEnquadramento'
+                'p.SolicitadoReal AS VlSolicitado',
+                new Zend_Db_Expr('sac.dbo.fnOutrasFontes(p.IdPRONAC) AS VlOutrasFontes'),
+                new Zend_Db_Expr('sac.dbo.fnValorDaProposta(p.idProjeto) AS VlProjeto'),
+                'p.SolicitadoReal AS CustoProjeto',
+                new Zend_Db_Expr('dbo.fnOutrasFontes(p.IdPRONAC) AS VlOutrasFontesAprovado'),
+                new Zend_Db_Expr('dbo.fnValorDaProposta(p.idProjeto) AS CustoTotal')
             )
         );
+        
+        $select->joinLeft(
+            array('e' => 'Enquadramento'),
+            new Zend_Db_Expr('(p.AnoProjeto = e.AnoProjeto AND p.Sequencial = e.Sequencial)'),
+            array(
+                new Zend_Db_Expr("CASE WHEN e.Enquadramento = '1' THEN 'Artigo 26' WHEN e.Enquadramento = '2' THEN 'Artigo 18' ELSE 'Não enquadrado' END AS Enquadramento")
+            )
+        );
+        
         $select->where("p.idPronac = ?", $idpronac);
+        
         return $this->fetchAll($select);
     }
-
-
+    
     public function assinarParecerTecnico($idpronac)
     {
         $returnData = array();

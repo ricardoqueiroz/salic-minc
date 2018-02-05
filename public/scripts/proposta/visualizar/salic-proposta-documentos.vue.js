@@ -57,7 +57,7 @@ Vue.component('salic-proposta-documentos', {
             documentos: []
         }
     },
-    props: ['proposta'],
+    props: ['proposta', 'arrayDocumentos'],
     mounted: function () {
         if (typeof this.proposta != 'undefined') {
             this.fetch(this.proposta);
@@ -66,6 +66,10 @@ Vue.component('salic-proposta-documentos', {
     watch: {
         proposta: function (value) {
             this.fetch(value);
+        },
+        arrayDocumentos: function (value) {
+            this.$set(this.documentos, 'proposta', value.documentos_proposta);
+            this.$set(this.documentos, 'proponente', value.documentos_proponente);
         }
     },
     methods: {

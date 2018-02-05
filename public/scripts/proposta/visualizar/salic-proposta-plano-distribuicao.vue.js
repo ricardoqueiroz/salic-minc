@@ -14,7 +14,6 @@ Vue.component('salic-proposta-plano-distribuicao', {
                                 <th>Segmento</th>
                                 <th>Principal</th>
                                 <th>Canal aberto?</th>
-                                <th>Quantidade Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,7 +22,6 @@ Vue.component('salic-proposta-plano-distribuicao', {
                                 <td>{{produto.DescricaoSegmento}}</td>
                                 <td>{{label_sim_ou_nao(produto.stPrincipal)}}</td>
                                 <td>{{label_sim_ou_nao(produto.canalAberto)}}</td>
-                                <td class="center-align">{{produto.QtdeProduzida}}</td>
                             </tr>
                         </tbody>
                     </table>

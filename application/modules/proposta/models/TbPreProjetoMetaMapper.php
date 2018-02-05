@@ -148,6 +148,14 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         # Plano de distribuicao Detalhado
         $propostaCultural['tbdetalhaplanodistribuicao'] = $tbPlanoDistribuicao->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
 
+        # Documentos Proposta
+        $tbDocumentosPreProjeto = new Proposta_Model_DbTable_TbDocumentosPreProjeto();
+        $propostaCultural['documentos_proposta'] = $tbDocumentosPreProjeto->buscarDadosDocumentos(array("idProjeto = ?" => $idPreProjeto));
+
+        # Documentos do proponente
+        $tbDocumentosAgentes = new Proposta_Model_DbTable_TbDocumentosAgentes();
+        $propostaCultural['documentos_proponente'] = $tbDocumentosAgentes->buscarDadosDocumentos(array("idAgente = ?" => $proposta['idAgente']))->toArray();
+
         return $propostaCultural;
     }
 

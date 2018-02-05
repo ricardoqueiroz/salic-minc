@@ -19,11 +19,7 @@ Vue.component('salic-proposta-diff', {
                     <div class="collapsible-header" ><i class="material-icons">person</i>Proponente</div>
                     <div class="collapsible-body padding20">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
-                                <salic-agente-proponente :idagente="dadosHistorico.idAgente"></salic-agente-proponente>
-                                <salic-agente-usuario :idusuario="dadosHistorico.idUsuario"></salic-agente-usuario>
-                            </div>
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m12 12 scroll">
                                 <salic-agente-proponente :idagente="dadosAtuais.idAgente"></salic-agente-proponente>
                                 <salic-agente-usuario :idusuario="dadosAtuais.idUsuario"></salic-agente-usuario>
                             </div>
@@ -168,11 +164,11 @@ Vue.component('salic-proposta-diff', {
                         <div class="row">
                             <div class="col s12 m6 l6 scroll">
                                 <salic-proposta-local-realizacao-deslocamento
-                                :localizacao="dadosAtuais"></salic-proposta-local-realizacao-deslocamento>
+                                :localizacoes="dadosAtuais"></salic-proposta-local-realizacao-deslocamento>
                             </div>
                             <div class="col s12 m6 l6 scroll">
                                 <salic-proposta-local-realizacao-deslocamento
-                                :localizacao="dadosHistorico"></salic-proposta-local-realizacao-deslocamento>
+                                :localizacoes="dadosHistorico"></salic-proposta-local-realizacao-deslocamento>
                             </div>
                         </div>
                     </div>
@@ -182,10 +178,10 @@ Vue.component('salic-proposta-diff', {
                     <div class="collapsible-body padding20">
                         <div class="row">
                             <div class="col s12 m6 l6 scroll">
-                                <salic-proposta-documentos :proposta="dadosHistorico"></salic-proposta-documentos>
+                                <salic-proposta-documentos :arrayDocumentos="dadosHistorico"></salic-proposta-documentos>
                             </div>
                             <div class="col s12 m6 l6 scroll">
-                                <salic-proposta-documentos :proposta="dadosAtuais"></salic-proposta-documentos>
+                                <salic-proposta-documentos :arrayDocumentos="dadosAtuais"></salic-proposta-documentos>
                             </div>
                         </div>
                     </div>
