@@ -29,7 +29,7 @@ class RealizarAnaliseProjetoDAO extends Zend_db_table
 			                       THEN 'Artigo 26' 
 				                 WHEN Enquadramento = 2 
 				                   THEN 'Artigo 18' 
-                                 ELSE 'Não enquadrado'
+                                 ELSE 'N&atilde;o enquadrado'
                                  END"
                             )),
                             'SAC.dbo'
@@ -341,15 +341,15 @@ class RealizarAnaliseProjetoDAO extends Zend_db_table
 			,par.SugeridoReal
             ,par.ResumoParecer
             , case
-                  when par.ParecerFavoravel = 1 then 'N�o'
+                  when par.ParecerFavoravel = 1 then 'N&atilde;o'
                   when par.ParecerFavoravel = 2 then 'Sim'
             end as parecerfavoravel,
             par.TipoParecer
             ,case
-			      when par.TipoParecer = 1 then 'Aprova��o Inicial'
-			      when par.TipoParecer = 2 then 'Complementa��o'
-			      when par.TipoParecer = 3 then 'Prorroga��o'
-			      when par.TipoParecer = 4 then 'Redu��o'
+			      when par.TipoParecer = 1 then 'Aprova&ccedil;&atilde;o Inicial'
+			      when par.TipoParecer = 2 then 'Complementa&ccedil;&atilde;o'
+			      when par.TipoParecer = 3 then 'Prorroga&ccedil;&atilde;o'
+			      when par.TipoParecer = 4 then 'Redu&ccedil;&atilde;o'
 			end as tipoparecer
             ,case
 			when par.idEnquadramento = 1 then 'Artigo 26'
@@ -359,7 +359,7 @@ class RealizarAnaliseProjetoDAO extends Zend_db_table
 			left JOIN SAC.dbo.Enquadramento enq on enq.IdPRONAC  = PRO.IdPRONAC
             WHERE PAR.idTipoAgente = 1 and PRO.IdPRONAC=" . $idPronac;
         // busca de acordo com o pronac
-
+        
         $db= Zend_Db_Table::getDefaultAdapter();
         $db->setFetchMode(Zend_DB::FETCH_OBJ);
         $resultado = $db->fetchAll($sql);

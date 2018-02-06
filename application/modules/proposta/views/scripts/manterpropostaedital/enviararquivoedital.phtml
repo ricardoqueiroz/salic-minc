@@ -54,9 +54,9 @@ $edital='';
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="input-field col s12">
-                                    <label class="active">Documento <span class="red-text">*</span></label>
-                                    <select id="documento" name="documento" class="select_simples">
+                                <div class="col s12">
+                                    <label for="documento" class="active">Documento <span class="red-text">*</span></label>
+                                    <select id="documento" name="documento" class="browser-default">
                                         <option value=""> - Selecione um Tipo de Documento - &nbsp;</option>
                                     </select>
                                     <span style="color:#f00" id="documentoinvalido"></span>
@@ -100,10 +100,13 @@ $edital='';
                         </td>
                         <?php if ($this->isEditavel) : ?>
                             <td align="center">
-                                <button type="button" class="btn red white-text"
-                                    onclick="excluirAnexos(<?php echo $arquivosProposta['iddocumentospreprojetos']; ?>, <?php echo trim($_GET['idPreProjeto']); ?>, 'proposta');" >
-                                    Excluir
-                                </button>
+                                <a
+                                    class="btn small waves-effect waves-light tooltipped red btn-excluir-item"
+                                    href="javascript:void(0);"
+                                    onclick="excluirAnexos(<?php echo $arquivosProposta['iddocumentospreprojetos']; ?>, <?php echo trim($this->idPreProjeto); ?>, 'proposta');"
+                                    data-tooltip="Excluir arquivo">
+                                    <i class="material-icons">delete</i>
+                                </a>
                             </td>
                         <?php endif; ?>
                     <?php } ?>
@@ -131,10 +134,13 @@ $edital='';
 
                             <td align="center">
                                 <?php if ($this->isEditavel) : ?>
-                                    <button type="button"
-                                        class="btn red white-text"
-                                        onclick="excluirAnexos(<?php echo $arquivosProponente['idDocumentosAgentes']; ?>, <?php echo trim($_GET['idPreProjeto']); ?>, 'proponente');" />
-                                    excluir</button>
+                                    <a
+                                        class="btn small waves-effect waves-light tooltipped red btn-excluir-item"
+                                        href="javascript:void(0);"
+                                        onclick="excluirAnexos(<?php echo $arquivosProponente['idDocumentosAgentes']; ?>, <?php echo trim($this->idPreProjeto); ?>, 'proponente');"
+                                        data-tooltip="Excluir arquivo">
+                                        <i class="material-icons">delete</i>
+                                    </a>
                                 <?php endif; ?>
                             </td>
 

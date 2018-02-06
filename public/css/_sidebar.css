@@ -198,6 +198,7 @@ body.nav-fixed #sidenav {
 
 #sidenav .sidebar-info .info-title {
     /*font-size: 15px;*/
+    line-height: 22px;
 }
 
 #sidenav ul {

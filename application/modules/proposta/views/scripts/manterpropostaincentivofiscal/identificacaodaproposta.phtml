@@ -228,7 +228,7 @@ if (isset($this->proposta['idpreprojeto'])) {
                                                     <div id="comprovanteDocumentoAnexado"
                                                          class="doc<?php echo $this->arquivoExecucaoImediata[0]['codigodocumento']; ?>">
                                                         <label for="arquivo"
-                                                               style="width: 50px; "><?php echo $this->arquivoExecucaoImediata[0]['descricao']; ?> </label>
+                                                               style=""><?php echo $this->arquivoExecucaoImediata[0]['descricao']; ?> </label>
                                                         <a href="<?php echo $this->url(array('module' => 'default', 'controller' => 'upload', 'action' => 'abrir-documentos-pre-projeto')); ?>?id=<?php echo $this->arquivoExecucaoImediata[0]['iddocumentospreprojetos']; ?>">
                                                             <?php echo $this->arquivoExecucaoImediata[0]['noarquivo']; ?>
                                                         </a>
@@ -237,7 +237,7 @@ if (isset($this->proposta['idpreprojeto'])) {
                                                     </div>
                                                 <?php else : ?>
                                                     <div id="anexarDocumento">
-                                                        <label for="arquivo" style="width: 50px; ">Comprovante do Plano de Execu&ccedil;&atilde;o
+                                                        <label for="arquivo" style="">Comprovante do Plano de Execu&ccedil;&atilde;o
                                                             Imediata </label>
                                                         <input type="file" name="arquivo" id="arquivo" class="input_simples">
                                                         <div id="arquivoinvalido" style="color:#FF0000"></div>
@@ -414,17 +414,17 @@ if (isset($this->proposta['idpreprojeto'])) {
     }
 
     $(document).ready(function () {
+        var desabilitarEdicao = 0;
 
         <?php if (!$this->isEditavel) : ?>
-        //DESABILITA ALTERACOES NOS DADOS DO FORMULARIO (INCLUIR/ALTERAR/EXCLUIR)
-       // JSBloquearAlteracaoFormulario();
+            desabilitarEdicao = true;
         <?php endif; ?>
 
         $("#resumodoprojeto").editorRico({
             altura: 200,
             maxchar: 1000,
             isLimitarCarateres : true,
-            isDesabilitarEdicao: 0
+            isDesabilitarEdicao: desabilitarEdicao
         });
 
         $("textarea.editor").each(function () {
@@ -433,7 +433,7 @@ if (isset($this->proposta['idpreprojeto'])) {
                 altura: 400,
                 maxchar: 8000,
                 isLimitarCarateres : true,
-                isDesabilitarEdicao: 0
+                isDesabilitarEdicao: desabilitarEdicao
             });
         });
 

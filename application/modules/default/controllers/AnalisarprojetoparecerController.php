@@ -508,7 +508,7 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
             
             $parecerDAO = new Parecer();
             $whereParecer['idPRONAC = ?'] = $idPronac;
-            $buscaParecer = $parecerDAO->buscar($whereParecer);
+            $buscaParecer = $parecerDAO->buscar($whereParecer)->toArray();
             $countParecerP = count($buscaParecer);
             /***********************************************************************************/
             if (($countEnquadramentoP != 0) && ($countParecerP != 0)) {

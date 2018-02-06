@@ -158,6 +158,7 @@ table.tabela td.destacar span,
     position: relative;
     left: 0px;
     opacity: 1;
+    pointer-events: auto;
 }
 
 #conteudo [type="radio"] + label:before,

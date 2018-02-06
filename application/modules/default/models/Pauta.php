@@ -300,9 +300,9 @@ class Pauta extends MinC_Db_Table_Abstract
             array('cv' => 'tbConsolidacaoVotacao'),
             "cv.IdPRONAC = pt.IdPRONAC and cv.IdNrReuniao = pt.IdNrReuniao",
             array(
-                new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao'),
-                "BDCORPORATIVO.scSAC"
-            )
+                new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao')
+            ),
+            "BDCORPORATIVO.scSAC"
         );
         foreach ($idpronac as $resu) {
             $select->orwhere('pt.IdPRONAC = ?', $resu);

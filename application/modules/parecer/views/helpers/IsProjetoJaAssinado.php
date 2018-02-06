@@ -34,14 +34,16 @@ class Zend_View_Helper_IsProjetoJaAssinado
         $codOrgaoSuperior = $orgao->obterOrgaoSuperior($idOrgaoDoAssinante)['Codigo'];
         
         $tbAtoAdministrativo = new Assinatura_Model_DbTable_TbAtoAdministrativo();
+        
         $assinaturasNecessarias = $tbAtoAdministrativo->buscar(
             array(
-                'idTipoDoAto = ?' => Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL,
+                'idTipoDoAto = ?' => $idTipoDoAtoAdministrativo,
                 'idOrgaoSuperiorDoAssinante = ?' => $codOrgaoSuperior
             )
-        );
-
-        $idUltimaAssinatura = (end($assinaturas)->idOrdemDaAssinatura) ? end($assinaturas)->idOrdemDaAssinatura : 0;
+        )->toArray();
+        
+        $ultimaAssinatura = end($assinaturas);
+        $idUltimaAssinatura = ($ultimaAssinatura['idOrdemDaAssinatura']) ? $ultimaAssinatura['idOrdemDaAssinatura'] : 0;
         
         if ($idUltimaAssinatura <= count($assinaturasNecessarias)) {
             $idProximaAssinatura = $idUltimaAssinatura + 1;
