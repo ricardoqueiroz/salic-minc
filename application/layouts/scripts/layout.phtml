@@ -172,6 +172,14 @@
         <div class="mensagem-content sumir">
             <div class="mensagens msg<?php echo $this->message_type; ?>">
                 <div><?php echo $this->message; ?></div>
+                <a
+                    href="javascript:void(0)"
+                    onclick="Materialize.Toast.removeAll();"
+                    style="margin-left: 10px"
+                    class="white-text"
+                >
+                    <i class="material-icons">close</i>
+                </a>
             </div>
         </div>
     <?php endif; ?>
