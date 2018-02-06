@@ -224,9 +224,13 @@
                             render: function (data, type, row) {
 
                                 if (data.CodSituacao == $('#PROPOSTA_EM_ANALISE_FINAL').val()
-                                    && (
+                                    &&
+                                    (
                                         parseInt(data.quantidade_distribuicoes, 10) == 0 && $('#perfil_atual').val() == $('#perfil_tecnico_admissibilidade').val()
-                                        || (parseInt(data.quantidade_distribuicoes, 10) > 0 && parseInt(data.avaliacao_atual, 10) == 1)
+                                        ||
+                                        (
+                                            parseInt(data.quantidade_distribuicoes, 10) > 0 && parseInt(data.avaliacao_atual, 10) == 1
+                                        )
                                     )
                                 ) {
                                     return '<a class="waves-effect waves-light btn modal-trigger" data-id_preprojeto="' + data.idProjeto + '" href="#dialogEncaminharProposta">'

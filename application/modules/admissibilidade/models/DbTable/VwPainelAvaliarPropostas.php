@@ -50,59 +50,10 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
         $db = $this->getAdapter();
         $db->setFetchMode(Zend_DB :: FETCH_OBJ);
 
-        $selectDistribuicaoAvaliacao = '0';
-        $selectQuantidadeAvaliacoes = '0';
-
-        if (!is_null($distribuicaoAvaliacaoProposta)
-            && $distribuicaoAvaliacaoProposta->getIdPerfil()
-            && $distribuicaoAvaliacaoProposta->getIdOrgaoSuperior()) {
-            $selectDistribuicaoAvaliacao = $this->select();
-            $selectDistribuicaoAvaliacao->setIntegrityCheck(false);
-            $selectDistribuicaoAvaliacao->from(
-                'distribuicao_avaliacao_proposta',
-                [],
-                $this->getSchema('sac')
-            );
-
-            $selectDistribuicaoAvaliacao->where(
-                'distribuicao_avaliacao_proposta.id_preprojeto = vwPainelAvaliarPropostas.idProjeto'
-            );
-
-            $selectDistribuicaoAvaliacao->where(
-                'distribuicao_avaliacao_proposta.id_orgao_superior = ?',
-                $distribuicaoAvaliacaoProposta->getIdOrgaoSuperior()
-            );
-
-            $selectDistribuicaoAvaliacao->where(
-                'distribuicao_avaliacao_proposta.id_orgao_superior = vwPainelAvaliarPropostas.idSecretaria'
-            );
-
-            $selectQuantidadeAvaliacoes = clone $selectDistribuicaoAvaliacao;
-            $selectQuantidadeAvaliacoes->columns(new Zend_Db_Expr('count(avaliacao_atual)'));
-            $selectDistribuicaoAvaliacao->columns(new Zend_Db_Expr('avaliacao_atual'));
-
-            $perfis = [
-                $distribuicaoAvaliacaoProposta->getIdPerfil()
-            ];
-
-            if ($distribuicaoAvaliacaoProposta->getIdPerfil() == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
-                $perfis[] = Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE;
-            }
-
-            $selectDistribuicaoAvaliacao->where(
-                'distribuicao_avaliacao_proposta.id_perfil in (?)',
-                $perfis
-            );
-        }
-
         $subSelect = $this->select();
         $subSelect->setIntegrityCheck(false);
         $subSelect->from('vwPainelAvaliarPropostas',
-            [
-                '*',
-                'avaliacao_atual' => new Zend_Db_Expr("({$selectDistribuicaoAvaliacao})"),
-                'quantidade_distribuicoes' => new Zend_Db_Expr("({$selectQuantidadeAvaliacoes})"),
-            ],
+            ['*'],
             $this->_schema);
 
         foreach ($where as $coluna => $valor) {
@@ -119,23 +70,48 @@ class Admissibilidade_Model_DbTable_VwPainelAvaliarPropostas extends MinC_Db_Tab
             $subSelect->limitPage($start, $limit);
         }
 
+        $sqlPerfisDistribuicao = '';
+        if($distribuicaoAvaliacaoProposta->getIdPerfil() != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
+            $perfis = [
+                $distribuicaoAvaliacaoProposta->getIdPerfil()
+            ];
+
+            if ($distribuicaoAvaliacaoProposta->getIdPerfil() == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
+                $perfis[] = Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE;
+            }
+            $perfisDistribuicao = implode(',', $perfis);
+            $sqlPerfisDistribuicao = " and distribuicao_avaliacao_proposta.id_perfil in ({$perfisDistribuicao}) ";
+        }
+
+        $subSelect->joinLeft(
+            ['distribuicao_avaliacao_proposta']
+            , "distribuicao_avaliacao_proposta.id_preprojeto = vwPainelAvaliarPropostas.idProjeto
+                    {$sqlPerfisDistribuicao}
+                    and distribuicao_avaliacao_proposta.id_orgao_superior = {$distribuicaoAvaliacaoProposta->getIdOrgaoSuperior()}"
+            ,
+            [
+                'avaliacao_atual' => "coalesce(distribuicao_avaliacao_proposta.avaliacao_atual, '0')",
+                'quantidade_distribuicoes' => "coalesce(distribuicao_avaliacao_proposta.id_distribuicao_avaliacao_proposta, '0')"
+            ]
+            ,  $this->getSchema('sac')
+        );
+
         $selectFinal = $this->select();
         $selectFinal->setIntegrityCheck(false);
         $selectFinal->isUseSchema(false);
         $selectFinal->from(
             ['tabela_temporaria' => new Zend_Db_Expr("($subSelect)")],
-            '*'
+            ['*']
         );
         if($order) {
             $selectFinal->order($order);
         }
 
-        $selectFinal->where('avaliacao_atual is null');
+        $selectFinal->where('avaliacao_atual = 0');
         $selectFinal->where('quantidade_distribuicoes = 0');
         if ($distribuicaoAvaliacaoProposta->getIdPerfil() != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
             $selectFinal->orWhere('avaliacao_atual = 1 and quantidade_distribuicoes > 0');
         }
-
         return $db->fetchAll($selectFinal);
     }
 

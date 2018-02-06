@@ -2688,7 +2688,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         if (!empty($propostas)) {
             $zDate = new Zend_Date();
             $SugestaoEnquadramento = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            $avaliacaoPropostaDbTable = new Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta();
             foreach ($propostas as $key => $proposta) {
                 $zDate->set($proposta->DtMovimentacao);
                 $proposta->NomeProposta = utf8_encode($proposta->NomeProposta);
