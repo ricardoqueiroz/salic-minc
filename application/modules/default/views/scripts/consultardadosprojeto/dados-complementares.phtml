@@ -85,7 +85,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="democratizacao" onclick="mostraOcultaElemento('democratizacao');" />  <b>Democratizaç&atilde;o de acesso</b>
+                <input type="button" class="btn_adicionar" id="democratizacao" onclick="mostraOcultaElemento('democratizacao');" />  <b>Democratiza&#231;&#227;o  de acesso</b>
             </td>
         </tr>
         <tr class="democratizacao sumir" align="left" style="padding: 5px">
@@ -109,7 +109,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar"  id="fichatecnica" onclick="mostraOcultaElemento('fichatecnica');" />  <b>Ficha técnica</b>
+                <input type="button" class="btn_adicionar"  id="fichatecnica" onclick="mostraOcultaElemento('fichatecnica');" />  <b>Ficha tecnica</b>
             </td>
         </tr>
         <tr class="fichatecnica sumir" align="left" style="padding: 5px">
@@ -142,10 +142,22 @@
             </td>
         </tr>
     </table>
+   <table class="tabela">
+        <tr>
+            <td align="left">
+                <input type="button" class="btn_adicionar" id="descricaoatividade" onclick="mostraOcultaElemento('descricaoatividade');" />  <b>Descri&#231;&#227;o da atividade do produto</b>
+            </td>
+        </tr>
+        <tr class="descricaoatividade sumir" align="left" style="padding: 5px">
+            <td>
+                <?php echo (trim(strip_tags($this->proposta->DescricaoAtividade)) != "")?strip_tags($this->proposta->DescricaoAtividade,"<b></b><ul></ul><li></li><strong></strong><i></i><p></p><br>"):"N&atilde;o informado.";  ?>
+            </td>
+        </tr>
+    </table>
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="especificacao" onclick="mostraOcultaElemento('especificacao');" />  <b>Especificaç&otilde;es técnicas do produto</b>
+                <input type="button" class="btn_adicionar" id="especificacao" onclick="mostraOcultaElemento('especificacao');" />  <b>Especifica&#231;&#245;es tecnicas do produto</b>
             </td>
         </tr>
         <tr class="especificacao sumir" align="left" style="padding: 5px">
@@ -157,7 +169,7 @@
     <table class="tabela">
         <tr>
             <td align="left">
-                <input type="button" class="btn_adicionar" id="outras" onclick="mostraOcultaElemento('outras');" />  <b>Outras informaç&otilde;es</b>
+                <input type="button" class="btn_adicionar" id="outras" onclick="mostraOcultaElemento('outras');" />  <b>Outras informa&#231;&#245;es</b>
             </td>
         </tr>
         <tr class="outras sumir" align="left" style="padding: 5px">
@@ -178,7 +190,7 @@
                 </table>
             </fieldset>-->
             <!--<fieldset>
-                <legend>Democratizaç&atilde;o de Acesso</legend>
+                <legend>Democratizaï¿½&atilde;o de Acesso</legend>
                 <table class="tabela">
                     <tr align="left">
                         <td>
