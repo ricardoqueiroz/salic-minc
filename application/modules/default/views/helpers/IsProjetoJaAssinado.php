@@ -15,14 +15,8 @@ class Zend_View_Helper_IsProjetoJaAssinado
      */
     public function IsProjetoJaAssinado($idPronac, $idTipoDoAtoAdministrativo, $idPerfilDoAssinante)
     {
-        $objAssinatura = new Assinatura_Model_DbTable_TbAssinatura();
-        $assinaturas = $objAssinatura->obterAssinaturas($idPronac, $idTipoDoAtoAdministrativo);
-
-        foreach ($assinaturas as $assinatura) {
-            if ($assinatura['idPerfilDoAssinante'] == $idPerfilDoAssinante) {
-                return true;
-            }
-        }
-        return false;
+        $tbDocumentoAssinatura = new Assinatura_Model_TbDocumentoAssinaturaMapper();
+        
+        return $tbDocumentoAssinatura->IsProjetoJaAssinado($idPronac, $idTipoDoAtoAdministrativo, $idPerfilDoAssinante);
     }
 }

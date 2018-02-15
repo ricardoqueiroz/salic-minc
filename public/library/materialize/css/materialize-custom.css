@@ -2,7 +2,6 @@
  Esse codigo e para compatibilidade com o login, pensar em migrar
 --------------------------------------------------------------*/
 
-
 body {
     display: flex;
     min-height: 100vh;
@@ -30,6 +29,13 @@ label {
 #sidenav-overlay {
     z-index: 988;
 }
+
+@media screen and (min-width: 768px) {
+    #toast-container {
+        top: 15%;
+    }
+}
+
 /*--------------------------------------------------------------
 x - FORMULÁRIOS
 --------------------------------------------------------------*/

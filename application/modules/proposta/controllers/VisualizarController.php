@@ -139,13 +139,14 @@ class Proposta_VisualizarController extends Proposta_GenericController
         return $planilha;
     }
 
-    public function montarArrayDetalhamentoPlanoDistribuicao($detalhamentos) {
+    public function montarArrayDetalhamentoPlanoDistribuicao($detalhamentos)
+    {
 
         $arrayDetalhamentos = [];
 
         foreach ($detalhamentos as $key => $item) {
             $arrayDetalhamentos[$item['idPlanoDistribuicao']][$item['DescricaoUf'] . ' - '
-                . $item['DescricaoMunicipio']][] = $item;
+            . $item['DescricaoMunicipio']][] = $item;
         }
 
         return $arrayDetalhamentos;
@@ -156,17 +157,17 @@ class Proposta_VisualizarController extends Proposta_GenericController
         foreach ($dados as $key => $array) {
             foreach ($array as $key2 => $dado) {
                 if (is_array($dado)) {
-                    $dado = array_map('utf8_encode', $dado);
+                    $dado = array_map('strConvertCharset', $dado);
                     $dados[$key][$key2] = array_map('html_entity_decode', $dado);
 
                     foreach ($dado as $key3 => $dado2) {
                         if (is_array($dado2)) {
-                            $dado2 = array_map('utf8_encode', $dado2);
+                            $dado2 = array_map('strConvertCharset', $dado2);
                             $dados[$key][$key2][$key3] = array_map('html_entity_decode', $dado2);
                         }
                     }
                 } else {
-                    $dado = utf8_encode($dado);
+                    $dado = strConvertCharset($dado);
                     $dados[$key][$key2] = html_entity_decode($dado);
                 }
             }
@@ -281,18 +282,6 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function obterDeslocamentoAction($idPreProjeto)
-    {
-        $this->_helper->layout->disableLayout();
-
-        $deslocamentos = new Proposta_Model_TbDeslocamentoMapper();
-        $dados = $deslocamentos->getDbTable()->buscarDeslocamento($idPreProjeto);
-
-        $dados = [];
-
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
-    }
-
     public function obterPlanilhaOrcamentariaPropostaAction()
     {
         $this->_helper->layout->disableLayout();
@@ -325,30 +314,33 @@ class Proposta_VisualizarController extends Proposta_GenericController
         $this->_helper->json(array('data' => $dados, 'success' => 'true'));
     }
 
-    public function obterPlanoDistribuicacaoAction($idPreProjeto)
+    public function obterPlanoDistribuicacaoAction()
     {
         $dados = [];
 
         $this->_helper->layout->disableLayout();
 
-        $arrBusca = array();
-        $arrBusca['idprojeto'] = $this->idPreProjeto;
+        $idPreProjeto = $this->_request->getParam('idPreProjeto');
 
-        $tblAbrangencia = new Proposta_Model_DbTable_Abrangencia();
-        $rsAbrangencia = $tblAbrangencia->buscar($arrBusca);
-        $this->view->abrangencias = $rsAbrangencia;
+        try {
 
-        $tblPlanoDistribuicao = new PlanoDistribuicao();
+            if (empty($idPreProjeto)) {
+                throw new Exception("Proposta inválida");
+            }
 
-        $rsPlanoDistribuicao = $tblPlanoDistribuicao->buscar(
-            array("a.idprojeto = ?" => $this->idPreProjeto, "a.stplanodistribuicaoproduto = ?" => 1),
-            array("idplanodistribuicao DESC")
-        );
+            $tbPlanoDistribuicao = new PlanoDistribuicao();
+            $dados['planodistribuicaoproduto'] = $tbPlanoDistribuicao->buscar(array('idProjeto = ?' => $idPreProjeto))->toArray();
+            $dados['tbdetalhaplanodistribuicao'] = $tbPlanoDistribuicao->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
+            $dados = $this->prepararArrayParaJson($dados);
 
-        $this->view->planosDistribuicao = $rsPlanoDistribuicao;
-        $this->abrangencias = $rsAbrangencia;
+            $dados['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
+                $dados['tbdetalhaplanodistribuicao']
+            );
 
-        $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+            $this->_helper->json(array('data' => $dados, 'success' => 'true'));
+        } catch (Exception $e) {
+            $this->_helper->json(array('msg' => utf8_encode($e->getMessage()), 'data' => $dados, 'success' => 'false'));
+        }
     }
 
     public function obterDetalhamentoPlanoDistribuicao($idPlanoDistribuicacao)

@@ -482,22 +482,18 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
             $projeto = array_change_key_case($tblProjetos->findBy(array('idprojeto = ?' => $idPreProjeto)));
             $idPronac = $projeto['idpronac'];
 
-            if ($arrResultado->Observacao === true) {
-                $planilhaproposta = new Proposta_Model_DbTable_TbPlanilhaProposta();
-                $ValorTotalPlanilha = $planilhaproposta->somarPlanilhaProposta($idPreProjeto)->toArray();
+            // validar planodistribuicao
+            $planoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+            $verificaPlanoDistribuicao = $planoDistribuicao->validatePlanoDistribuicao($idPreProjeto);
 
-                # validar valor original e valor total atual da proposta
-                if (round($ValorTotalPlanilha['soma'], 2) > round($projeto['solicitadoreal'], 2)) {
-                    $validacao->dsInconsistencia = 'O valor total do projeto n&atilde;o pode ultrapassar o valor anteriormente solicitado!';
-                    $validacao->Observacao = false;
-                    $validacao->Url = array('module' => 'proposta', 'controller' => 'manterorcamento', 'action' => 'produtoscadastrados', 'idPreProjeto' => $idPreProjeto);
-                    $listaValidacao[] = clone($validacao);
-                } else {
-                    $listaValidacao = $arrResultado;
-                    $this->view->acao = $this->_urlPadrao . "/proposta/manterpropostaincentivofiscal/encaminharprojetoaominc";
-                }
+            if (!empty($verificaPlanoDistribuicao)) {
+                $arrResultado = array_merge($arrResultado, $verificaPlanoDistribuicao);
             }
 
+            if ($arrResultado->Observacao === true) {
+                    $listaValidacao = $arrResultado;
+                    $this->view->acao = $this->_urlPadrao . "/proposta/manterpropostaincentivofiscal/encaminharprojetoaominc";
+            }
 
             if ($params['confirmarenvioaominc'] == true && $arrResultado->Observacao === true) {
                 if ($projeto['area'] == 2) {
@@ -720,7 +716,7 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
         }
 
         //VERIFICA SE DATA INICIO E MAIOR QUE 90 DIAS DA DATA ATUAL
-        if (!empty($get->dtInicio) && strlen($get->dtInicio) == 10) {
+        if (!empty($get->dtInicio) && strlen($get->dtInicio) == 10 && !$this->view->isEditarProjeto ) {
             $dtTemp = explode("/", $get->dtInicio);
             $dtInicio = $dtTemp[2] . $dtTemp[1] . $dtTemp[0];
 

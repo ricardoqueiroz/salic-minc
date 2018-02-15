@@ -41,10 +41,10 @@ if (isset($this->proposta['idpreprojeto'])) {
                 <div class="col s12 m9 l10">
                     <h1>
                         <?php if (!isset($this->proposta['idpreprojeto'])) {
-                                echo "Nova Proposta";
-                            } else {
-                                echo $this->layout['titleFull'];
-                            }
+                            echo "Nova Proposta";
+                        } else {
+                            echo $this->layout['titleFull'];
+                        }
                         ?>
                     </h1>
 
@@ -135,10 +135,12 @@ if (isset($this->proposta['idpreprojeto'])) {
                                     <tr>
                                         <td colspan="5">
                                             <p class="caption">
-                          No campo Resumo deve-se descrever o objetivo do projeto em no m&aacute;ximo 5 linhas. O texto
-                          deve ser conciso e apresentar de forma clara os produtos que comp&otilde;em a proposta.
-                          <br/>
-                          Pergunta-chave: O QU&Ecirc;? *</p>
+                                                No campo Resumo deve-se descrever o objetivo do projeto em no m&aacute;ximo
+                                                5 linhas. O texto
+                                                deve ser conciso e apresentar de forma clara os produtos que comp&otilde;em
+                                                a proposta.
+                                                <br/>
+                                                Pergunta-chave: O QU&Ecirc;? *</p>
 
                                             <textarea id="resumodoprojeto" class="browser-default"
                                                       name="resumodoprojeto" <?php echo isset($this->arrConfig['resumodoprojeto']['disabled']) ? 'disabled="disabled"' : '' ?>>
@@ -156,7 +158,8 @@ if (isset($this->proposta['idpreprojeto'])) {
                                         <td class="centro" width="150px;" nowrap>Mecanismo: <b>Incentivo Fiscal</b></td>
                                         <td class="centro">
                                             <label for="stDataFixa">Data Fixa</label>
-                                            <select class="select_simples" name="stDataFixa" id="stDataFixa" style="width: 5em">
+                                            <select class="select_simples" name="stDataFixa" id="stDataFixa"
+                                                    style="width: 5em">
                                                 <option value="0" <?php
                                                 if (isset($this->proposta['idpreprojeto']))
                                                     if ($this->proposta['stdatafixa'] == "0") {
@@ -175,7 +178,8 @@ if (isset($this->proposta['idpreprojeto'])) {
                                         </td>
                                         <td class="centro">
                                             <label for="agenciaBancaria">Ag&ecirc;ncia Banc&aacute;ria *</label>
-                                            <input type="text" class="input_simples" name="agenciaBancaria" id="agenciaBancaria"
+                                            <input type="text" class="input_simples" name="agenciaBancaria"
+                                                   id="agenciaBancaria"
                                                    maxlength="12" style="width:70px;"
                                                    value="<?php echo $this->proposta['agenciabancaria']; ?>"/>
                                             <div id="ValidaAgencia" name="ValidaAgencia" style="color:#FF0000"></div>
@@ -217,13 +221,14 @@ if (isset($this->proposta['idpreprojeto'])) {
                                                     </option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <div id="ValidaStProposta" name="ValidaStProposta" style="color:#FF0000"></div>
+                                            <div id="ValidaStProposta" name="ValidaStProposta"
+                                                 style="color:#FF0000"></div>
                                         </td>
                                         <td colspan="2">
                                             <div id="comprovanteplanodeexecucao" style="display: none">
                                                 <?php if (!empty($this->arquivoExecucaoImediata[0])) : ?>
                                                     <?php
-                                                        $currentUrl = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
+                                                    $currentUrl = Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
                                                     ?>
                                                     <div id="comprovanteDocumentoAnexado"
                                                          class="doc<?php echo $this->arquivoExecucaoImediata[0]['codigodocumento']; ?>">
@@ -239,7 +244,8 @@ if (isset($this->proposta['idpreprojeto'])) {
                                                     <div id="anexarDocumento">
                                                         <label for="arquivo" style="">Comprovante do Plano de Execu&ccedil;&atilde;o
                                                             Imediata </label>
-                                                        <input type="file" name="arquivo" id="arquivo" class="input_simples">
+                                                        <input type="file" name="arquivo" id="arquivo"
+                                                               class="input_simples">
                                                         <div id="arquivoinvalido" style="color:#FF0000"></div>
                                                     </div>
                                                 <?php endif; ?>
@@ -254,9 +260,11 @@ if (isset($this->proposta['idpreprojeto'])) {
                                         <td colspan="2"><b>No caso de bem tombado</b></td>
                                     </tr>
                                     <tr>
-                                        <td class="centro"><label for="dtInicioDeExecucao">Data de In&iacute;cio *</label></td>
+                                        <td class="centro"><label for="dtInicioDeExecucao">Data de In&iacute;cio
+                                                *</label></td>
                                         <td>
-                                            <input type="text" name="dtInicioDeExecucao" id="dtInicioDeExecucao" maxlength="10"
+                                            <input type="text" name="dtInicioDeExecucao" id="dtInicioDeExecucao"
+                                                   maxlength="10"
                                                    class="input_simples btn_calendario"
                                                    value="<?php if (isset($this->proposta['idpreprojeto'])) echo $this->proposta['dtiniciodeexecucaoform']; ?>"/>
                                         </td>
@@ -276,7 +284,8 @@ if (isset($this->proposta['idpreprojeto'])) {
                                             </select>
                                         </td>
                                         <td><label for="nrAtoTombamento">N&uacute;mero do Ato </label></td>
-                                        <td><input type="text" class="input_simples" name="nrAtoTombamento" id="nrAtoTombamento"
+                                        <td><input type="text" class="input_simples" name="nrAtoTombamento"
+                                                   id="nrAtoTombamento"
                                                    maxlength="12" onkeyup="ativarDesativarObrigatoriedadeDtAto()"
                                                    value="<?php if (isset($this->proposta['idpreprojeto'])) echo trim($this->proposta['nratotombamento']); ?>"/>
                                         </td>
@@ -284,14 +293,16 @@ if (isset($this->proposta['idpreprojeto'])) {
                                     <tr>
                                         <td class="centro"><label for="dtFinalDeExecucao">Data Final *</label></td>
                                         <td>
-                                            <input type="text" name="dtFinalDeExecucao" id="dtFinalDeExecucao" maxlength="10"
+                                            <input type="text" name="dtFinalDeExecucao" id="dtFinalDeExecucao"
+                                                   maxlength="10"
                                                    class="input_simples btn_calendario"
                                                    value="<?php if (isset($this->proposta['idpreprojeto'])) echo $this->proposta['dtfinaldeexecucaoform']; ?>"/>
                                         </td>
                                         <td></td>
                                         <td><label for="dtAtoTombamento">Data do Ato </label></td>
                                         <td>
-                                            <input type="text" name="dtAtoTombamento" id="dtAtoTombamento" maxlength="10"
+                                            <input type="text" name="dtAtoTombamento" id="dtAtoTombamento"
+                                                   maxlength="10"
                                                    class="input_simples btn_calendario"
                                                    value="<?php if (isset($this->proposta['idpreprojeto'])) echo $this->proposta['dtatotombamentoform']; ?>"/>
                                         </td>
@@ -299,7 +310,8 @@ if (isset($this->proposta['idpreprojeto'])) {
                                     <tr>
                                         <td colspan="3">
                                             <span id="msgValidaData"></span>
-                                            <input type="hidden" name="blnDatasValidas" id="blnDatasValidas" value="true">
+                                            <input type="hidden" name="blnDatasValidas" id="blnDatasValidas"
+                                                   value="true">
                                         </td>
                                         <td><label for="esferaTombamento">Esfera do Ato </label></td>
                                         <td><select class="select_simples" name="esferaTombamento" id="esferaTombamento"
@@ -330,62 +342,71 @@ if (isset($this->proposta['idpreprojeto'])) {
                                         </td>
                                     </tr>
                                 </table>
-
-                                <table class="tabela" cellpadding="1" cellspacing="1">
-                                    <tr class="destacar centro">
-                                        <td colspan="5"><b>Objetivos *</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <p class="caption">
-                          O campo Objetivos deve conter os objetivos gerais e espec&iacute;ficos de forma separada,
-                          especificando cada categoria (geral e espec&iacute;fico).
-                          </br></br><b>Objetivo Geral</b></br>
-                          No Objetivo Geral deve-se descrever, resumidamente, qual o principal resultado que o
-                          projeto pretende alcan&ccedil;ar, qual a sua finalidade.
-                          <br/>
-                          Pergunta-chave: PARA QU&Ecirc;?
-                          </br></br><b>Objetivo espec&iacute;fico</b></br>
-                          Nos Objetivos espec&iacute;ficos deve-se citar todas as a&ccedil;&otilde;es que ser&atilde;o realizadas
-                          no projeto, ou seja, quais os produtos espec&iacute;ficos que ser&atilde;o oferecidos &agrave;
-                          popula&ccedil;&atilde;o. Os objetivos espec&iacute;ficos devem ser mensur&aacute;veis e
-                          devidamente comprovados na presta&ccedil;&atilde;o de contas.
-                          <br/>
-                          Pergunta-chave: QUAIS? QUANTOS?
-                                            </p>
-
-                                            <textarea id="objetivos" class="browser-default editor"
-                                                      name="objetivos" <?php echo isset($this->arrConfig['objetivos']['disabled']) ? 'disabled="disabled"' : '' ?>>
-                                                         <?php if (isset($this->proposta['objetivos'])) echo $this->proposta['objetivos']; ?>
-                                                        </textarea>
-                                            <!--  <label for="objetivos" class="active">Objetivos *</label>-->
-                                        </td>
-                                    </tr>
-                                </table>
-                                <table class="tabela" cellpadding="1" cellspacing="1">
-                                    <tr class="destacar centro">
-                                        <td colspan="5"><b>Justificativa *</b></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <p class="caption">
-                          Destaque a necessidade do uso do Mecanismo Incentivo a Projetos Culturais para
-                          financiamento deste, apresentando em quais incisos do Art. 1&ordm; da Lei 8313/91 o
-                          projeto se enquadra, bem como quais objetivos do Art. 3&ordm; da referida norma
-                          ser&atilde;o alcan&ccedil;ados.
-                          <br/><br/>
-                          Pergunta-chave: POR QUE A LEI ROUANET?
-                        </p>
-
-                                            <textarea id="justificativa" class="browser-default editor"
-                                                      name="justificativa" <?php echo isset($this->arrConfig['justificativa']['disabled']) ? 'disabled="disabled"' : '' ?>>
-                                                     <?php if (isset($this->proposta['justificativa'])) echo $this->proposta['justificativa']; ?>
-                                                    </textarea>
-                                            <!--                                <label for="justificativa" class="active">Justificativa *</label>-->
-                                        </td>
-                                    </tr>
-                                </table>
                             <?php endif; ?>
+
+                            <table class="tabela" cellpadding="1" cellspacing="1">
+                                <tr class="destacar centro">
+                                    <td colspan="5"><b>Objetivos *</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="caption">
+                                            O campo Objetivos deve conter os objetivos gerais e espec&iacute;ficos
+                                            de forma separada,
+                                            especificando cada categoria (geral e espec&iacute;fico).
+                                            </br></br><b>Objetivo Geral</b></br>
+                                            No Objetivo Geral deve-se descrever, resumidamente, qual o principal
+                                            resultado que o
+                                            projeto pretende alcan&ccedil;ar, qual a sua finalidade.
+                                            <br/>
+                                            Pergunta-chave: PARA QU&Ecirc;?
+                                            </br></br><b>Objetivo espec&iacute;fico</b></br>
+                                            Nos Objetivos espec&iacute;ficos deve-se citar todas as a&ccedil;&otilde;es
+                                            que ser&atilde;o realizadas
+                                            no projeto, ou seja, quais os produtos espec&iacute;ficos que ser&atilde;o
+                                            oferecidos &agrave;
+                                            popula&ccedil;&atilde;o. Os objetivos espec&iacute;ficos devem ser
+                                            mensur&aacute;veis e
+                                            devidamente comprovados na presta&ccedil;&atilde;o de contas.
+                                            <br/>
+                                            Pergunta-chave: QUAIS? QUANTOS?
+                                        </p>
+
+                                        <textarea id="objetivos" class="browser-default editor"
+                                                  name="objetivos" <?php echo isset($this->arrConfig['objetivos']['disabled']) ? 'disabled="disabled"' : '' ?>>
+                                                     <?php if (isset($this->proposta['objetivos'])) echo $this->proposta['objetivos']; ?>
+                                                    </textarea>
+                                        <!--  <label for="objetivos" class="active">Objetivos *</label>-->
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="tabela" cellpadding="1" cellspacing="1">
+                                <tr class="destacar centro">
+                                    <td colspan="5"><b>Justificativa *</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="caption">
+                                            Destaque a necessidade do uso do Mecanismo Incentivo a Projetos
+                                            Culturais para
+                                            financiamento deste, apresentando em quais incisos do Art. 1&ordm; da
+                                            Lei 8313/91 o
+                                            projeto se enquadra, bem como quais objetivos do Art. 3&ordm; da
+                                            referida norma
+                                            ser&atilde;o alcan&ccedil;ados.
+                                            <br/><br/>
+                                            Pergunta-chave: POR QUE A LEI ROUANET?
+                                        </p>
+
+                                        <textarea id="justificativa" class="browser-default editor"
+                                                  name="justificativa" <?php echo isset($this->arrConfig['justificativa']['disabled']) ? 'disabled="disabled"' : '' ?>>
+                                                 <?php if (isset($this->proposta['justificativa'])) echo $this->proposta['justificativa']; ?>
+                                                </textarea>
+                                        <!--                                <label for="justificativa" class="active">Justificativa *</label>-->
+                                    </td>
+                                </tr>
+                            </table>
+
                         </div>
 
                         <?php if ($this->isEditavel || empty($this->idPreProjeto)) : ?>
@@ -417,13 +438,13 @@ if (isset($this->proposta['idpreprojeto'])) {
         var desabilitarEdicao = 0;
 
         <?php if (!$this->isEditavel) : ?>
-            desabilitarEdicao = true;
+        desabilitarEdicao = true;
         <?php endif; ?>
 
         $("#resumodoprojeto").editorRico({
             altura: 200,
             maxchar: 1000,
-            isLimitarCarateres : true,
+            isLimitarCarateres: true,
             isDesabilitarEdicao: desabilitarEdicao
         });
 
@@ -432,7 +453,7 @@ if (isset($this->proposta['idpreprojeto'])) {
             $(this).editorRico({
                 altura: 400,
                 maxchar: 8000,
-                isLimitarCarateres : true,
+                isLimitarCarateres: true,
                 isDesabilitarEdicao: desabilitarEdicao
             });
         });
@@ -532,23 +553,25 @@ if (isset($this->proposta['idpreprojeto'])) {
                     $("#msgValidaData").focusin();
                     return false;
                 }
-                //valida data do ano anual
-                if ($("#stProposta").val() == '4' && $("#dtInicioDeExecucao").val().length == 10) {
-                    ano_vigente = <?php echo date('Y')?>;
-                    ano_execucao = new Number($('#dtInicioDeExecucao').val().substr(6, 4));
-                    if (ano_vigente >= ano_execucao) {
-//                        JSMostraOcultaObj('identificacaodiv');
-                        $("#ValidaStProposta").html("<font color='red'>O per&iacute;odo de execu&ccedil;&atilde;o de projetos de plano anual dever ser posterior ao ano vigente</font>");
-                        $("#dtInicioDeExecucao").focusin();
-                        return false;
+
+                <?php if (!$this->projeto) : ?>
+                    //valida data do ano anual
+                    if ($("#stProposta").val() == '614' && $("#dtInicioDeExecucao").val().length == 10) {
+                        ano_vigente = <?php echo date('Y')?>;
+                        ano_execucao = new Number($('#dtInicioDeExecucao').val().substr(6, 4));
+                        if (ano_vigente >= ano_execucao) {
+                            $("#ValidaStProposta").html("<font color='red'>O per&iacute;odo de execu&ccedil;&atilde;o de projetos de plano anual dever ser posterior ao ano vigente</font>");
+                            $("#dtInicioDeExecucao").focusin();
+                            return false;
+
+                        } else {
+                            $("#ValidaStProposta").html("");
+                        }
 
                     } else {
                         $("#ValidaStProposta").html("");
                     }
-
-                } else {
-                    $("#ValidaStProposta").html("");
-                }
+                <?php endif; ?>
 
                 form.submit();
 

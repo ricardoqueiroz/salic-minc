@@ -560,13 +560,13 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         return $this->fetchRow($select);
     } // fecha m�todo buscarDados()
 
-    public function buscarValorComprovadoDoItem($idPlanilhaAprovacao)
+    public function buscarValorComprovadoDoItem($idPlanilhaAprovacao, $where = [])
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
                 array('a' => $this->_name),
-                array( new Zend_Db_Expr("SUM(b.vlComprovacao) AS vlComprovado") ),
+                array( new Zend_Db_Expr("SUM(b.vlComprovacao) AS vlComprovado")),
             'BDCORPORATIVO.scSAC'
         );
         $select->joinInner(
@@ -580,8 +580,50 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         } else {
             $select->where('a.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
         }
+
+        foreach ($where as $coluna => $valor) {
+            if (!is_null($valor)) {
+                $select->where($coluna, $valor);
+            }
+        }
+
         return $this->fetchRow($select);
-    } // fecha m�todo buscarDados()
+    }
+
+    public function buscarValorComprovadoPorFonteProdutoEtapaLocalItem($where)
+    {
+        try {
+
+            if (empty($where)) {
+               throw new Exception("Par&acirc;metros n&atilde;o podem ficar vazios");
+            }
+
+            $select = $this->select();
+            $select->setIntegrityCheck(false);
+            $select->from(
+                array('a' => $this->_name),
+                array( new Zend_Db_Expr("ISNULL(SUM(a.vlComprovado), 0) AS vlComprovado")),
+                'BDCORPORATIVO.scSAC'
+            );
+            $select->joinInner(
+                array('b' => 'tbPlanilhaAprovacao'),
+                "a.idPlanilhaAprovacao = b.idPlanilhaAprovacao",
+                array(),
+                'SAC.dbo'
+            );
+
+            foreach ($where as $coluna => $valor) {
+                if (!is_null($valor)) {
+                    $select->where($coluna, $valor);
+                }
+            }
+            return $this->fetchRow($select);
+
+        } catch(Exception $e) {
+            throw new $e;
+        }
+
+    }
 
     // TODO: usar dbo.fnVlComprovadoItem para valor comprovado
 } // fecha class

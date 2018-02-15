@@ -35,7 +35,7 @@ Vue.component('salic-proposta-detalhamento-plano-distribuicao', {
                         </thead>
                         <tbody v-if="detalhamento.length > 0">
                             <tr v-for="( item, index ) in detalhamento">
-                                <td>{{ item.dsProduto }}</td>
+                                <td>{{item.dsProduto}}</td>
                                 <td class="right-align">{{ item.qtExemplares }}</td>
             
                                 <!-- Distribuicao Gratuita-->
@@ -93,7 +93,6 @@ Vue.component('salic-proposta-detalhamento-plano-distribuicao', {
         }
     },
     props: [
-        'idplanodistribuicao',
         'arrayDetalhamentos'
     ],
     computed: {
@@ -202,19 +201,12 @@ Vue.component('salic-proposta-detalhamento-plano-distribuicao', {
         }
     },
     watch: {
-        idplanodistribuicao: function (value) {
-            // this.fetch(value);
-        },
         arrayDetalhamentos: function(value) {
             this.detalhamentos = value;
         }
 
     },
     mounted: function () {
-        if (typeof this.idplanodistribuicao != 'undefined') {
-            // this.fetch(this.idplanodistribuicao);
-        }
-
         if (typeof this.arrayDetalhamentos != 'undefined') {
             this.iniciarCollapsible();
             this.detalhamentos = this.arrayDetalhamentos;
@@ -228,7 +220,6 @@ Vue.component('salic-proposta-detalhamento-plano-distribuicao', {
                 type: "GET",
                 url: "/proposta/visualizar/obter-detalhamento-plano-distribuicao",
                 data: {
-                    idPlanoDistribuicao: vue.idplanodistribuicao,
                     idPreProjeto: vue.idpreprojeto,
                 }
             }).done(function (response) {

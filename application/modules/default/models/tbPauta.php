@@ -492,7 +492,7 @@ class tbPauta extends MinC_Db_Table_Abstract
         if ($count) {
             $slctContador = $this->select();
             $slctContador->setIntegrityCheck(false);
-            $selectCount->from(
+            $slctContador->from(
                             array('p'=>$this->_name),
                             array('total'=>"count(*)")
                          );
@@ -625,11 +625,11 @@ class tbPauta extends MinC_Db_Table_Abstract
                 array('*',
                       'resultadoPlenaria' => new Zend_Db_Expr("CASE
                                                                 WHEN stAnalise = 'AS'
-                                                                    THEN 'Aprovado na plen�ria'
+                                                                    THEN 'Aprovado na plen&aacute;ria'
                                                                 WHEN stAnalise = 'AC'
                                                                     THEN 'Aprovado pelo componente'
                                                                 WHEN stAnalise = 'IS'
-                                                                    THEN 'Indeferido na plen�ria'
+                                                                    THEN 'Indeferido na plen&aacute;ria'
                                                                 WHEN stAnalise = 'IC'
                                                                     THEN 'Indeferido pelo componente'
                                                                 END "),
@@ -658,7 +658,7 @@ class tbPauta extends MinC_Db_Table_Abstract
         if ($count) {
             $slctContador = $this->select();
             $slctContador->setIntegrityCheck(false);
-            $selectCount->from(
+            $slctContador->from(
                             array('p'=>$this->_name),
                             array('total'=>"count(*)")
                          );
@@ -756,12 +756,12 @@ class tbPauta extends MinC_Db_Table_Abstract
                 "pr.IdPRONAC = tp.IdPRONAC",
                 array(
                     '(pr.AnoProjeto+pr.Sequencial) as pronac',
-                    'SAC.dbo.fnTotalAprovadoProjeto(pr.AnoProjeto,pr.Sequencial) AS AprovadoReal',
+                    new Zend_Db_Expr('SAC.dbo.fnTotalAprovadoProjeto(pr.AnoProjeto,pr.Sequencial) AS AprovadoReal'),
                     'pr.NomeProjeto',
                     'pr.Situacao',
                     'pr.Area',
                     'pr.Orgao',
-                    'TABELAS.dbo.fnCodigoOrgaoEstrutura(pr.orgao, 1) AS orgaoSuperior',
+                    new Zend_Db_Expr('TABELAS.dbo.fnCodigoOrgaoEstrutura(pr.orgao, 1) AS orgaoSuperior'),
                     'pr.DtProtocolo',
                     new Zend_Db_Expr('SAC.dbo.fnDtAprovacao(pr.AnoProjeto,pr.Sequencial) as DtAprovacao')
                 ),
@@ -799,7 +799,7 @@ class tbPauta extends MinC_Db_Table_Abstract
         $slct->joinLeft(
                 array('cv' => 'tbConsolidacaoVotacao'),
                 "cv.IdPRONAC = tp.IdPRONAC and cv.IdNrReuniao = tp.IdNrReuniao",
-                array('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao'),
+                array(new Zend_Db_Expr('CAST(cv.dsConsolidacao as TEXT) as dsConsolidacao')),
                 "BDCORPORATIVO.scSAC"
         );
         //adiciona quantos filtros foram enviados
@@ -810,9 +810,9 @@ class tbPauta extends MinC_Db_Table_Abstract
         if ($count) {
             $slctContador = $this->select();
             $slctContador->setIntegrityCheck(false);
-            $selectCount->from(
+            $slctContador->from(
                             array('tp'=>$this->_name),
-                            array('total'=>"count(*)")
+                            array('total'=>new Zend_Db_Expr("count(*)"))
                          );
             $slctContador->joinInner(
                     array('pr' => 'Projetos'),
@@ -960,7 +960,7 @@ class tbPauta extends MinC_Db_Table_Abstract
         $slct3->from(
             array('a' => 'tbReadequacao'),
             array(
-                new Zend_Db_Expr("'Readequa��o' AS TipoAprovacao,d.dsReadequacao AS Tipo,b.IdPRONAC,b.AnoProjeto+b.Sequencial AS PRONAC, b.NomeProjeto"),
+                new Zend_Db_Expr("'Readequa&ccedil;&atilde;o' AS TipoAprovacao,d.dsReadequacao AS Tipo,b.IdPRONAC,b.AnoProjeto+b.Sequencial AS PRONAC, b.NomeProjeto"),
                 new Zend_Db_Expr("(SELECT COUNT(d.stVoto) FROM BDCORPORATIVO.scSAC.tbVotacao d WHERE d.stVoto = 'A' and d.idPronac = a.IdPRONAC and d.tpTipoReadequacao = a.idTipoReadequacao) as QtdeVotoAprovacao"),
                 new Zend_Db_Expr("(SELECT COUNT(e.stVoto) FROM BDCORPORATIVO.scSAC.tbVotacao e WHERE e.stVoto = 'B' and e.idPronac = a.IdPRONAC and e.tpTipoReadequacao = a.idTipoReadequacao) as QtdeVotoAbstencao"),
                 new Zend_Db_Expr("(SELECT COUNT(f.stVoto) FROM BDCORPORATIVO.scSAC.tbVotacao f WHERE f.stVoto = 'I' and f.idPronac = a.IdPRONAC and f.tpTipoReadequacao = a.idTipoReadequacao) as QtdeVotoIndeferimento"),

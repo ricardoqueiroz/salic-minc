@@ -1,6 +1,9 @@
 Vue.component('salic-proposta-plano-distribuicao', {
     template: `
-    <div class="plano-distribuicao">
+    <div class="plano-distribuicao" v-if="produtos">
+        <div v-if="produtos.length <= 0" class="padding10">
+            <b>Aguarde! Carregando....</b>
+        </div>
         <ul class="collapsible collapsible-produto no-padding" data-collapsible="expandable">
             <li v-for="produto of produtos">
                 <div class="collapsible-header green-text">
@@ -98,7 +101,7 @@ Vue.component('salic-proposta-plano-distribuicao', {
                     </table>
                     
                     <salic-proposta-detalhamento-plano-distribuicao 
-                        :arrayDetalhamentos="detalhamentosByID(arrayDetalhamentos, produto.idPlanoDistribuicao)">
+                        :arrayDetalhamentos="detalhamentosByID(detalhamentos, produto.idPlanoDistribuicao)">
                     </salic-proposta-detalhamento-plano-distribuicao>
                 </div>
             </li>
@@ -108,6 +111,7 @@ Vue.component('salic-proposta-plano-distribuicao', {
     data: function () {
         return {
             produtos: [],
+            detalhamentos: [],
             active: false,
             icon: 'add',
             radio: 'n'
@@ -130,6 +134,9 @@ Vue.component('salic-proposta-plano-distribuicao', {
         },
         arrayProdutos: function (value) {
             this.produtos = value;
+        },
+        arrayDetalhamentos: function (value) {
+            this.detalhamentos = value;
         }
     },
     mounted: function () {
@@ -143,13 +150,14 @@ Vue.component('salic-proposta-plano-distribuicao', {
 
             $3.ajax({
                 type: "GET",
-                url: "/proposta/visualizar/obter-plano-distribuicacao/idPreProjeto/",
+                url: "/proposta/visualizar/obter-plano-distribuicacao",
                 data: {
-                    idPreProjeto: vue.idpreprojeto,
-                    idPlanoDistribuicao: vue.idplanodistribuicao
+                    idPreProjeto: vue.idpreprojeto
                 }
             }).done(function (response) {
-                vue.produtos = response.data;
+                let dados = response.data;
+                vue.produtos = dados.planodistribuicaoproduto;
+                vue.detalhamentos = dados.tbdetalhaplanodistribuicao;
             });
         },
         detalhamentosByID: function (lista, id) {

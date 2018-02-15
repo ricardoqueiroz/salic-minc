@@ -30,7 +30,7 @@ $edital='';
         <div class="content">
             <div id="msgExclusaoArq" class="sumir">Deseja realmente efetuar a exclus&atilde;o?</div>
             <div class="card-panel">
-                <?php if( !$this->isEditarProjeto) : ?>
+                <?php if( $this->isEditavel) : ?>
                     <form method="post" action="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaedital', 'action' => 'incluir-anexo')) ?>" id="formulario"  enctype="multipart/form-data">
                         <input type="hidden" name="idPreProjeto" value="<?php echo $_GET['idPreProjeto'] ?>" >
                         <input type="hidden" name="edital" value="<?php echo $edital ?>" />
@@ -47,8 +47,10 @@ $edital='';
                                 <div class="col s12">
                                     <label class="active">Tipo do documento<span class="red-text">*</span></label>
                                     <p>
-                                        <input type="radio"  name="tipoDocumento" class="tipoDocumento" id="tipoDocumento1" value="1" /><label for="tipoDocumento1">Proponente</label>
-                                        <input type="radio"  name="tipoDocumento" class="tipoDocumento" id="tipoDocumento2" value="2" /><label for="tipoDocumento2">Proposta</label>
+                                        <input type="radio"  name="tipoDocumento" class="tipoDocumento" id="tipoDocumento1" value="1" />
+                                        <label for="tipoDocumento1">Proponente</label>
+                                        <input type="radio"  name="tipoDocumento" class="tipoDocumento" id="tipoDocumento2" value="2" />
+                                        <label for="tipoDocumento2"><?= isset($this->layout['titleShort']) ? $this->layout['titleShort']: 'Proposta'; ?></label>
                                         <span style="color:#f00" id="tipodocumentoinvalido"></span>
                                     </p>
                                 </div>
@@ -77,15 +79,15 @@ $edital='';
                     </form>
                 <?php endif; ?>
                 <?php if(count($this->arquivosProposta)>0){ ?>
-                <table class="tabela">
+                <table class="bordered">
                     <tr>
-                        <th colspan="4">Documentos da Proposta</th>
+                        <th colspan="4">Documentos <?= isset($this->layout['titleShort']) ? $this->layout['titleShort']: 'Proposta'; ?></th>
                     </tr>
                     <tr class="destacar">
                         <td align="center"><b>Documento</b></td>
                         <td align="center"><b>Data envio</b></td>
                         <td align="center"><b>Arquivo</b></td>
-                        <?php if( !$this->isEditarProjeto) : ?>
+                        <?php if($this->isEditavel) : ?>
                         <td align="center" width="150"><b>A&ccedil;&atilde;o</b></td>
                         <?php endif; ?>
                     </tr>
@@ -122,7 +124,7 @@ $edital='';
                         <td align="center"><b>Documento</b></td>
                         <td align="center"><b>Data envio</b></td>
                         <td align="center"><b>Arquivo</b></td>
-                        <?php if( !$this->isEditarProjeto) : ?>
+                        <?php if( $this->isEditavel) : ?>
                             <td align="center" width="150"><b>A&ccedil;&atilde;o</b></td>
                         <?php endif; ?>
                     </tr>

@@ -2811,7 +2811,6 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
         }
         
         /* DADOS DO ITEM ATIVO */
-        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
         $where = array();
 
         if (empty($idPlanilhaAprovacaoPai) || $idPlanilhaAprovacaoPai == '') {
@@ -2819,24 +2818,39 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
         } else {
             $where['idPlanilhaAprovacaoPai = ?'] = $idPlanilhaAprovacaoPai;
         }
+
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
         $planilhaAtiva = $tbPlanilhaAprovacao->buscarDadosAvaliacaoDeItemRemanejamento($where);
 
         $idPlanilhaAprovacaoComprovado = (!empty($idPlanilhaAprovacaoPai)) ? array($idPlanilhaAprovacao,$idPlanilhaAprovacaoPai) : $idPlanilhaAprovacao;
-        
-        $tbCompPagxPlanAprov = new tbComprovantePagamentoxPlanilhaAprovacao();
-        $resComprovado = $tbCompPagxPlanAprov->buscarValorComprovadoDoItem($idPlanilhaAprovacaoComprovado);
-        
-        
-        /* DADOS ORIGINAIS PARA REFERÊNCIA DE MÍNIMO E MÁXIMO */
+
+       /* DADOS ORIGINAIS PARA REFERÊNCIA DE MÍNIMO E MÁXIMO */
         $idPronac = $planilhaAtiva[0]['idPRONAC'];
         $idPlanilhaItem = $planilhaAtiva[0]['idPlanilhaItem'];
 
-        $where = array();
-        $where['tpPlanilha = ?'] = 'CO';
-        $where['IdPRONAC = ?'] = $idPronac;
-        $where['idPlanilhaItem = ?'] = $idPlanilhaItem;
-        
-        $planilhaOriginal = $tbPlanilhaAprovacao->buscar($where);
+        $whereItemValorComprovado = array();
+        $whereItemValorComprovado['b.IdPRONAC = ?'] = $idPronac;
+        $whereItemValorComprovado['b.idPlanilhaItem = ?'] = $idPlanilhaItem;
+        $whereItemValorComprovado['b.idEtapa = ?'] = $planilhaAtiva[0]['idEtapa'];
+        $whereItemValorComprovado['b.idProduto = ?'] = $planilhaAtiva[0]['idProduto'];
+        $whereItemValorComprovado['b.idUFDespesa = ?'] = $planilhaAtiva[0]['idUFDespesa'];
+        $whereItemValorComprovado['b.idMunicipioDespesa = ?'] = $planilhaAtiva[0]['idMunicipioDespesa'];
+        $whereItemValorComprovado['b.nrFonteRecurso = ?'] = $planilhaAtiva[0]['nrFonteRecurso'];
+
+        $tbCompPagxPlanAprov = new tbComprovantePagamentoxPlanilhaAprovacao();
+        $resComprovado = $tbCompPagxPlanAprov->buscarValorComprovadoPorFonteProdutoEtapaLocalItem($whereItemValorComprovado);
+
+        $whereItemPlanilhaOriginal = array();
+        $whereItemPlanilhaOriginal['tpPlanilha = ?'] = 'CO'; # CO - planilha do componente da comissao (original aprovada)
+        $whereItemPlanilhaOriginal['IdPRONAC = ?'] = $idPronac;
+        $whereItemPlanilhaOriginal['idPlanilhaItem = ?'] = $idPlanilhaItem;
+        $whereItemPlanilhaOriginal['idEtapa = ?'] = $planilhaAtiva[0]['idEtapa'];
+        $whereItemPlanilhaOriginal['idProduto = ?'] = $planilhaAtiva[0]['idProduto'];
+        $whereItemPlanilhaOriginal['idUFDespesa = ?'] = $planilhaAtiva[0]['idUFDespesa'];
+        $whereItemPlanilhaOriginal['idMunicipioDespesa = ?'] = $planilhaAtiva[0]['idMunicipioDespesa'];
+        $whereItemPlanilhaOriginal['nrFonteRecurso = ?'] = $planilhaAtiva[0]['nrFonteRecurso'];
+
+        $planilhaOriginal = $tbPlanilhaAprovacao->buscar($whereItemPlanilhaOriginal);
 
         $dadosPlanilhaOriginal = array();
         foreach ($planilhaOriginal as $registro) {
@@ -2846,7 +2860,8 @@ class ConsultarDadosProjetoController extends MinC_Controller_Action_Abstract
             $vlAtual = @number_format(($registro['qtItem']*$registro['nrOcorrencia']*$registro['vlUnitario']), 2, '', '');
             $vlAtualPerc = $vlAtual* tbReadequacao::PERCENTUAL_REMANEJAMENTO/100;
             
-            //VALOR M�NIMO E M�XIMO DO ITEM ORIGINAL
+            //VALOR MINIMO E MAXIMO DO ITEM ORIGINAL
+            //SE TIVER VALOR COMPROVADO, DEVE SUBTRAIR O VALOR DO ITEM COMPROVADO DO VALOR UNITARIO
             $vlAtualMin = (number_format($resComprovado->vlComprovado, 2, '', '') > round($vlAtual-$vlAtualPerc)) ? number_format($resComprovado->vlComprovado, 2, '', '') : round($vlAtual-$vlAtualPerc);
             $vlAtualMax = round($vlAtual+$vlAtualPerc);
                 

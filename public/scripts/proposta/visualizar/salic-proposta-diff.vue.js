@@ -143,15 +143,15 @@ Vue.component('salic-proposta-diff', {
                 </li>
                 <li>
                     <div class="collapsible-header" 
-                        v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.ImpactoAmbiental, dadosHistorico.ImpactoAmbiental)}">
-                        <i class="material-icons">subject</i>Impacto Ambiental
+                        v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.DemocratizacaoDeAcesso, dadosHistorico.DemocratizacaoDeAcesso)}">
+                        <i class="material-icons">subject</i>Democratiza&ccedil;&atilde;o de Acesso
                     </div>
                     <div class="collapsible-body padding20" v-if="dadosAtuais">
                          <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.ImpactoAmbiental"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.ImpactoAmbiental"></td>
+                                    <td class="original padding20" v-html="dadosHistorico.DemocratizacaoDeAcesso"></td>
+                                    <td class="changed padding20" v-html="dadosAtuais.DemocratizacaoDeAcesso"></td>
                                 </tr>
                             </table>
                         </div>

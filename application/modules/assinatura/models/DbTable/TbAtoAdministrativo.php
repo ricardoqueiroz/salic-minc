@@ -241,7 +241,7 @@ class Assinatura_Model_DbTable_TbAtoAdministrativo extends MinC_Db_Table_Abstrac
             ),
             $this->_schema
         );
-        $objQuery->where('idSecretaria = ?', $idOrgaoSuperior);
+        $objQuery->where('(idSecretaria = ?)', $idOrgaoSuperior);
         $objQuery->where('Status = ?', 0);
         $objQuery->order(2);
 
