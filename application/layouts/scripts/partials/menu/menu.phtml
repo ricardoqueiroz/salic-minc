@@ -352,6 +352,12 @@ $arrMenu['admissibilidade']['menu'][] = array(
     'label' => 'Avalia&ccedil;&atilde;o'
 );
 $arrMenu['admissibilidade']['menu'][] = array(
+    'grupo' => array(92,97,131),
+    'url' => $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'listar-solicitacoes-desarquivamento'), '', true),
+    'title' => 'Desarquivamento',
+    'label' => 'Desarquivamento'
+);
+$arrMenu['admissibilidade']['menu'][] = array(
 'grupo' => array(92,97,131),
 'url' => $this->url(array('module' => 'default','controller' => 'manterregularidadeproponente', 'action' => 'index')),
 'title' => 'Ir para Certid&otilde;es Negativas',

@@ -41,8 +41,9 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
         $search = $this->getRequest()->getParam('search');
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
-        //$order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
-        
+        $order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
+        $where = array();
+
         $idAgente = ((int)$idAgente == 0) ? $this->idAgente : (int)$idAgente;
 
         if (empty($idAgente)) {
@@ -59,7 +60,7 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             $this->idAgente,
             $this->idResponsavel,
             $idAgente,
-            array(),
+            $where,
             $order,
             $start,
             $length,
@@ -74,20 +75,20 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             foreach ($rsPreProjetoArquivado as $key => $proposta) {
                 $proposta->nomeproponente = utf8_encode($proposta->nomeproponente);
                 $proposta->nomeprojeto = utf8_encode($proposta->nomeprojeto);
-                
+
                 $aux[$key] = $proposta;
             }
             //            $recordsFiltered = $tblPreProjetoArquivado->propostasTotal($this->idAgente, $this->idResponsavel, $idAgente, array(), null, null, null, $search);
             //            $recordsTotal = $tblPreProjetoArquivado->propostasTotal($this->idAgente, $this->idResponsavel, $idAgente);
         }
-        
+
         $this->_helper->json(array(
             "data" => !empty($aux) ? $aux : 0,
             'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
             'draw' => $draw,
             'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0));
     }
-    
+
     public function verificaPermissaoAcessoProposta($idPreProjeto)
     {
         $tblProposta = new Proposta_Model_DbTable_PreProjeto();
@@ -144,21 +145,32 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
     {
         $message = null;
         $success = true;
+        $data = [];
 
-        $idPreProjeto = $this->getRequest()->getParam("idPreProjeto");
+        $idPreProjeto = $this->getRequest()->getParam("idpreprojeto");
         $SolicitacaoDesarquivamento = $this->getRequest()->getParam("SolicitacaoDesarquivamento");
+        $stEstado = $this->getRequest()->getParam("stEstado");
+        $stDecisao = $this->getRequest()->getParam("stDecisao");
 
         $arquivar = new Proposta_Model_PreProjetoArquivado();
 
-        $data = [
-            'SolicitacaoDesarquivamento' => $SolicitacaoDesarquivamento,
-            'dtSolicitacaoDesarquivamento' => new Zend_Db_Expr('getdate()'),
+        if($SolicitacaoDesarquivamento){
+            $data['SolicitacaoDesarquivamento'] = $SolicitacaoDesarquivamento;
+            $data['dtSolicitacaoDesarquivamento'] = new Zend_Db_Expr('GETDATE()');
+        }
 
-        ];
+        if($stEstado !== null) {
+            $data['stEstado'] = $stEstado;
+        }
+
+        if($stDecisao != null) {
+            $data['stDecisao'] = $stDecisao;
+        }
 
         try {
-            $arquivar->update($data, ['idPreProjeto = ?' => $idPreProjeto]);
-            $message = 'Solicitação enviada!';
+            $arquivar->update($data, array('idPreProjeto = ?' => $idPreProjeto));
+            $message = $data['dtSolicitacaoDesarquivamento'];
+            $message = 'Solicitação enviada!' . $idPreProjeto;
         } catch(Exception $e){
             $message = $e->getMessage();
             $success = false;
@@ -190,5 +202,45 @@ class Proposta_PreProjetoArquivadoController extends Proposta_GenericController
             $mail->setSubject($email->subject);
             $mail->send($transport);
         };
-    }    
+    }
+
+    public function listarSolicitacoesAction()
+    {
+        $start = $this->getRequest()->getParam('start');
+        $length = $this->getRequest()->getParam('length');
+        $draw = (int)$this->getRequest()->getParam('draw');
+        $search = $this->getRequest()->getParam('search');
+        $order = $this->getRequest()->getParam('order');
+        $columns = $this->getRequest()->getParam('columns');
+        $order = new Zend_Db_Expr('"p"."idpreprojeto" DESC');
+
+        $tblPreProjetoArquivado = new Proposta_Model_PreProjetoArquivado();
+
+        $rsPreProjetoArquivado = $tblPreProjetoArquivado->listarSolicitacoes(
+            array(),
+            $order,
+            $start,
+            $length,
+            $search,
+            $stEstado
+        );
+
+        $recordsTotal = 0;
+        $recordsFiltered = 0;
+        $aux = array();
+        if (!empty($rsPreProjetoArquivado)) {
+            foreach ($rsPreProjetoArquivado as $key => $proposta) {
+                $proposta->nomeproponente = utf8_encode($proposta->nomeproponente);
+                $proposta->nomeprojeto = utf8_encode($proposta->nomeprojeto);
+
+                $aux[$key] = $proposta;
+            }
+        }
+
+        $this->_helper->json(array(
+            "data" => !empty($aux) ? $aux : 0,
+            'recordsTotal' => $recordsTotal ? $recordsTotal : 0,
+            'draw' => $draw,
+            'recordsFiltered' => $recordsFiltered ? $recordsFiltered : 0));
+    }
 }

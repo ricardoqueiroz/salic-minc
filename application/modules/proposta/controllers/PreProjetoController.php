@@ -102,8 +102,12 @@ class Proposta_PreProjetoController extends Proposta_GenericController
         $DtArquivamento = $this->getRequest()->getParam('DtArquivamento');
 
         $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
-        $rsPreProjeto = $tblPreProjeto->find($this->idPreProjeto)->current();
-        $rsPreProjeto->DtArquivamento = $DtArquivamento;
+        $rsPreProjeto = $tblPreProjeto->find($idPreProjeto)->current();
+        
+        if ($DtArquivamento) {
+            $rsPreProjeto->DtArquivamento = $DtArquivamento;
+        }
+
         $rsPreProjeto->stEstado = $stEstado;
 
         try {
