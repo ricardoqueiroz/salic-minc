@@ -13,7 +13,6 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
     public function init()
     {
         $auth = Zend_Auth::getInstance(); // instancia da autenticacao
-
         $this->grupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
 
         // verifica as permissoes
@@ -53,7 +52,8 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $PermissoesGrupo[] = 140; // Tecnico de Admissibilidade Edital
         $PermissoesGrupo[] = 148;
         $PermissoesGrupo[] = 151;
-        //parent::perfil(1, $PermissoesGrupo);
+        $PermissoesGrupo[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
+
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
         parent::init();
 
@@ -71,6 +71,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->codOrgao = $GrupoAtivo->codOrgao;
             $this->codOrgaoSuperior = (!empty($auth->getIdentity()->usu_org_max_superior)) ? $auth->getIdentity()->usu_org_max_superior : null;
         }
+
     }
 
     public function indexAction()
@@ -222,6 +223,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->view->menu = 'inativo';
             $this->view->tituloTopo = 'Consultar dados da proposta';
         }
+        $this->view->grupo = $this->codGrupo;
 
         if ($propostaPorEdital) {
             $tbFormDocumentoDAO = new tbFormDocumento();
@@ -2688,13 +2690,13 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $recordsFiltered = 0;
         if (!empty($propostas)) {
             $zDate = new Zend_Date();
-            $SugestaoEnquadramento = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+            $sugestaoEnquadramento = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
             foreach ($propostas as $key => $proposta) {
                 $zDate->set($proposta->DtMovimentacao);
                 $proposta->NomeProposta = utf8_encode($proposta->NomeProposta);
                 $proposta->Tecnico = utf8_encode($proposta->Tecnico);
                 $proposta->DtMovimentacao = $zDate->toString('dd/MM/y h:m');
-                $proposta->isEnquadrada = $SugestaoEnquadramento->isPropostaEnquadrada(
+                $proposta->isEnquadrada = $sugestaoEnquadramento->isPropostaEnquadrada(
                     $proposta->idProjeto,
                     $this->grupoAtivo->codOrgao,
                     $this->grupoAtivo->codGrupo
@@ -2703,15 +2705,32 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 $aux[$key] = $proposta;
             }
 
-            $recordsTotal = $vwPainelAvaliar->propostasTotal($where);
-            $recordsFiltered = $vwPainelAvaliar->propostasTotal($where, null, null, null, $search);
+            $recordsTotal = $vwPainelAvaliar->obterQuantidadePropostasParaAvaliacao(
+                $where,
+                null,
+                null,
+                null,
+                null,
+                $distribuicaoAvaliacaoProposta
+            );
+            $recordsFiltered = $vwPainelAvaliar->obterQuantidadePropostasParaAvaliacao(
+                $where,
+                null,
+                null,
+                null,
+                $search,
+                $distribuicaoAvaliacaoProposta
+            );
         }
 
-        $this->_helper->json(array(
-            "data" => !empty($aux) ? $aux : 0,
-            'recordsTotal' => $recordsTotal ? $recordsTotal->total : 0,
-            'draw' => $draw,
-            'recordsFiltered' => $recordsFiltered ? $recordsFiltered->total : 0));
+        $this->_helper->json(
+            [
+                "data" => !empty($aux) ? $aux : 0,
+                'recordsTotal' => $recordsTotal ? $recordsTotal->total : 0,
+                'draw' => $draw,
+                'recordsFiltered' => $recordsFiltered ? $recordsFiltered->total : 0
+            ]
+        );
     }
 
     public function exibirpropostaculturalAjaxAction()
@@ -2841,6 +2860,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
             $this->view->menu = 'inativo';
             $this->view->tituloTopo = 'Consultar dados da proposta';
         }
+        $this->view->grupo = $this->codGrupo;
 
         if ($propostaPorEdital) {
             $tbFormDocumentoDAO = new tbFormDocumento();

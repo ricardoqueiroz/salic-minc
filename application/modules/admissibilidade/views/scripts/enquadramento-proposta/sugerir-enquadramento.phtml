@@ -58,14 +58,15 @@
                     endif;
                     ?>
                     <?php
-                    if ($this->id_perfil_usuario == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE):
-                    ?>
-                    <div class="row">
-                        <div class="input-field col s12 m12 center" style="margin-bottom:80px">
+                    if ($this->id_perfil_usuario == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE
+                        || $this->id_perfil_usuario == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO):
+                        ?>
+                        <div class="row">
+                            <div class="input-field col s12 m12 center" style="margin-bottom:80px">
                             <span class="red-text">OBS: A sele&ccedil;&atilde;o dos campos <strong>&Aacute;rea</strong> e <strong>Segmento</strong> &eacute;
                                 essencial para encaminhar a avalia&ccedil;&atilde;o da Proposta Cultural</span>
+                            </div>
                         </div>
-                    </div>
                         <?php
                     endif;
                     ?>

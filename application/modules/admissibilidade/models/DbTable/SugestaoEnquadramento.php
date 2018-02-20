@@ -6,6 +6,9 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
     protected $_schema = "sac";
     protected $_primary = "id_sugestao_enquadramento";
 
+    const ULTIMA_SUGESTAO_ATIVA = 1;
+    const ULTIMA_SUGESTAO_INATIVA = 0;
+
     public function obterHistoricoEnquadramento($id_preprojeto)
     {
 
@@ -65,7 +68,6 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         if ($resultado) {
             return $resultado->toArray();
         }
-
     }
 
     public function isPropostaEnquadrada($id_preprojeto, $id_orgao, $id_perfil_usuario)
@@ -80,5 +82,23 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         if (count($resultado) > 0) {
             return true;
         }
+    }
+
+    public function inativarSugestoes($id_preprojeto)
+    {
+        $this->alterar(
+            ['ultima_sugestao' => self::ULTIMA_SUGESTAO_INATIVA],
+            ['id_preprojeto = ?' => $id_preprojeto]
+        );
+    }
+
+    public function obterSugestaoAtiva($id_preprojeto)
+    {
+        return $this->findBy(
+            [
+                'id_preprojeto' => $id_preprojeto,
+                'ultima_sugestao' => self::ULTIMA_SUGESTAO_ATIVA,
+            ]
+        );
     }
 }
