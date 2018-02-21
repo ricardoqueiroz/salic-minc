@@ -86,9 +86,11 @@ class ProjetosGerenciarController extends MinC_Controller_Action_Abstract
         $componentes = array();
         $areaComponente = $titulacao->buscarAreaConselheiro();
         $a = 0;
+
         foreach ($areaComponente as $dadosComponentes) {
             $componentes[$dadosComponentes->stConselheiro][$a]['idAgente'] = $dadosComponentes->idAgente;
             $componentes[$dadosComponentes->stConselheiro][$a]['Nome'] = $dadosComponentes->Nome;
+            $componentes[$dadosComponentes->stConselheiro][$a]['CNPJCPF'] = $dadosComponentes->CNPJCPF;
             $componentes[$dadosComponentes->stConselheiro][$a]['Area'] = $dadosComponentes->Area;
             $componentes[$dadosComponentes->stConselheiro][$a]['cdArea'] = $dadosComponentes->cdArea;
             $where['D.idAgente = ? '] = $dadosComponentes->idAgente;
