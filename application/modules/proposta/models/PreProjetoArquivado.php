@@ -97,7 +97,7 @@ class Proposta_Model_PreProjetoArquivado  extends MinC_Db_Table_Abstract
             $sqlFinal->where('p.idpreprojeto like ? OR p.nomeprojeto like ? OR  p.nomeproponente like ?', '%'.$search['value'].'%');
         }
 
-        $sqlFinal->where('SolicitacaoDesarquivamento IS NULL');
+        /* $sqlFinal->where('SolicitacaoDesarquivamento IS NULL'); */
         //$sqlFinal->order($order);
 
         /* echo $sqlFinal;die; */
