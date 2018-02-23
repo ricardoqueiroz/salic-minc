@@ -106,131 +106,17 @@ class Analise_AnaliseController extends Analise_GenericController
                 throw new Exception("Identificador do projeto &eacute; necess&aacute;rio para acessar essa funcionalidade.");
             }
 
-            $objTbProjetos = new Projeto_Model_DbTable_Projetos();
-            $projeto = $objTbProjetos->findBy(array(
-                'IdPRONAC' => $idPronac
-            ));
-            $this->view->projeto = $projeto;
+            if (empty($idPreProjeto)) {
+                $objTbProjetos = new Projeto_Model_DbTable_Projetos();
+                $projeto = $objTbProjetos->findBy(array(
+                    'IdPRONAC' => $idPronac
+                ));
 
-            $idPreProjeto = $projeto['idProjeto'];
-            $dados = Proposta_Model_AnalisarPropostaDAO::buscarGeral($idPreProjeto);
-            $this->view->itensGeral = $dados;
-
-            $movimentacao = new Proposta_Model_DbTable_TbMovimentacao();
-            $movimentacao = $movimentacao->buscarStatusAtualProposta($idPreProjeto);
-            $this->view->movimentacao = $movimentacao['Movimentacao'];
-
-            //========== inicio codigo dirigente ================
-            $arrMandatos = array();
-            $this->view->mandatos = $arrMandatos;
-            $preProjeto = new Proposta_Model_DbTable_PreProjeto();
-            $rsDirigentes = array();
-
-            $Empresa = $preProjeto->buscar(array('idPreProjeto = ?' => $idPreProjeto))->current();
-            $idEmpresa = $Empresa->idAgente;
-
-            $Projetos = new Projetos();
-            $dadosProjeto = $Projetos->buscar(array('idProjeto = ?' => $idPreProjeto))->current();
-
-            // Busca na tabela apoio ExecucaoImediata stproposta
-            $tableVerificacao = new Proposta_Model_DbTable_Verificacao();
-            if (!empty($this->view->itensGeral[0]->stProposta)) {
-                $this->view->ExecucaoImediata = $tableVerificacao->findBy(array('idVerificacao' => $this->view->itensGeral[0]->stProposta));
+                $this->view->projeto = $projeto;
+                $this->view->idPreProjeto = $projeto['idProjeto'];
+                $this->view->tipo = 'alterarprojeto';
             }
 
-            $Pronac = null;
-            if (count($dadosProjeto) > 0) {
-                $Pronac = $dadosProjeto->AnoProjeto . $dadosProjeto->Sequencial;
-            }
-            $this->view->Pronac = $Pronac;
-
-            if (isset($dados[0]->CNPJCPFdigirente) && $dados[0]->CNPJCPFdigirente != "") {
-                $tblAgente = new Agente_Model_DbTable_Agentes();
-                $tblNomes = new Nomes();
-                foreach ($dados as $v) {
-                    $rsAgente = $tblAgente->buscarAgenteENome(array('CNPJCPF=?' => $v->CNPJCPFdigirente))->current();
-                    $rsDirigentes[$rsAgente->idAgente]['CNPJCPFDirigente'] = $rsAgente->CNPJCPF;
-                    $rsDirigentes[$rsAgente->idAgente]['idAgente'] = $rsAgente->idAgente;
-                    $rsDirigentes[$rsAgente->idAgente]['NomeDirigente'] = $rsAgente->Descricao;
-                }
-
-                $tbDirigenteMandato = new tbAgentesxVerificacao();
-                foreach ($rsDirigentes as $dirigente) {
-                    $rsMandato = $tbDirigenteMandato->listarMandato(array('idEmpresa = ?' => $idEmpresa, 'idDirigente = ?' => $dirigente['idAgente'], 'stMandato = ?' => 0));
-                    $NomeDirigente = $dirigente['NomeDirigente'];
-                    $arrMandatos[$NomeDirigente] = $rsMandato;
-                }
-            }
-
-            $this->view->dirigentes = $rsDirigentes;
-            $this->view->mandatos = $arrMandatos;
-            //============== fim codigo dirigente ================
-
-            $this->view->itensTelefone = Proposta_Model_AnalisarPropostaDAO::buscarTelefone($this->view->itensGeral[0]->idAgente);
-            $this->view->itensPlanosDistribuicao = Proposta_Model_AnalisarPropostaDAO::buscarPlanoDeDistribucaoProduto($idPreProjeto);
-            $this->view->itensFonteRecurso = Proposta_Model_AnalisarPropostaDAO::buscarFonteDeRecurso($idPreProjeto);
-            $this->view->itensLocalRealiazacao = Proposta_Model_AnalisarPropostaDAO::buscarLocalDeRealizacao($idPreProjeto);
-            $this->view->itensDeslocamento = Proposta_Model_AnalisarPropostaDAO::buscarDeslocamento($idPreProjeto);
-
-            # informacoes atuais
-            $TPDC = new PlanoDistribuicao();
-            $TPP = new Proposta_Model_DbTable_TbPlanilhaProposta();
-            $TPA = new Proposta_Model_DbTable_Abrangencia();
-            $TPD = new Proposta_Model_DbTable_TbDeslocamento();
-            $atual['itensPlanosDistribuicao'] = $TPDC->buscar(array('idProjeto = ?' => $idPreProjeto))->toArray();
-            $atual['planilhaProjeto'] = $TPP->buscarPlanilhaCompleta($idPreProjeto);
-            $atual['itensLocalRealizacao'] = $TPA->buscar(array('idProjeto' => $idPreProjeto));
-            $atual['itensDeslocamento'] = $TPD->buscarDeslocamentosGeral(array('idProjeto' => $idPreProjeto));
-            $this->view->atual = $atual;
-
-            # informacoes do historico
-            $PPM = new Proposta_Model_DbTable_TbPreProjetoMeta();
-            $historico['planilhaProjeto'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_tbplanilhaproposta'));
-            $historico['itensLocalRealizacao'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_abrangencia'));
-            $historico['itensDeslocamento'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_deslocamento'));
-            $historico['itensPlanosDistribuicao'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_planodistribuicaoproduto'));
-            $historico['tbdetalhaplanodistribuicao'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao'));
-            $historico['geral'] = unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_identificacaoproposta'));
-            $historico['geral'] += unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_responsabilidadesocial'));
-            $historico['geral'] += unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_detalhestecnicos'));
-            $historico['geral'] += unserialize($PPM->buscarMeta($idPreProjeto, 'alterarprojeto_outrasinformacoes'));
-
-            $this->view->historico = $historico;
-
-            # documentos anexados proposta
-            $tbl = new Proposta_Model_DbTable_TbDocumentosPreProjeto();
-            $rs = $tbl->buscarDocumentos(array("idProjeto = ?" => $idPreProjeto));
-            $this->view->arquivosProposta = $rs;
-
-            # documentos anexados proponente
-            $tbA = new Proposta_Model_DbTable_TbDocumentosAgentes();
-            $rsA = $tbA->buscarDocumentos(array("idAgente = ?" => $dados[0]->idAgente));
-            $this->view->arquivosProponente = $rsA;
-
-            # documentos anexados na diligencia
-            $tblAvaliacaoProposta = new AvaliacaoProposta();
-            $rsAvaliacaoProposta = $tblAvaliacaoProposta->buscar(array("idProjeto = ?" => $idPreProjeto, "idArquivo ?" => new Zend_Db_Expr("IS NOT NULL")));
-            $tbArquivo = new tbArquivo();
-            $arrDadosArquivo = array();
-            $arrRelacionamentoAvaliacaoDocumentosExigidos = array();
-            if (count($rsAvaliacaoProposta) > 0) {
-                foreach ($rsAvaliacaoProposta as $avaliacao) {
-                    $arrDadosArquivo[$avaliacao->idArquivo] = $tbArquivo->buscar(array("idArquivo = ?" => $avaliacao->idArquivo));
-                    $arrRelacionamentoAvaliacaoDocumentosExigidos[$avaliacao->idArquivo] = $avaliacao->idCodigoDocumentosExigidos;
-                }
-            }
-            $this->view->relacionamentoAvaliacaoDocumentosExigidos = $arrRelacionamentoAvaliacaoDocumentosExigidos;
-            $this->view->itensDocumentoPreProjeto = $arrDadosArquivo;
-
-            # pegando relacao de documentos exigidos(geral)
-            $tblDocumentosExigidos = new DocumentosExigidos();
-            $rsDocumentosExigidos = $tblDocumentosExigidos->buscar()->toArray();
-            $arrDocumentosExigidos = array();
-            foreach ($rsDocumentosExigidos as $documentoExigido) {
-                $arrDocumentosExigidos[$documentoExigido["Codigo"]] = $documentoExigido;
-            }
-            $this->view->documentosExigidos = $arrDocumentosExigidos;
-            $this->view->itensHistorico = Proposta_Model_AnalisarPropostaDAO::buscarHistorico($idPreProjeto);
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), "/{$this->moduleName}/analise/listarprojetos", "ERROR");
         }
@@ -323,7 +209,8 @@ class Analise_AnaliseController extends Analise_GenericController
 
 
                     if (($percentualCaptado >= self::PERCENTUAL_MINIMO_CAPTACAO_PARA_ANALISE)
-                        or (!empty($dadosPreProjeto['stProposta']) && $dadosPreProjeto['stProposta'] != 610)) {
+                        or (!empty($dadosPreProjeto['stProposta']) && $dadosPreProjeto['stProposta'] != 610)
+                    ) {
 
                         # alterar a situacao do projeto
                         $situacao = Projeto_Model_Situacao::ENCAMINHADO_PARA_ANALISE_TECNICA;
@@ -376,13 +263,13 @@ class Analise_AnaliseController extends Analise_GenericController
             # para Producao comentar linha abaixo e para teste descomente ela
             # $d->Email =   'salicweb@gmail.com';
             $email = trim(strtolower($d->Email));
-        $mens = '<b>Pronac: ' . $d->pronac . ' - ' . $d->NomeProjeto . '<br>Proponente: ' . $d->Destinatario . '<br> </b>' . $Mensagem;
-        $assunto = 'Pronac:  ' . $d->pronac . ' - Avaliação adequação do projeto';
-        $assunto = utf8_decode($assunto);
+            $mens = '<b>Pronac: ' . $d->pronac . ' - ' . $d->NomeProjeto . '<br>Proponente: ' . $d->Destinatario . '<br> </b>' . $Mensagem;
+            $assunto = 'Pronac:  ' . $d->pronac . ' - Avaliação adequação do projeto';
+            $assunto = utf8_decode($assunto);
 
-        $enviaEmail = EmailDAO::enviarEmail($email, $assunto, $mens);
+            $enviaEmail = EmailDAO::enviarEmail($email, $assunto, $mens);
 
-        $dados = array(
+            $dados = array(
                 'idProjeto' => $idProjeto,
                 'idTextoemail' => new Zend_Db_Expr('NULL'),
                 'iDAvaliacaoProposta' => new Zend_Db_Expr('NULL'),
@@ -391,7 +278,7 @@ class Analise_AnaliseController extends Analise_GenericController
                 'idUsuario' => $auth->getIdentity()->usu_codigo,
             );
 
-        $tbHistoricoEmailDAO->inserir($dados);
+            $tbHistoricoEmailDAO->inserir($dados);
         endforeach;
     }
 

@@ -31,90 +31,87 @@ numeral.locale('pt-br');
 
 Vue.component('salic-proposta-planilha-orcamentaria', {
     template: `
-    <div class="planilha-orcamentaria card">
-        <div class="card-content" v-if="planilha" style="padding: 10px">
-            <h2>Planilha Or&ccedil;ament&aacute;ria</h2>
-            <ul class="collapsible no-margin" data-collapsible="accordion">
-                <li v-for="(fontes, fonte) of planilhaCompleta" v-if="isObject(fontes)">
-                    <div class="collapsible-header active red-text">
-                        <i class="material-icons">beenhere</i>{{fonte}}<span class="badge">R$ {{fontes.total}}</span>
-                    </div>
-                    <div class="collapsible-body no-padding">
-                        <ul class="collapsible no-border no-margin" data-collapsible="expandable">
-                            <li v-for="(produtos, produto) of fontes" v-if="isObject(produtos)">
-                                <div class="collapsible-header active green-text" style="padding-left: 30px;">
-                                    <i class="material-icons">perm_media</i>{{produto}}<span class="badge">R$ {{produtos.total}}</span>
-                                </div>
-                                <div class="collapsible-body no-padding no-border">
-                                    <ul class="collapsible no-border no-margin" data-collapsible="expandable">
-                                        <li v-for="(etapas, etapa) of produtos" v-if="isObject(etapas)">
-                                             <div class="collapsible-header active orange-text" style="padding-left: 50px;">
-                                                <i class="material-icons">label</i>{{etapa}}<span class="badge">R$ {{etapas.total}}</span>
-                                            </div>
-                                            <div class="collapsible-body no-padding no-border">
-                                                <ul class="collapsible no-border no-margin" data-collapsible="expandable">
-                                                    <li v-for="(locais, local) of etapas" v-if="isObject(locais)">
-                                                         <div class="collapsible-header active blue-text" style="padding-left: 70px;">
-                                                            <i class="material-icons">place</i>{{local}} <span class="badge">R$ {{locais.total}}</span>
-                                                        </div>
-                                                        <div class="collapsible-body no-padding margin20 scroll-x">
-                                                            <table class="bordered">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th>Item</th>
-                                                                        <th>Dias</th>
-                                                                        <th>Qtde</th>
-                                                                        <th>Ocor.</th>
-                                                                        <th>Vl. Unit&aacute;rio</th>
-                                                                        <th>Vl. Solicitado</th>
-                                                                        <th>#</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr v-for="row of locais" 
-                                                                        :key="row.idPlanilhaProposta"  
-                                                                        v-if="isObject(row)"
-                                                                        v-bind:class="{'orange lighten-2': ultrapassaValor(row)}"
-                                                                    >
-                                                                        <td>{{row.Seq}}</td>
-                                                                        <td>{{row.Item}}</td>
-                                                                        <td>{{row.QtdeDias}}</td>
-                                                                        <td>{{row.Quantidade}}</td>
-                                                                        <td>{{row.Ocorrencia}}</td>
-                                                                        <td>{{converterParaReal(row.vlUnitario)}}</td>
-                                                                        <td>{{converterParaReal(row.vlSolicitado)}}</td>
-                                                                        <td>
-                                                                            <a  v-if="row.JustProponente.length > 3"
-                                                                                class="tooltipped"
-                                                                                data-position="left"
-                                                                                data-delay="50"
-                                                                                v-bind:data-tooltip="row.JustProponente"
-                                                                                ><i class="material-icons tiny">message</i>
-                                                                            </a>
-                                                                            
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </li> 
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div v-else>Nenhuma planilha encontrada</div>
+    <div v-if="planilha" class="planilha-orcamentaria card">
+        <ul class="collapsible no-margin" data-collapsible="accordion">
+            <li v-for="(fontes, fonte) of planilhaCompleta" v-if="isObject(fontes)">
+                <div class="collapsible-header active red-text">
+                    <i class="material-icons">beenhere</i>{{fonte}}<span class="badge">R$ {{fontes.total}}</span>
+                </div>
+                <div class="collapsible-body no-padding">
+                    <ul class="collapsible no-border no-margin" data-collapsible="expandable">
+                        <li v-for="(produtos, produto) of fontes" v-if="isObject(produtos)">
+                            <div class="collapsible-header active green-text" style="padding-left: 30px;">
+                                <i class="material-icons">perm_media</i>{{produto}}<span class="badge">R$ {{produtos.total}}</span>
+                            </div>
+                            <div class="collapsible-body no-padding no-border">
+                                <ul class="collapsible no-border no-margin" data-collapsible="expandable">
+                                    <li v-for="(etapas, etapa) of produtos" v-if="isObject(etapas)">
+                                         <div class="collapsible-header active orange-text" style="padding-left: 50px;">
+                                            <i class="material-icons">label</i>{{etapa}}<span class="badge">R$ {{etapas.total}}</span>
+                                        </div>
+                                        <div class="collapsible-body no-padding no-border">
+                                            <ul class="collapsible no-border no-margin" data-collapsible="expandable">
+                                                <li v-for="(locais, local) of etapas" v-if="isObject(locais)">
+                                                     <div class="collapsible-header active blue-text" style="padding-left: 70px;">
+                                                        <i class="material-icons">place</i>{{local}} <span class="badge">R$ {{locais.total}}</span>
+                                                    </div>
+                                                    <div class="collapsible-body no-padding margin20 scroll-x">
+                                                        <table class="bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Item</th>
+                                                                    <th>Dias</th>
+                                                                    <th>Qtde</th>
+                                                                    <th>Ocor.</th>
+                                                                    <th>Vl. Unit&aacute;rio</th>
+                                                                    <th>Vl. Solicitado</th>
+                                                                    <th>#</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="row of locais" 
+                                                                    :key="row.idPlanilhaProposta"  
+                                                                    v-if="isObject(row)"
+                                                                    v-bind:class="{'orange lighten-2': ultrapassaValor(row)}"
+                                                                >
+                                                                    <td>{{row.Seq}}</td>
+                                                                    <td>{{row.Item}}</td>
+                                                                    <td>{{row.QtdeDias}}</td>
+                                                                    <td>{{row.Quantidade}}</td>
+                                                                    <td>{{row.Ocorrencia}}</td>
+                                                                    <td>{{converterParaReal(row.vlUnitario)}}</td>
+                                                                    <td>{{converterParaReal(row.vlSolicitado)}}</td>
+                                                                    <td>
+                                                                        <a  v-if="row.JustProponente.length > 3"
+                                                                            class="tooltipped"
+                                                                            data-position="left"
+                                                                            data-delay="50"
+                                                                            v-bind:data-tooltip="row.JustProponente"
+                                                                            ><i class="material-icons tiny">message</i>
+                                                                        </a>
+                                                                        
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li> 
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
         <div class="card-action">
              <span><b>Valor total do projeto:</b> R$ {{planilhaCompleta.total}}</span>
         </div>
     </div>
+    <div v-else>Nenhuma planilha encontrada</div>
     `,
     data: function () {
         return {
@@ -196,10 +193,8 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         },
         isObject: function (el) {
 
-            if (typeof el !== "object") {
-                return false;
-            }
-            return true;
+            return typeof el === "object";
+
         },
         iniciarCollapsible: function () {
             $3('.planilha-orcamentaria .collapsible').each(function() {
@@ -207,10 +202,8 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
             });
         },
         ultrapassaValor: function (row) {
-            if (row.stCustoPraticado == true) {
-                return true;
-            }
-            return false;
+            return row.stCustoPraticado == true;
+
         },
         converterParaReal: function (value) {
             value = parseFloat(value);

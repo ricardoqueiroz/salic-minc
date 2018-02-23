@@ -9,25 +9,16 @@ Vue.component('salic-proposta-identificacao', {
                         <b>Nº da proposta</b><br>
                         {{ proposta.idPreProjeto }}
                     </div>
-                    <div class="col s12 l3 m6">
+                    <div class="col s12 l6 m6">
                         <b>Nome Projeto</b><br>
                         {{ proposta.NomeProjeto }}
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.PRONAC">
                         <b>Pronac</b><br>
                         {{ proposta.PRONAC }}
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col s12 l3 m3">
-                        <b>CNPJ/CPF</b><br>
-                        {{ proposta.CNPJCPF }}
-                    </div>
-                    <div class="col s12 l6 m6">
-                        <b>Proponente</b><br>
-                        {{ proposta.NomeAgente }}
-                    </div>
-                </div>
+                
             </div>
         </div>
 

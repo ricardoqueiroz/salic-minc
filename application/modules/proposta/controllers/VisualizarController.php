@@ -41,55 +41,24 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $idPreProjeto = $this->_request->getParam('idPreProjeto');
             $tipo = $this->_request->getParam('tipo', 'alterarprojeto');
 
+
             if (empty($idPreProjeto)) {
                 throw new Exception("N&uacute;mero da proposta &eacute; obrigat&oacute;rio");
             }
 
-            $tbPreProjetoMapper = new Proposta_Model_TbPreProjetoMetaMapper();
-            $propostaCulturalAtual = $tbPreProjetoMapper->obterPropostaCulturalCompleta($idPreProjeto);
+            $preProjetoMapper = new Proposta_Model_PreProjetoMapper();
+            $propostaAtual = $preProjetoMapper->obterArrayPropostaCompleta($idPreProjeto);
+            $propostaHistorico = $preProjetoMapper->obterArrayVersaoPropostaCompleta($idPreProjeto, $tipo);
 
-            $propostaCulturalAtual = $this->prepararArrayParaJson($propostaCulturalAtual);
+            $tbProjeto = new Projeto_Model_DbTable_Projetos();
+            $projeto = $tbProjeto->findBy(['idProjeto'=> $idPreProjeto]);
 
-            $propostaCulturalAtual['tbplanilhaproposta'] = $this->montarPlanilhaProposta(
-                $propostaCulturalAtual['tbplanilhaproposta']
-            );
+            if (!empty($projeto)) {
 
-            $propostaCulturalAtual['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
-                $propostaCulturalAtual['tbdetalhaplanodistribuicao']
-            );
+                $pronac = $projeto['AnoProjeto'] . $projeto['Sequencial'];
+                $propostaAtual = array_merge($propostaAtual, ['PRONAC'=>$pronac, 'idPronac'=> $projeto['IdPRONAC']]);
 
-            $propostaAtual = array_merge(
-                $propostaCulturalAtual['responsabilidadesocial'],
-                $propostaCulturalAtual['detalhestecnicos'],
-                $propostaCulturalAtual['outrasinformacoes'],
-                $propostaCulturalAtual['identificacaoproposta']
-            );
-
-            $propostaAtual = array_merge($propostaAtual, $propostaCulturalAtual);
-
-            $propostaCulturalHistorico = $tbPreProjetoMapper->unserializarPropostaCulturalCompleta($idPreProjeto, $tipo);
-
-            if (empty($propostaCulturalHistorico)) {
-                throw new Exception("Historico n&atilde;o encontrado!");
             }
-
-            $propostaCulturalHistorico = $this->prepararArrayParaJson($propostaCulturalHistorico);
-            $propostaCulturalHistorico['tbplanilhaproposta'] = $this->montarPlanilhaProposta(
-                $propostaCulturalHistorico['tbplanilhaproposta']
-            );
-
-            $propostaCulturalHistorico['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
-                $propostaCulturalHistorico['tbdetalhaplanodistribuicao']
-            );
-
-            $propostaHistorico = array_merge(
-                $propostaCulturalHistorico['responsabilidadesocial'],
-                $propostaCulturalHistorico['detalhestecnicos'],
-                $propostaCulturalHistorico['outrasinformacoes'],
-                $propostaCulturalHistorico['identificacaoproposta']
-            );
-
-            $propostaHistorico = array_merge($propostaHistorico, $propostaCulturalHistorico);
 
             $dados = [];
             $dados['atual'] = $propostaAtual;
@@ -101,80 +70,6 @@ class Proposta_VisualizarController extends Proposta_GenericController
         }
     }
 
-    public function montarPlanilhaProposta($planilhaOrcamentaria)
-    {
-        $planilha = array();
-        $count = 0;
-        $i = 1;
-
-        foreach ($planilhaOrcamentaria as $item) {
-            $row = [];
-
-            $produto = !empty($item['idProduto']) ? $item['DescricaoProduto'] : html_entity_decode('Administra&ccedil;&atilde;o do Projeto');
-
-            $row["Seq"] = $i;
-            $row["idPlanilhaProposta"] = $item['idPlanilhaProposta'];
-            $row["Item"] = $item['DescricaoItem'];
-            $row['FonteRecurso'] = $item['DescricaoRecurso'];
-            $row['Municipio'] = $item['DescricaoMunicipio'];
-            $row['UF'] = $item['DescricaoUf'];
-            $row['idEtapa'] = $item['idEtapa'];
-            $row['Etapa'] = $item['DescricaoEtapa'];
-            $row['Ocorrencia'] = $item['Ocorrencia'];
-            $row['Quantidade'] = $item['Quantidade'];
-            $row['QtdeDias'] = $item['QtdeDias'];
-            $row['vlUnitario'] = $item['ValorUnitario'];
-            $row["vlSolicitado"] = $item['Quantidade'] * $item['Ocorrencia'] * $item['ValorUnitario'];
-            $row['JustProponente'] = $item['dsJustificativa'];
-            $row['stCustoPraticado'] = $item['stCustoPraticado'];
-
-            foreach ($row as $cel => $val) {
-                $planilha[$row['FonteRecurso']][$produto][$row['Etapa']][$row['UF'] . ' - '
-                . $row['Municipio']][$count][$cel] = $val;
-            }
-            $count++;
-            $i++;
-        }
-
-        return $planilha;
-    }
-
-    public function montarArrayDetalhamentoPlanoDistribuicao($detalhamentos)
-    {
-
-        $arrayDetalhamentos = [];
-
-        foreach ($detalhamentos as $key => $item) {
-            $arrayDetalhamentos[$item['idPlanoDistribuicao']][$item['DescricaoUf'] . ' - '
-            . $item['DescricaoMunicipio']][] = $item;
-        }
-
-        return $arrayDetalhamentos;
-    }
-
-    public function prepararArrayParaJson($dados)
-    {
-        foreach ($dados as $key => $array) {
-            foreach ($array as $key2 => $dado) {
-                if (is_array($dado)) {
-                    $dado = array_map('strConvertCharset', $dado);
-                    $dados[$key][$key2] = array_map('html_entity_decode', $dado);
-
-                    foreach ($dado as $key3 => $dado2) {
-                        if (is_array($dado2)) {
-                            $dado2 = array_map('strConvertCharset', $dado2);
-                            $dados[$key][$key2][$key3] = array_map('html_entity_decode', $dado2);
-                        }
-                    }
-                } else {
-                    $dado = strConvertCharset($dado);
-                    $dados[$key][$key2] = html_entity_decode($dado);
-                }
-            }
-        }
-
-        return $dados;
-    }
 
     public function obterHistoricoAvaliacoesAction()
     {
@@ -328,14 +223,10 @@ class Proposta_VisualizarController extends Proposta_GenericController
                 throw new Exception("Proposta inválida");
             }
 
-            $tbPlanoDistribuicao = new PlanoDistribuicao();
+            $tbPlanoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
             $dados['planodistribuicaoproduto'] = $tbPlanoDistribuicao->buscar(array('idProjeto = ?' => $idPreProjeto))->toArray();
             $dados['tbdetalhaplanodistribuicao'] = $tbPlanoDistribuicao->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
-            $dados = $this->prepararArrayParaJson($dados);
-
-            $dados['tbdetalhaplanodistribuicao'] = $this->montarArrayDetalhamentoPlanoDistribuicao(
-                $dados['tbdetalhaplanodistribuicao']
-            );
+            $dados = TratarArray::prepararArrayMultiParaJson($dados);
 
             $this->_helper->json(array('data' => $dados, 'success' => 'true'));
         } catch (Exception $e) {
