@@ -568,7 +568,6 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
 
         if (!empty($idPreProjeto)) {
             $tbPreProjeto = new Proposta_Model_DbTable_PreProjeto();
-
             if (!$tbPreProjeto->getAdapter() instanceof Zend_Db_Adapter_Pdo_Mssql) {
                 $arrResultado = $this->validarEnvioPropostaSemSp($idPreProjeto);
             } else {
@@ -641,8 +640,9 @@ class Proposta_ManterpropostaincentivofiscalController extends Proposta_GenericC
             }
 
             return $arrResultado;
-        } catch (Zend_Exception $ex) {
-            parent::message("N&atilde;o foi poss&iacute;vel realizar a opera&ccedil;&atilde;o! (comsp)" . $ex->getMessage(), "/proposta/manterpropostaincentivofiscal/index?idPreProjeto=" . $idPreProjeto, "ERROR");
+        } catch (Exception $objExcetion) {
+            throw $objExcetion;
+//            parent::message("N&atilde;o foi poss&iacute;vel realizar a opera&ccedil;&atilde;o! (comsp)" . $ex->getMessage(), "/proposta/manterpropostaincentivofiscal/index?idPreProjeto=" . $idPreProjeto, "ERROR");
         }
     }
 
