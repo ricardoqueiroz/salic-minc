@@ -84,14 +84,15 @@ class Proposta_VisualizarController extends Proposta_GenericController
                 $newArray[$key]['Tipo'] = $dado->tipo;
                 $objDateTime = new DateTime($dado->DtAvaliacao);
                 $newArray[$key]['DtAvaliacao'] = $objDateTime->format('d/m/Y H:i:s');
-                $newArray[$key]['Avaliacao'] = $dado->Avaliacao;
+                $newArray[$key]['Avaliacao'] =  str_replace('<p>&nbsp;</p>','',$dado->Avaliacao);
             }
-
+            $json['class'] = 'bordered striped';
             $json['lines'] = $newArray;
             $json['cols'] = [
                 'Tipo' => ['name' => 'Tipo'],
-                'DtAvaliacao' => ['name' => 'Data'],
-                'Avaliacao' => ['name' => 'Avalia&ccedil;&atilde;o']
+                'DtAvaliacao' => ['name' => 'Data', 'class' => 'valig'],
+                'Avaliacao' => [
+                        'name' => html_entity_decode('Avalia&ccedil;&atilde;o')]
             ];
 
             $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $json));

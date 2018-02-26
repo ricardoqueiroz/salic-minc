@@ -18,6 +18,14 @@ Vue.component('salic-proposta-diff', {
                         </div>
                     </div>
                 </li>
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico de avalia&ccedil;&otilde;es</div>
+                    <div class="collapsible-body padding10">
+                        <div class="card padding10">
+                            <salic-proposta-historico-avaliacoes :idpreprojeto="idpreprojeto"></salic-proposta-historico-avaliacoes>
+                        </div>
+                    </div>
+                </li>
                 <li>
                     <div class="collapsible-header"><i class="material-icons">person</i>Proponente</div>
                     <div class="collapsible-body padding20">
