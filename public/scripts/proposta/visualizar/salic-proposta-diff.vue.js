@@ -323,7 +323,7 @@ Vue.component('salic-proposta-diff', {
                         <div class="row">
                             <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-custos-vinculados
-                                    :arrayCustos="dadosHistorico.tvcustosvinculados"
+                                    :arrayCustos="dadosHistorico.tbcustosvinculados"
                                 ></salic-proposta-custos-vinculados>
                             </div>
                             <div class="col s12 m6 l6 scroll atual">
