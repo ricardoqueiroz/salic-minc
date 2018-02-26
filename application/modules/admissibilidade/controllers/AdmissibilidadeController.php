@@ -2914,7 +2914,7 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                 throw new Exception("N&uacute;mero do projeto &eacute; obrigat&oacute;rio");
             }
             $this->view->idPreProjeto = $idPreProjeto;
-            $this->view->tipo = $this->getRequest()->getParam('tipo', 'diligencia');
+            $this->view->tipo = 'diligencia';
 
         } catch (Exception $e) {
             parent::message($e->getMessage(), "/admissibilidade/admissibilidade/listar-propostas", "INFO");

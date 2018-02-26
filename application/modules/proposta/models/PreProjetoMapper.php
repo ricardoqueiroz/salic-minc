@@ -74,7 +74,7 @@ class Proposta_Model_PreProjetoMapper extends MinC_Db_Mapper
 
         # Plano distribuicao
         $tbPlanoDistribuicao = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
-        $proposta['planodistribuicaoproduto'] = $tbPlanoDistribuicao->buscar(['idProjeto = ?' => $idPreProjeto])->toArray();
+        $proposta['planodistribuicaoproduto'] = $tbPlanoDistribuicao->buscar(['idProjeto = ?' => $idPreProjeto], ['Produto DESC'])->toArray();
 
         # Plano de distribuicao Detalhado
         $proposta['tbdetalhaplanodistribuicao'] = $tbPlanoDistribuicao->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
@@ -126,6 +126,28 @@ class Proposta_Model_PreProjetoMapper extends MinC_Db_Mapper
                 'DescricaoMunicipio', SORT_ASC,
                 'DescricaoItem', SORT_ASC
             );
+        }
+
+        if($proposta['tbcustosvinculados']) {
+            $newArray = [];
+
+            foreach ($proposta['tbcustosvinculados'] as $key => $dado) {
+                $objDateTime = new DateTime($dado['dtCadastro']);
+                $newArray[$key]['item'] =  $dado['item'];
+                $newArray[$key]['dtCadastro'] = $objDateTime->format('d/m/Y');
+                $newArray[$key]['pcCalculo'] = $dado['pcCalculo'] . '%';
+            }
+
+            $custosVinculados = [];
+            $custosVinculados['class'] = 'bordered striped';
+            $custosVinculados['lines'] = $newArray;
+            $custosVinculados['cols'] = [
+                'item' => ['name' => 'Item'],
+                'dtCadastro' => ['name' => 'Data', 'class' => 'valig'],
+                'pcCalculo' => ['name' => 'Percentual']
+            ];
+
+            $proposta['tbcustosvinculados'] = $custosVinculados;
         }
 
         $proposta['tbplanilhaproposta'] = $this->montarPlanilhaProposta(

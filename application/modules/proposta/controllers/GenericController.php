@@ -162,9 +162,6 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
                     'prazoAlterarProjeto' => $this->contagemRegressivaSegundos($projeto['dtsituacao'], $this->_diasParaAlterarProjeto)
                 );
 
-//                $tbPreProjetoMetaMapper = new Proposta_Model_TbPreProjetoMetaMapper();
-//                $tbPreProjetoMetaMapper->salvarPropostaCulturalSerializada($this->idPreProjeto, 'alterarprojeto');
-
                 $this->salvarDadosPropostaSerializada($this->idPreProjeto);
 
             }
@@ -304,110 +301,16 @@ abstract class Proposta_GenericController extends MinC_Controller_Action_Abstrac
     }
 
     /**
-     * @todo utilizar o metodo generico para salvar a proposta cultural serializada na Proposta_Model_TbPreProjetoMetaMapper
+     * Na adequação à realidade a versão do projeto será salva apenas uma vez
      */
-    public function salvarPropostaSerializadaAlterarProjeto($idPreProjeto) {
+    public function salvarPropostaSerializadaAlterarProjeto($idPreProjeto)
+    {
+        $tbPreProjetoMeta = new Proposta_Model_DbTable_TbPreProjetoMeta();
+        $metaProposta = $tbPreProjetoMeta->buscarMeta($idPreProjeto, 'alterarprojeto_identificacaoproposta');
 
-        # Recupera informações da proposta atual
-        $proposta = $this->_proposta;
-
-        $PPM = new Proposta_Model_DbTable_TbPreProjetoMeta();
-        $tbPreProjetoMeta = new Proposta_Model_TbPreProjetoMetaMapper();
-
-        # Planilha orcamentaria
-        $metaPlanilha = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_tbplanilhaproposta');
-        $this->view->PlanilhaSalvo = true;
-        if (!$metaPlanilha) {
-            $TPP = new Proposta_Model_DbTable_TbPlanilhaProposta();
-            $dadosPlanilhaCompleta = $TPP->buscarPlanilhaCompleta($idPreProjeto);
-
-            $this->view->PlanilhaSalvo = $tbPreProjetoMeta->salvarArraySerializado($dadosPlanilhaCompleta, $idPreProjeto, 'alterarprojeto_tbplanilhaproposta');
-        }
-
-        # Local de realizacao (abrangencia)
-        $metaAbrangencia = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_abrangencia');
-        $this->view->AbrangenciaSalvo = true;
-        if (!$metaAbrangencia) {
-            $TPA = new Proposta_Model_DbTable_Abrangencia();
-            $abrangenciaCompleta = $TPA->buscar(array('idProjeto' => $idPreProjeto));
-            $this->view->AbrangenciaSalvo = $tbPreProjetoMeta->salvarArraySerializado($abrangenciaCompleta, $idPreProjeto, 'alterarprojeto_abrangencia');
-        }
-
-        # Deslocamento
-        $metaDeslocamento = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_deslocamento');
-        $this->view->DeslocamentoSalvo = true;
-        if (!$metaDeslocamento) {
-            $TPD = new Proposta_Model_DbTable_TbDeslocamento();
-            $deslocamentoCompleto = $TPD->buscarDeslocamentosGeral(array('idProjeto' => $idPreProjeto));
-            $this->view->DeslocamentoSalvo = $tbPreProjetoMeta->salvarArraySerializado($deslocamentoCompleto, $idPreProjeto, 'alterarprojeto_deslocamento');
-        }
-
-        # Plano distribuicao
-        $metaPlanoDistribuicao = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_planodistribuicaoproduto');
-        $this->view->PlanoDistribuicaoSalvo = true;
-        if (!$metaPlanoDistribuicao) {
-            $TPDC = new PlanoDistribuicao();
-            $planoDistribuicaoCompleto = $TPDC->buscar(array('idProjeto = ?' => $idPreProjeto))->toArray();
-            $this->view->PlanoDistribuicaoSalvo = $tbPreProjetoMeta->salvarArraySerializado($planoDistribuicaoCompleto, $idPreProjeto, 'alterarprojeto_planodistribuicaoproduto');
-        }
-
-        # Plano de distribuicao Detalhado
-        $metaPlanoDistribuicaoDetalha = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao');
-        $this->view->PlanoDistribuicaoDetalhadoSalvo = true;
-        if (!$metaPlanoDistribuicaoDetalha) {
-            $TPD = new PlanoDistribuicao();
-            $PlanoDetalhado = $TPD->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
-
-            $this->view->PlanoDistribuicaoDetalhadoSalvo = $tbPreProjetoMeta->salvarArraySerializado($PlanoDetalhado, $idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao');
-        }
-
-        # identificacao da proposta
-        $metaIdentificacaoProposta = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_identificacaoproposta');
-        $this->view->IdentificaoPropostaSalvo = true;
-        if (!$metaIdentificacaoProposta) {
-            $identificacaoProposta = array(
-                'dtiniciodeexecucao' => $proposta['dtiniciodeexecucaoform'],
-                'dtfinaldeexecucao' => $proposta['dtfinaldeexecucaoform']
-            );
-
-            $this->view->IdentificaoPropostaSalvo = $tbPreProjetoMeta->salvarArraySerializado($identificacaoProposta, $idPreProjeto, 'alterarprojeto_identificacaoproposta');
-        }
-
-        # responsabilidade social
-        $metaResponsabilidadeSocial = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_responsabilidadesocial');
-        $this->view->ResponsabilidadeSocialSalvo = true;
-        if (!$metaResponsabilidadeSocial) {
-            $responsabilidadeSocial = array(
-                'Acessibilidade' => $proposta['acessibilidade'],
-                'DemocratizacaoDeAcesso' => $proposta['democratizacaodeacesso'],
-                'ImpactoAmbiental' => $proposta['impactoambiental']
-            );
-
-            $this->view->ResponsabilidadeSocialSalvo = $tbPreProjetoMeta->salvarArraySerializado($responsabilidadeSocial, $idPreProjeto, 'alterarprojeto_responsabilidadesocial');
-        }
-
-        # detalhes técnicos
-        $metadetalhesTecnicos = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_detalhestecnicos');
-        $this->view->DetalhesTecnicosSalvo = true;
-        if (!$metadetalhesTecnicos) {
-            $detalhesTecnicos = array(
-                'EtapaDeTrabalho' => $proposta['etapadetrabalho'],
-                'FichaTecnica' => $proposta['fichatecnica'],
-                'Sinopse' => $proposta['sinopse'],
-                'EspecificacaoTecnica' => $proposta['especificacaotecnica']
-            );
-            $this->view->DetalhesTecnicosSalvo = $tbPreProjetoMeta->salvarArraySerializado($detalhesTecnicos, $idPreProjeto, 'alterarprojeto_detalhestecnicos');
-        }
-
-        # outras informacoes
-        $metaOutrasInformacoes = $PPM->buscarMeta($idPreProjeto, 'alterarprojeto_outrasinformacoes');
-        $this->view->OutrasInformacoesSalvo = true;
-        if (!$metaOutrasInformacoes) {
-            $outrasInformacoes = array(
-                'EstrategiadeExecucao' => $proposta['estrategiadeexecucao']
-            );
-
-            $this->view->OutrasInformacoesSalvo = $tbPreProjetoMeta->salvarArraySerializado($outrasInformacoes, $idPreProjeto, 'alterarprojeto_outrasinformacoes');
+        if (!$metaProposta) {
+            $tbPreProjetoMetaMapper = new Proposta_Model_TbPreProjetoMetaMapper();
+            $tbPreProjetoMetaMapper->salvarPropostaCulturalSerializada($this->idPreProjeto, 'alterarprojeto');
         }
     }
 }

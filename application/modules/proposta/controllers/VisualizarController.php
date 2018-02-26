@@ -81,8 +81,8 @@ class Proposta_VisualizarController extends Proposta_GenericController
             $newArray = [];
 
             foreach ($dados as $key => $dado) {
-                $newArray[$key]['Tipo'] = $dado->tipo;
                 $objDateTime = new DateTime($dado->DtAvaliacao);
+                $newArray[$key]['Tipo'] = $dado->tipo;
                 $newArray[$key]['DtAvaliacao'] = $objDateTime->format('d/m/Y H:i:s');
                 $newArray[$key]['Avaliacao'] =  str_replace('<p>&nbsp;</p>','',$dado->Avaliacao);
             }
@@ -268,5 +268,38 @@ class Proposta_VisualizarController extends Proposta_GenericController
         ];
 
         $this->_helper->json(array('data' => $json, 'success' => 'true'));
+    }
+
+    public function obterCustosVinculadosAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        try {
+
+            $tbCustosVinculados = new Proposta_Model_DbTable_TbCustosVinculados();
+            $dados= $tbCustosVinculados->buscarCustosVinculados(['idProjeto = ?' => $this->idPreProjeto])->toArray();
+
+            $data = [];
+            $newArray = [];
+
+            foreach ($dados as $key => $dado) {
+                $objDateTime = new DateTime($dado['dtCadastro']);
+                $newArray[$key]['item'] =  utf8_encode($dado['item']);
+                $newArray[$key]['dtCadastro'] = $objDateTime->format('d/m/Y');
+                $newArray[$key]['pcCalculo'] = $dado['pcCalculo'] . '%';
+            }
+
+            $data['class'] = 'bordered striped';
+            $data['lines'] = $newArray;
+            $data['cols'] = [
+                'item' => ['name' => 'Item'],
+                'dtCadastro' => ['name' => 'Data', 'class' => 'valig'],
+                'pcCalculo' => ['name' => 'Percentual']
+            ];
+
+            $this->_helper->json(array('success' => 'true', 'msg' => '', 'data' => $data));
+        } catch (Exception $e) {
+            $this->_helper->json(array('success' => 'false', 'msg' => $e->getMessage(), 'data' => []));
+        }
     }
 }
