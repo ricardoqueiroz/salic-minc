@@ -66,17 +66,17 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
             array('nmArquivo'),
             "BDCORPORATIVO.scCorp"
         );
-        
+
         $select->where("c.stAtivo = ?", 'S');
         $select->where("c.idPronac = ?", $idPronac);
         $select->where("a.idPlanilhaAprovacao = ?", $idPlanilhaAprovacao);
-        
+
         //$select->order("t.dtCredito");
-        
+
         return $this->fetchAll($select);
     } // fecha m�todo buscarDados()
-    
-    
+
+
     public function buscarRelacaoPagamentos($idPronac, $idPlanilhaAprovacao = null)
     {
         $select = $this->select();
@@ -121,14 +121,14 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
                     ),
                 "BDCORPORATIVO.scSAC"
             );
-            
+
         $select->joinInner(
                 array("b" => "tbComprovantePagamento"),
-            
+
                 "a.idComprovantePagamento = b.idComprovantePagamento",
-            
+
                 array(),
-            
+
                 "BDCORPORATIVO.scSAC"
             );
         $select->joinLeft(
@@ -166,13 +166,13 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         if ($idPlanilhaAprovacao) {
             $select->where("a.idPlanilhaAprovacao = ?", $idPlanilhaAprovacao);
         }
-        
+
         $select->order("d.Descricao");
         $select->order("e.Descricao");
-            
+
         return $this->fetchAll($select);
     } // fecha m�todo buscarDados()
-    
+
     public function pagamentosPorUFMunicipio($idPronac)
     {
         $select = $this->select();
@@ -236,16 +236,16 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         //Altera��o realizada no dia 25/02/2016 a pedido da area demandante.
         #$select->where("c.stAtivo = ?", 'S');
         $select->where("c.idPronac = ?", $idPronac);
-        
+
         $select->order("d.Descricao");
         $select->order("e.Descricao");
 
-        
+
 
         return $this->fetchAll($select);
     } // fecha m�todo buscarDados()
-    
-    
+
+
     public function pagamentosConsolidadosPorUfMunicipio($idPronac)
     {
         $select = $this->select();
@@ -291,11 +291,11 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->order(new Zend_Db_Expr("Agentes.dbo.fnUFAgente(idFornecedor)"));
         $select->order(new Zend_Db_Expr("Agentes.dbo.fnMunicipioAgente(idFornecedor)"));
         $select->group(new Zend_Db_Expr("Agentes.dbo.fnUFAgente(idFornecedor), Agentes.dbo.fnMunicipioAgente(idFornecedor)"));
-        
+
         return $this->fetchAll($select);
     }
-    
-    
+
+
     public function buscarRelatorioBensDeCapital($idPronac)
     {
         $select = $this->select();
@@ -354,11 +354,11 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         $select->where("c.idPronac = ?", $idPronac);
         $select->order(3);
-        
+
         return $this->fetchAll($select);
     } // fecha m�todo buscarDados()
-    
-    
+
+
     public function buscarRelatorioFisico($idPronac)
     {
         $select = $this->select();
@@ -417,11 +417,10 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->where("c.idPronac = ?", $idPronac);
         $select->group(array('c.idPronac','f.Descricao','d.Descricao','g.Descricao','c.qtItem','nrOcorrencia','c.vlUnitario','f.idPlanilhaEtapa'));
         $select->order(array(1,2));
-        
+
         return $this->fetchAll($select);
-    } // fecha m�todo buscarDados()
-        
-    
+    } 
+
     public function buscarRelatorioExecucaoReceita($idPronac)
     {
         $a = $this->select();
@@ -443,15 +442,15 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
                 array(),
             'AGENTES.dbo'
         );
-        $a->where(new Zend_Db_Expr('a.AnoProjeto+a.Sequencial = (SELECT x.Anoprojeto+x.Sequencial FROM SAC.dbo.Projetos x WHERE x.idPronac = ? ))', $idPronac);
+
+        $a->where(new Zend_Db_Expr('a.AnoProjeto+a.Sequencial = (SELECT x.Anoprojeto+x.Sequencial FROM SAC.dbo.Projetos x WHERE x.idPronac = ?)'), $idPronac);
+
         $a->group(array('a.CgcCpfMecena','c.Descricao'));
         $a->order(array('2','3'));
 
-        
-
         return $this->fetchAll($a);
-    } // fecha m�todo buscarDados()
-    
+    }
+
     public function buscarRelatorioExecucaoDespesa($idPronac)
     {
         $b = $this->select();
@@ -493,8 +492,8 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $b->order(array('2','3'));
         return $this->fetchAll($b);
     } // fecha m�todo buscarDados()
-    
-    
+
+
     /**
      * M�todo para cadastrar
      * @access public
@@ -557,17 +556,17 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         );
         $select->where('a.idTmpCaptacao = ?', $idTmpCaptacao);
 
-        
+
         return $this->fetchRow($select);
     } // fecha m�todo buscarDados()
-    
-    public function buscarValorComprovadoDoItem($idPlanilhaAprovacao)
+
+    public function buscarValorComprovadoDoItem($idPlanilhaAprovacao, $where = [])
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
                 array('a' => $this->_name),
-                array( new Zend_Db_Expr("SUM(b.vlComprovacao) AS vlComprovado") ),
+                array( new Zend_Db_Expr("SUM(b.vlComprovacao) AS vlComprovado")),
             'BDCORPORATIVO.scSAC'
         );
         $select->joinInner(
@@ -581,8 +580,50 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         } else {
             $select->where('a.idPlanilhaAprovacao = ?', $idPlanilhaAprovacao);
         }
+
+        foreach ($where as $coluna => $valor) {
+            if (!is_null($valor)) {
+                $select->where($coluna, $valor);
+            }
+        }
+
         return $this->fetchRow($select);
-    } // fecha m�todo buscarDados()
+    }
+
+    public function buscarValorComprovadoPorFonteProdutoEtapaLocalItem($where)
+    {
+        try {
+
+            if (empty($where)) {
+               throw new Exception("Par&acirc;metros n&atilde;o podem ficar vazios");
+            }
+
+            $select = $this->select();
+            $select->setIntegrityCheck(false);
+            $select->from(
+                array('a' => $this->_name),
+                array( new Zend_Db_Expr("ISNULL(SUM(a.vlComprovado), 0) AS vlComprovado")),
+                'BDCORPORATIVO.scSAC'
+            );
+            $select->joinInner(
+                array('b' => 'tbPlanilhaAprovacao'),
+                "a.idPlanilhaAprovacao = b.idPlanilhaAprovacao",
+                array(),
+                'SAC.dbo'
+            );
+
+            foreach ($where as $coluna => $valor) {
+                if (!is_null($valor)) {
+                    $select->where($coluna, $valor);
+                }
+            }
+            return $this->fetchRow($select);
+
+        } catch(Exception $e) {
+            throw new $e;
+        }
+
+    }
 
     // TODO: usar dbo.fnVlComprovadoItem para valor comprovado
 } // fecha class

@@ -1229,7 +1229,7 @@ class RealizarAnaliseProjetoDAO extends Zend_db_table
             array(''),
             'SAC.dbo'
         )
-        ->joinInner(
+        ->joinLeft(
             array('v' => 'Verificacao'),
             'x.idPosicaoDaLogo = v.idVerificacao',
             array(new Zend_Db_Expr('v.Descricao AS PosicaoDaLogo')),

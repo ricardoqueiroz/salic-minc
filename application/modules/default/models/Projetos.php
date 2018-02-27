@@ -3044,7 +3044,7 @@ class Projetos extends MinC_Db_Table_Abstract
             array('p' => $this->_name),
             array(new Zend_Db_Expr('SAC.dbo.fnchecarDiligencia(p.IdPRONAC) AS Diligencia'),
                 'p.IdPRONAC',
-                '(p.AnoProjeto + p.Sequencial) AS PRONAC',
+                new Zend_Db_Expr('(p.AnoProjeto + p.Sequencial) AS PRONAC'),
                 'p.NomeProjeto')
         );
 
@@ -3060,7 +3060,7 @@ class Projetos extends MinC_Db_Table_Abstract
                 'd.Observacao',
                 'DescricaoAnalise' => new Zend_Db_Expr('CASE WHEN TipoAnalise = 0 THEN \'Cont?udo\' WHEN TipoAnalise = 1 THEN \'Custo do Produto\' ELSE \'Custo Administrativo\' END'),
                 'd.TipoAnalise',
-                'AGENTES.dbo.fnNome(d.idAgenteParecerista) AS Parecerista')
+                new Zend_Db_Expr('AGENTES.dbo.fnNome(d.idAgenteParecerista) AS Parecerista'))
         );
 
 
@@ -7313,12 +7313,7 @@ class Projetos extends MinC_Db_Table_Abstract
                             then 'Artigo 18'
                             else 'N&atilde;o enquadrado'
                             end as Enquadramento, p.Situacao as codSituacao,
-                            (SELECT sum(b1.vlComprovacao)
-                                FROM BDCORPORATIVO.scSAC.tbComprovantePagamentoxPlanilhaAprovacao AS a1
-                                INNER JOIN BDCORPORATIVO.scSAC.tbComprovantePagamento AS b1 ON (a1.idComprovantePagamento = b1.idComprovantePagamento)
-                                INNER JOIN SAC.dbo.tbPlanilhaAprovacao AS c1 ON (a1.idPlanilhaAprovacao = c1.idPlanilhaAprovacao or a1.idPlanilhaAprovacao = c1.idPlanilhaAprovacaoPai)
-                                WHERE c1.stAtivo = 'S' AND (c1.idPronac = $idPronac)
-                                GROUP BY c1.idPronac) AS vlComprovado,
+                            sac.dbo.fnVlComprovadoProjeto($idPronac)AS vlComprovado,
                                 CONVERT(varchar(10),sac.dbo.fnInicioCaptacao(p.AnoProjeto,p.Sequencial),103) as DtInicioCaptacao,
                                 CONVERT(varchar(10),sac.dbo.fnFimCaptacao(p.AnoProjeto,p.Sequencial),103) as DtFimCaptacao
                             ")

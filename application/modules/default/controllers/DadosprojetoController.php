@@ -2,6 +2,7 @@
 
 class DadosprojetoController extends MinC_Controller_Action_Abstract
 {
+    protected $_in2017  = false;
 
     /**
      * Reescreve o m�todo init()
@@ -58,6 +59,13 @@ class DadosprojetoController extends MinC_Controller_Action_Abstract
             return $this->_helper->redirector->goToRoute(array('controller' => 'index', 'action' => 'logout'), null, true);
         }*/
 
+        $idPronac = $this->_request->getParam("idpronac");
+        if ($idPronac) {
+            $fnVerificarProjetoAprovadoIN2017 = new fnVerificarProjetoAprovadoIN2017();
+            $this->_in2017 = $fnVerificarProjetoAprovadoIN2017->verificar($idPronac);
+            $this->view->in2017 = $this->_in2017;
+        }
+
         parent::init(); // chama o init() do pai GenericControllerNew
     } // fecha m�todo init()
 
@@ -90,7 +98,7 @@ class DadosprojetoController extends MinC_Controller_Action_Abstract
                     }
                 }
             } else {
-                parent::message("N�o existe CNIC aberta no momento. Favor aguardar!", "principal/index", "ERROR");
+                parent::message("N&atilde;o existe CNIC aberta no momento. Favor aguardar!", "principal/index", "ERROR");
             }
             $pronac = $this->_request->getParam("idpronac");
             $tbdadosprojeto = DadosprojetoDAO::buscar($pronac);
@@ -152,7 +160,6 @@ class DadosprojetoController extends MinC_Controller_Action_Abstract
         $tbdadosprojeto = DadosprojetoDAO::buscar($pronac);
         $this->view->dadosprojeto = $tbdadosprojeto;
     }
-
 
     public function indexAction()
     {

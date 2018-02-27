@@ -1,20 +1,30 @@
 Vue.component('salic-proposta-diff', {
     template: `
-        <div v-if="idpreprojeto" class="proposta">
-            <ul class="collapsible" data-collapsible="expandable">
+        <div class="proposta">
+            <ul v-show="Object.keys(dadosHistorico).length > 2" class="collapsible" data-collapsible="expandable">
                  <li>
                     <div class="collapsible-header"
                         v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.identificacaoproposta, dadosHistorico.identificacaoproposta)}">
-                        <i class="material-icons">assignment</i>Proposta - {{idpreprojeto}} - {{dadosAtuais.NomeProjeto}}
+                        <i class="material-icons">assignment</i>
+                        <span v-if="dadosAtuais.PRONAC">Projeto - {{dadosAtuais.PRONAC}} - {{dadosAtuais.NomeProjeto}}</span>
+                        <span v-else>Proposta - {{idpreprojeto}} - {{dadosAtuais.NomeProjeto}}</span>
                     </div>
                     <div class="collapsible-body padding20">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-identificacao :idpreprojeto="idpreprojeto" :proposta="dadosHistorico"></salic-proposta-identificacao>
                             </div>
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll atual">
                                 <salic-proposta-identificacao :idpreprojeto="idpreprojeto" :proposta="dadosAtuais"></salic-proposta-identificacao>
                             </div>
+                        </div>
+                    </div>
+                </li>
+                 <li>
+                    <div class="collapsible-header"><i class="material-icons">history</i>Hist&oacute;rico de avalia&ccedil;&otilde;es</div>
+                    <div class="collapsible-body padding10">
+                        <div class="card padding10">
+                            <salic-proposta-historico-avaliacoes :idpreprojeto="idpreprojeto"></salic-proposta-historico-avaliacoes>
                         </div>
                     </div>
                 </li>
@@ -38,8 +48,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.FichaTecnica"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.FichaTecnica"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.FichaTecnica"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.FichaTecnica"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -54,8 +68,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.ResumoDoProjeto"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.ResumoDoProjeto"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.ResumoDoProjeto"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20">
+                                        <salic-texto-simples :texto="dadosAtuais.ResumoDoProjeto"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -70,8 +88,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.Objetivos"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.Objetivos"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.Objetivos"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.Objetivos"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -86,8 +108,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.EtapaDeTrabalho"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.EtapaDeTrabalho"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.EtapaDeTrabalho"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.EtapaDeTrabalho"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -102,8 +128,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.Acessibilidade"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.Acessibilidade"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.Acessibilidade"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.Acessibilidade"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -118,8 +148,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.EspecificacaoTecnica"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.EspecificacaoTecnica"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.EspecificacaoTecnica"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.EspecificacaoTecnica"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -133,9 +167,13 @@ Vue.component('salic-proposta-diff', {
                     <div class="collapsible-body padding20" v-if="dadosAtuais">
                         <div class="card">
                             <table>
-                                <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.Sinopse"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.Sinopse"></td>
+                                 <tr>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.Sinopse"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.Sinopse"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -143,15 +181,19 @@ Vue.component('salic-proposta-diff', {
                 </li>
                 <li>
                     <div class="collapsible-header" 
-                        v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.ImpactoAmbiental, dadosHistorico.ImpactoAmbiental)}">
-                        <i class="material-icons">subject</i>Impacto Ambiental
+                        v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.DemocratizacaoDeAcesso, dadosHistorico.DemocratizacaoDeAcesso)}">
+                        <i class="material-icons">subject</i>Democratiza&ccedil;&atilde;o de Acesso
                     </div>
                     <div class="collapsible-body padding20" v-if="dadosAtuais">
                          <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.ImpactoAmbiental"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.ImpactoAmbiental"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.DemocratizacaoDeAcesso"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.DemocratizacaoDeAcesso"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -166,8 +208,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.Justificativa"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.Justificativa"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.Justificativa"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.Justificativa"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -182,8 +228,12 @@ Vue.component('salic-proposta-diff', {
                         <div class="card">
                             <table>
                                 <tr>
-                                    <td class="original padding20" v-html="dadosHistorico.DescricaoAtividade"></td>
-                                    <td class="changed padding20" v-html="dadosAtuais.DescricaoAtividade"></td>
+                                    <td class="original historico padding20">
+                                        <salic-texto-simples :texto="dadosHistorico.DescricaoAtividade"></salic-texto-simples>
+                                    </td>
+                                    <td class="changed atual padding20" >
+                                        <salic-texto-simples :texto="dadosAtuais.DescricaoAtividade"></salic-texto-simples>
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -196,11 +246,11 @@ Vue.component('salic-proposta-diff', {
                     </div>
                     <div class="collapsible-body padding20">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-local-realizacao-deslocamento
                                 :localizacoes="dadosAtuais"></salic-proposta-local-realizacao-deslocamento>
                             </div>
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll atual">
                                 <salic-proposta-local-realizacao-deslocamento
                                 :localizacoes="dadosHistorico"></salic-proposta-local-realizacao-deslocamento>
                             </div>
@@ -214,32 +264,32 @@ Vue.component('salic-proposta-diff', {
                     </div>
                     <div class="collapsible-body padding20">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-documentos :arrayDocumentos="dadosHistorico"></salic-proposta-documentos>
                             </div>
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll atual">
                                 <salic-proposta-documentos :arrayDocumentos="dadosAtuais"></salic-proposta-documentos>
                             </div>
                         </div>
                     </div>
                 </li>
                 <li>
-                    <div id="plano-distribuicao" class="collapsible-header active" 
+                    <div id="plano-distribuicao" class="collapsible-header"
                         v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.tbdetalhaplanodistribuicao, dadosHistorico.tbdetalhaplanodistribuicao)}">
                         <i class="material-icons">equalizer</i>Plano Distribui&ccedil;&atilde;o
                     </div>
-                    <div class="collapsible-body padding20 active">
+                    <div class="collapsible-body padding20">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
-                                <salic-proposta-plano-distribuicao
-                                    :arrayProdutos="dadosAtuais.planodistribuicaoproduto"
-                                    :arrayDetalhamentos="dadosAtuais.tbdetalhaplanodistribuicao"
-                                ></salic-proposta-plano-distribuicao>
-                            </div>
-                             <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-plano-distribuicao
                                     :arrayProdutos="dadosHistorico.planodistribuicaoproduto"
                                     :arrayDetalhamentos="dadosHistorico.tbdetalhaplanodistribuicao"
+                                ></salic-proposta-plano-distribuicao>
+                            </div>
+                            <div class="col s12 m6 l6 scroll atual">
+                                <salic-proposta-plano-distribuicao
+                                    :arrayProdutos="dadosAtuais.planodistribuicaoproduto"
+                                    :arrayDetalhamentos="dadosAtuais.tbdetalhaplanodistribuicao"
                                 ></salic-proposta-plano-distribuicao>
                             </div>
                         </div>
@@ -253,21 +303,45 @@ Vue.component('salic-proposta-diff', {
                     </div>
                     <div class="collapsible-body padding20 active">
                         <div class="row">
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-planilha-orcamentaria
                                 :arrayPlanilha="dadosHistorico.tbplanilhaproposta"></salic-proposta-planilha-orcamentaria>
                             </div>
-                            <div class="col s12 m6 l6 scroll">
+                            <div class="col s12 m6 l6 scroll atual">
                                 <salic-proposta-planilha-orcamentaria
                                 :arrayPlanilha="dadosAtuais.tbplanilhaproposta"></salic-proposta-planilha-orcamentaria>
                             </div>
                         </div>
                     </div>
                 </li>
+                <li>
+                    <div id="custos-vinculados" class="collapsible-header"
+                        v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.tbcustosvinculados, dadosHistorico.tbcustosvinculados)}">
+                        <i class="material-icons">equalizer</i>Custos Vinculados
+                    </div>
+                    <div class="collapsible-body padding20">
+                        <div class="row">
+                            <div class="col s12 m6 l6 scroll historico">
+                                <salic-proposta-custos-vinculados
+                                    :arrayCustos="dadosHistorico.tbcustosvinculados"
+                                ></salic-proposta-custos-vinculados>
+                            </div>
+                            <div class="col s12 m6 l6 scroll atual">
+                                <salic-proposta-custos-vinculados
+                                    :arrayCustos="dadosAtuais.tbcustosvinculados"
+                                ></salic-proposta-custos-vinculados>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
-        </div>
-        <div v-else class="center-align">
-            <div class="padding10 green white-text">Opa! Proposta não informada...</div>
+            <div v-show="Object.keys(dadosHistorico).length == 0" class="center-align">
+                <div class="card padding20">
+                    <h5 v-if="dadosAtuais.PRONAC">Projeto - {{dadosAtuais.PRONAC}} - {{dadosAtuais.NomeProjeto}}</h5>
+                    <h5 v-else>Proposta - {{idpreprojeto}} - {{dadosAtuais.NomeProjeto}}</h5>
+                    <div class="padding20">Ops! Não existe versão para a proposta informada...</div>
+                </div>
+            </div>
         </div>
     `,
     data: function () {
@@ -288,7 +362,9 @@ Vue.component('salic-proposta-diff', {
     },
     props: ['idpreprojeto', 'tipo'],
     mounted: function () {
-        this.buscar_dados();
+        if(typeof this.idpreprojeto != 'undefined') {
+            this.buscar_dados();
+        }
     },
     methods: {
         buscar_dados: function () {
@@ -297,16 +373,16 @@ Vue.component('salic-proposta-diff', {
                 url: '/proposta/visualizar/obter-proposta-cultural-versionamento/idPreProjeto/' + vue.idpreprojeto + '/tipo/' + vue.tipo
             }).done(function (response) {
                 vue.dadosAtuais = response.data.atual;
-                vue.dadosHistorico= response.data.historico;
+                vue.dadosHistorico = response.data.historico;
 
-                if(response.data.historico != 'undefined') {
+                if (response.data.historico != 'undefined') {
                     setTimeout(vue.mostrar_diferenca, 1000)
                 }
             });
         },
         existe_diferenca: function (atual, historico) {
 
-            if(typeof atual == 'object') {
+            if (typeof atual == 'object') {
                 return JSON.stringify(atual) != JSON.stringify(historico);
             }
 

@@ -53,7 +53,7 @@ class Proposta_Model_PreProjetoArquivado  extends MinC_Db_Table_Abstract
 
         $sql2 = $db->select()
             ->from(array('a'=>'preprojeto'), array('a.idpreprojeto', 'a.nomeprojeto', 'a.DtArquivamento'), $this->_schema)
-              ->join(array('ppa' => $this->_name), 'ppa.idpreprojeto = a.idpreprojeto', array('ppa.MotivoArquivamento', 'ppa.SolicitacaoDesarquivamento AS SolicitacaoDesarquivamento', 'ppa.Avaliacao', 'ppa.idAvaliador', 'ppa.dtSolicitacaoDesarquivamento', 'ppa.dtAvaliacao', 'ppa.stDecisao'), $this->getSchema($this->_schema))                            
+              ->join(array('ppa' => $this->_name), 'ppa.idpreprojeto = a.idpreprojeto', array('ppa.MotivoArquivamento', 'ppa.SolicitacaoDesarquivamento AS SolicitacaoDesarquivamento', 'ppa.Avaliacao', 'ppa.idAvaliador', 'ppa.dtSolicitacaoDesarquivamento', 'ppa.dtAvaliacao', 'ppa.stDecisao'), $this->getSchema($this->_schema))
             ->join(array('b' => 'agentes'), 'a.idagente = b.idagente', array('b.cnpjcpf', 'b.idagente'), $this->getSchema('agentes'))
             ->join(array('c' => 'vinculacao'), 'b.idagente = c.idvinculoprincipal', array(), $this->getSchema('agentes'))
             ->join(array('d' => 'agentes'), 'c.idagente = d.idagente', array(), $this->getSchema('agentes'))
@@ -86,7 +86,7 @@ class Proposta_Model_PreProjetoArquivado  extends MinC_Db_Table_Abstract
         }
 
         $sql = $db->select()->union(array($sql, $sql2,$sql3), Zend_Db_Select::SQL_UNION);
-        
+
         $sqlFinal = $db->select()->from(array("p" => $sql));
 
         foreach ($where as $coluna=>$valor) {
@@ -96,16 +96,17 @@ class Proposta_Model_PreProjetoArquivado  extends MinC_Db_Table_Abstract
         if (!empty($search['value'])) {
             $sqlFinal->where('p.idpreprojeto like ? OR p.nomeprojeto like ? OR  p.nomeproponente like ?', '%'.$search['value'].'%');
         }
-        
-        $sqlFinal->where('SolicitacaoDesarquivamento IS NULL');
+
+        /* $sqlFinal->where('SolicitacaoDesarquivamento IS NULL'); */
         //$sqlFinal->order($order);
-        
+
+        /* echo $sqlFinal;die; */
         if (!is_null($start) && $limit) {
             $start = (int)$start;
             $limit = (int)$limit;
             $sqlFinal->limitPage($start, $limit);
         }
-        
+
         return $db->fetchAll($sqlFinal);
     }
 
@@ -197,5 +198,59 @@ class Proposta_Model_PreProjetoArquivado  extends MinC_Db_Table_Abstract
             $sqlFinal->limitPage($start, $limit);
         }
         return $db->fetchOne($sqlFinal);
-    }    
+    }
+
+    public function listarSolicitacoes(
+        $where = array(),
+        $order = array(),
+        $start = 0,
+        $limit = 20,
+        $search = null,
+        $stEstado = 1
+    )
+    {
+        $db = Zend_Db_Table::getDefaultAdapter();
+        $db->setFetchMode(Zend_DB::FETCH_OBJ);
+
+        $sql = $db->select()
+             ->from(
+                 array('a'=>'preprojeto'),
+                 array(
+                     'a.idpreprojeto',
+                     'a.nomeprojeto',
+                     'a.DtArquivamento'),
+                 $this->_schema
+             )
+             ->join(
+                 array('ppa' => $this->_name),
+                 'ppa.idpreprojeto = a.idpreprojeto',
+                 array(
+                     'ppa.MotivoArquivamento',
+                     'ppa.SolicitacaoDesarquivamento AS SolicitacaoDesarquivamento',
+                     'ppa.Avaliacao',
+                     'ppa.idAvaliador',
+                     'ppa.dtSolicitacaoDesarquivamento',
+                     'ppa.dtAvaliacao',
+                     'ppa.stDecisao',
+                     'ppa.stEstado'
+                 ),
+                 $this->getSchema($this->_schema))
+             ->where("a.mecanismo = '1'");
+
+        $sql = $db->select()->from(array("p" => $sql));
+
+        $sql->where('SolicitacaoDesarquivamento IS NOT NULL');
+
+        foreach ($where as $coluna=>$valor) {
+            $sql->where($coluna, $valor);
+        }
+
+        if (!is_null($start) && $limit) {
+            $start = (int)$start;
+            $limit = (int)$limit;
+            $sql->limitPage($start, $limit);
+        }
+
+        return $db->fetchAll($sql);
+    }
 }

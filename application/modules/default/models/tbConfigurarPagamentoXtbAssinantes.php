@@ -56,8 +56,6 @@ class tbConfigurarPagamentoXtbAssinantes extends MinC_Db_Table_Abstract
 
         $select->order('a.nrOrdenacao');
 
-
-
         return $this->fetchAll($select);
     }
 }

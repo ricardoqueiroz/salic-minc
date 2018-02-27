@@ -538,7 +538,12 @@ class PareceristaController extends MinC_Controller_Action_Abstract
         $this->view->assign('configuracaoAtiva', $configAtivo);
 
         // Envia todos os assinantes selecionados
-        $assinantesConfigurados = $modeltbConfigurarPagamentoXtbAssinantes->assinantesConfigurados(array('a.idConfigurarPagamento = ?' => $configAtivo[0]->idConfigurarPagamento));
+        $assinantesConfigurados = $modeltbConfigurarPagamentoXtbAssinantes->assinantesConfigurados(
+            array(
+                'a.idConfigurarPagamento = ?' => $configAtivo[0]->idConfigurarPagamento
+            )
+        );
+
         $this->view->assign('assinantesConfigurados', $assinantesConfigurados);
 
         $idAssinantes = array();
@@ -791,6 +796,7 @@ class PareceristaController extends MinC_Controller_Action_Abstract
             $despachos[$d]['idGerarPagamentoParecerista']   = $de->idGerarPagamentoParecerista;
             $despachos[$d]['idConfigurarPagamento']         = $de->idConfigurarPagamento;
             $despachos[$d]['dtGeracaoPagamento']            = $de->dtGeracaoPagamento;
+            $despachos[$d]['anoGeracaoPagamento']           = substr($de->dtGeracaoPagamento, -4);
             $despachos[$d]['dtEfetivacaoPagamento']         = $de->dtEfetivacaoPagamento;
             $despachos[$d]['dtOrdemBancaria']               = $de->dtOrdemBancaria;
             $despachos[$d]['nrOrdemBancaria']               = $de->nrOrdemBancaria;
@@ -965,9 +971,11 @@ class PareceristaController extends MinC_Controller_Action_Abstract
         $d = 0;
 
         foreach ($busca as $de) {
+
             $despachos[$d]['idGerarPagamentoParecerista']   = $de->idGerarPagamentoParecerista;
             $despachos[$d]['idConfigurarPagamento']         = $de->idConfigurarPagamento;
             $despachos[$d]['dtGeracaoPagamento']            = $de->dtGeracaoPagamento;
+            $despachos[$d]['anoGeracaoPagamento']           = substr($de->dtGeracaoPagamento, -4);
             $despachos[$d]['dtEfetivacaoPagamento']         = $de->dtEfetivacaoPagamento;
             $despachos[$d]['dtOrdemBancaria']               = $de->dtOrdemBancaria;
             $despachos[$d]['nrOrdemBancaria']               = $de->nrOrdemBancaria;
@@ -1270,15 +1278,22 @@ class PareceristaController extends MinC_Controller_Action_Abstract
         $listaDespachos = $modelGerarPagamentoParecerista->buscarDespachos(array('gpp.idGerarPagamentoParecerista = ?' => $nrDespacho));
 
         // Envia todos os assinantes selecionados
-        $assinantesConfigurados = $modeltbConfigurarPagamentoXtbAssinantes->assinantesConfigurados(array('a.idConfigurarPagamento = ?' => $listaDespachos[0]->idConfigurarPagamento));
+        $assinantesConfigurados = $modeltbConfigurarPagamentoXtbAssinantes->assinantesConfigurados(
+            array(
+                'a.idConfigurarPagamento = ?' => $listaDespachos[0]->idConfigurarPagamento
+            )
+        );
+
         $this->view->assign('assinantesConfigurados', $assinantesConfigurados);
 
         $despachos = array();
 
         $d = 0;
         foreach ($listaDespachos as $de) {
+
             $despachos[$d]['idGerarPagamentoParecerista']   = $de->idGerarPagamentoParecerista;
             $despachos[$d]['dtGeracaoPagamento']            = $de->dtGeracaoPagamento;
+            $despachos[$d]['anoGeracaoPagamento']           = substr($de->dtGeracaoPagamento, -4);
             $despachos[$d]['dtEfetivacaoPagamento']         = $de->dtEfetivacaoPagamento;
             $despachos[$d]['dtOrdemBancaria']               = $de->dtOrdemBancaria;
             $despachos[$d]['nrOrdemBancaria']               = $de->nrOrdemBancaria;

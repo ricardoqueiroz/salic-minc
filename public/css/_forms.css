@@ -290,6 +290,10 @@ form .select-wrapper input.select-dropdown {
     margin-bottom: 5px;
 }
 
+.dropdown-content {
+    z-index:9999;
+}
+
 form .caption {
     color: #484545;
 }

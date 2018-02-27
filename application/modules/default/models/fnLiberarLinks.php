@@ -414,7 +414,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $Marcas = 0;
             $SolicitarProrrogacao = 0;
             $Readequacao = 0;
-            $Readequacao_50 = 0;
+            $Readequacao_50 = 1;
             $ComprovacaoFinanceira = 1;
             $RelatorioTrimestral = 0;
             $RelatorioFinal = 1;
@@ -423,7 +423,6 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             $situacoesPlanilha = array('E13', 'E15', 'E23', 'E74', 'E75');
             if (in_array($dadosProjeto->Situacao, $situacoesPlanilha)) {
-                $Readequacao_50 = 1;
                 $Readequacao = 1;
             }
 
@@ -441,6 +440,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             if ($relatorioDeCumprimento->idCumprimentoObjeto) {
                 $ComprovacaoFinanceira = 0;
+                $Readequacao_50 = 0;
                 $RelatorioFinal = 0;
                 if ($Diligencia) {
                     $ComprovacaoFinanceira = 1;
@@ -461,13 +461,13 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                     )
                     ->where('a.idPronac = ?', $idPronac)
                     ->where('b.idTipoReadequacao = ?', 2)
-                    ->where('a.siEncaminhamento = ?', 15)
-                    ->where('a.stEstado = ?', 1);
+                    ->where('a.siEncaminhamento NOT IN (?)', array(2, 15))
+                    ->where('a.stEstado = ?', 0);
                 $readequacaoFase5 = $db->fetchRow($readequacaoFase5);
-                if (!$readequacaoFase5->idTipoReadequacao) {
-                    $Readequacao_50 = 1;
-                } else {
+                if ($readequacaoFase5->idTipoReadequacao) {
                     $Readequacao_50 = 0;
+                } else {
+                    $Readequacao_50 = 1;
                 }
             }
 

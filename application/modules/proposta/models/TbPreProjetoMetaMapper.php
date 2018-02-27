@@ -84,81 +84,6 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         return $response;
     }
 
-
-    public function obterPropostaCulturalCompleta($idPreProjeto)
-    {
-        if (empty($idPreProjeto)) {
-            return false;
-        }
-
-        $propostaCultural = [];
-
-        $tblPreProjeto = new Proposta_Model_DbTable_PreProjeto();
-        $proposta = $tblPreProjeto->buscar(array('idPreProjeto = ?' => $idPreProjeto))->current()->toArray();
-
-        /**
-         * devido ao tamanho da tabela de proposta(preprojeto) separamos em algumas partes
-         */
-        # responsabilidade social (preprojeto)
-        $propostaCultural['responsabilidadesocial'] = array(
-            'Acessibilidade' => $proposta['Acessibilidade'],
-            'DemocratizacaoDeAcesso' => $proposta['DemocratizacaoDeAcesso'],
-            'ImpactoAmbiental' => $proposta['ImpactoAmbiental']
-        );
-
-        # detalhes técnicos (preprojeto)
-        $propostaCultural['detalhestecnicos'] = array(
-            'EtapaDeTrabalho' => $proposta['EtapaDeTrabalho'],
-            'FichaTecnica' => $proposta['FichaTecnica'],
-            'Sinopse' => $proposta['Sinopse'],
-            'EspecificacaoTecnica' => $proposta['EspecificacaoTecnica'],
-            'DescricaoAtividade' => $proposta['DescricaoAtividade']
-        );
-
-        # outras informacoes (preprojeto)
-        $propostaCultural['outrasinformacoes'] = array(
-            'EstrategiadeExecucao' => $proposta['EstrategiadeExecucao']
-        );
-
-        # identificacao da proposta (preprojeto) - campos que ainda nao foram salvo)
-        $propostaCultural['identificacaoproposta'] = (
-        array_diff(
-            $proposta,
-            $propostaCultural['responsabilidadesocial'],
-            $propostaCultural['detalhestecnicos'],
-            $propostaCultural['outrasinformacoes'])
-        );
-
-        # Planilha orcamentaria
-        $tbPlanilhaProposta = new Proposta_Model_DbTable_TbPlanilhaProposta();
-        $propostaCultural['tbplanilhaproposta'] = $tbPlanilhaProposta->buscarPlanilhaCompleta($idPreProjeto);
-
-        # Local de realizacao (abrangencia)
-        $tbAbrangencia = new Proposta_Model_DbTable_Abrangencia();
-        $propostaCultural['abrangencia'] = $tbAbrangencia->buscar(array('idProjeto' => $idPreProjeto));
-
-        # Deslocamento
-        $tbDeslocamento = new Proposta_Model_DbTable_TbDeslocamento();
-        $propostaCultural['deslocamento'] = $tbDeslocamento->buscarDeslocamentosGeral(array('idProjeto' => $idPreProjeto));
-
-        # Plano distribuicao
-        $tbPlanoDistribuicao = new PlanoDistribuicao();
-        $propostaCultural['planodistribuicaoproduto'] = $tbPlanoDistribuicao->buscar(array('idProjeto = ?' => $idPreProjeto))->toArray();
-
-        # Plano de distribuicao Detalhado
-        $propostaCultural['tbdetalhaplanodistribuicao'] = $tbPlanoDistribuicao->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
-
-        # Documentos Proposta
-        $tbDocumentosPreProjeto = new Proposta_Model_DbTable_TbDocumentosPreProjeto();
-        $propostaCultural['documentos_proposta'] = $tbDocumentosPreProjeto->buscarDadosDocumentos(array("idProjeto = ?" => $idPreProjeto));
-
-        # Documentos do proponente
-        $tbDocumentosAgentes = new Proposta_Model_DbTable_TbDocumentosAgentes();
-        $propostaCultural['documentos_proponente'] = $tbDocumentosAgentes->buscarDadosDocumentos(array("idAgente = ?" => $proposta['idAgente']))->toArray();
-
-        return $propostaCultural;
-    }
-
     public function salvarPropostaCulturalSerializada($idPreProjeto, $prefix = 'alterarprojeto')
     {
         if (empty($idPreProjeto)) {
@@ -167,7 +92,8 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
 
         $response = false;
 
-        $propostaCompleta = $this->obterPropostaCulturalCompleta($idPreProjeto);
+        $preProjetoMapper = new Proposta_Model_PreProjetoMapper();
+        $propostaCompleta = $preProjetoMapper->obterPropostaCulturalCompleta($idPreProjeto);
 
         if (!empty($propostaCompleta)) {
             $response = $this->salvarMatrizSerializada($propostaCompleta, $idPreProjeto, $prefix);
@@ -224,8 +150,7 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         }
 
         # recupera e verifica se os itens existem
-        $tbPreProjetoMeta = new Proposta_Model_TbPreProjetoMetaMapper();
-        $itens = $tbPreProjetoMeta->unserializarObjeto($object, $idPreProjeto, $metakey);
+        $itens = $this->unserializarObjeto($object, $idPreProjeto, $metakey);
 
         # se não tiver itens, não eh pra restaurar
         if (empty($itens) || !is_array($itens)) {
@@ -236,8 +161,7 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         $metakeybkp = $metakey . "_bkp";
 
         # salvar objeto atual
-        $tbPreProjetoMapper = new Proposta_Model_TbPreProjetoMetaMapper();
-        $salvarBkp = $tbPreProjetoMapper->salvarObjetoSerializado($object, $idPreProjeto, $metakeybkp);
+        $salvarBkp = $this->salvarObjetoSerializado($object, $idPreProjeto, $metakeybkp);
 
         # excluir itens atuais
         if ($salvarBkp) {
@@ -282,11 +206,10 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         }
 
         $TPD = new PlanoDistribuicao();
-        $tbPreProjetoMapper = new Proposta_Model_TbPreProjetoMetaMapper();
-        $produtos = $tbPreProjetoMapper->unserializarObjeto($TPD, $idPreProjeto, 'alterarprojeto_planodistribuicaoproduto');
+        $produtos = $this->unserializarObjeto($TPD, $idPreProjeto, 'alterarprojeto_planodistribuicaoproduto');
 
         $TPDD = new Proposta_Model_DbTable_TbDetalhamentoPlanoDistribuicaoProduto();
-        $detalhamentoProdutos = $tbPreProjetoMapper->unserializarObjeto($TPDD, $idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao');
+        $detalhamentoProdutos = $this->unserializarObjeto($TPDD, $idPreProjeto, 'alterarprojeto_tbdetalhaplanodistribuicao');
 
         # se não tiver itens, não eh pra restaurar
         if (empty($produtos) || !is_array($produtos)) {
@@ -302,11 +225,10 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         $bkpPDPD = "alterarprojeto_tbdetalhaplanodistribuicao_bkp";
 
         # salvar os objetos atuais
-        $tbPreProjetoMeta = new Proposta_Model_TbPreProjetoMetaMapper();
-        $salvarPDP = $tbPreProjetoMeta->salvarObjetoSerializado($TPD, $idPreProjeto, $bkpPDP);
+        $salvarPDP = $this->salvarObjetoSerializado($TPD, $idPreProjeto, $bkpPDP);
 
         $PlanoDetalhado = $TPD->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto);
-        $salvarPDPD = $tbPreProjetoMeta->salvarArraySerializado($PlanoDetalhado, $idPreProjeto, $bkpPDPD);
+        $salvarPDPD = $this->salvarArraySerializado($PlanoDetalhado, $idPreProjeto, $bkpPDPD);
 
         # excluir itens atuais
         if ($salvarPDP && $salvarPDPD) {
@@ -345,20 +267,19 @@ class Proposta_Model_TbPreProjetoMetaMapper extends MinC_Db_Mapper
         return true;
     }
 
-    public function verificarSeExisteVersaoDaProposta($idPreProjeto, $etapa)
+    public function verificarSeExisteVersaoDaProposta($idPreProjeto, $prefix)
     {
-        if (empty($idPreProjeto) || empty($etapa)) {
+        if (empty($idPreProjeto) || empty($prefix)) {
             return false;
         }
 
         $TbPreProjetoMeta = new Proposta_Model_DbTable_TbPreProjetoMeta();
-        $response = $TbPreProjetoMeta->buscarMeta($idPreProjeto, $etapa . '_identificacaoproposta');
+        $response = $TbPreProjetoMeta->buscarMeta($idPreProjeto, $prefix . '_identificacaoproposta');
 
         if (empty($response)) {
             return false;
         }
 
         return true;
-
     }
 }

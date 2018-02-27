@@ -1,19 +1,15 @@
-]<?php
-/**
- * DAO tbPlanilhaAprovacao
- * @since 26/12/2012
- * @version 1.0
- * @package application
- * @subpackage application.model
- * @copyright � 2011 - Minist�rio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
-
+<?php
 class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
 {
     protected $_schema = "sac";
     protected $_name = "tbPlanilhaAprovacao";
     protected $_primary = "idPlanilhaAprovacao";
+
+
+    public function init()
+    {
+        parent::init();
+    }
 
     public function cadastrarDados($dados)
     {
@@ -104,10 +100,25 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
             array('a' => $this->_name),
             array(
                 new Zend_Db_Expr(
-                    'a.idPRONAC, a.idPlanilhaAprovacao, a.idProduto, b.Descricao as descProduto, a.idEtapa,
-                        c.Descricao as descEtapa, a.idPlanilhaItem, d.Descricao as descItem,
-                        a.idUnidade, e.Descricao as descUnidade, a.qtItem as Quantidade, a.nrOcorrencia as Ocorrencia,
-                        a.vlUnitario as ValorUnitario, a.qtDias as QtdeDias, CAST(a.dsJustificativa as TEXT) as Justificativa, a.idAgente'
+                    'a.idPRONAC,
+                    a.idPlanilhaAprovacao,
+                    a.idUFDespesa,
+                    a.idMunicipioDespesa,
+                    a.idProduto,
+                    a.nrFonteRecurso,
+                    b.Descricao as descProduto,
+                    a.idEtapa,
+                    c.Descricao as descEtapa,
+                    a.idPlanilhaItem,
+                    d.Descricao as descItem,
+                    a.idUnidade,
+                    e.Descricao as descUnidade,
+                    a.qtItem as Quantidade,
+                    a.nrOcorrencia as Ocorrencia,
+                    a.vlUnitario as ValorUnitario,
+                    a.qtDias as QtdeDias,
+                    CAST(a.dsJustificativa as TEXT) as Justificativa,
+                    a.idAgente'
                 )
             )
         );

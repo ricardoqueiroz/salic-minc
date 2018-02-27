@@ -119,7 +119,7 @@ class ContaBancaria extends MinC_Db_Table_Abstract
 
         $select->where('p.IdPRONAC = ?', $idPronac);
 
-        return $this->fetchAll($select);
+        return $this->fetchRow($select);
     }
 
     public function consultarDadosPorPronac($pronac, $orgao = null)

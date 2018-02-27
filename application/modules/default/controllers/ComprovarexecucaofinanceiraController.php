@@ -1800,7 +1800,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $etapaModel = new PlanilhaEtapa();
         $itemModel = new PlanilhaItem();
 
-        $itemPlanilhaAprovacao = $planilhaItemModel->pesquisar($idPlanilhaAprovacao);
+        $itemPlanilhaAprovacao = $planilhaItemModel->buscarItemDaAprovacao($idPlanilhaAprovacao);
         
         $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
         $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
@@ -1870,7 +1870,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             
             $this->view->idComprovantePagamento = $idComprovantePagamento;
             $this->view->vlComprovacao = $comprovanteAtualizar['vlComprovacao'];
-            
+
             if ($comprovanteAtualizar['idFornecedor']) {
                 $fornecedorModel = new FornecedorModel();
                 $fornecedor = $fornecedorModel->pesquisarFornecedor($comprovanteAtualizar['idFornecedor']);
@@ -1932,58 +1932,79 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     {
         $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
         $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
+        $idpronac = $this->getRequest()->getParam('idpronac');
 
-        $planilhaItemModel = new PlanilhaItem();
-        $itemPlanilhaAprovacao = $planilhaItemModel->pesquisar($idPlanilhaAprovacao);
-        $produtoModel = new Produto();
-        $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
-        $etapaModel = new PlanilhaEtapa();
-        $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
-        $itemModel = new PlanilhaItem();
-        $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
+        try {
 
-        $this->view->idpronac = $itemPlanilhaAprovacao->IdPRONAC;
+            $planilhaItemModel = new PlanilhaItem();
 
-        $pais = new Pais();
-        $paises = $pais->buscar(array(), 'Descricao');
-        $this->view->paises = $paises;
+            $itemPlanilhaAprovacao = $planilhaItemModel->buscarItemDaAprovacao($idPlanilhaAprovacao);
 
-        $this->view->produto = $produto;
-        $this->view->etapa = $etapa;
-        $this->view->item = $item;
-        $this->view->itemPlanilhaAprovacao = $itemPlanilhaAprovacao;
-        # compatibilidade com o template da outra action
-        $this->view->ckItens = array();
-        $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
+            if (empty($itemPlanilhaAprovacao)) {
+                throw new Exception("Erro! O item para comprova&ccedil;&atilde;o n&atilde;o foi encontrado!");
+            }
 
-        $comprovantePagamentoModel = new ComprovantePagamento();
-        $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovante($idComprovantePagamento, Zend_DB::FETCH_OBJ);
-        $comprovantePagamento = (object) $comprovantesDePagamento[0];
+            $produtoModel = new Produto();
+            $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
+            $etapaModel = new PlanilhaEtapa();
+            $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
+            $itemModel = new PlanilhaItem();
+            $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
 
-        $this->view->idComprovantePagamento = $idComprovantePagamento;
-        $this->view->vlComprovado = number_format($comprovantePagamento->vlComprovacao, 2, ',', '.');
+            $this->view->idpronac = $itemPlanilhaAprovacao->IdPRONAC;
 
-        $fornecedorModel = new FornecedorModel();
-        $this->view->idAgente = $comprovantePagamento->idFornecedor;
-        $fornecedor = $fornecedorModel->pesquisarFornecedor($comprovantePagamento->idFornecedor);
-        $this->view->CNPJCPF = (14 == strlen($fornecedor->CNPJCPF)) ?
-            Mascara::addMaskCNPJ($fornecedor->CNPJCPF) : Mascara::addMaskCPF($fornecedor->CNPJCPF);
-        $this->view->Descricao = $fornecedor->Descricao;
-        
-        $dataEmissao = $comprovantePagamento->dtEmissao ? new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao)) : new DateTime();
-        $this->view->tpDocumento = $comprovantePagamento->tpDocumento;
-        $this->view->nrComprovante = $comprovantePagamento->nrComprovante;
-        $this->view->nrSerie = $comprovantePagamento->nrSerie;
-        $this->view->dtEmissao = $dataEmissao->format('d/m/Y');
-        $this->view->tpFormaDePagamento = $comprovantePagamento->tpFormaDePagamento;
-        $this->view->nrDocumentoDePagamento = $comprovantePagamento->nrDocumentoDePagamento;
-        $this->view->dsJustificativa = $comprovantePagamento->dsJustificativa;
-        $this->view->idArquivo = $comprovantePagamento->idArquivo;
-        $this->view->nomeArquivo = $comprovantePagamento->nmArquivo;
-        $this->view->JustificativaTecnico = $comprovantePagamento->JustificativaTecnico;
-        $this->view->pagCompRecusado = true;
+            $pais = new Pais();
+            $paises = $pais->buscar(array(), 'Descricao');
+            $this->view->paises = $paises;
 
-        $this->render('comprovacaopagamento');
+            $this->view->produto = $produto;
+            $this->view->etapa = $etapa;
+            $this->view->item = $item;
+            $this->view->itemPlanilhaAprovacao = $itemPlanilhaAprovacao;
+            # compatibilidade com o template da outra action
+            $this->view->ckItens = array();
+            $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
+
+            $comprovantePagamentoModel = new ComprovantePagamento();
+            $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovante($idComprovantePagamento, Zend_DB::FETCH_OBJ);
+
+            $comprovantePagamento = (object) $comprovantesDePagamento[0];
+
+            $this->view->idComprovantePagamento = $idComprovantePagamento;
+            $this->view->vlComprovacao = $comprovantePagamento->vlComprovacao;
+
+            $fornecedorModel = new FornecedorModel();
+            $this->view->idAgente = $comprovantePagamento->idFornecedor;
+            $fornecedor = $fornecedorModel->pesquisarFornecedor($comprovantePagamento->idFornecedor);
+
+            if ($fornecedor) {
+
+                $cpfCnpj = $fornecedor->CNPJCPF;
+                $fornecedorUsaCnpj = 14 == strlen($cpfCnpj);
+                $fornecedor->CNPJCPF = $fornecedorUsaCnpj ? Mascara::addMaskCNPJ($cpfCnpj) : Mascara::addMaskCPF($cpfCnpj);
+                $fornecedor->usaCnpj = $fornecedorUsaCnpj;
+                $this->view->fornecedor = $fornecedor;
+                $this->view->Descricao = $fornecedor->Descricao;
+                $this->view->CNPJCPF = $fornecedor->CNPJCPF;
+            }
+
+            $dataEmissao = $comprovantePagamento->dtEmissao ? new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao)) : new DateTime();
+            $this->view->tpDocumento = $comprovantePagamento->tpDocumento;
+            $this->view->nrComprovante = $comprovantePagamento->nrComprovante;
+            $this->view->nrSerie = $comprovantePagamento->nrSerie;
+            $this->view->dtEmissao = $dataEmissao->format('d/m/Y');
+            $this->view->tpFormaDePagamento = $comprovantePagamento->tpFormaDePagamento;
+            $this->view->nrDocumentoDePagamento = $comprovantePagamento->nrDocumentoDePagamento;
+            $this->view->dsJustificativa = $comprovantePagamento->dsJustificativa;
+            $this->view->idArquivo = $comprovantePagamento->idArquivo;
+            $this->view->nomeArquivo = $comprovantePagamento->nmArquivo;
+            $this->view->JustificativaTecnico = $comprovantePagamento->JustificativaTecnico;
+            $this->view->pagCompRecusado = true;
+
+            $this->render('comprovacaopagamento');
+        } catch(Exception $e) {
+            parent::message($e->getMessage(), '/comprovarexecucaofinanceira/comprovantes-recusados/idpronac/' . $idpronac, 'ERROR');
+        }
     }
 
     /*

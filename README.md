@@ -6,6 +6,7 @@ Bem vindo/a à documentação do SALIC! Aqui você vai encontrar diversas docume
 * [Guia de operação e desenvolvimento](doc/Guia_de_operacao-desenvolvimento.md)
 * [Regras de versionamento](doc/Regras_versionamento.md)
 * [Roteiro de publicação de releases](doc/Roteiro_de_publicacao_de_releases.md)
+* [Teste e PHPUnit](doc/Teste_Manual.md)
 
 ## Docker
 Utilizamos o Docker como plataforma de desenvolvimento com o intuito de garantir o mesmo ambiente de desenvolvimento 

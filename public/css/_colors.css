@@ -257,14 +257,6 @@ footer.page-footer {
     color: #fff;
 }
 
-#qm0.qmmc > a:first-child,
-#qm0.qmmc > a:first-child:hover {
-    font-weight: 500;
-    font-size: 15px;
-    height: 60px;
-    padding-top: 5px;
-}
-
 /* submenu */
 #sidenav li.active,
 #qm0.qmmc div {

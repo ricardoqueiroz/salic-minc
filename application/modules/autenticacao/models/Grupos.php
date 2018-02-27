@@ -65,21 +65,25 @@ class Autenticacao_Model_Grupos extends MinC_Db_Table_Abstract
     {
 
         $perfis = [];
-        if ($id_perfil == Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE) {
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
+        switch ($id_perfil) {
+            case Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE:
+                $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
+                $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
+                break;
+            case Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE:
+                $perfis[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
+                break;
+            case Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO:
+                $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
+                $perfis[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
+                break;
+            case Autenticacao_Model_Grupos::COMPONENTE_COMISSAO:
+                $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE;
+                $perfis[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
+                break;
+            default:
+                break;
         }
-
-        if ($id_perfil == Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE) {
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO;
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_CNIC;
-        }
-
-        if ($id_perfil == Autenticacao_Model_Grupos::COORDENADOR_GERAL_ACOMPANHAMENTO) {
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE;
-            $perfis[] = Autenticacao_Model_Grupos::COORDENADOR_CNIC;
-        }
-
 
         if($perfis) {
             return $this->findAll(

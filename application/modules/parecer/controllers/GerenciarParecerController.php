@@ -264,13 +264,13 @@ class Parecer_GerenciarParecerController extends MinC_Controller_Action_Abstract
                         // dentro das unidades abaixo
                         if (in_array($dp->idOrgao, array(91,92,93,94,95,160,171,335))) {
                             if ($tipoFiltro == 'validados' || $tipoFiltro == 'devolvida') {
-                                $projeto->alterarSituacao($idPronac, null, 'C20', 'Anlise tcnica concluda');
+                                $projeto->alterarSituacao($idPronac, null, 'C20', 'Anlise t&eacute;cnica conclu&iacute;da');
                             } elseif ($tipoFiltro == 'em_validacao') {
-                                $projeto->alterarSituacao($idPronac, null, 'B11', 'Aguardando validao do parecer tcnico');
+                                $projeto->alterarSituacao($idPronac, null, 'B11', 'Aguardando valida&ccedil;&atilde;o do parecer t&eacute;cnico');
                             }
                         } else {
                             // fora das unidades acima
-                            $projeto->alterarSituacao($idPronac, null, 'B11', 'Aguardando validao do parecer tcnico');
+                            $projeto->alterarSituacao($idPronac, null, 'B11', 'Aguardando valida&ccedil;&atilde;o do parecer t&eacute;cnico');
                         }
                     } else {
                         // inabilitado

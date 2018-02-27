@@ -167,7 +167,7 @@ class tbDistribuicaoProjetoComissao extends MinC_Db_Table_Abstract
         $slctAnalisados->from(
             array('dpc' => $this->_name),
             array(new Zend_Db_Expr("'Analisado' as Analise"),
-                'DtDistribuicao' => Zend_Db_Expr('CONVERT(CHAR(20),DtDistribuicao, 120)'),
+                'DtDistribuicao' => new Zend_Db_Expr('CONVERT(CHAR(20),DtDistribuicao, 120)'),
                     'idAgente',
                 'Dias' => new Zend_Db_Expr('DATEDIFF(DAY,dpc.DtDistribuicao,GETDATE())')),
             $this->_schema

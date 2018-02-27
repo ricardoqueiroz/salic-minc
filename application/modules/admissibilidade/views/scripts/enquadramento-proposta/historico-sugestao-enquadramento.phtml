@@ -30,9 +30,11 @@ if(count($this->historicoEnquadramento) > 0):
                 if($enquadramentoProposta['tp_enquadramento']) {
                     $artigoEnquadramento = ($enquadramentoProposta['tp_enquadramento'] == 1) ? 'Artigo 26' : 'Artigo 18';
                 }
+                $area = ($enquadramentoProposta['area']) ? $enquadramentoProposta['area'] : ' - ';
+                $segmento = ($enquadramentoProposta['segmento']) ? $enquadramentoProposta['segmento'] : ' - ';
                 ?>
-                <td align="center" class="center"><?php echo $enquadramentoProposta['area'] ?></td>
-                <td align="center" class="center"><?php echo $enquadramentoProposta['segmento'] ?></td>
+                <td align="center" class="center"><?php echo $area ?></td>
+                <td align="center" class="center"><?php echo $segmento ?></td>
                 <td align="center" class="center"><?php echo $artigoEnquadramento ?></td>
                 <td align="left" nowrap><?php echo $enquadramentoProposta['descricao_motivacao'] ?></td>
             </tr>

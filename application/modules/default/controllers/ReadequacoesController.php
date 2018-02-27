@@ -349,6 +349,8 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
     public function incluirItemPlanilhaReadequacaoAction()
     {
         $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
@@ -433,12 +435,10 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $insert = $tbPlanilhaAprovacao->inserir($dadosInclusao);
 
         if ($insert) {
-            //$jsonEncode = json_encode($dadosPlanilha);
-            $this->_helper->json(array('resposta'=>true));
+            $this->_helper->json(['resposta' => true]);
         } else {
-            $this->_helper->json(array('resposta'=>false));
+            $this->_helper->json(['resposta'=> false]);
         }
-        $this->_helper->viewRenderer->setNoRender(true);
     }
 
     /*

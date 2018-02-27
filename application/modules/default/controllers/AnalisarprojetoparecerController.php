@@ -815,6 +815,11 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
 
         $planilhaProjeto = new PlanilhaProjeto();
 
+        $projetos = new Projetos();
+        if ($projetos->verificarIN2017($idPronac)) {
+            $this->verificarAssinatura($idPronac);
+        }
+        
         if ($planilhaProjeto->alterar($dados, $where)) {
             echo "Salvo com sucesso!";
         } else {
@@ -1130,6 +1135,11 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
                 if (count($buscarParecer) > 0) {
                     $buscarParecer = $buscarParecer->current();
                     $whereUpdateParecer = 'IdParecer = ' . $buscarParecer->IdParecer;
+
+                    if ($isIN2017) {
+                        $this->verificarAssinatura($idPronac);
+                    }
+                    
                     $alteraParecer = $parecerDAO->alterar($dadosParecer, $whereUpdateParecer);
                     $idParecer = $buscarParecer->IdParecer;
                 } else {
@@ -1156,7 +1166,7 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
                                 'idPronac = ?' => $idPronac,
                                 'idParecer = ?' => $idParecer
                             );
-                            
+
                         $tbAcaoAlcanceProjeto->update($dados, $where);
                     } else {
                         $tbAcaoAlcanceProjeto->insert($dados);
@@ -1167,6 +1177,67 @@ class AnalisarprojetoparecerController extends MinC_Controller_Action_Abstract
             } catch (Exception $e) {
                 parent::message("Error: " . $e->getMessage(), "Analisarprojetoparecer/produto?idPronac=" . $idPronac . "&idProduto=" . $idProduto . "&stPrincipal=" . $stPrincipal, "ERROR");
             }
+        }
+    }
+
+    private function verificarAssinatura($idPronac) {
+        $idTipoDoAtoAdministrativo = Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL;
+        
+        $tbDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+        $idDocumentoAssinatura = $tbDocumentoAssinatura->getIdDocumentoAssinatura(
+            $idPronac,
+            $idTipoDoAtoAdministrativo
+        );
+        
+        if ($idDocumentoAssinatura) {
+            $this->removerAssinatura(
+                $idPronac,
+                $idDocumentoAssinatura
+            );
+            $this->removerDocumentoAssinatura(
+                $idPronac,
+                $idDocumentoAssinatura
+            );
+        }        
+    }
+    
+    private function removerAssinatura($idPronac, $idDocumentoAssinatura) {
+        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
+        $idPerfilDoAssinante = $GrupoAtivo->codGrupo;
+
+        $objDocumentoAssinatura = new Assinatura_Model_TbDocumentoAssinaturaMapper();
+        
+        if ($objDocumentoAssinatura->IsProjetoJaAssinado(
+            $idPronac,
+            Assinatura_Model_DbTable_TbAssinatura::TIPO_ATO_ANALISE_INICIAL,
+            $idPerfilDoAssinante))
+        {
+            try {
+                $tbAssinatura = new Assinatura_Model_DbTable_TbAssinatura();
+            
+                $tbAssinatura->delete(
+                    array(
+                        'idDocumentoAssinatura = ?' => $idDocumentoAssinatura
+                    )
+                );
+            } catch (Exception $objException) {
+                parent::message($objException->getMessage(), $origin);
+            }
+        }
+    }
+    
+    private function removerDocumentoAssinatura($idPronac, $idDocumentoAssinatura) {
+        $objModelDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+        
+        try {
+            $tbDocumentoAssinatura = new Assinatura_Model_DbTable_TbDocumentoAssinatura();
+            $tbDocumentoAssinatura->delete(
+                array(
+                    'idDocumentoAssinatura = ?' => $idDocumentoAssinatura
+                )
+            );
+        } catch (Exception $objException) {
+            parent::message($objException->getMessage(), $origin);
         }
     }
 }

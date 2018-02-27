@@ -1383,7 +1383,7 @@ class RecursoController extends MinC_Controller_Action_Abstract
         $enquadramentoProjeto = $_POST['enquadramentoProjeto'];
         $parecerProjeto = $_POST['parecerProjeto'];
         $dsParecer = $_POST['dsParecer'];
-
+        
         try {
             //ATUALIAZA A SITUACAO, AREA E SEGMENTO DO PROJETO
             $d = array();
@@ -1397,6 +1397,7 @@ class RecursoController extends MinC_Controller_Action_Abstract
             $Projetos->update($d, $where);
 
             $dadosProjeto = $Projetos->buscar(array('IdPRONAC = ?'=>$idPronac));
+            
             if (count($dadosProjeto)>0) {
                 //CADASTRA OU ATUALIZA O ENQUADRAMENTO DO PROJETO
                 $enquadramentoDAO = new Admissibilidade_Model_Enquadramento();
@@ -1458,24 +1459,27 @@ class RecursoController extends MinC_Controller_Action_Abstract
                     $insereParecer = $parecerDAO->inserir($dadosParecer);
                 }
             }
-
+            
             if (isset($_POST['finalizarAvaliacao']) && $_POST['finalizarAvaliacao'] == 1) {
                 $idNrReuniao = null;
+                $dados = array();
+
                 if ($_POST['plenaria']) {
                     $campoSiRecurso = 8; // 8=Enviado � Plen�ria
-
-                    $reuniao = new Reuniao();
-                    $raberta = $reuniao->buscarReuniaoAberta();
-                    $idNrReuniao = $raberta['idNrReuniao'];
                 } else {
                     $campoSiRecurso = 9; // 9=Enviado para Checklist Publica��o
+                    $dados['stEstado'] = 1;
                 }
 
                 //ATUALIZA A TABELA tbRecurso
-                $dados = array();
+                $reuniao = new Reuniao();
+                $raberta = $reuniao->buscarReuniaoAberta();
+                $idNrReuniao = $raberta['idNrReuniao'];
+                
                 $dados['siRecurso'] = $campoSiRecurso;
                 $dados['idNrReuniao'] = $idNrReuniao;
                 $dados['stAnalise'] = ($parecerProjeto == 1) ? 'IC' : 'AC';
+                
                 $where = "idRecurso = $idRecurso";
                 $tbRecurso = new tbRecurso();
                 $tbRecurso->update($dados, $where);

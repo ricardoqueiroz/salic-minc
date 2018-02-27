@@ -160,32 +160,7 @@ class Assinatura_IndexController extends Assinatura_GenericController
 
     public function visualizarDocumentoAssinadoAction()
     {
-//        $this->_helper->layout->disableLayout();
-//        $this->_helper->viewRenderer->setNoRender();
-
-//        $layout = Zend_Layout::getMvcInstance();
-//        $layout->disableLayout();
-//        $layout->setLayout('layout_visualizar');
-
-//        $config = Zend_Registry::get('config');
-//        $config = new Zend_Config_Ini('/path/to/layout.ini', 'layout');
-//        $layout = Zend_Layout::startMvc($config);
-
         Zend_Layout::startMvc(array('layout' => 'layout_visualizar'));
-//        Zend_Layout::startMvc(array('layout'     => 'layout_visualizar'));
-        # paginacao
-//        Zend_View_Helper_PaginationControl::setDefaultViewPartial('paginacao/paginacaoMinc.phtml');
-
-//        // Initialize view
-//        $view         = new Zend_View();
-//        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper(
-//            'ViewRenderer'
-//        );
-//        $viewRenderer->setView($view);
-//        $view->addHelperPath(
-//            APPLICATION_PATH . '/../library/MinC/View/Helper/',
-//            'MinC_View_Helper_'
-//        );
 
         $get = Zend_Registry::get('get');
         $idDocumentoAssinatura = $get->idDocumentoAssinatura;

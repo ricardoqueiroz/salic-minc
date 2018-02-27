@@ -127,7 +127,7 @@ class tbPlanoDistribuicao extends MinC_Db_Table_Abstract
             , 'h.stPrincipal'
             , 'h.tpAcao'
             , 'h.tpPlanoDistribuicao'
-            , new Zend_Db_Expr('CONVERT(CHAR(10), h.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao')new Zend_Db_Expr(
+            , new Zend_Db_Expr('CONVERT(CHAR(10), h.dtPlanoDistribuicao, 103) AS dtPlanoDistribuicao')
         , new Zend_Db_Expr('CONVERT(CHAR(10), h.dtPlanoDistribuicao, 108) AS hrPlanoDistribuicao')
         , new Zend_Db_Expr('CAST(h.dsjustificativa AS TEXT) AS dsJustificativa'))
         );

@@ -41,19 +41,9 @@ x - BREADCRUMB
     margin: 0px;
 }
 
-#breadcrumb ul li a,
-#breadcrumb ul li.first,
-#breadcrumb ul li.last,
-#breadcrumb ul li {
-    /*color: inherit;*/
-    /*padding: 0;*/
-    /*margin: 0;*/
-    /*font-weight: normal;*/
-    /*font-size: 15px;*/
-}
-
 #breadcrumb ul li.last {
     font-weight: bold;
+    line-height: 0px;
 }
 
 #breadcrumb ul li:after {

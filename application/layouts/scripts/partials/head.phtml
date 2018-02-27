@@ -61,6 +61,8 @@
         );
     }
 
+    echo $this->partial('partials/favicons.phtml');
+
     $this->headTitle(html_entity_decode($configLayout->layout->headTitle, ENT_QUOTES, $config->resources->db->params->charset));
     $this->doctype($config->layout->doctype);
     $this->headMeta()->setHttpEquiv('Content-Type', 'text/html; charset=' . $config->resources->db->params->charset);

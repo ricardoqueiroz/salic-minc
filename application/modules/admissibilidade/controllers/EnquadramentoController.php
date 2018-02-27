@@ -84,7 +84,7 @@ class Admissibilidade_EnquadramentoController extends MinC_Controller_Action_Abs
 //            }
 
             $post = $this->getRequest()->getPost();
-            if (!$post) {
+            if (!$post['areaCultural'] || !$post['segmentoCultural'] || !$post['enquadramento_projeto'] || !$post['observacao']) {
                 $this->carregardadosEnquadramentoProjeto($projeto);
             } else {
                 $this->salvarEnquadramentoProjeto($projeto);
@@ -107,7 +107,8 @@ class Admissibilidade_EnquadramentoController extends MinC_Controller_Action_Abs
             $get = $this->getRequest()->getParams();
             $authIdentity = array_change_key_case((array)$auth->getIdentity());
             $objEnquadramento = new Admissibilidade_Model_Enquadramento();
-            $arrayDadosEnquadramento = $objEnquadramento->findBy(array('IdPRONAC = ?'=>$projeto['IdPRONAC']));
+            $arrayDadosEnquadramento = $objEnquadramento->findBy(array('IdPRONAC = ?' => $projeto['IdPRONAC']));
+
             $arrayArmazenamentoEnquadramento = array(
                 'AnoProjeto' => $projeto['AnoProjeto'],
                 'Sequencial' => $projeto['Sequencial'],
@@ -178,10 +179,10 @@ class Admissibilidade_EnquadramentoController extends MinC_Controller_Action_Abs
 
             $objInternet = new Agente_Model_DbTable_Internet();
             $arrayEmails = $objInternet->obterEmailProponentesPorPreProjeto($projeto['idProjeto']);
+
             foreach ($arrayEmails as $email) {
                 EmailDAO::enviarEmail($email->Descricao, $verificacao['Descricao'], $textoEmail['dsTexto']);
             }
-
             parent::message('Enquadramento cadastrado com sucesso.', '/admissibilidade/enquadramento/gerenciar-enquadramento', 'CONFIRM');
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), "/admissibilidade/enquadramento/enquadrarprojeto?IdPRONAC={$projeto['IdPRONAC']}");
@@ -223,24 +224,29 @@ class Admissibilidade_EnquadramentoController extends MinC_Controller_Action_Abs
     public function encaminharAssinaturaAction()
     {
         try {
-            $get = $this->getRequest()->getParams();
-            $post = $this->getRequest()->getPost();
-            $servicoDocumentoAssinatura = $this->obterServicoDocumentoAssinatura();
-
-            if (isset($get['IdPRONAC']) && !empty($get['IdPRONAC']) && $get['encaminhar'] == 'true') {
-                $servicoDocumentoAssinatura->idPronac = $get['IdPRONAC'];
-                $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
-                parent::message('Projeto encaminhado com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
-            } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
-                foreach ($post['IdPRONAC'] as $idPronac) {
-                    $servicoDocumentoAssinatura->idPronac = $idPronac;
-                    $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
-                }
-                parent::message('Projetos encaminhados com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
-            }
+            $this->encaminharProjetosParaAssinatura();
             $this->carregarListaEncaminhamentoAssinatura();
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), '/admissibilidade/enquadramento/encaminhar-assinatura');
+        }
+    }
+
+    private function encaminharProjetosParaAssinatura()
+    {
+        $get = $this->getRequest()->getParams();
+        $post = $this->getRequest()->getPost();
+        $servicoDocumentoAssinatura = $this->obterServicoDocumentoAssinatura();
+
+        if (isset($get['IdPRONAC']) && !empty($get['IdPRONAC']) && $get['encaminhar'] == 'true') {
+            $servicoDocumentoAssinatura->idPronac = $get['IdPRONAC'];
+            $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
+            parent::message('Projeto encaminhado com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
+        } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
+            foreach ($post['IdPRONAC'] as $idPronac) {
+                $servicoDocumentoAssinatura->idPronac = $idPronac;
+                $servicoDocumentoAssinatura->encaminharProjetoParaAssinatura();
+            }
+            parent::message('Projetos encaminhados com sucesso.', '/admissibilidade/enquadramento/encaminhar-assinatura', 'CONFIRM');
         }
     }
 
@@ -279,7 +285,7 @@ class Admissibilidade_EnquadramentoController extends MinC_Controller_Action_Abs
                     'status' => 1,
                     'despacho' => utf8_encode($despacho['Despacho']),
                     'data' => Data::tratarDataZend($despacho['Data'], 'brasileiro', true)
-                    )
+                )
             );
         } catch (Exception $objException) {
             $this->_helper->json(array('status' => 0, 'msg' => $objException->getMessage()));

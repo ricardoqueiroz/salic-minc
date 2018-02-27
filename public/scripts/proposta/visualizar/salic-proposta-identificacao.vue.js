@@ -5,27 +5,17 @@ Vue.component('salic-proposta-identificacao', {
             <div class="card-content">
                 <h5>Identifica&ccedil;&atilde;o</h5>
                 <div class="row">
-                    <div class="col s12 l3 m3">
-                        <b>Nº da proposta</b><br>
-                        {{ proposta.idPreProjeto }}
-                    </div>
-                    <div class="col s12 l3 m6">
-                        <b>Nome Projeto</b><br>
-                        {{ proposta.NomeProjeto }}
-                    </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.PRONAC">
                         <b>Pronac</b><br>
                         {{ proposta.PRONAC }}
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col s12 l3 m3">
-                        <b>CNPJ/CPF</b><br>
-                        {{ proposta.CNPJCPF }}
+                    <div class="col s12 l3 m3" v-if="proposta.idPreProjeto">
+                        <b>Nº da proposta</b><br>
+                        {{ proposta.idPreProjeto }}
                     </div>
                     <div class="col s12 l6 m6">
-                        <b>Proponente</b><br>
-                        {{ proposta.NomeAgente }}
+                        <b>Nome Projeto</b><br>
+                        <salic-texto-simples :texto="proposta.NomeProjeto"></salic-texto-simples>
                     </div>
                 </div>
             </div>
@@ -35,19 +25,19 @@ Vue.component('salic-proposta-identificacao', {
             <div class="card-content">
                 <h5>Informa&ccedil;&otilde;es complementares</h5>
                 <div class="row">
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.Mecanismo">
                         <b>Mecanismo</b><br>
                         {{ Mecanismo }}
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.DtInicioDeExecucao">
                         <b>In&iacute;cio Execu&ccedil;&atilde;o</b><br>
                         {{ DtInicioDeExecucao }}
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.DtFinalDeExecucao">
                         <b>Final Execu&ccedil;&atilde;o</b><br>
                         {{ DtFinalDeExecucao }}
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.stDataFixa">
                         <b>Dt. Fixa</b><br>
                         {{ stDataFixa }}
                     </div>
@@ -56,19 +46,19 @@ Vue.component('salic-proposta-identificacao', {
                 <div class="row">
                     <div class="col s12 l3 m3">
                         <b>Ag&ecirc;ncia banc&aacute;ria</b><br>
-                        {{ proposta.AgenciaBancaria }}
+                        <salic-texto-simples :texto="proposta.AgenciaBancaria"></salic-texto-simples>
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.AreaAbrangencia">
                         <b>É proposta audiovisual</b><br>
                         {{ AreaAbrangencia }}
                     </div>
-                    <div class="col s12 l3 m3">
+                    <div class="col s12 l3 m3" v-if="proposta.tpProrrogacao">
                         <b>Prorroga&ccedil;&atilde;o autom&aacute;tica</b><br>
                         {{ tpProrrogacao }}
                     </div>
                     <div class="col s12 l3 m3">
                         <b>Tipo de execu&ccedil;&atilde;o</b><br>
-                        {{ proposta.TipoExecucao }}
+                        <salic-texto-simples :texto="proposta.TipoExecucao"></salic-texto-simples>
                     </div>
                 </div>
             </div>

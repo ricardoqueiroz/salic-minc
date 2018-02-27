@@ -2299,7 +2299,7 @@ class PlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->where("v.idPronac = ?", $idPronac);
         $select->order("v.FonteRecurso");
         $select->order("v.Produto DESC");
-        $select->order("convert(varchar(10), v.idEtapa) + ' - ' + v.Etapa");
+        $select->order(new Zend_Db_Expr("convert(varchar(10), v.idEtapa) + ' - ' + v.Etapa"));
         $select->order("v.UF");
         $select->order("v.Municipio");
         $select->order("v.Item");

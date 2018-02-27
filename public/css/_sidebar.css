@@ -69,6 +69,14 @@ x - Menu lateral (legado)
     font-size: 13px;
 }
 
+#qm0.qmmc > a:first-child,
+#qm0.qmmc > a:first-child:hover {
+    font-weight: 500;
+    font-size: 13px;
+    height: 60px;
+    padding-top: 5px;
+}
+
 .container-fluid #qm0.qmmc {
     left: -42px;
     top: -31px;

@@ -36,7 +36,7 @@
             <div id="qm0" class="qmmc sanfona">
                 <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'configurar-pagamento-parecerista'), '', true); ?>" title="Configurar Despacho">Configurar Despacho</a>
                 <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'solicitar-pagamento-parecerista'), '', true); ?>" title="Solicitar pagamento de parecerista">Solicitar Pagamentos</a>
-                <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'registrar-ordem-bancaria'), '', true); ?>" title="Registrar ordem banc�ria">Registrar ordem banc�ria</a>
+                <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'registrar-ordem-bancaria'), '', true); ?>" title="Registrar ordem banc&aacute;ria&quot;&gt;Registrar ordem banc&aacute;ria</a>
                 <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'finalizar-pagamento-parecerista'), '', true); ?>" title="Finalizar pagamento de parecerista">Finalizar pagamentos</a>
                 <a class="no_seta" href="<?php echo $this->url(array('controller' => 'parecerista', 'action' => 'index'), '', true); ?>" title="Consulta">Consulta</a>
             </div>

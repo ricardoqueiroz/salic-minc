@@ -90,84 +90,12 @@ class PlanoDistribuicao extends MinC_Db_Table_Abstract
     }
 
     /**
-     * Retorna registros do banco de dados
-     * @param array $where - array com dados where no formato "nome_coluna_1"=>"valor_1","nome_coluna_2"=>"valor_2"
-     * @param array $order - array com orders no formado "coluna_1 desc","coluna_2"...
-     * @param int $tamanho - numero de registros que deve retornar
-     * @param int $inicio - offset
-     * @return Zend_Db_Table_Rowset_Abstract
+     * @deprecated metodo migrado para classe Proposta_Model_DbTable_PlanoDistribuicaoProduto()
      */
     public function buscar($where=array(), $order=array(), $tamanho=-1, $inicio=-1)
     {
-        // criando objeto do tipo select
-        $slct = $this->select();
-
-        $slct->setIntegrityCheck(false);
-
-        $cols = array_merge($this->_getCols(), array(
-            new Zend_Db_Expr("FORMAT(a.QtdeProponente, '0,0','pt-br') as QtdeProponente"),
-            new Zend_Db_Expr("FORMAT(a.QtdeProduzida, '0,0','pt-br') as QtdeProduzida"),
-            new Zend_Db_Expr("FORMAT(a.QtdePatrocinador, '0,0','pt-br') as QtdePatrocinador"),
-            new Zend_Db_Expr("FORMAT(a.QtdeOutros, '0,0','pt-br') as QtdeOutros"),
-            new Zend_Db_Expr("FORMAT(a.QtdeVendaPopularPromocional, '0,0','pt-br') as QtdeVendaPopularPromocional"),
-            new Zend_Db_Expr("FORMAT(a.QtdeVendaNormal, '0,0','pt-br') as QtdeVendaNormal"),
-            new Zend_Db_Expr("FORMAT(a.QtdeVendaPromocional, '0,0','pt-br') as QtdeVendaPromocional"),
-            new Zend_Db_Expr("FORMAT(a.QtdeVendaPopularNormal, '0,0','pt-br') as QtdeVendaPopularNormal"),
-            new Zend_Db_Expr("FORMAT(a.vlUnitarioPopularNormal, 'N','pt-br') as vlUnitarioPopularNormal"),
-            new Zend_Db_Expr("FORMAT( a.vlUnitarioNormal, 'N','pt-br') AS vlUnitarioNormal"),
-            new Zend_Db_Expr("FORMAT( a.ReceitaPopularNormal, 'N','pt-br') AS ReceitaPopularNormal"),
-            new Zend_Db_Expr("FORMAT( a.ReceitaPopularPromocional, 'N','pt-br') AS ReceitaPopularPromocional"),
-            new Zend_Db_Expr("FORMAT( a.PrecoUnitarioPromocional, 'N','pt-br') AS PrecoUnitarioPromocional"),
-            new Zend_Db_Expr("FORMAT( a.PrecoUnitarioNormal, 'N', 'pt-br') AS PrecoUnitarioNormal"),
-            new Zend_Db_Expr("FORMAT( a.vlReceitaTotalPrevista, 'N', 'pt-br') AS Receita"),
-            new Zend_Db_Expr("FORMAT( a.ReceitaPopularNormal, 'N', 'pt-br') AS ValorMedioPopular"),
-            new Zend_Db_Expr("FORMAT( a.ReceitaPopularPromocional, 'N', 'pt-br') AS ValorMedioProponente")
-        ));
-
-        $slct->from(array("a"=> $this->_name), $cols, $this->_schema);
-        $slct->joinInner(
-                array("b"=>"produto"),
-                            "a.idproduto = b.codigo",
-                            array("Produto"=>"b.descricao"),
-                            $this->_schema
-            );
-        $slct->joinInner(
-                array("ar"=>"area"),
-                            "a.area = ar.codigo",
-                            array("DescricaoArea"=>"ar.descricao"),
-                $this->_schema
-            );
-        $slct->joinInner(
-                array("s"=>"segmento"),
-                            "a.segmento = s.codigo",
-                            array("DescricaoSegmento"=>"s.descricao"),
-                $this->_schema
-            );
-
-        $slct->where('a.stplanodistribuicaoproduto = ?', '1');
-
-        // adicionando clausulas where
-        foreach ($where as $coluna=>$valor) {
-            $slct->where($coluna, $valor);
-        }
-
-        // adicionando linha order ao select
-        $slct->order($order);
-
-        // paginacao
-        if ($tamanho > -1) {
-            $tmpInicio = 0;
-            if ($inicio > -1) {
-                $tmpInicio = $inicio;
-            }
-            $slct->limit($tamanho, $tmpInicio);
-        }
-
-        //SETANDO A QUANTIDADE DE REGISTROS
-        $this->_totalRegistros = $this->pegaTotal($where);
-        //$this->_totalRegistros = 100;
-        // retornando os registros conforme objeto select
-        return $this->fetchAll($slct);
+        $planoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+        return $planoDistribuicaoProduto->buscar($where, $order, $tamanho, $inicio);
     }
 
     /**
@@ -296,57 +224,13 @@ class PlanoDistribuicao extends MinC_Db_Table_Abstract
         }
     }
 
+    /**
+     * @deprecated metodo migrado para a classe Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+     */
     public function buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto, $where = array(), $order = null)
     {
-        $slct = $this->select();
-        $slct->setIntegrityCheck(false);
-        $slct->from(array("p" => 'PlanoDistribuicaoProduto'), $this->_getCols(), $this->_schema);
-
-        $slct->joinInner(
-            array("d" => "tbDetalhaPlanoDistribuicao"),
-            "p.idPlanoDistribuicao = d.idPlanoDistribuicao",
-            '*',
-            $this->_schema
-        );
-
-        $slct->joinInner(array('uf' => 'uf'), 'uf.CodUfIbge = d.idUF', 'uf.descricao AS DescricaoUf', $this->_schema);
-
-        $slct->joinInner(array('mun' => 'municipios'), 'mun.idmunicipioibge = d.idMunicipio', 'mun.descricao as DescricaoMunicipio', $this->getSchema('agentes'));
-
-        $slct->joinInner(
-            array("b"=>"produto"),
-            "p.idproduto = b.codigo",
-            array("Produto"=>"b.descricao"),
-            $this->_schema
-        );
-
-        $slct->joinInner(
-            array("ar"=>"area"),
-            "p.area = ar.codigo",
-            array("DescricaoArea"=>"ar.descricao"),
-            $this->_schema
-        );
-        $slct->joinInner(
-            array("s"=>"segmento"),
-            "p.segmento = s.codigo",
-            array("DescricaoSegmento"=>"s.descricao"),
-            $this->_schema
-        );
-
-        $slct->where('p.idProjeto = ?', $idPreProjeto);
-
-        foreach ($where as $coluna => $valor) {
-            $slct->where($coluna, $valor);
-        }
-
-        $slct->order($order);
-
-        try {
-            return $this->fetchAll($slct)->toArray();
-        } catch (Exception $e) {
-            echo($slct->assemble());
-            die;
-        }
+        $tbPlanoDistribuicaoProduto = new Proposta_Model_DbTable_PlanoDistribuicaoProduto();
+        return $tbPlanoDistribuicaoProduto->buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto, $where, $order);
     }
 
     /**

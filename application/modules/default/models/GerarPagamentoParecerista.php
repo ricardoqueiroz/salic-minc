@@ -89,7 +89,7 @@ class GerarPagamentoParecerista extends MinC_Db_Table_Abstract
         $select->from(
             array('pro' => 'Projetos'),
                         array('Pronac' => new Zend_Db_Expr('pro.AnoProjeto + pro.Sequencial'),
-                              'sac.dbo.fnNome(pp.idParecerista) as Parecerista',
+                            new Zend_Db_Expr('sac.dbo.fnNome(pp.idParecerista) as Parecerista'),
                               'pro.IdPRONAC as idPronac',
                               'pro.NomeProjeto')
         );

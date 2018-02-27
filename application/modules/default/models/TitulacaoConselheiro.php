@@ -1,29 +1,30 @@
 <?php
+
 class TitulacaoConselheiro extends MinC_Db_Table_Abstract
 {
     protected $_banco = 'agentes';
     protected $_schema = 'agentes';
     protected $_name = 'tbTitulacaoConselheiro';
 
-    public function buscarTitulacaoConselheiro($where=null, $order=array())
+    public function buscarTitulacaoConselheiro($where = null, $order = array())
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
-                array('TC' => $this->_name),
-                array(
-                    'TC.stTitular',
-                    'TC.idAgente'
-                )
+            array('TC' => $this->_name),
+            array(
+                'TC.stTitular',
+                'TC.idAgente'
+            )
         );
         $select->joinInner(
-                array('ar' => 'Area'),
+            array('ar' => 'Area'),
             'ar.Codigo = TC.cdArea',
             array('ar.Descricao as Area'),
             'SAC.dbo'
         );
         $select->joinInner(
-                array('nm' => 'Nomes'),
+            array('nm' => 'Nomes'),
             'nm.idagente = tc.idAgente',
             array('nm.Descricao as nome'),
             'Agentes.dbo'
@@ -41,28 +42,34 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
-    public function buscarAreaConselheiro($idAgente=null)
+    public function buscarAreaConselheiro($idAgente = null)
     {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
-                array('C' => $this->_name),
-                array('C.idAgente',
-                    'C.cdArea',
-                    'C.stTitular',
-                    'C.stConselheiro'
-                )
+            array('C' => $this->_name),
+            array('C.idAgente',
+                'C.cdArea',
+                'C.stTitular',
+                'C.stConselheiro'
+            )
         );
         $select->joinInner(
-                array('Ar' => 'Area'),
+            array('Ar' => 'Area'),
             'Ar.Codigo = C.cdArea',
             array(
                 'Ar.Descricao as Area'
-                ),
+            ),
             'SAC.dbo'
         );
         $select->joinInner(
-                array('Nm' => 'Nomes'),
+            ['Agente' => 'Agentes'],
+            'Agente.idAgente = C.idAgente',
+            ['Agente.CNPJCPF'],
+            $this->getSchema('Agentes')
+        );
+        $select->joinInner(
+            array('Nm' => 'Nomes'),
             'Nm.idAgente = C.idAgente',
             array('Nm.Descricao as Nome')
         );
@@ -72,6 +79,7 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
             return $this->fetchRow($select);
         }
         $select->order('Ar.Descricao asc');
+
         return $this->fetchAll($select);
     }
 
@@ -90,15 +98,15 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
                       )  as QTD
                      "),
                 "T.cdArea"
-                )
+            )
         );
         $select->joinInner(
-                array('N' => 'Nomes'),
+            array('N' => 'Nomes'),
             "N.idAgente =   T.idAgente",
             array('N.Descricao as Nome')
         );
         $select->joinInner(
-                array('A' => 'Area'),
+            array('A' => 'Area'),
             'A.Codigo =  T.cdArea',
             array('A.Descricao as Area'),
             'SAC.dbo'
@@ -114,29 +122,35 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
-                array('C' => 'tbTitulacaoConselheiro'),
+            array('C' => 'tbTitulacaoConselheiro'),
             array('C.idAgente')
         );
         $select->joinInner(
-                array('N' => 'Nomes'),
+            ['Agente' => 'Agentes'],
+            'Agente.idAgente = C.idAgente',
+            ['Agente.CNPJCPF'],
+            $this->getSchema('Agentes')
+        );
+        $select->joinInner(
+            array('N' => 'Nomes'),
             'C.idAgente = N.idAgente',
             array('N.Descricao as Nome'),
             'Agentes.dbo'
         );
         $select->joinInner(
-                array('A' => 'Area'),
+            array('A' => 'Area'),
             'C.cdArea = A.Codigo',
             array('A.Descricao as Area'),
             'SAC.dbo'
         );
         $select->joinInner(
-                array('H' => 'tbHistoricoConselheiro'),
+            array('H' => 'tbHistoricoConselheiro'),
             'H.idConselheiro = N.idAgente',
             array(
                 'H.idConselheiro',
                 'H.dsJustificativa as Just',
                 new Zend_Db_Expr('CONVERT(CHAR(10), H.dtHistorico,103) as Data')
-                ),
+            ),
             "BDCORPORATIVO.scAGENTES"
         );
         $select->where('H.stConselheiro = ?', 'I');
@@ -160,15 +174,15 @@ class TitulacaoConselheiro extends MinC_Db_Table_Abstract
                       )  as QTD
                      "),
                 "T.cdArea"
-                )
+            )
         );
         $select->joinInner(
-                array('N' => 'Nomes'),
+            array('N' => 'Nomes'),
             "N.idAgente =   T.idAgente",
             array('N.Descricao as Nome')
         );
         $select->joinInner(
-                array('A' => 'Area'),
+            array('A' => 'Area'),
             'A.Codigo =  T.cdArea',
             array('A.Descricao as Area'),
             'SAC.dbo'

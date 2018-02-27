@@ -44,9 +44,9 @@ class Admissibilidade_DistribuicaoAvaliacaoPropostaController extends MinC_Contr
                 'avaliacao_atual' => Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA
             );
 
-            $distribuicaoAvaliacaoProposta = new Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta();
-            $distribuicaoAvaliacaoProposta->inativarAvaliacoesProposta($post['id_preprojeto']);
-            $distribuicaoAvaliacaoProposta->inserir($dadosEncaminhamentoProposta);
+            $distribuicaoAvaliacaoPropostaDbTable = new Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta();
+            $distribuicaoAvaliacaoPropostaDbTable->inativarAvaliacoesProposta($post['id_preprojeto']);
+            $distribuicaoAvaliacaoPropostaDbTable->inserir($dadosEncaminhamentoProposta);
 
             $msg = 'Proposta encaminhada com sucesso!';
             $resposta = true;

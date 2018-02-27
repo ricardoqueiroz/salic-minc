@@ -468,7 +468,7 @@ function strConvertCharset($str) {
         $str = utf8_encode($str);
     }
 
-    return utf8_decode($str);
+    return $str;
 }
 
 function converterArrayParaObjetos($array)

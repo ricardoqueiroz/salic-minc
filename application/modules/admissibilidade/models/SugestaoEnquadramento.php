@@ -5,12 +5,69 @@ class Admissibilidade_Model_SugestaoEnquadramento extends MinC_Db_Model
     protected $_id_sugestao_enquadramento;
     protected $_id_preprojeto;
     protected $_id_orgao;
+    protected $_id_orgao_superior;
     protected $_id_perfil_usuario;
     protected $_id_usuario_avaliador;
     protected $_id_area;
     protected $_id_segmento;
     protected $_descricao_motivacao;
     protected $_data_avaliacao;
+    protected $_ultima_sugestao;
+    protected $_id_distribuicao_avaliacao_proposta;
+
+    /**
+     * @return mixed
+     */
+    public function getIdDistribuicaoAvaliacaoProposta()
+    {
+        return $this->_id_distribuicao_avaliacao_proposta;
+    }
+
+    /**
+     * @param mixed $id_distribuicao_avaliacao_proposta
+     * @return Admissibilidade_Model_SugestaoEnquadramento
+     */
+    public function setIdDistribuicaoAvaliacaoProposta($id_distribuicao_avaliacao_proposta)
+    {
+        $this->_id_distribuicao_avaliacao_proposta = $id_distribuicao_avaliacao_proposta;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUltimaSugestao()
+    {
+        return $this->_ultima_sugestao;
+    }
+
+    /**
+     * @param mixed $ultima_sugestao
+     * @return Admissibilidade_Model_SugestaoEnquadramento
+     */
+    public function setUltimaSugestao($ultima_sugestao)
+    {
+        $this->_ultima_sugestao = $ultima_sugestao;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIdOrgaoSuperior()
+    {
+        return $this->_id_orgao_superior;
+    }
+
+    /**
+     * @param mixed $id_orgao_superior
+     * @return Admissibilidade_Model_SugestaoEnquadramento
+     */
+    public function setIdOrgaoSuperior($id_orgao_superior)
+    {
+        $this->_id_orgao_superior = $id_orgao_superior;
+        return $this;
+    }
 
     /**
      * @return mixed

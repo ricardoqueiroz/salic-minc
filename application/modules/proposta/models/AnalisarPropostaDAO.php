@@ -343,7 +343,14 @@ class Proposta_Model_AnalisarPropostaDAO extends MinC_Db_Model
     public static function buscarHistorico($idPreProjeto)
     {
         $sql = "
-        SELECT 'Proposta' as tipo,idProjeto,idTecnico,idPerfil, g.gru_nome AS Perfil ,usu_Nome, convert(varchar(30),DtAvaliacao, 120 ) as DtAvaliacao, Avaliacao
+        SELECT 'Proposta' as tipo,
+                idProjeto,
+                idTecnico,
+                idPerfil, 
+                g.gru_nome AS Perfil ,
+                usu_Nome, 
+                convert(varchar(30),DtAvaliacao, 120 ) as DtAvaliacao, 
+                Avaliacao
             FROM       SAC.dbo.tbAvaliacaoProposta p
               INNER JOIN tabelas.dbo.Usuarios        u on (p.idTecnico = u.usu_codigo)
               LEFT JOIN tabelas.dbo.grupos g ON g.gru_codigo = idPerfil
@@ -362,7 +369,7 @@ class Proposta_Model_AnalisarPropostaDAO extends MinC_Db_Model
               INNER JOIN sac.dbo.PreProjeto                c on (b.idProjeto = c.idPreProjeto)
               INNER JOIN tabelas.dbo.Usuarios              d on (a.idTecnico = d.usu_codigo)
             WHERE idProjeto = {$idPreProjeto}
-            ORDER BY 5 ASC
+            ORDER BY DtAvaliacao ASC
         ";
 
         $db = Zend_Db_Table::getDefaultAdapter();
