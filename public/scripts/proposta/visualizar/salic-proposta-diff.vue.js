@@ -7,7 +7,7 @@ Vue.component('salic-proposta-diff', {
             <div v-else-if="Object.keys(dadosAtuais).length > 2">
                 <div class="card padding20">
                     <div class="nao-existe-versao-proposta">
-                        <h5>Ops! Não encontramos versionamento de alterações para o projeto informado...</h5>
+                        <h5>Ops! Não existe versionamento de alterações para o projeto informado...</h5>
                     </div>
                 </div>
                 <salic-proposta :idpreprojeto="idpreprojeto" :proposta="dadosAtuais"></salic-proposta>
