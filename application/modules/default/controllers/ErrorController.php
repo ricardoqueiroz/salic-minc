@@ -1,26 +1,33 @@
 <?php
 
-/**
- * Trata as mensagens de erro do sistema
- * @author Equipe RUP - Politec
- * @since 29/03/2010
- * @version 1.0
- * @package application
- * @subpackage application.controller
- * @copyright c 2010 - Ministerio da Cultura - Todos os direitos reservados.
- * @link http://www.cultura.gov.br
- */
 class ErrorController extends Zend_Controller_Action
 {
+    /**
+     * @var $ravenClient Raven_Client
+     */
+    private $ravenClient;
+
+    public function init()
+    {
+        $config = Zend_Registry::get("config")->toArray();
+        if ($config['errorHandler'] && $config['errorHandler']['sentryURL']) {
+            $this->instanciarRaven($config['errorHandler']['sentryURL']);
+        }
+    }
+
+    private function instanciarRaven($url)
+    {
+        $this->ravenClient = new Raven_Client($url);
+        $error_handler = new Raven_ErrorHandler($this->ravenClient);
+        $error_handler->registerExceptionHandler();
+        $error_handler->registerErrorHandler();
+        $error_handler->registerShutdownFunction();
+        $this->ravenClient->install();
+    }
 
     /**
      * Action para exibir mensagem ao usuario nao logado que tentou acessar algo
      * de usuario que necessitam estar autenticados.
-     *
-     * @name noauthAction
-     *
-     * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
-     * @since  25/08/2016
      */
     public function noauthAction()
     {
@@ -35,11 +42,6 @@ class ErrorController extends Zend_Controller_Action
     /**
      * Action para exibir mensagem ao usuario que nao tem permissao para visualizar
      * determinado conteudo.
-     *
-     * @name notallowedAction
-     *
-     * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
-     * @since  25/08/2016
      */
     public function notallowedAction()
     {
@@ -52,11 +54,6 @@ class ErrorController extends Zend_Controller_Action
     /**
      * Action para exibir mensagem informando que o sistema nao encontrou a
      * pagina solicitada.
-     *
-     * @name notfoundAction
-     *
-     * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
-     * @since  25/08/2016
      */
     public function notfoundAction()
     {
@@ -66,13 +63,6 @@ class ErrorController extends Zend_Controller_Action
         $this->view->errorType = 'pagina';
     }
 
-    /**
-     *
-     * @name errorPlanetAction
-     *
-     * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
-     * @since  25/08/2016
-     */
     public function errorPlanetAction()
     {
 
@@ -121,26 +111,20 @@ class ErrorController extends Zend_Controller_Action
         }
 
         // Log exception, if logger available
-//        if ($log = $this->getLog()) {
-//            $log->crit($this->view->message, $errors->exception);
-//        }
+        if ($log = $this->getLog()) {
+            $log->crit($this->view->message, $errors->exception);
+        }
 //
         // conditionally display exceptions
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->exception = $errors->exception;
         }
 
-        $this->view->request   = $errors->request;
+        $this->view->request = $errors->request;
     }
 
     /**
      * Retorna o erro gerado pelo bootstrap.
-     *
-     * @name getLog
-     * @return bool
-     *
-     * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
-     * @since  25/08/2016
      */
     public function getLog()
     {
@@ -157,12 +141,14 @@ class ErrorController extends Zend_Controller_Action
 
     /**
      * Trata as excecoes para os usuarios
-     * @access public
-     * @param void
-     * @return void
      */
     public function errorAction()
     {
+        $error = $this->_getParam('error_handler');
+        if($this->ravenClient) {
+            $this->ravenClient->captureException($error->exception);
+        }
+
         if (APPLICATION_ENV === 'development') {
             $this->_helper->viewRenderer->setNoRender();
             $request = clone $this->getRequest();
@@ -171,15 +157,13 @@ class ErrorController extends Zend_Controller_Action
             return $this->_helper->actionStack($request);
         }
 
-        // limpa o conte�do gerado antes do erro
         $this->getResponse()->clearBody();
-
         // pega a excecao e manda para o template
         $this->_helper->viewRenderer->setViewSuffix('phtml');
-        $error = $this->_getParam('error_handler');
-        $this->view->ambiente     = APPLICATION_ENV;
-        $this->view->exception    = $error->exception;
-        $this->view->request      = $error->request;
+
+        $this->view->ambiente = APPLICATION_ENV;
+        $this->view->exception = $error->exception;
+        $this->view->request = $error->request;
         $this->view->message_type = "ERROR";
 
         switch ($error->type) {

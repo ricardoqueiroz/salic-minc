@@ -1,9 +1,4 @@
 <?php
-
-//echo '<pre>';
-//var_dump($this->grupoAtivo);
-//exit;
-
 //@todo melhorar forma de montar menus sem esse monte de array.
 $arrMenuProponente = array();
 // Proponente
@@ -386,12 +381,14 @@ $arrMenu['admissibilidade']['menu'][] = array(
     'title' => 'Avalia&ccedil;&atilde;o',
     'label' => 'Avalia&ccedil;&atilde;o'
 );
+
 $arrMenu['admissibilidade']['menu'][] = array(
     'grupo' => array(92,97,131),
     'url' => $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'listar-solicitacoes-desarquivamento'), '', true),
     'title' => 'Desarquivamento',
     'label' => 'Desarquivamento'
 );
+
 $arrMenu['admissibilidade']['menu'][] = array(
     'grupo' => [
         Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE,
@@ -402,6 +399,7 @@ $arrMenu['admissibilidade']['menu'][] = array(
     'title' => 'Ir para Certid&otilde;es Negativas',
     'label' => 'Certid&otilde;es Negativas'
 );
+
 $arrMenu['admissibilidade']['menu'][] = array(
     'grupo' => array(92, 131),
     'url' => $this->url(array('module' => 'admissibilidade', 'controller' => 'enquadramento', 'action' => 'gerenciar-enquadramento')),
@@ -812,7 +810,7 @@ if (isset ($auth['cpf'])) {
         <div class="nav-wrapper  container">
             <a id="menu-left" href="#" data-activates="sidenav" class="button-collapse left"><i class="material-icons">menu</i></a>
             <a id="menu-right" href="#" data-activates="nav-mobile" class="button-collapse right"><i
-                        class="material-icons">menu</i></a>
+                    class="material-icons">menu</i></a>
 
             <ul class="left hide-on-med-and-down">
                 <?php echo $this->partialLoop('partials/menu/item.phtml', $arrMenu); ?>

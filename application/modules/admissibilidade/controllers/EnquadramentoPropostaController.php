@@ -54,7 +54,7 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         }
 
         $this->view->id_perfil_usuario = $this->grupoAtivo->codGrupo;
-        $this->view->historicoEnquadramento = $this->obterHistoricoSugestaoEnquadramento($preprojeto['idPreProjeto']);
+//        $this->view->historicoEnquadramento = $this->obterHistoricoSugestaoEnquadramento($preprojeto['idPreProjeto']);
     }
 
     private function salvarSugestaoEnquadramento()
@@ -138,14 +138,33 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         }
     }
 
-    private function obterHistoricoSugestaoEnquadramento($id_preprojeto)
+    public function obterHistoricoSugestaoEnquadramentoAjaxAction()
     {
-        $view = new Zend_View();
-        $view->setScriptPath(__DIR__ . DIRECTORY_SEPARATOR . '../views/scripts/enquadramento-proposta');
+        try {
+            $this->_helper->layout->disableLayout();
 
-        $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-        $view->historicoEnquadramento = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento($id_preprojeto);
-        return $view->render('historico-sugestao-enquadramento.phtml');
+            $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+
+            $get = $this->getRequest()->getParams();
+            if (!isset($get['id_preprojeto']) || empty($get['id_preprojeto'])) {
+                throw new Exception("Identificador da proposta não informado.");
+            }
+
+            $resultado = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento(
+                $get['id_preprojeto']
+            );
+
+            $resultado = array_map(function($dado) {
+                return array_map('utf8_encode', $dado);
+            }, $resultado);
+
+            $this->_helper->json(
+                ['sugestoes_enquadramento' => $resultado]
+            );
+//xd($resultado);
+        } catch (Exception $objException) {
+            xd($objException->getMessage());
+        }
     }
 
     public function tratarAvaliacoesVencidasComponentesComissaoAction()

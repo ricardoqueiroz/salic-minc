@@ -33,6 +33,16 @@ header #topo #logo h1 {
     cursor: pointer;
 }
 
+header #topo #logo-homolog h1 {
+    height: 60px;
+    font-size: 12px;
+    margin: 0;
+    text-indent: -1000px;
+    background: url(../img/logo_salic_homolog.png) center no-repeat;
+    background-size: 150px;
+    cursor: pointer;
+}
+
 header #topo  #logo h1 a {
     display: block;
     height: 58px;
