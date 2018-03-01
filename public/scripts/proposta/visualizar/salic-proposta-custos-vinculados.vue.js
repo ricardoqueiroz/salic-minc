@@ -16,6 +16,11 @@ Vue.component('salic-proposta-custos-vinculados', {
         if (typeof this.idpreprojeto != 'undefined') {
             this.buscar_dados(this.idpreprojeto);
         }
+
+        if (typeof this.arrayCustos != 'undefined') {
+            this.dados = this.arrayCustos;
+        }
+
     },
     watch: {
         idpreprojeto: function (value) {

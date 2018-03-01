@@ -126,6 +126,10 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         if (typeof this.idpreprojeto != 'undefined') {
             this.fetch(this.idpreprojeto);
         }
+
+        if (typeof this.arrayPlanilha != 'undefined') {
+            this.planilha = this.arrayPlanilha;
+        }
     },
     computed: {
         planilhaCompleta: function () {
@@ -166,9 +170,6 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         }
     },
     watch: {
-        idpreprojeto: function (value) {
-            this.fetch(value);
-        },
         arrayPlanilha: function (value) {
             this.planilha = value;
             this.iniciarCollapsible();
@@ -199,48 +200,6 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         iniciarCollapsible: function () {
             $3('.planilha-orcamentaria .collapsible').each(function() {
                 $3(this).collapsible();
-            });
-
-            $3('.planilha-orcamentaria').on('click', '.collapsible', function() {
-                $3(this).collapsible({
-                    accordion: false,
-                    onOpen: function(el) {
-                        // console.log('Open', el.prevObject);
-                        let elm = el.prevObject.attr('class');
-
-                        if(typeof  elm != 'undefined') {
-                            let classes = '.' + elm.replace(/[\s]+/g, '.');
-                            classes = classes.replace('.active', '');
-
-                            let elm2 = $3(classes).not(".active").closest('.collapsible');
-                            console.log(elm);
-                            $3(classes).addClass("active");
-                            // $3(elm2).collapsible('open', 0);
-                            $3(elm2).collapsible({accordion: false});
-                        }
-                    }, // Callback for Collapsible open
-                    onClose: function(el) {
-                        console.log('closed', el.prevObject);
-                        let elm = el.prevObject.attr('class');
-
-                        if(typeof  elm != 'undefined') {
-                            let classes = '.' + elm.replace(/[\s]+/g, '.');
-
-                            let elm2 = $3(classes).closest('.collapsible');
-
-                            $3(classes).removeClass(function(){
-                                return "active";
-                            });
-
-                            // $3(elm2).collapsible('close', 0);
-                            $3(elm2).collapsible({accordion: false});
-                            $3(elm2).collapsible({accordion: true});
-
-                        }
-
-                    } // Callback for Collapsible close
-                });
-
             });
         },
         converterStringParaClasseCss: function(text) {

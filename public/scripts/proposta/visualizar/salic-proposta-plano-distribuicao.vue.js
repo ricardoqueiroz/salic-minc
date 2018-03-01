@@ -143,6 +143,14 @@ Vue.component('salic-proposta-plano-distribuicao', {
         if (typeof this.idpreprojeto != 'undefined') {
             this.fetch(this.idpreprojeto);
         }
+
+        if (typeof this.arrayProdutos != 'undefined') {
+            this.produtos = this.arrayProdutos;
+        }
+
+        if (typeof this.arrayDetalhamentos != 'undefined') {
+            this.detalhamentos = this.arrayDetalhamentos;
+        }
     },
     methods: {
         fetch: function () {
