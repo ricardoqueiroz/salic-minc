@@ -22,20 +22,17 @@ class Analise_AnaliseController extends Analise_GenericController
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::COORDENADOR_ANALISE;
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::TECNICO_ANALISE;
 
-        if (!empty($_REQUEST['idPreProjeto'])) {
-            $this->idPreProjeto = $_REQUEST['idPreProjeto'];
+        if (!empty($this->getRequest()->getParam('idPreProjeto'))) {
+            $this->idPreProjeto = $this->getRequest()->getParam('idPreProjeto');
         }
-        $auth = Zend_Auth::getInstance(); // instancia da autenticacao
+        $auth = Zend_Auth::getInstance();
 
-        //parent::perfil(1, $PermissoesGrupo);
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
 
         $this->idUsuario = isset($auth->getIdentity()->usu_codigo) ? $auth->getIdentity()->usu_codigo : $auth->getIdentity()->IdUsuario;
 
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
         if (isset($auth->getIdentity()->usu_codigo)) {
-            // LEMBRAR :
-            // $this->grupoAtivo->codOrgao  => Orgão logado   ==== Projetos.Orgao
             $this->codGrupo = $GrupoAtivo->codGrupo;
             $this->codOrgao = $GrupoAtivo->codOrgao;
             $this->codOrgaoSuperior = (!empty($auth->getIdentity()->usu_org_max_superior)) ? $auth->getIdentity()->usu_org_max_superior : null;
@@ -53,6 +50,9 @@ class Analise_AnaliseController extends Analise_GenericController
 
     public function listarProjetosAjaxAction()
     {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender();
+
         $start = $this->getRequest()->getParam('start');
         $length = $this->getRequest()->getParam('length');
         $draw = (int)$this->getRequest()->getParam('draw');
@@ -60,7 +60,7 @@ class Analise_AnaliseController extends Analise_GenericController
         $order = $this->getRequest()->getParam('order');
         $columns = $this->getRequest()->getParam('columns');
 
-        $order = ($order[0]['dir'] != 1) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtSituacao DESC");
+        $order = ($order[0]['dir'] != 1 && isset($order)) ? array($columns[$order[0]['column']]['name'] . ' ' . $order[0]['dir']) : array("DtSituacao DESC");
 
         $vwPainelAvaliar = new Analise_Model_DbTable_vwProjetosAdequadosRealidadeExecucao();
 
@@ -296,6 +296,16 @@ class Analise_AnaliseController extends Analise_GenericController
                 throw new Exception("Identificador do projeto &eacute; necess&aacute;rio para acessar essa funcionalidade.");
             }
 
+            $vwPainelAvaliar = new Analise_Model_DbTable_vwProjetosAdequadosRealidadeExecucao();
+            $where['idpronac = ?'] = $params['idpronac'];
+            $projetos = $vwPainelAvaliar->projetos($where, array(), 0, 1);
+
+            if (empty($projetos)) {
+                throw new Exception("Projeto n&atilde;o dispon&iacute;vel para redistribui&ccedil;&atilde;o!");
+            }
+
+            $this->view->projeto = $projetos[0];
+
             if ($this->getRequest()->isPost()) {
                 if (empty($params['idNovoTecnico']) || empty($params['tecnicoAtual'])) {
                     throw new Exception("Id do t&eacute;cnico &eacute; necess&aacute;rio para acessar essa funcionalidade.");
@@ -313,15 +323,8 @@ class Analise_AnaliseController extends Analise_GenericController
 
                 parent::message("An&aacute;lise redistribu&iacute;da com sucesso.", "/{$this->moduleName}/analise/listarprojetos", "CONFIRM");
             } else {
+
                 $vw = new vwUsuariosOrgaosGrupos();
-
-                $vwPainelAvaliar = new Analise_Model_DbTable_vwProjetosAdequadosRealidadeExecucao();
-
-                $where['idpronac = ?'] = $params['idpronac'];
-
-                $projetos = $vwPainelAvaliar->projetos($where, array(), 0, 1);
-                $this->view->projeto = $projetos[0];
-
                 $this->view->novosAnalistas = $vw->carregarTecnicosPorUnidadeEGrupo($this->codOrgao, 110);
             }
         } catch (Exception $objException) {

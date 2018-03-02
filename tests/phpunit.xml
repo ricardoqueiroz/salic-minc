@@ -8,6 +8,9 @@
     <testsuite name="Admissibilidade">
         <directory>application/modules/admissibilidade</directory>
     </testsuite>
+    <testsuite name="Analise">
+        <directory>application/modules/analise</directory>
+    </testsuite>
 
     <filter>
         <whitelist>
