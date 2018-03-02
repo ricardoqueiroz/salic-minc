@@ -9,6 +9,10 @@ class Verificacao extends MinC_Db_Table_Abstract
     const DEVOLUCAO_FUNDO_NACIONAL_CULTURA = 350;
     const OUTRAS_DEVOLUCOES_DE_RECURSOS_CAPTADOS = 351;
     const APROVACAO_INICIAL_DO_PROJETO = 626;
+    const PROJETO_NORMAL = 610;
+    const PROJETO_APROVADO_EM_EDITAIS = 618;
+    const PROJETO_COM_CONTRATOS_DE_PATROCINIOS = 619;
+
 
     protected $_schema = "sac";
     protected $_name = "verificacao";
