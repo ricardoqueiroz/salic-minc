@@ -285,11 +285,11 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
                     'avaliacao_atual' => Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta::AVALIACAO_ATUAL_ATIVA
                 ]
             );
-            $this->view->possuiAvaliacaoCnic = $distribuicaoAvaliacaoPropostaDbTable->propostaPossuiAvaliacao(
-                $this->idPreProjeto,
-                Autenticacao_Model_Grupos::COMPONENTE_COMISSAO,
-                $orgaoSuperior
-            );
+            // $this->view->possuiAvaliacaoCnic = $distribuicaoAvaliacaoPropostaDbTable->propostaPossuiAvaliacao(
+            //     $this->idPreProjeto,
+            //     Autenticacao_Model_Grupos::COMPONENTE_COMISSAO,
+            //     $orgaoSuperior
+            // );
 
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
             $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento(
