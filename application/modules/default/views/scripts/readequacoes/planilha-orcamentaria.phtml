@@ -72,12 +72,19 @@
         });
         
         $('#AdicionarItem').click(function(){
-        
+            
             // **** LIMPA OS CAMPOS ANTES DE ABRIR A MODAL ****
             $('.camposObrigatoriosInclusao:not(#newRecursos,#newUF,#newMunicipio,#newEtapa,#newProduto)').each(function(){
                 $(this).css('border-color', '#CCCCCC');
                 $(this).val('');
             });
+            
+            $('#newFonte').val($(this).attr('fonte'));
+            //                $('#newUF').val($(this).attr('uf'));
+            $('#newMunicipio').val($(this).attr('municipio'));
+            $('#newEtapa').val($(this).attr('etapa'));
+            $('#newProduto').val($(this).attr('produto'));
+            
             $('#newTotalCalculado').html('R$ 0,00');
             // ***********************************************
             
@@ -216,7 +223,7 @@
                 });
             }
         });
-        
+      
         $('.btn_finalizar').click(function(){
 	    $('#mensagens').html('<span style="font-weigth: bold; color: grey">Verificando limites or&ccedil;amentarios...</span>');
 	    // verifica limites or�ament�rios
@@ -818,7 +825,14 @@
                                 <td id="valorEntrePlanilhas">
                                     <span class="bold black-text">R$ 0,00</span>
                                 </td>
-                                <td style="width: 1px;"><input type="button" class="btn_incluir" id="AdicionarItem" title="Adicionar Item � Planilha" /></td>
+                                <td>
+				    <div class="right-align">
+					<a class="waves-effect waves-light btn white-text btn-incluir-novo-item" id="AdicionarItem">
+					    <i class="material-icons left">add</i>
+					    Adicionar item em novo munic&iacute;pio
+					</a>
+				    </div>
+				</td>
                             </tr>
                         </table>
                     </div>

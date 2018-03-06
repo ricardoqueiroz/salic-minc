@@ -882,12 +882,16 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             $idPronac = Seguranca::dencrypt($idPronac);
         }
 
+        $tbReadequacao = new tbReadequacao();
+        $tbReadequacao = $tbReadequacao->buscar(array('idPronac=?'=>$idPronac, 'siEncaminhamento=?'=>12,'stEstado=?'=>0))->current();
+        
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
 
         //BUSCAR VALOR TOTAL DA PLANILHA ATIVA
         $where = array();
         $where['a.IdPRONAC = ?'] = $idPronac;
         $where['a.stAtivo = ?'] = 'S';
+        
         $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
         //BUSCAR VALOR TOTAL DA PLANILHA DE READEQUADA
@@ -896,6 +900,8 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $where['a.tpPlanilha = ?'] = 'SR';
         $where['a.stAtivo = ?'] = 'N';
         $where['a.tpAcao != ?'] = 'E';
+        $where['a.idReadequacao = ?'] = $tbReadequacao['idReadequacao'];
+
         $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
         if ($PlanilhaReadequada->Total > 0) {

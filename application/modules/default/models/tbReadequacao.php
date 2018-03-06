@@ -17,6 +17,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
     protected $_primary = "idReadequacao";
 
     const TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL = 1;
+    const TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA = 2;
     const PERCENTUAL_REMANEJAMENTO = 50;
     const ST_ESTADO_EM_ANDAMENTO = 0;
     const ST_ESTADO_FINALIZADO = 1;

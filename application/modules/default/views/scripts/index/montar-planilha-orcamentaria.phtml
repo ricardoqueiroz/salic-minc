@@ -1,96 +1,96 @@
 <?php header('Content-Type: text/plain; charset=ISO-8859-1'); ?>
 <script type="text/javascript">
-    function AbrirFecharPlanilha(elemento)
-    {
-        $('.' + elemento).toggle();
+ function AbrirFecharPlanilha(elemento)
+ {
+     $('.' + elemento).toggle();
 
-        if ($('#' + elemento).hasClass('icn_mais'))
-        {
-            $('#' + elemento).addClass('icn_menos');
-            $('#' + elemento).removeClass('icn_mais');
-        }
-        else
-        {
-            $('#' + elemento).addClass('icn_mais');
-            $('#' + elemento).removeClass('icn_menos');
-        }
-    }
-    <?php if($this->tipoPlanilha != 6){ ?>
-    $(document).ready(function(){
-        //ATUALIZA TITULO DA PAGINA
-        window.parent.$("#titulo").html("<div>Planilha Or&ccedil;ament&aacute;ria </div>");
-        window.parent.$("#caminhoLocalAtual").html("Planilha Or&ccedil;ament&aacute;ria");
-    });
-    <?php } ?>
+     if ($('#' + elemento).hasClass('icn_mais'))
+         {
+             $('#' + elemento).addClass('icn_menos');
+             $('#' + elemento).removeClass('icn_mais');
+         }
+     else
+         {
+             $('#' + elemento).addClass('icn_mais');
+             $('#' + elemento).removeClass('icn_menos');
+         }
+ }
+ <?php if($this->tipoPlanilha != 6){ ?>
+     $(document).ready(function(){
+         //ATUALIZA TITULO DA PAGINA
+         window.parent.$("#titulo").html("<div>Planilha Or&ccedil;ament&aacute;ria </div>");
+         window.parent.$("#caminhoLocalAtual").html("Planilha Or&ccedil;ament&aacute;ria");
+     });
+     <?php } ?>
 
-    $(document).ready(function(){
-        $(".icn_menos").click(function(){
-            var tipo = $(this).attr('tipo');
-            var aberto = $(this).attr('aberto');
-            if(aberto == 'true'){
-                adisplay = 'none';
-                $(this).attr('aberto','false')
-                $(this).removeClass('icn_menos').addClass('icn_mais')
-            }
-            else{
-                adisplay = '';
-                $(this).attr('aberto','true')
-                $(this).removeClass('icn_mais').addClass('icn_menos')
-            }
-            if(tipo == 'fonte'){
-                fonte = $(this).attr('fonte');
-                $(".master[fonte='"+fonte+"']").css('display', adisplay);
-                $(".clickproduto").removeClass('icn_mais').addClass('icn_menos');
-            }
-            if(tipo == 'produto'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                $(".produto[produto='"+produto+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-            if(tipo == 'etapa'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                etapa = $(this).attr('etapa');
-                $(".etapa[produto='"+produto+"'][etapa='"+etapa+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-            if(tipo == 'cidade'){
-                fonte = $(this).attr('fonte');
-                produto = $(this).attr('produto');
-                etapa = $(this).attr('etapa');
-                cidade = $(this).attr('cidade');
-                $(".cidade[produto='"+produto+"'][etapa='"+etapa+"'][cidade='"+cidade+"'][fonte='"+fonte+"']").css('display', adisplay);
-            }
-        });
-        $(".item").mouseover(function(){
-            $(this).addClass('fundo_linha3');
-        });
-        $(".item").mouseout(function(){
-            $(this).removeClass('fundo_linha3');
-        });
-        $(".item").click(function(){
-            if($(this).hasClass('fundo_linha4')){
-                $(this).removeClass('fundo_linha4');
-            }
-            else{
-                $(this).addClass('fundo_linha4');
-            }
-        });
+ $(document).ready(function(){
+     $(".icn_menos").click(function(){
+         var tipo = $(this).attr('tipo');
+         var aberto = $(this).attr('aberto');
+         if(aberto == 'true'){
+             adisplay = 'none';
+             $(this).attr('aberto','false')
+             $(this).removeClass('icn_menos').addClass('icn_mais')
+         }
+         else{
+             adisplay = '';
+             $(this).attr('aberto','true')
+             $(this).removeClass('icn_mais').addClass('icn_menos')
+         }
+         if(tipo == 'fonte'){
+             fonte = $(this).attr('fonte');
+             $(".master[fonte='"+fonte+"']").css('display', adisplay);
+             $(".clickproduto").removeClass('icn_mais').addClass('icn_menos');
+         }
+         if(tipo == 'produto'){
+             fonte = $(this).attr('fonte');
+             produto = $(this).attr('produto');
+             $(".produto[produto='"+produto+"'][fonte='"+fonte+"']").css('display', adisplay);
+         }
+         if(tipo == 'etapa'){
+             fonte = $(this).attr('fonte');
+             produto = $(this).attr('produto');
+             etapa = $(this).attr('etapa');
+             $(".etapa[produto='"+produto+"'][etapa='"+etapa+"'][fonte='"+fonte+"']").css('display', adisplay);
+         }
+         if(tipo == 'cidade'){
+             fonte = $(this).attr('fonte');
+             produto = $(this).attr('produto');
+             etapa = $(this).attr('etapa');
+             cidade = $(this).attr('cidade');
+             $(".cidade[produto='"+produto+"'][etapa='"+etapa+"'][cidade='"+cidade+"'][fonte='"+fonte+"']").css('display', adisplay);
+         }
+     });
+     $(".item").mouseover(function(){
+         $(this).addClass('fundo_linha3');
+     });
+     $(".item").mouseout(function(){
+         $(this).removeClass('fundo_linha3');
+     });
+     $(".item").click(function(){
+         if($(this).hasClass('fundo_linha4')){
+             $(this).removeClass('fundo_linha4');
+         }
+         else{
+             $(this).addClass('fundo_linha4');
+         }
+     });
 
-        $('.detalharItemComp').click(function(){
-            $("#modalComprovantes").html('Carregando...');
-            var idPlanilha = $(this).attr('idPlanilha');
-            jqAjaxLinkSemLoading('<?php echo $this->Url(array('controller' => 'consultardadosprojeto', 'action' => 'carregar-comprovantes-comprovados-por-item'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idPlanilha='+idPlanilha, '', 'modalComprovantes');
+     $('.detalharItemComp').click(function(){
+         $("#modalComprovantes").html('Carregando...');
+         var idPlanilha = $(this).attr('idPlanilha');
+         jqAjaxLinkSemLoading('<?php echo $this->Url(array('controller' => 'consultardadosprojeto', 'action' => 'carregar-comprovantes-comprovados-por-item'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>&idPlanilha='+idPlanilha, '', 'modalComprovantes');
 
-            $("#modalComprovantes").dialog("destroy");
-            $("#modalComprovantes").dialog({
-                resizable: true,
-                title: 'Comprovantes do Item',
-                width: 1200,
-//                height:160,
-                modal: true
-            });
-        });
-    });
+         $("#modalComprovantes").dialog("destroy");
+         $("#modalComprovantes").dialog({
+             resizable: true,
+             title: 'Comprovantes do Item',
+             width: 1200,
+	     //                height:160,
+             modal: true
+         });
+     });
+ });
 </script>
 
 <div class="sumir centro" id="modalComprovantes">Carregando...</div>
@@ -1108,14 +1108,28 @@ else if($this->tipoPlanilha == 6){ ?>
                 $valorUnitarioTotalEtapa = 0;
                 $valorAprovadoTotalEtapa = 0;
                 foreach ($this->planilha[$fonte][$produto][$etapa] as $cidade => $planilha) {
+                    $item = $planilha[0];
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
                             <div tipo="cidade" fonte="<?php echo $nrfonte; ?>" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>" aberto="true" class="icn_menos" style="width:94%; margin-left:6%;"><span class="black del_link" style="font-size: 12pt; font-weight: 800;"><?php echo $cidade; ?></span></div>
                         </td>
                     </tr>
+
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
+			    <div class="center-align">
+				<a class="waves-effect waves-light btn white-text btn-incluir-novo-item"
+				   fonte="<?php echo $item['idFonte']; ?>"
+				   produto="<?php echo $item['idProduto']; ?>"
+				   etapa="<?php echo $item['idEtapa']; ?>"
+				   uf="<?php echo $item['idUF']; ?>"
+				   municipio="<?php echo $item['idMunicipio'] ?>" >
+				    <i class="material-icons left">add</i>
+				    incluir item neste munic&iacute;pio
+				</a>
+			    </div>
+			    <br/>
                             <table class="tabela">
                                 <tr>
                                     <th>&nbsp;</th>
