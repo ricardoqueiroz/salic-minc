@@ -50,5 +50,32 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         $this->assertUrl('default','readequacoes', 'planilha-orcamentaria');
     }
 
+    /**
+     * TestPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
+     *
+     * @access public
+     * @return void
+     */    
+    public function testPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
+    {
+        // puxar um projetos com condições não satisfeitos
+        // verificar que não consegue acessar página de readequação de planilha
+        
+        /* Condições para realizar uma readequação de planilha orçamentária
+         
+         Regras
+         - NÃO POSSUIR ((readequação OU remanejamento 50%) E (em andamento)))
+         - POSSUIR (
+         (contrato de patrocínio) OU
+         ((plano de execução imediata) E
+         (anual OU bienal OU trienal OU quadrienal)
+         ))
+         - POSSUIR (plano de execução vigente))
+         
+         Ação
+         - ACESSAR url
+
+        */
+    }
     
 }

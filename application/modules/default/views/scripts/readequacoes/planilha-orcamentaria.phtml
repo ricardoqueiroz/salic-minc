@@ -70,21 +70,81 @@
             });
             $('.ui-dialog-titlebar-close').remove();
         });
+
+      $('#planilhaOrcamentariaMontada').on('click', '.btn-incluir-novo-item', function(){
+	  var dadosModal = {
+	      'id_uf': $(this).attr('id_uf'),
+	      'id_municipio': $(this).attr('id_municipio'),
+	      'id_etapa': $(this).attr('id_etapa'),
+	      'id_produto': $(this).attr('id_produto'),
+	      'id_fonte': $(this).attr('id_fonte')
+	  }
+	  console.log(dadosModal);
+	  modalItem(dadosModal);
+      });
         
         $('#AdicionarItem').click(function(){
-            
+	    modalItem();
+	});
+        
+      var modalItem = function(dados = null) {
+	  
+	    if (dados) {
+		$('#newRecursos').val(dados.id_fonte).prop('disabled', true);
+		$('#newUF').val(dados.id_uf).prop('disabled', true);
+		$('#newEtapa').val(dados.id_etapa).prop('disabled', true);
+		$('#newProduto').val(dados.id_produto).prop('disabled', true);
+
+                $.ajax({
+                    url : '<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'index'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>',
+                    type: "POST",
+                    data :{
+                        iduf : dados.id_uf
+                    },
+                    success: function(valor){
+                        $("#newMunicipio").html('<option value=""> - Selecione - </option>');
+
+                        for(a in valor){
+                            $("#newMunicipio").append('<option value="'+valor[a].idCidade+'">'+valor[a].nomeCidade+'</option>');
+                        }
+			$('#newMunicipio').val(dados.id_municipio).prop('disabled', true);			    
+                    },
+                    type : 'post'
+                    , dataType : 'json'
+                });
+
+		
+                $.ajax({
+		    url : '<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'index'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>',
+		    type: "POST",
+                    data :{
+                        idEtapa : $('#newEtapa').val(),
+                        idProduto : dados.id_produto
+                    },
+                    success: function(valor){
+                        $("#newItem").html('<option value=""> - Selecione - </option>');
+                        for(a in valor){
+                            $("#newItem").append('<option value="'+valor[a].idPlanilhaItens+'">'+valor[a].Item+'</option>');
+                        }
+                    },
+                    type : 'post'
+                    , dataType : 'json'
+                });
+		
+		
+	    } else {
+		$('#newRecursos').val('').prop('disabled', false);;
+		$('#newUF').val('').prop('disabled', false);;
+		$('#newEtapa').val('').prop('disabled', false);;
+		$('#newProduto').val('').prop('disabled', false);;
+		$('#newMunicipio').val('').prop('disabled', false);
+	    }
+          
             // **** LIMPA OS CAMPOS ANTES DE ABRIR A MODAL ****
             $('.camposObrigatoriosInclusao:not(#newRecursos,#newUF,#newMunicipio,#newEtapa,#newProduto)').each(function(){
                 $(this).css('border-color', '#CCCCCC');
                 $(this).val('');
             });
-            
-            $('#newFonte').val($(this).attr('fonte'));
-            //                $('#newUF').val($(this).attr('uf'));
-            $('#newMunicipio').val($(this).attr('municipio'));
-            $('#newEtapa').val($(this).attr('etapa'));
-            $('#newProduto').val($(this).attr('produto'));
-            
             $('#newTotalCalculado').html('R$ 0,00');
             // ***********************************************
             
@@ -168,7 +228,7 @@
                 }
             });
             $('.ui-dialog-titlebar-close').remove();
-        });
+        }
 
         $('#newUF').change(function(){
             $("#newMunicipio").html('<option value=""> - Carregando - </option>');

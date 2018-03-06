@@ -1108,7 +1108,7 @@ else if($this->tipoPlanilha == 6){ ?>
                 $valorUnitarioTotalEtapa = 0;
                 $valorAprovadoTotalEtapa = 0;
                 foreach ($this->planilha[$fonte][$produto][$etapa] as $cidade => $planilha) {
-                    $item = $planilha[0];
+                    $item = array_shift(array_slice($planilha, 0, 1));
                     ?>
                     <tr class="master produto etapa" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>"  fonte="<?php echo $nrfonte; ?>" >
                         <td>
@@ -1120,11 +1120,11 @@ else if($this->tipoPlanilha == 6){ ?>
                         <td>
 			    <div class="center-align">
 				<a class="waves-effect waves-light btn white-text btn-incluir-novo-item"
-				   fonte="<?php echo $item['idFonte']; ?>"
-				   produto="<?php echo $item['idProduto']; ?>"
-				   etapa="<?php echo $item['idEtapa']; ?>"
-				   uf="<?php echo $item['idUF']; ?>"
-				   municipio="<?php echo $item['idMunicipio'] ?>" >
+				   id_fonte="<?php echo $item['idFonte']; ?>"
+				   id_produto="<?php echo $item['idProduto']; ?>"
+				   id_etapa="<?php echo $item['idEtapa']; ?>"
+				   id_uf="<?php echo $item['idUF']; ?>"
+				   id_municipio="<?php echo $item['idMunicipio'] ?>" >
 				    <i class="material-icons left">add</i>
 				    incluir item neste munic&iacute;pio
 				</a>
