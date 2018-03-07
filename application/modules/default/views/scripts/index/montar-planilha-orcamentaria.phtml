@@ -944,7 +944,7 @@ else if($this->tipoPlanilha == 5){ ?>
 					    <?php
                                         if((($this->link && $planilha['tpAcao'] != 'E') && $nrfonte == '0')
                                            ||
-                                           ($this->idPerfil == '1111') // se for proponente
+                                           ($this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE) // se for proponente
                                         ) { ?>
                                                 <a href="#" style="color: <?php echo $corLinha; ?> !important;" title="clique para alterar os dados do item" class="editarItem" idPlanilhaAprovacao="<?php echo $planilha['idPlanilhaAprovacao']; ?>"><?php echo $planilha['Item']; ?></a>
                                             <?php } else {
@@ -1170,7 +1170,7 @@ else if($this->tipoPlanilha == 6){ ?>
                                         switch ($planilha['tpAcao']) {
                                             case 'E':
                                                 $corLinha = 'red';
-                                                if($this->idPerfil == 1111){
+                                                if($this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE){
                                                     $corLinha = 'silver';
                                                 }
                                                 break;
@@ -1189,9 +1189,14 @@ else if($this->tipoPlanilha == 6){ ?>
                                         <td style="width: 5%;"><?php echo $planilha['Seq']; ?></td>
                                         <td style="width: 20%;">
 					    <?php
-                                        if((($this->link && $planilha['tpAcao'] != 'E') && $nrfonte == '0')
+                                        if((
+                                            ($this->link && $planilha['tpAcao'] != 'E') &&
+                                            $nrfonte == '0' &&
+                                            !$planilha['vlComprovado'])
                                            ||
-                                           ($this->idPerfil == '1111') // se for proponente
+                                           ($this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE &&
+                                            (!$planilha['vlComprovado'])
+                                           )
                                         ) { ?>
                                                 <a href="#" style="color: <?php echo $corLinha; ?> !important;" title="clique para alterar os dados do item" class="editarItem" idPlanilhaAprovacao="<?php echo $planilha['idPlanilhaAprovacao']; ?>"><?php echo $planilha['Item']; ?></a>
                                             <?php } else {
@@ -1207,7 +1212,7 @@ else if($this->tipoPlanilha == 6){ ?>
                                         <td class="direita textValorComprovado"><?php echo @number_format($planilha['vlComprovado'], 2, ",", "."); ?></td>
                                         <td class="textJustificativa" style="width: 20%;"><?php echo $planilha['dsJustificativa']; ?></td>
                                         <td class="excluirItem centro" style="width: 1%;">
-                                        <?php if($this->link && $this->idPerfil == 1111){ ?>
+                                        <?php if($this->link && $this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE){ ?>
                                             <?php if($planilha['tpAcao'] == 'E'){ ?>
                                                 Item excluído
                                                 <img src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" style="cursor: pointer;" class="restaurarItem" tipo="<?php echo $planilha['tpAcao']; ?>" idPlanilha="<?php echo $planilha['idPlanilhaAprovacao']; ?>" title="<?php echo 'restaurar item'; ?>"/>
@@ -1235,11 +1240,11 @@ else if($this->tipoPlanilha == 6){ ?>
                                                         break;
                                                     } ?>
 
-                                                <?php if(in_array($this->idPerfil, array(94,121)) && $planilha['tpAcao'] != 'N'){ ?>
+                                                <?php if(in_array($this->idPerfil, array(Autenticacao_Model_Grupos::PARECERISTA,Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO)) && $planilha['tpAcao'] != 'N'){ ?>
                                                 <img src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" style="cursor: pointer;" class="restaurarItem" tipo="<?php echo $planilha['tpAcao']; ?>" idPlanilha="<?php echo $planilha['idPlanilhaAprovacao']; ?>" title="<?php echo $title; ?>"/>
                                                 <?php } ?>
 
-                                                <?php if($this->idPerfil == 118 && $planilha['tpAcao'] != 'N' && $this->link){ ?>
+                                                <?php if($this->idPerfil == Autenticacao_Model_Grupos::COMPONENTE_COMISSAO && $planilha['tpAcao'] != 'N' && $this->link){ ?>
                                                 <img src="<?php echo $this->baseUrl(); ?>/public/img/refresh.gif" style="cursor: pointer;" class="restaurarItem" tipo="<?php echo $planilha['tpAcao']; ?>" idPlanilha="<?php echo $planilha['idPlanilhaAprovacao']; ?>" title="<?php echo $title; ?>"/>
                                                 <?php } ?>
                                         <?php } ?>
