@@ -186,45 +186,60 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $controllerFront->getRouter()->addRoute('rest', $restRoute);
     }
 
-    protected function _initController()
+//    public function _initAutoloader()
+//    {
+//
+////        $loader = function($className) {
+////            $className = str_replace('\\', '_', $className);
+////x($className);
+////            Zend_Loader_Autoloader::autoload($className);
+////        };
+////
+////        $autoloader = Zend_Loader_Autoloader::getInstance();
+////        $autoloader->pushAutoloader($loader, 'Foo\\Controller');
+////xd(new \Foo\Controller\FooController());
+//
+//        $loader = new Zend_Loader_StandardAutoloader(array(
+//            'namespaces' => array(
+//                'Foo' => APPLICATION_PATH . '/modules/foo',
+//            ),
+////            'prefixes' => array(
+////                'Scapi' => APPLICATION_PATH . '/../library/Scapi',
+////            ),
+//            'fallback_autoloader' => true,
+//        ));
+////xd(APPLICATION_PATH . '/modules/foo');
+//// Register with spl_autoload:
+//        $loader->register();
+//    }
+
+//    protected function _initAutoload()
+//    {
+//        $applicationAutoloader = new Zend_Application_Module_Autoloader(array(
+//            'namespace' => 'Application_',
+//            'basePath'  => dirname(__FILE__),
+//        ));
+//
+//        $autoloader = Zend_Loader_Autoloader::getInstance();
+//        $autoloader->pushAutoloader(array('Bootstrap', 'classAutoload'), 'Foo\\');
+//    }
+//
+//    static public function classAutoload($className)
+//    {
+//        $pedacos = explode('\\', $className);
+//        $classname = str_replace('\\', '_', $className);
+//xd($pedacos,$classname);
+//        Zend_Loader_Autoloader::autoload($classname);
+//    }
+
+    protected function _initAutoloader()
     {
-        // Add helpers prefixed with Helper in Plugins/Helpers/
-//        Zend_Controller_Action_HelperBroker::addPath('./Plugins/Helpers',
+        $loader = function($className) {
+            $className = str_replace('\\', '_', $className);
+            Zend_Loader_Autoloader::autoload($className);
+        };
 
-//            $breadCrumb = new MinC_Controller_Action_Helper_BreadCrumb();
-//        Zend_Controller_Action_HelperBroker::addHelper($breadCrumb);
-//            $breadCrumb = new Zend_View_Helper_BreadCrumb();
-//        echo '<pre>';
-//        var_dump($breadCrumb);
-//        exit;
-//            Zend_Controller_Action_HelperBroker::addHelper($breadCrumb);
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+        $autoloader->pushAutoloader($loader, 'Foo\\');
     }
-
-
-    public function _initLayouts()
-    {
-        /* configuraççes do layout padrão do sistema */
-//        Zend_Layout::startMvc(array(
-//            'layout'     => 'layout',
-//            'layoutPath' => APPLICATION_PATH.'/layout/',
-//            'contentKey' => 'content'));
-//        # paginacao
-//        Zend_View_Helper_PaginationControl::setDefaultViewPartial('paginacao/paginacaoMinc.phtml');
-
-        // Initialize view
-//        $view         = new Zend_View();
-//        $layout         = new Zend_Layout();
-//        echo '<pre>';
-//        var_dump($layout->name);
-//        exit;
-//        $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper(
-//            'ViewRenderer'
-//        );
-//        $viewRenderer->setView($view);
-//        $view->addHelperPath(
-//            APPLICATION_PATH . '/../library/MinC/View/Helper/',
-//            'MinC_View_Helper_'
-//        );
-    }
-
 }
