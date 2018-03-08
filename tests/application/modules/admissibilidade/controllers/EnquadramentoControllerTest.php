@@ -53,7 +53,8 @@ class EnquadramentoControllerTest extends MinC_Test_ControllerActionTestCase
      */
     public function testEnquadrarprojetoAction()
     {
-        $this->dispatch('/admissibilidade/enquadramento/enquadrarprojeto' . '?IdPRONAC=' . $this->idPronac);
+        $idPronac = 204085;
+        $this->dispatch('/admissibilidade/enquadramento/enquadrarprojeto' . '?IdPRONAC=' . $idPronac);
         $this->assertUrl('admissibilidade','enquadramento', 'enquadrarprojeto');
        
         $this->assertQuery('form#formEnquadramentoProjeto');

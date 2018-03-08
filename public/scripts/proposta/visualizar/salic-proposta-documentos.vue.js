@@ -62,6 +62,11 @@ Vue.component('salic-proposta-documentos', {
         if (typeof this.proposta != 'undefined') {
             this.fetch(this.proposta);
         }
+
+        if (typeof this.arrayDocumentos != 'undefined') {
+            this.$set(this.documentos, 'proposta', this.arrayDocumentos.documentos_proposta);
+            this.$set(this.documentos, 'proponente', this.arrayDocumentos.documentos_proponente);
+        }
     },
     watch: {
         proposta: function (value) {

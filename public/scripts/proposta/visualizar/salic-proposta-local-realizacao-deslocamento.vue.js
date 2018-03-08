@@ -67,6 +67,11 @@ Vue.component('salic-proposta-local-realizacao-deslocamento', {
         if (typeof this.idpreprojeto != 'undefined') {
             this.fetch(this.idpreprojeto);
         }
+
+        if (typeof this.localizacoes != 'undefined') {
+            this.$set(this.proposta, 'localizacoes', this.localizacoes.abrangencia);
+            this.$set(this.proposta, 'deslocamentos', this.localizacoes.deslocamento);
+        }
     },
     watch: {
         idpreprojeto: function (value) {

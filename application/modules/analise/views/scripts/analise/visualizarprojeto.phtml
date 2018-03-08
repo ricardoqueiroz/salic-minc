@@ -1,3 +1,5 @@
+<?php echo $this->partial("analise/inc/menususpenso.phtml", $this); ?>
+
 <?php
 $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'incluiravaliacao'));
 ?>
@@ -15,10 +17,12 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
                     <h1>An&aacute;lise de adequa&ccedil;&atilde;o de Projeto</h1>
 
                     <?php
-                    gerarNovoBreadCrumb(array(
-                        array('An&aacute;lise de adequa&ccedil;&atilde;o de Projeto' => '',
-                        )
-                    ));
+                    gerarNovoBreadCrumb(
+                        [
+                            ['Listar projetos' => ['module' => 'analise','controller' => 'analise','action' => 'listarprojetos']],
+                            ['An&aacute;lise de adequa&ccedil;&atilde;o de Projeto' => '']
+                        ]
+                    );
                     ?>
                 </div>
 
@@ -40,7 +44,6 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
     </div>
 </div>
 
-<?php echo $this->partial("analise/inc/menususpenso.phtml", $this); ?>
 <script type="text/javascript">
     $(document).ready(function () {
         $('.avaliarProposta').click(function () {
@@ -48,7 +51,6 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
             $('#preProjeto').submit();
         });
     });
-
 </script>
 
 
@@ -62,6 +64,7 @@ $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller'
 <script src="/public/js/componentes/salic-texto-simples.vue.js" type="text/javascript"></script>
 
 <script src="/public/scripts/proposta/visualizar/salic-proposta-diff.vue.js" type="text/javascript"></script>
+<script src="/public/scripts/proposta/visualizar/salic-proposta.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/proposta/visualizar/salic-proposta-identificacao.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/proposta/visualizar/salic-proposta-documentos.vue.js" type="text/javascript"></script>
 <script src="/public/scripts/proposta/visualizar/salic-proposta-fontes-de-recursos.vue.js"

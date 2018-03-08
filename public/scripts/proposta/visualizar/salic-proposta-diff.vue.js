@@ -1,7 +1,66 @@
 Vue.component('salic-proposta-diff', {
     template: `
         <div class="proposta">
-            <ul v-show="Object.keys(dadosHistorico).length > 2" class="collapsible" data-collapsible="expandable">
+            <div v-if="Object.keys(dadosHistorico).length > 2">
+                <salic-proposta-alteracoes :idpreprojeto="idpreprojeto" :dadosAtuais="dadosAtuais" :dadosHistorico="dadosHistorico"></salic-proposta-alteracoes>
+            </div>
+            <div v-else-if="Object.keys(dadosAtuais).length > 2">
+                <div class="card padding20">
+                    <div class="nao-existe-versao-proposta">
+                        <h4><i class="material-icons small left">report</i>Não existe versionamento de alterações para o projeto informado...</h4>
+                        <p style="margin-left: 44px">O proponente não fez alterações no projeto no prazo estabelecido.</p>
+                    </div>
+                </div>
+                <salic-proposta :idpreprojeto="idpreprojeto" :proposta="dadosAtuais"></salic-proposta>
+            </div>
+            <div v-else>
+                <div class="card padding20">
+                    <div class="center-align padding20">
+                        <h5>Carregando ...</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+    data: function () {
+        return {
+            dadosAtuais: {
+                type: Object,
+                default: function () {
+                    return {}
+                }
+            },
+            dadosHistorico: {
+                type: Object,
+                default: function () {
+                    return {}
+                }
+            }
+        }
+    },
+    props: ['idpreprojeto', 'tipo'],
+    mounted: function () {
+        if (typeof this.idpreprojeto != 'undefined') {
+            this.buscar_dados();
+        }
+    },
+    methods: {
+        buscar_dados: function () {
+            let vue = this;
+            $3.ajax({
+                url: '/proposta/visualizar/obter-proposta-cultural-versionamento/idPreProjeto/' + vue.idpreprojeto + '/tipo/' + vue.tipo
+            }).done(function (response) {
+                vue.dadosAtuais = response.data.atual;
+                vue.dadosHistorico = response.data.historico;
+            });
+        }
+    }
+});
+
+Vue.component('salic-proposta-alteracoes', {
+    template: `
+        <div class="alteracoes-proposta">
+            <ul class="collapsible" data-collapsible="expandable">
                  <li>
                     <div class="collapsible-header"
                         v-bind:class="{'orange lighten-4': existe_diferenca(dadosAtuais.identificacaoproposta, dadosHistorico.identificacaoproposta)}">
@@ -248,11 +307,11 @@ Vue.component('salic-proposta-diff', {
                         <div class="row">
                             <div class="col s12 m6 l6 scroll historico">
                                 <salic-proposta-local-realizacao-deslocamento
-                                :localizacoes="dadosAtuais"></salic-proposta-local-realizacao-deslocamento>
+                                :localizacoes="dadosHistorico"></salic-proposta-local-realizacao-deslocamento>
                             </div>
                             <div class="col s12 m6 l6 scroll atual">
                                 <salic-proposta-local-realizacao-deslocamento
-                                :localizacoes="dadosHistorico"></salic-proposta-local-realizacao-deslocamento>
+                                :localizacoes="dadosAtuais"></salic-proposta-local-realizacao-deslocamento>
                             </div>
                         </div>
                     </div>
@@ -335,51 +394,16 @@ Vue.component('salic-proposta-diff', {
                     </div>
                 </li>
             </ul>
-            <div v-show="Object.keys(dadosHistorico).length == 0" class="center-align">
-                <div class="card padding20">
-                    <h5 v-if="dadosAtuais.PRONAC">Projeto - {{dadosAtuais.PRONAC}} - {{dadosAtuais.NomeProjeto}}</h5>
-                    <h5 v-else>Proposta - {{idpreprojeto}} - {{dadosAtuais.NomeProjeto}}</h5>
-                    <div class="padding20">Ops! Não existe versão para a proposta informada...</div>
-                </div>
-            </div>
         </div>
     `,
-    data: function () {
-        return {
-            dadosAtuais: {
-                type: Object,
-                default: function () {
-                    return {}
-                }
-            },
-            dadosHistorico: {
-                type: Object,
-                default: function () {
-                    return {}
-                }
-            }
-        }
-    },
-    props: ['idpreprojeto', 'tipo'],
+    props: ['idpreprojeto', 'dadosAtuais', 'dadosHistorico'],
     mounted: function () {
-        if(typeof this.idpreprojeto != 'undefined') {
-            this.buscar_dados();
+        this.iniciarCollapsible();
+        if (this.dadosHistorico != 'undefined') {
+            setTimeout(this.mostrar_diferenca, 1000)
         }
     },
     methods: {
-        buscar_dados: function () {
-            let vue = this;
-            $3.ajax({
-                url: '/proposta/visualizar/obter-proposta-cultural-versionamento/idPreProjeto/' + vue.idpreprojeto + '/tipo/' + vue.tipo
-            }).done(function (response) {
-                vue.dadosAtuais = response.data.atual;
-                vue.dadosHistorico = response.data.historico;
-
-                if (response.data.historico != 'undefined') {
-                    setTimeout(vue.mostrar_diferenca, 1000)
-                }
-            });
-        },
         existe_diferenca: function (atual, historico) {
 
             if (typeof atual == 'object') {
@@ -389,10 +413,14 @@ Vue.component('salic-proposta-diff', {
             return atual != historico;
         },
         mostrar_diferenca: function () {
-            $(".proposta table tr").prettyTextDiff({
+            $(".alteracoes-proposta table tr").prettyTextDiff({
                 cleanup: true,
                 diffContainer: ".diff",
                 debug: false
+            });
+        }, iniciarCollapsible: function () {
+            $3('.collapsible').each(function () {
+                $3(this).collapsible();
             });
         }
     }

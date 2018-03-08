@@ -23,7 +23,9 @@ class Analise_Model_DbTable_vwProjetosAdequadosRealidadeExecucao extends MinC_Db
             $sql->where('Pronac like ? OR NomeProjeto like ? OR Tecnico like ? OR  Proponente like ?', '%'.$search['value'].'%');
         }
 
-        $sql->order($order);
+        if (!empty($order)) {
+            $sql->order($order);
+        }
 
         if (!is_null($start) && $limit) {
             $start = (int)$start;

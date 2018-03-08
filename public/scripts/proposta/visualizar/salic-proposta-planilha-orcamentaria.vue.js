@@ -32,27 +32,27 @@ numeral.locale('pt-br');
 Vue.component('salic-proposta-planilha-orcamentaria', {
     template: `
     <div v-if="planilha" class="planilha-orcamentaria card">
-        <ul class="collapsible no-margin" data-collapsible="accordion">
+        <ul class="collapsible no-margin" data-collapsible="expandable">
             <li v-for="(fontes, fonte) of planilhaCompleta" v-if="isObject(fontes)">
-                <div class="collapsible-header active red-text">
+                <div class="collapsible-header active red-text fonte" :class="converterStringParaClasseCss(fonte)">
                     <i class="material-icons">beenhere</i>{{fonte}}<span class="badge">R$ {{fontes.total}}</span>
                 </div>
                 <div class="collapsible-body no-padding">
                     <ul class="collapsible no-border no-margin" data-collapsible="expandable">
                         <li v-for="(produtos, produto) of fontes" v-if="isObject(produtos)">
-                            <div class="collapsible-header active green-text" style="padding-left: 30px;">
+                            <div class="collapsible-header active green-text" style="padding-left: 30px;" :class="converterStringParaClasseCss(produto)">
                                 <i class="material-icons">perm_media</i>{{produto}}<span class="badge">R$ {{produtos.total}}</span>
                             </div>
                             <div class="collapsible-body no-padding no-border">
                                 <ul class="collapsible no-border no-margin" data-collapsible="expandable">
                                     <li v-for="(etapas, etapa) of produtos" v-if="isObject(etapas)">
-                                         <div class="collapsible-header active orange-text" style="padding-left: 50px;">
+                                         <div class="collapsible-header active orange-text" style="padding-left: 50px;" :class="converterStringParaClasseCss(etapa)">
                                             <i class="material-icons">label</i>{{etapa}}<span class="badge">R$ {{etapas.total}}</span>
                                         </div>
                                         <div class="collapsible-body no-padding no-border">
                                             <ul class="collapsible no-border no-margin" data-collapsible="expandable">
                                                 <li v-for="(locais, local) of etapas" v-if="isObject(locais)">
-                                                     <div class="collapsible-header active blue-text" style="padding-left: 70px;">
+                                                     <div class="collapsible-header active blue-text" style="padding-left: 70px;" :class="converterStringParaClasseCss(local)">
                                                         <i class="material-icons">place</i>{{local}} <span class="badge">R$ {{locais.total}}</span>
                                                     </div>
                                                     <div class="collapsible-body no-padding margin20 scroll-x">
@@ -126,6 +126,10 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         if (typeof this.idpreprojeto != 'undefined') {
             this.fetch(this.idpreprojeto);
         }
+
+        if (typeof this.arrayPlanilha != 'undefined') {
+            this.planilha = this.arrayPlanilha;
+        }
     },
     computed: {
         planilhaCompleta: function () {
@@ -166,9 +170,6 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
         }
     },
     watch: {
-        idpreprojeto: function (value) {
-            this.fetch(value);
-        },
         arrayPlanilha: function (value) {
             this.planilha = value;
             this.iniciarCollapsible();
@@ -200,6 +201,11 @@ Vue.component('salic-proposta-planilha-orcamentaria', {
             $3('.planilha-orcamentaria .collapsible').each(function() {
                 $3(this).collapsible();
             });
+        },
+        converterStringParaClasseCss: function(text) {
+            return text.toString().toLowerCase().trim()
+                .replace(/&/g, '-and-')
+                .replace(/[\s\W-]+/g, '-');
         },
         ultrapassaValor: function (row) {
             return row.stCustoPraticado == true;

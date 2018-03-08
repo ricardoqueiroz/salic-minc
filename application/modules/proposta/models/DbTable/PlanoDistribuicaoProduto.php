@@ -3,7 +3,7 @@
 class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abstract
 {
     protected $_schema = 'sac';
-    protected $_name   = 'PlanoDistribuicaoProduto';
+    protected $_name = 'PlanoDistribuicaoProduto';
     protected $_primary = 'idPlanoDistribuicao';
 
     public function buscar($where = array(), $order = array(), $tamanho = -1, $inicio = -1)
@@ -133,19 +133,19 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $a = $this->select();
         $a->setIntegrityCheck(false);
         $a->from(
-                array('a' => $this->_name),
-                array('idPlanoDistribuicao','idProduto','QtdePatrocinador','QtdeProponente','QtdeOutros')
+            array('a' => $this->_name),
+            array('idPlanoDistribuicao', 'idProduto', 'QtdePatrocinador', 'QtdeProponente', 'QtdeOutros')
         );
         $a->joinInner(
-                array('b' => 'Projetos'),
+            array('b' => 'Projetos'),
             "a.idProjeto = b.idProjeto",
-                array('IdPRONAC'),
+            array('IdPRONAC'),
             'SAC.dbo'
         );
         $a->joinInner(
-                array('c' => 'Produto'),
+            array('c' => 'Produto'),
             "a.idProduto = c.Codigo",
-                array('Descricao as Produto'),
+            array('Descricao as Produto'),
             'SAC.dbo'
         );
         $a->where('b.IdPRONAC = ?', $idPronac);
@@ -157,25 +157,25 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $a = $this->select();
         $a->setIntegrityCheck(false);
         $a->from(
-                array('a' => $this->_name),
-                array('stPrincipal','idProduto')
+            array('a' => $this->_name),
+            array('stPrincipal', 'idProduto')
         );
         $a->joinInner(
-                array('b' => 'Projetos'),
+            array('b' => 'Projetos'),
             "a.idProjeto = b.idProjeto",
-                array(''),
+            array(''),
             'SAC.dbo'
         );
         $a->joinInner(
-                array('c' => 'Produto'),
+            array('c' => 'Produto'),
             "a.idProduto = c.Codigo",
-                array('Descricao as Produto'),
+            array('Descricao as Produto'),
             'SAC.dbo'
         );
         $a->joinInner(
-                array('d' => 'tbAnaliseDeConteudo'),
+            array('d' => 'tbAnaliseDeConteudo'),
             "a.idProduto = d.idProduto AND b.IdPRONAC = d.idPronac",
-                array('*'),
+            array('*'),
             'SAC.dbo'
         );
         $a->where('b.IdPRONAC = ?', $idPronac);
@@ -226,7 +226,7 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
 
 
         $slctUnion = $this->select()
-            ->union(array('('.$a.')', '('.$b.')'))
+            ->union(array('(' . $a . ')', '(' . $b . ')'))
             ->order('1', '2');
 
         return $this->fetchAll($slctUnion);
@@ -241,9 +241,9 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $select->distinct(true);
 
         $select->from(
-            array('pd'=>$this->getName('PlanoDistribuicaoProduto')),
-            array('CodigoProduto'=>'pd.idproduto',
-                'idProposta'=> 'pd.idprojeto'
+            array('pd' => $this->getName('PlanoDistribuicaoProduto')),
+            array('CodigoProduto' => 'pd.idproduto',
+                'idProposta' => 'pd.idprojeto'
             ),
             $this->_schema
         );
@@ -260,7 +260,8 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         return $db->fetchAll($select);
     }
 
-    public function obterUfsMunicipiosDoDetalhamento($idPreProjeto) {
+    public function obterUfsMunicipiosDoDetalhamento($idPreProjeto)
+    {
         $select = $this->select();
         $select->setIntegrityCheck(false);
         $select->from(
@@ -290,7 +291,7 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $select->setIntegrityCheck(false);
 
         $select->from(
-            array('pd'=>$this->getName('PlanoDistribuicaoProduto')),
+            array('pd' => $this->getName('PlanoDistribuicaoProduto')),
             array('pd.canalAberto', 'pd.PrecoUnitarioNormal')
         )
             ->joinInner(
@@ -299,12 +300,12 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
                 array('Descricao as Produto'),
                 'SAC.dbo'
             )
-            ->where('pd.idProjeto = ?' , $idPreProjeto);
-        
+            ->where('pd.idProjeto = ?', $idPreProjeto);
+
         $planosDistribuicao = $this->fetchAll($select);
 
         $errors = array();
-        
+
         foreach ($planosDistribuicao as $planoDistribuicao) {
             if (!$planoDistribuicao['canalAberto']) {
                 if ((int)$planoDistribuicao['PrecoUnitarioNormal'] > 225) {
@@ -313,13 +314,13 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
                     $error->dsChamada = '';
                     $error->dsInconsistencia = "O pre&ccedil;o m&eacute;dio do produto '" . $planoDistribuicao['Produto'] . "' ultrapassou o limite de 225,00.";
                     $error->Observacao = 'PENDENTE';
-                    
+
                     $errors[] = $error;
                 }
             }
         }
-        
-        return $errors;        
+
+        return $errors;
     }
 
     public function buscarPlanoDistribuicaoDetalhadoByIdProjeto($idPreProjeto, $where = array(), $order = null)
@@ -340,22 +341,22 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
         $slct->joinInner(array('mun' => 'municipios'), 'mun.idmunicipioibge = d.idMunicipio', 'mun.descricao as DescricaoMunicipio', $this->getSchema('agentes'));
 
         $slct->joinInner(
-            array("b"=>"produto"),
+            array("b" => "produto"),
             "p.idproduto = b.codigo",
-            array("Produto"=>"b.descricao"),
+            array("Produto" => "b.descricao"),
             $this->_schema
         );
 
         $slct->joinInner(
-            array("ar"=>"area"),
+            array("ar" => "area"),
             "p.area = ar.codigo",
-            array("DescricaoArea"=>"ar.descricao"),
+            array("DescricaoArea" => "ar.descricao"),
             $this->_schema
         );
         $slct->joinInner(
-            array("s"=>"segmento"),
+            array("s" => "segmento"),
             "p.segmento = s.codigo",
-            array("DescricaoSegmento"=>"s.descricao"),
+            array("DescricaoSegmento" => "s.descricao"),
             $this->_schema
         );
 
@@ -373,5 +374,38 @@ class Proposta_Model_DbTable_PlanoDistribuicaoProduto extends MinC_Db_Table_Abst
             echo($slct->assemble());
             die;
         }
+    }
+
+    public function buscarIdVinculada($idPreProjeto)
+    {
+
+        $slct = $this->select();
+        $slct->setIntegrityCheck(false);
+        $slct->from(
+            array(
+                "p" => $this->_name
+            ),
+            [],
+            $this->_schema
+        );
+
+        $slct->joinInner(
+            array("s" => "vSegmento"),
+            "p.Segmento = s.Codigo",
+            array("idVinculada" => "s.idOrgao"),
+            $this->_schema
+        );
+
+        $slct->joinInner(
+            array("o" => "Orgaos"),
+            "s.idOrgao = o.Codigo",
+            array("Vinculada" => "o.Sigla"),
+            $this->_schema
+        );
+
+        $slct->where('p.stPrincipal = ?', 1);
+        $slct->where('p.idProjeto = ?', $idPreProjeto);
+
+        return $this->fetchRow($slct);
     }
 }

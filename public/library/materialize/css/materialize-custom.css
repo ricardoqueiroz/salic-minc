@@ -203,6 +203,7 @@ textarea.materialize-textarea:focus:not([readonly]) + label[data-error] {
 ins {
     background-color: #c6ffc6;
     text-decoration: none;
+    padding: 2px;
 }
 
 ins br {
@@ -212,6 +213,7 @@ ins br {
 del {
     background-color: #ffc6c6;
     text-decoration: none;
+    padding: 2px;
 }
 
 td.original,
