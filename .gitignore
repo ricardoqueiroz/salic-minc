@@ -27,3 +27,4 @@ composer.lock
 .idea
 composer.phar
 .php_cs.cache
+docker-compose.yml
