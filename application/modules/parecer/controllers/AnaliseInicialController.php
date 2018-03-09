@@ -199,7 +199,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         /* $dadosProjetoProduto = $projetos->dadosFechar($this->getIdUsuario, $idPronac, $idDistribuirParecer); */
         $dadosProjetoProduto = $projetos->dadosFechar($this->idUsuario, $idPronac, $idDistribuirParecer);
         $this->view->dados = $dadosProjetoProduto;
-        /* var_dump($dadosProjetoProduto); */
 
         $this->view->IN2017 = $projetos->verificarIN2017($idPronac);
 

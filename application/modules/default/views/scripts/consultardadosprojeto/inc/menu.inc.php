@@ -363,6 +363,10 @@
                 <?php
                     } ?>
                 <!--  ==================== FIM - MANTER MENSAGENS =======================  -->
+
+
+                <a class="no_seta" href="<?= $this->url(array('module'=>'solicitacao', 'controller' => 'mensagem', 'action' => 'index', 'idPronac' => $this->idPronac, 'listarTudo' => 'true')); ?>"><?= $this->blnProponente ? "Minhas solicita&ccedil;&otilde;es" : "Solicita&ccedil;&otilde;es"; ?></a>
+
             </div>
             <div class="bottom"></div>
             <div id="space_menu"></div>

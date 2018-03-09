@@ -54,7 +54,9 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
         $PermissoesGrupo[] = 151;
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::COMPONENTE_COMISSAO;
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE;
+        $PermissoesGrupo[] = Autenticacao_Model_Grupos::TECNICO_DE_ATENDIMENTO;
 
+        //parent::perfil(1, $PermissoesGrupo);
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
         parent::init();
 
@@ -2954,5 +2956,5 @@ class Admissibilidade_AdmissibilidadeController extends MinC_Controller_Action_A
 
     public function listarSolicitacoesDesarquivamentoAction()
     {
-    }    
+    }
 }

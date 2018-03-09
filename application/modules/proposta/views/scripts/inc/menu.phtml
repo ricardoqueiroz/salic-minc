@@ -86,12 +86,13 @@ $arrMenuProponente['itensorcamentario'] = array(
     'grupo' => array()
 );
 $arrMenuProponente['itensorcamentario']['menu'][] = array('label' => 'Solicitar inclus&atilde;o de itens', 'title' => 'Ir para Solicitar inclus&atilde;o de itens',
-    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'index')) . '?idPreProjeto=' . $idPreProjeto,
+    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'index', 'idPreProjeto' => $idPreProjeto)),
     'grupo' => array()
 );
 $arrMenuProponente['itensorcamentario']['menu'][] = array('label' => 'Minhas solicita&ccedil;&otilde;es', 'title' => 'Ir para Minhas solicita&ccedil;&otilde;es',
-    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'minhas-solicitacoes', 'idPreProjeto' => $idPreProjeto)).'?tipoFiltro=solicitado',
-    'grupo' => array()
+    'url' => $this->url(array('module' => 'proposta', 'controller' => 'mantertabelaitens', 'action' => 'minhas-solicitacoes', 'idPreProjeto' => $idPreProjeto, 'tipoFiltro' => 'solicitado')),
+    'grupo' => array(),
+    'icon' => 'message'
 );
 
 $arrMenuProponente['anexardocumentos'] = array(
@@ -120,6 +121,15 @@ $arrMenuProponente['mensagensenviadas'] = array(
     'title' => '',
     'url' => $this->url(array('module' => 'proposta', 'controller' => 'diligenciar', 'action' => 'listardiligenciaproponente', 'idPreProjeto' => $idPreProjeto)),
     'icon' => 'announcement',
+    'menu' => array(),
+    'grupo' => array()
+);
+
+$arrMenuProponente['solicitacoes'] = array(
+    'id' => 'minhassolicitacoes',
+    'label' => 'Minhas solicita&ccedil;&otilde;es',
+    'title' => '',
+    'url' => $this->url(array('module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'index', 'idPreProjeto' => $idPreProjeto)),
     'menu' => array(),
     'grupo' => array()
 );
