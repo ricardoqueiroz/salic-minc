@@ -1883,7 +1883,6 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
             $dados = array();
             $dados['siEncaminhamento'] = 1;
-            $dados['dtEnvio'] = new Zend_Db_Expr('GETDATE()');
             $where = "idPronac = $idPronac AND siEncaminhamento = 12 AND stEstado = 0";
             $atualizar = $tbReadequacao->update($dados, $where);
 
