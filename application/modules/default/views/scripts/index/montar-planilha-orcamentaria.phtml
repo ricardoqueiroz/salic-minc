@@ -1171,7 +1171,7 @@ else if($this->tipoPlanilha == 6){ ?>
                                     $podeEditarItem =
                                                     (
                                                         $this->link &&
-                                                        !$planilha['vlComprovado'] &&
+                                                        $planilha['vlComprovado'] < $planilha['vlAprovado'] &&
                                                         $disponivelParaEdicaoReadequacaoPlanilha &&
                                                         (
                                                             $planilha['tpAcao'] != 'E' &&
