@@ -9,12 +9,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     private $tipoDocumento = array(' - Selecione - ','Cupom Fiscal','Guia de Recolhimento','Nota Fiscal/Fatura','Recibo de Pagamento','RPA');
     private $_vrSituacao   = false;
 
-    /*
-     * M�todo init
-     * @access public
-     * @param void
-     * @return void
-     */
     public function init()
     {
         $idusuario = $this->_request->getParam('idusuario');
@@ -700,16 +694,18 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
     public function cadastrarcomprovacaopagamentoAction()
     {
+        $dtPagamento = $this->getRequest()->getParam('dtPagamento') ? new DateTime(data::dataAmericana($this->getRequest()->getParam('dtPagamento'))) : null;
+
+        if (empty($dtPagamento)) {
+            throw new Exception('Erro no preenchimento.');
+        }
+
         try {
             $this->verificarPermissaoAcesso(false, true, false);
             $request = $this->getRequest();
 
             $pais = $this->getRequest()->getParam('pais');
-            #if (empty($pais)) {
-            #    throw new Exception('Favor preencher o campo "Nacionalidade do Fornecedor"');
-            #}
-            #Este Campo sempre � Preenchido, porem quando se tenta enviar um arquivo muito grande A Requisi��o se perde
-            #Podemos identificar esta perda pelo campo de pais.
+
             if (empty($pais)) {
                 throw new Exception('Por favor inserir um arquivo com tamanho máximo de 5MB."');
             }
@@ -731,7 +727,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     $request->getParam('dtEmissao') ? new DateTime(data::dataAmericana($request->getParam('dtEmissao'))) : null,
                     $arquivoModel->getId(),
                     $request->getParam('tpFormaDePagamento'),
-                    new DateTime(),
+                    $dtPagamento,
                     str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))),
                     $request->getParam('nrDocumentoDePagamento'),
                     $request->getParam('dsJustificativa')
@@ -760,6 +756,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     $request->getParam('dsJustificativaInternacional')
                 );
             }
+
             $comprovantePagamentoModel->cadastrar();
             $this->_helper->flashMessenger('Comprovante cadastrado com sucesso.');
             $this->_helper->flashMessengerType('CONFIRM');
