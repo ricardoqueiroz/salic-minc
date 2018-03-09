@@ -311,6 +311,18 @@ class IndexController extends MinC_Controller_Action_Abstract
         $this->view->idPerfil = $GrupoAtivo->codGrupo;
 
         $this->view->idPronac = $get->idPronac;
+
+        $auth = Zend_Auth::getInstance();
+        $proj = new Projetos();
+        $cpf = $proj->buscarProponenteProjeto($this->view->idPronac);
+        $cpf = $cpf->CgcCpf;
+        
+        $tblAgente = new Agente_Model_DbTable_Agentes();
+        $rsAgente = $tblAgente->buscar(array('CNPJCPF = ?'=>$auth->getIdentity()->Cpf));
+        if ($rsAgente->count() > 0) {
+            $this->view->idAgente = $rsAgente[0]->idAgente;
+        }
+        
         $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
         $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($get->idPronac, $get->tipoPlanilha);
         $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, $get->tipoPlanilha);

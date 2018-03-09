@@ -1067,6 +1067,9 @@ else if($this->tipoPlanilha == 6){ ?>
     $TotalSugerido = 0;
     $TotalUnitario = 0;
     $TotalAprovado = 0;
+    $disponivelParaAdicaoItensReadequacaoPlanilha = $this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac, $this->idAgente);
+    $disponivelParaEdicaoReadequacaoPlanilha = $this->DisponivelParaEdicaoReadequacaoPlanilha($this->idPronac, $this->idAgente);
+    
     if(is_array($this->planilha) && count($this->planilha)>0) foreach ($this->planilha as $fonte => $planilha) { //ForeachFonteIncentivo
         ?>
         <tr>
@@ -1119,6 +1122,16 @@ else if($this->tipoPlanilha == 6){ ?>
                     <tr class="master produto etapa cidade" produto="<?php echo $nrproduto; ?>" etapa="<?php echo $nretapa; ?>" cidade="<?php echo $nrcidade; ?>"  fonte="<?php echo $nrfonte; ?>">
                         <td>
 			    <div class="center-align">
+                    <?php
+                    $podeAdicionarItem = (
+                        $this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE &&
+                        $disponivelParaAdicaoItensReadequacaoPlanilha &&
+                        $this->link
+                    ) ? true : false;
+                    
+                    ?>
+                    
+                    <?php if ($podeAdicionarItem) : ?>                    
 				<a class="waves-effect waves-light btn white-text btn-incluir-novo-item"
 				   id_fonte="<?php echo $item['idFonte']; ?>"
 				   id_produto="<?php echo $item['idProduto']; ?>"
@@ -1128,6 +1141,7 @@ else if($this->tipoPlanilha == 6){ ?>
 				    <i class="material-icons left">add</i>
 				    incluir item neste munic&iacute;pio
 				</a>
+                    <?php endif; ?>
 			    </div>
 			    <br/>
                             <table class="tabela">
@@ -1154,6 +1168,17 @@ else if($this->tipoPlanilha == 6){ ?>
                                 $vlUnitario = 0;
                                 $vlAprovado = 0;
                                 foreach ($this->planilha[$fonte][$produto][$etapa][$cidade] as $planilha) {
+                                    $podeEditarItem =
+                                                    (
+                                                        $this->link &&
+                                                        !$planilha['vlComprovado'] &&
+                                                        $disponivelParaEdicaoReadequacaoPlanilha &&
+                                                        (
+                                                            $planilha['tpAcao'] != 'E' &&
+                                                            $nrfonte == '0'
+                                                        )
+                                                    );
+                                    
                                     $vlAprovado += $planilha['vlAprovado'];
                                     // soma somente quando não tiver excluído o item
                                     if($planilha['tpAcao'] != 'E'){
@@ -1189,15 +1214,7 @@ else if($this->tipoPlanilha == 6){ ?>
                                         <td style="width: 5%;"><?php echo $planilha['Seq']; ?></td>
                                         <td style="width: 20%;">
 					    <?php
-                                        if((
-                                            ($this->link && $planilha['tpAcao'] != 'E') &&
-                                            $nrfonte == '0' &&
-                                            !$planilha['vlComprovado'])
-                                           ||
-                                           ($this->idPerfil == Autenticacao_Model_Grupos::PROPONENTE &&
-                                            (!$planilha['vlComprovado'])
-                                           )
-                                        ) { ?>
+                                        if($podeEditarItem) { ?>
                                                 <a href="#" style="color: <?php echo $corLinha; ?> !important;" title="clique para alterar os dados do item" class="editarItem" idPlanilhaAprovacao="<?php echo $planilha['idPlanilhaAprovacao']; ?>"><?php echo $planilha['Item']; ?></a>
                                             <?php } else {
                                                 echo $planilha['Item']; ?>

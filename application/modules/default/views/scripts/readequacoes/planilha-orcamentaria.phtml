@@ -498,13 +498,13 @@
                                     });
                                     
                                     if(obrigatorios > 0){
-                                        mensagem += '- Favor preencher os dados obrigat�rios.<br/>';
+                                        mensagem += '- Favor preencher os dados obrigat&oacute;rios.<br/>';
                                     }
 
                                     var TotalCalculadoComponente = $('#TotalCalculado').html().replace(/[^\d]/g, "");
                                     if(parseInt(TotalCalculadoComponente) < parseInt(vlComprovadoDoItemValidacao)){
                                         //$('#TotalCalculado').css('color','red');
-                                        mensagem += '- O valor total do item n�o pode ser menor do que o valor comprovado de '+data.valoresDoItem.vlComprovadoDoItem+'.<br/>';
+                                        mensagem += '- O valor total do item n&atilde;o pode ser menor do que o valor comprovado de '+data.valoresDoItem.vlComprovadoDoItem+'.<br/>';
                                         erros++;
                                     }
                                     

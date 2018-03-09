@@ -18,6 +18,26 @@ class tbReadequacao extends MinC_Db_Table_Abstract
 
     const TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL = 1;
     const TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA = 2;
+    const TIPO_READEQUACAO_RAZAO_SOCIAL = 3;
+    const TIPO_READEQUACAO_AGENCIA_BANCARIA = 4;
+    const TIPO_READEQUACAO_SINOPSE_OBRA = 5;
+    const TIPO_READEQUACAO_IMPACTO_AMBIENTAL = 6;
+    const TIPO_READEQUACAO_ESPECIFICACAO_TECNICA = 7;
+    const TIPO_READEQUACAO_ESTRATEGIA_EXECUCAO = 8;
+    const TIPO_READEQUACAO_LOCAL_REALIZACAO = 9;
+    const TIPO_READEQUACAO_ALTERACAO_PROPONENTE = 10;
+    const TIPO_READEQUACAO_PLANO_DISTRIBUICAO = 11;
+    const TIPO_READEQUACAO_NOME_PROJETO = 12;
+    const TIPO_READEQUACAO_PERIODO_EXECUCAO = 13;
+    const TIPO_READEQUACAO_PLANO_DIVULGACAO = 14;
+    const TIPO_READEQUACAO_RESUMO_PROJETO = 15;
+    const TIPO_READEQUACAO_OBJETIVOS = 16;
+    const TIPO_READEQUACAO_JUSTIFICATIVA = 17;
+    const TIPO_READEQUACAO_ACESSIBILIDADE = 18;
+    const TIPO_READEQUACAO_DEMOCRATIZACAO_ACESSO = 19;
+    const TIPO_READEQUACAO_ETAPAS_TRABALHO = 20;
+    const TIPO_READEQUACAO_FICHA_TECNICA = 21;
+    
     const PERCENTUAL_REMANEJAMENTO = 50;
     const ST_ESTADO_EM_ANDAMENTO = 0;
     const ST_ESTADO_FINALIZADO = 1;
@@ -479,7 +499,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
      */
     public function painelReadequacoesAnalise($where = array(), $order = array(), $tamanho = -1, $inicio = -1, $qtdeTotal = false, $idPerfil = 0)
     {
-        if ($idPerfil == 121) {
+        if ($idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO) {
             $nome = 'd.usu_nome AS Tecnico';
         } else {
             $nome = 'd.Descricao AS Tecnico';
@@ -507,7 +527,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
             'SAC.dbo'
         );
 
-        if ($idPerfil == 121) {
+        if ($idPerfil == Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO) {
             $select->joinLeft(
                 array('d' => 'Usuarios'),
                 'a.idAvaliador = d.usu_codigo',
@@ -1089,4 +1109,145 @@ class tbReadequacao extends MinC_Db_Table_Abstract
             return false;
         }
     }
+
+
+    /**
+     * Método para verificar se existe qualquer tipo de readequação em andamento
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idAgente
+     * @param integer $idTipoReadequacao
+     * @return boolean
+     */    
+    public function existeReadequacaoEmAndamento($idPronac, $idAgente = null, $idTipoReadequacao = null)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('r' => $this->_name),
+            'r.idReadequacao'
+        );
+        $select->where('r.idPronac = ?', $idPronac);
+        
+        if ($idTipoReadequacao) {
+            $tiposReadequacoes = array($idTipoReadequacao);
+        } else {
+            $tiposReadequacoes = array(
+                self::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL,
+                self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+            );
+        }
+        
+        $select->where('r.idTipoReadequacao IN(?)', $tiposReadequacoes);
+        $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
+        
+        if ($idAgente) {
+            $select->where('r.idSolicitante = ?', $idAgente);
+        }
+        
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Método para verificar se está o projeto está disponivel para rReadequacao de planilha 
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idAgente
+     * @return boolean
+     */
+    public function disponivelParaReadequacaoPlanilha($idPronac)
+    {
+        $liberacao = new Liberacao();
+        $projeto = new Projetos();
+        
+        $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento($idPronac);
+        $contaLiberada = $liberacao->contaLiberada($idPronac);
+        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
+        
+        $periodoExecucaoVigente = (
+            $periodoExecucao->DtInicioExecucao < date('d/m/Y') &&
+            $periodoExecucao->DtFimExecucao > date('d/m/Y')
+        ) ? true : false;
+             
+        if (!$existeReadequacaoEmAndamento &&
+            $contaLiberada &&
+            $periodoExecucao) {
+
+            return true;
+        } else {
+            return false;
+        }            
+    }
+    
+    /**
+     * Método para verificar se está o projeto está disponivel para edição da readequacao de planilha
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idAgente
+     * @return boolean
+     */
+    public function disponivelParaEdicaoReadequacaoPlanilha($idPronac, $idAgente)
+    {
+        $liberacao = new Liberacao();
+        $projeto = new Projetos();
+        
+        $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento($idPronac, $idAgente);
+        $contaLiberada = $liberacao->contaLiberada($idPronac);
+        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
+        
+        $periodoExecucaoVigente = (
+            $periodoExecucao->DtInicioExecucao < date('d/m/Y') &&
+            $periodoExecucao->DtFimExecucao > date('d/m/Y')
+        ) ? true : false;
+             
+        if ($existeReadequacaoEmAndamento &&
+            $contaLiberada &&
+            $periodoExecucao) {
+
+            return true;
+        } else {
+            return false;
+        }        
+    }
+
+    /**
+     * Método para verificar se está o projeto está disponivel para adição de itens da readequacao de planilha
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idAgente
+     * @return boolean
+     */
+    public function disponivelParaAdicaoItensReadequacaoPlanilha($idPronac, $idAgente)
+    {
+        $liberacao = new Liberacao();
+        $projeto = new Projetos();
+        
+        $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento(
+            $idPronac,
+            $idAgente,
+            self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+        );
+        $contaLiberada = $liberacao->contaLiberada($idPronac);
+        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
+        
+        $periodoExecucaoVigente = (
+            $periodoExecucao->DtInicioExecucao < date('d/m/Y') &&
+            $periodoExecucao->DtFimExecucao > date('d/m/Y')
+        ) ? true : false;
+             
+        if ($existeReadequacaoEmAndamento &&
+            $contaLiberada &&
+            $periodoExecucao) {
+
+            return true;
+        } else {
+            return false;
+        }        
+    }    
 }
