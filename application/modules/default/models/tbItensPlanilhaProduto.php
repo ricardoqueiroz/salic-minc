@@ -258,4 +258,37 @@ class tbItensPlanilhaProduto extends MinC_Db_Table_Abstract
 
         return $db->fetchAll($sql);
     }
+
+    public function itensPorProdutoItemEtapaMunicipioReadequacao($idEtapa, $idProduto, $idMunicipio, $idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            array('idPlanilhaItens')
+        );
+        
+        $select->joinInner(
+            array('b' => 'tbPlanilhaItens'),
+            'a.idPlanilhaItens = b.idPlanilhaItens',
+            array('Descricao as Item')
+        );
+
+        $select->joinInner(
+            array('tpa' => 'tbPlanilhaAprovacao'),
+            'tpa.idPlanilhaItem = a.idPlanilhaItens',
+            array('a.idPlanilhaItens AS idItem')
+        );
+
+        $select->where('a.idPlanilhaEtapa = ?', $idEtapa);
+        $select->where('a.idProduto = ?', $idProduto);
+        $select->where('tpa.idEtapa = ?', $idEtapa);
+        $select->where('tpa.idMunicipioDespesa = ?', $idMunicipio);
+        $select->where('tpa.tpPlanilha = ?', 'SR');
+        $select->where('tpa.idPronac = ?', $idPronac);
+        
+        $select->order('2');
+        
+        return $this->fetchAll($select);
+    }    
 }

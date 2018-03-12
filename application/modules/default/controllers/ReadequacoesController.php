@@ -88,21 +88,23 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $idUF = $this->_request->getParam('iduf');
         $idEtapa = $this->_request->getParam('idEtapa');
         $idProduto = $this->_request->getParam('idProduto');
+        $idMunicipio = $this->_request->getParam('idMunicipio');
+        
+        $idPronac = $this->_request->getParam("idPronac");
+        if (strlen($idPronac) > 7) {
+            $idPronac = Seguranca::dencrypt($idPronac);
+        }
+        $this->view->idPronac = $idPronac;
         
         if ($idUF) {
             $this->carregarListaUF($idUF);
         }
         
         if ($idEtapa && $idProduto) {
-            $this->carregarEtapaProduto($idEtapa, $idProduto);
+            $this->carregarEtapaProduto($idEtapa, $idProduto, $idPronac, $idMunicipio);
         }
 
-        $idPronac = $this->_request->getParam("idPronac");
-        if (strlen($idPronac) > 7) {
-            $idPronac = Seguranca::dencrypt($idPronac);
-        }
-
-        $this->view->idPronac = $idPronac;
+        
         if (!empty($idPronac)) {
             $Projetos = new Projetos();
             $this->view->projeto = $Projetos->buscar(array('IdPRONAC = ?'=>$idPronac))->current();
@@ -133,7 +135,14 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
             // na listagem de 'outras solicitações' não listar planilha orçamentária (idTipoReadequacao 2)
             $tbReadequacao = new tbReadequacao();
-            $this->view->readequacoesCadastradas = $tbReadequacao->readequacoesCadastradasProponente(array('a.idPronac = ?'=>$idPronac, 'a.siEncaminhamento = ?'=>12, 'a.idTipoReadequacao != ?' => 2), array(1));
+            $this->view->readequacoesCadastradas = $tbReadequacao->readequacoesCadastradasProponente(
+                array(
+                    'a.idPronac = ?'=>$idPronac,
+                    'a.siEncaminhamento = ?'=>12,
+                    'a.idTipoReadequacao != ?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+                ),
+                array(1)
+            );
         } else {
             parent::message("N&uacute;mero Pronac inv&aacute;lido!", "principalproponente", "ERROR");
         }
@@ -157,20 +166,48 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $this->_helper->viewRenderer->setNoRender(true);        
     }
 
-    private function carregarEtapaProduto($idEtapa, $idProduto)
+    private function carregarEtapaProduto($idEtapa, $idProduto, $idPronac = null, $idMunicipio = null)
     {
         $this->_helper->layout->disableLayout();
         
         $tbItensPlanilhaProduto = new tbItensPlanilhaProduto();
         $itens = $tbItensPlanilhaProduto->itensPorItemEEtapaReadequacao($idEtapa, $idProduto);
-        
-        $a = 0;
-        $itensArray = array();
-        foreach ($itens as $i) {
-            $itensArray[$a]['idPlanilhaItens'] = $i->idPlanilhaItens;
-            $itensArray[$a]['Item'] = utf8_encode($i->Item);
-            $a++;
+
+        if ($idPronac && $idMunicipio) {
+            $itensAtuais = $tbItensPlanilhaProduto->itensPorProdutoItemEtapaMunicipioReadequacao(
+                $idEtapa,
+                $idProduto,
+                $idMunicipio,
+                $idPronac
+            );
+            
+            $a = 0;
+            $itensArray = array();
+            
+            foreach ($itens as $item) {
+                $excluir = false;
+                foreach ($itensAtuais as $atuais) {
+                    if ($item->idPlanilhaItens == $atuais->idPlanilhaItens) {
+                        $excluir = true;
+                    }
+                }
+
+                if (!$excluir) {
+                    $itensArray[$a]['idPlanilhaItens'] = $item->idPlanilhaItens;
+                    $itensArray[$a]['Item'] = utf8_encode($item->Item);                
+                    $a++;
+                }
+            }
+            
+        } else {
+            // old
+            foreach ($itens as $item) {
+                $itensArray[$a]['idPlanilhaItens'] = $item->idPlanilhaItens;
+                $itensArray[$a]['Item'] = utf8_encode($item->Item);
+                $a++;
+            }            
         }
+        
         $this->_helper->json($itensArray);
         $this->_helper->viewRenderer->setNoRender(true);
     }
@@ -880,8 +917,14 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         }
 
         $tbReadequacao = new tbReadequacao();
-        $tbReadequacao = $tbReadequacao->buscar(array('idPronac=?'=>$idPronac, 'siEncaminhamento=?'=>12,'stEstado=?'=>0))->current();
-        
+        $resultReadequacao = $tbReadequacao->buscar(
+            array(
+                'idPronac=?'=>$idPronac,
+                'siEncaminhamento=?'=>12,
+                'stEstado=?'=>0,
+                'idTipoReadequacao =?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+            ))->current();
+
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
 
         //BUSCAR VALOR TOTAL DA PLANILHA ATIVA
@@ -890,14 +933,14 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $where['a.stAtivo = ?'] = 'S';
         
         $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
+        
         //BUSCAR VALOR TOTAL DA PLANILHA DE READEQUADA
         $where = array();
         $where['a.IdPRONAC = ?'] = $idPronac;
         $where['a.tpPlanilha = ?'] = 'SR';
         $where['a.stAtivo = ?'] = 'N';
         $where['a.tpAcao != ?'] = 'E';
-        $where['a.idReadequacao = ?'] = $tbReadequacao['idReadequacao'];
+        $where['a.idReadequacao = ?'] = $resultReadequacao['idReadequacao'];
 
         $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
 
@@ -4045,7 +4088,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             $this->view->readequacao = $tbReadequacao->readequacoesCadastradasProponente(array(
                 'a.idPronac = ?'=>$idPronac,
                 'a.siEncaminhamento = ?'=>12,
-                'a.idTipoReadequacao = ?' => 2,
+                'a.idTipoReadequacao = ?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
             ), array(1));
         } else {
             parent::message("N&uacute;mero Pronac inv&aacute;lido!", "principalproponente", "ERROR");
@@ -4079,7 +4122,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             $tbReadequacao = new tbReadequacao();
             $dados = array();
             $dados['idPronac'] = $idPronac;
-            $dados['idTipoReadequacao'] = 2;
+            $dados['idTipoReadequacao'] = tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA;
             $dados['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
             $dados['idSolicitante'] = $rsAgente->idAgente;
             $dados['dsJustificativa'] = '';
