@@ -850,7 +850,7 @@ else if($this->tipoPlanilha == 3){ ?>
 </table>
 
 <?php }
-//MONTANDO A PLANILHA DO TIPO 6 = Readequação
+//MONTANDO A PLANILHA DO TIPO 5 = Remanejamento 50%
 else if($this->tipoPlanilha == 5){ ?>
 <table class="tabela">
     <?php
@@ -1067,8 +1067,8 @@ else if($this->tipoPlanilha == 6){ ?>
     $TotalSugerido = 0;
     $TotalUnitario = 0;
     $TotalAprovado = 0;
-    $disponivelParaAdicaoItensReadequacaoPlanilha = $this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac, $this->idAgente);
-    $disponivelParaEdicaoReadequacaoPlanilha = $this->DisponivelParaEdicaoReadequacaoPlanilha($this->idPronac, $this->idAgente);
+    $disponivelParaAdicaoItensReadequacaoPlanilha = $this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac);
+    $disponivelParaEdicaoReadequacaoPlanilha = $this->DisponivelParaEdicaoReadequacaoPlanilha($this->idPronac);
     
     if(is_array($this->planilha) && count($this->planilha)>0) foreach ($this->planilha as $fonte => $planilha) { //ForeachFonteIncentivo
         ?>

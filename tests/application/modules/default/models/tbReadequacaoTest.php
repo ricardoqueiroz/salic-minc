@@ -1,10 +1,10 @@
 <?php
 /**
- * Default_TbReadequacoes
+ * Default_TbReadequacao
  *
  * @package
  */
-class TbReadequacoesModelTest extends MinC_Test_ModelTestCase
+class TbReadequacaoModelTest extends MinC_Test_ModelTestCase
 {
     public function setUp()
     {
@@ -29,8 +29,7 @@ class TbReadequacoesModelTest extends MinC_Test_ModelTestCase
         
         $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento(
             $this->idPronac,
-            null,
-            tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL
+               tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL
         );
         
         $this->assertFalse($existeReadequacaoEmAndamento);
@@ -42,46 +41,25 @@ class TbReadequacoesModelTest extends MinC_Test_ModelTestCase
         
         $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento(
             $this->idPronac,
-            null,
-            tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+               tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
         );
         
         $this->assertTrue($existeReadequacaoEmAndamento);
     }
     
-    public function testExisteReadequacaoEmAndamentoAgenteIgual()
-    {
-        $idAgente = 9343;
-        $tbReadequacao = new tbReadequacao();
-        
-        $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento($this->idPronac, $idAgente);
-        $this->assertTrue($existeReadequacaoEmAndamento);
-    }
-
-    public function testExisteReadequacaoEmAndamentoAgenteDiferente()
-    {
-        $idAgente = 9344;
-        $tbReadequacao = new tbReadequacao();
-        
-        $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento($this->idPronac, $idAgente);
-        $this->assertFalse($existeReadequacaoEmAndamento);
-    }
-    
     public function testDisponivelParaEdicaoReadequacaoPlanilha()
     {
-        $idAgente = 9343;
         $tbReadequacao = new tbReadequacao();
         
-        $disponivelParaEdicaoReadequacaoPlanilha = $tbReadequacao->disponivelParaEdicaoReadequacaoPlanilha($this->idPronac, $idAgente);
+        $disponivelParaEdicaoReadequacaoPlanilha = $tbReadequacao->disponivelParaEdicaoReadequacaoPlanilha($this->idPronac);
         $this->assertTrue($disponivelParaEdicaoReadequacaoPlanilha);
     }
 
     public function testDisponivelParaAdicaoItensReadequacaoPlanilha()
     {
-        $idAgente = 9343;
         $tbReadequacao = new tbReadequacao();
         
-        $disponivelParaEdicaoReadequacaoPlanilha = $tbReadequacao->disponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac, $idAgente);
+        $disponivelParaEdicaoReadequacaoPlanilha = $tbReadequacao->disponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac);
         $this->assertTrue($disponivelParaEdicaoReadequacaoPlanilha);
     }
 }
