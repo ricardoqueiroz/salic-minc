@@ -190,9 +190,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
      */
     public function pagamentoAction()
     {
-        /* =============================================================================== */
         /* ==== VERIFICA PERMISSAO DE ACESSO DO PROPONENTE A PROPOSTA OU AO PROJETO ====== */
-        /* =============================================================================== */
         $this->verificarPermissaoAcesso(false, true, false);
         $this->dadosProjeto();
 
