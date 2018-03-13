@@ -5,15 +5,14 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
     private $idPronac;
     private $idUsuario = 0;
 
-    private function validarPerfis() {
+    private function validarPerfis()
+    {
         $auth = Zend_Auth::getInstance();
 
         $PermissoesGrupo = array();
         $PermissoesGrupo[] = Autenticacao_Model_Grupos::PARECERISTA;
 
         isset($auth->getIdentity()->usu_codigo) ? parent::perfil(1, $PermissoesGrupo) : parent::perfil(4, $PermissoesGrupo);
-
-
     }
 
     public function init()
@@ -45,7 +44,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $idDocumentoAssinatura = $this->getIdDocumentoAssinatura($get['IdPRONAC'], $idTipoDoAtoAdministrativo);
 
                 $this->redirect("/assinatura/index/visualizar-projeto/?idDocumentoAssinatura=" . $idDocumentoAssinatura . "&origin=" . $get['origin']);
-            } elseif(isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
+            } elseif (isset($post['IdPRONAC']) && is_array($post['IdPRONAC']) && count($post['IdPRONAC']) > 0) {
                 // ainda nao implementado o encaminhamento de vários para pareceres
             }
         } catch (Exception $objException) {
@@ -54,9 +53,9 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
     }
 
-    function obterServicoDocumentoAssinatura()
+    public function obterServicoDocumentoAssinatura()
     {
-        if(!isset($this->servicoDocumentoAssinatura)) {
+        if (!isset($this->servicoDocumentoAssinatura)) {
             require_once __DIR__ . DIRECTORY_SEPARATOR . "AnaliseInicialDocumentoAssinaturaController.php";
             $this->servicoDocumentoAssinatura = new Parecer_AnaliseInicialDocumentoAssinaturaController($this->getRequest()->getPost());
         }
@@ -95,16 +94,8 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
         $situacao = $this->_request->getParam('situacao');
 
-        /* die('deteste'); */
         $projeto = new Projetos();
         $resp = $projeto->buscaProjetosProdutosParaAnalise(
-            array(
-                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
-                'distribuirParecer.idOrgao = ?' => $idOrgao,
-            )
-        );
-
-        $d = $projeto->buscaprojetosparaanalise(
             array(
                 'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
                 'distribuirParecer.idOrgao = ?' => $idOrgao,
@@ -130,7 +121,6 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         $this->view->situacao = $situacao;
         /* $this->view->buscar = $paginator; */
         $this->view->buscar = $resp;
-        $this->view->d = $d;
     }
 
 
@@ -168,7 +158,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
 
                 $fecharAnalise = 0;
 
-                    $dados = array(
+                $dados = array(
                         'idOrgao' => $dp->idOrgao,
                         'DtEnvio' => $dp->DtEnvio,
                         'idAgenteParecerista' => $dp->idAgenteParecerista,
@@ -186,25 +176,21 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                         'stDiligenciado' => null
                     );
 
-                    $where['idDistribuirParecer = ?'] = $idDistribuirParecer;
+                $where['idDistribuirParecer = ?'] = $idDistribuirParecer;
 
-                    $salvar = $tbDistribuirParecer->alterar(array('stEstado' => 1), $where);
+                $salvar = $tbDistribuirParecer->alterar(array('stEstado' => 1), $where);
 
-                    $insere = $tbDistribuirParecer->inserir($dados);
+                $insere = $tbDistribuirParecer->inserir($dados);
 
                 endforeach;
 
                 $tbDistribuirParecer->getAdapter()->commit();
 
                 parent::message("An&aacute;lise conclu&iacute;da com sucesso !", "parecer/analise-inicial", "CONFIRM");
-
             } catch (Zend_Db_Exception $e) {
-
                 $tbDistribuirParecer->getAdapter()->rollBack();
                 parent::message("Error" . $e->getMessage(), "parecer/analise-inicial", "ERROR");
             }
-
-
         } else {
             $idPronac = $this->_request->getParam("idPronac");
             $idProduto = $this->_request->getParam("idProduto");
@@ -233,8 +219,7 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
         }
 
         // Validacao do 15%
-        if ($stPrincipal == "1") //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
-        {
+        if ($stPrincipal == "1") { //avaliacao da regra dos 15% so deve ser feita quando a analise for do produto principal
             $Situacao = false;
 
             $V1 = '';
@@ -295,45 +280,5 @@ class Parecer_AnaliseInicialController extends MinC_Controller_Action_Abstract i
                 $this->view->verifica15porcento = $valoracustosadministrativos['soma'];
             }
         }
-    }
-
-    /*@todo revisar codigo*/
-    public function produtosAnaliseAjaxAction()
-    {
-        $this->validarPerfis();
-
-        $idPRONAC = $this->_request->getParam('idPRONAC');
-
-        $auth = Zend_Auth::getInstance();
-        $idusuario = $auth->getIdentity()->usu_codigo;
-        $this->view->idUsuario = $idusuario;
-
-        $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo');
-        $idOrgao = $GrupoAtivo->codOrgao;
-
-        $UsuarioDAO = new Autenticacao_Model_Usuario();
-        $agente = $UsuarioDAO->getIdUsuario($idusuario);
-        $idAgenteParecerista = $agente['idagente'];
-        $this->view->idAgenteParecerista = $idAgenteParecerista;
-
-        $situacao = $this->_request->getParam('situacao');
-
-        $projeto = new Projetos();
-        $resp = $projeto->projetosParaAnaliseProdutos(
-            array(
-                'distribuirParecer.idAgenteParecerista = ?' => $idAgenteParecerista,
-                'distribuirParecer.idOrgao = ?' => $idOrgao,
-                'projeto.idPRONAC = ?' => $idPRONAC
-            )
-        );
-
-        $produtoAux = [];
-        foreach ($resp->toArray() as $key => $produto) {
-            $produtoAux[$key] = $produto;
-
-            $produtoAux[$key]['dsProduto'] = utf8_encode($produtoAux[$key]['dsProduto']);
-        }
-
-        $this->_helper->json($produtoAux);
     }
 }

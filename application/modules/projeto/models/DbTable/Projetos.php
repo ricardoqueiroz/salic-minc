@@ -9,7 +9,8 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
     protected $_name = 'Projetos';
     protected $_primary = 'IdPRONAC';
 
-    public function alterarOrgao($orgao, $idPronac) {
+    public function alterarOrgao($orgao, $idPronac)
+    {
         $this->update(
             array(
                 'Orgao' => $orgao
@@ -18,14 +19,15 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         );
     }
 
-    public function obterValoresProjeto($idPronac) {
+    public function obterValoresProjeto($idPronac)
+    {
         $objQuery = $this->select();
         $objQuery->setIntegrityCheck(false);
         $objQuery->from(
             array(
                 'projetos' => $this->_name
-            )
-            ,array(
+            ),
+            array(
                 "ValorProposta" => new Zend_Db_Expr("sac.dbo.fnValorSolicitado(projetos.AnoProjeto,projetos.Sequencial)"),
                 "ValorSolicitado" => new Zend_Db_Expr("sac.dbo.fnValorSolicitado(projetos.AnoProjeto,projetos.Sequencial)") ,
                 "OutrasFontes" => new Zend_Db_Expr("sac.dbo.fnOutrasFontes(projetos.idPronac)"),
@@ -108,12 +110,11 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
 
         $resultadoProjetoTransformado = $this->_db->fetchRow($projetoTransformado);
 
-        if(!empty($resultadoProjetoAprovado) || !empty($resultadoProjetoTransformado)) {
+        if (!empty($resultadoProjetoAprovado) || !empty($resultadoProjetoTransformado)) {
             $retorno = 1;
         }
 
         return $retorno;
-
     }
 
     /*
@@ -135,8 +136,8 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         return $db->fetchOne($sql);
     }
 
-    public function fnChecarLiberacaoDaAdequacaoDoProjeto($idPronac) {
-
+    public function fnChecarLiberacaoDaAdequacaoDoProjeto($idPronac)
+    {
         $exec = new Zend_Db_Expr("SELECT dbo.fnChecarLiberacaoDaAdequacaoDoProjeto({$idPronac})");
 
         try {
@@ -147,8 +148,8 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         return $db->fetchOne($exec);
     }
 
-    public function spClonarProjeto($idPronac, $usuarioLogado) {
-
+    public function spClonarProjeto($idPronac, $usuarioLogado)
+    {
         $exec = new Zend_Db_Expr("EXEC SAC.dbo.spClonarProjeto {$idPronac}, {$usuarioLogado}");
 
         try {
@@ -158,45 +159,4 @@ class Projeto_Model_DbTable_Projetos extends MinC_Db_Table_Abstract
         }
         return $db->fetchRow($exec);
     }
-
-    public function identificacao($idPronac) 
-    {
-        $sql = $this->select();
-        $sql->setIntegrityCheck(false);
-        $sql->from(
-            array( 'p' => $this->_name)
-            ,array('*')
-        );
-        $sql->join(
-            array( 'a' => 'agentes'),
-            'p.cgccpf = a.CNPJCPF',
-            ['*'],
-            'Agentes'
-        );
-        $sql->join(
-            array( 'n' => 'nomes'),
-            'n.idAgente = a.idAgente',
-            ['n.Descricao as NomeAgente'],
-            'Agentes'
-        );
-
-        $sql->join(
-            array( 's' => 'segmento'),
-            's.Codigo = p.Segmento',
-            ['*'],
-            $this->_schema
-        );
-
-        $sql->join(
-            array( 'si' => 'situacao'),
-            'p.situacao = si.Codigo',
-            ['Descricao as situacao'],
-            $this->_schema
-        );
-
-        $sql->where('p.IdPRONAC = ?', $idPronac);
-
-        return $this->_db->fetchRow($sql);
-    }
-
 }

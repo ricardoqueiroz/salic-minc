@@ -327,21 +327,16 @@ gerarBreadCrumb($links);
                                                 </li>
                                             <?php endif; ?>
 
-                                            <?php if ($projeto["liberarEdicao"]) : ?>
-                                                <li>
-                                                    <a class="btn btn-floating waves-effect waves-light tooltipped btn-default"
-                                                       data-tooltip="Alterar projeto" target="_blank"
-                                                       href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaincentivofiscal', 'action' => 'identificacaodaproposta', 'idPreProjeto' => $projeto["idProjeto"])); ?>">
-                                                        <i class="material-icons">edit</i>
-                                                    </a>
-                                                </li>
-                                            <?php endif; ?>
-                                        </ul>
-                                    </div
-                                </div>
-                                </p>
-                            </td>
-                        </tr>
+                                <?php if ($projeto["liberarEdicao"]) : ?>
+                                    <a class="btn small waves-effect waves-light tooltipped btn-default"
+                                       data-tooltip="Adequar à realidade ou Encaminhar para o MinC" target="_blank"
+                                       href="<?php echo $this->url(array('module' => 'proposta', 'controller' => 'manterpropostaincentivofiscal', 'action' => 'identificacaodaproposta', 'idPreProjeto' => $projeto["idProjeto"])); ?>">
+                                        <i class="material-icons">edit</i>
+                                    </a>
+                                <?php endif; ?>
+                            </p>
+                        </td>
+                    </tr>
 
                         <?php $idAgente = $projeto["idAgente"]; ?>
 
@@ -412,13 +407,3 @@ gerarBreadCrumb($links);
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-//        $("#localizar").hide();
-//        $("#idProponente").change(function () {
-////            $("form#localiza").submit();
-//        });
-
-    });
-</script>

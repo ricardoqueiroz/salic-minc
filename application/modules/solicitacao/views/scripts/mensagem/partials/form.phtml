@@ -1,4 +1,4 @@
-<div class="card materialize">
+<div class="">
     <div class="row">
         <div class="col s12">
             <?php if (!empty($this->dataForm['Pronac'])) : ?>
@@ -23,8 +23,8 @@
 
             <?php if (isset($this->arrConfig['dsSolicitacao']['disabled']) && !$this->arrConfig['dsSolicitacao']['disabled']): ?>
                 <div class="row">
-                    <div class="col s12">
-                        <h5>Solicita&ccedil;&atilde;o</h5>
+                    <div class="col s12 input-field">
+                        <label>Solicita&ccedil;&atilde;o</label>
                         <textarea id="dsSolicitacao" class="materialize-textarea editor"
                                   name="dsSolicitacao" <?php if (isset($this->arrConfig['dsSolicitacao']) && $this->arrConfig['dsSolicitacao']['disabled']) echo 'disabled="disabled"' ?>><?php if (isset($this->dataForm['dsSolicitacao'])) echo $this->dataForm['dsSolicitacao']; ?>  </textarea>
                     </div>
@@ -94,7 +94,7 @@
             <div class="row">
                 <div class="col s12 center-align">
                     <?php if ($this->arrConfig['actions']['show'] === true): ?>
-                        <?php if ($this->ehProponente) : ?>
+                        <?php if ($this->isProponente) : ?>
                             <a id="btn_rascunho" class="btn waves-effect waves-light bt_rascunho">Salvar rascunho</a>
                         <?php endif; ?>
                         <a id="btn_enviar" class="btn waves-effect waves-light bt_rascunho">Enviar</a>
@@ -116,9 +116,21 @@
 
     // Adicionando evento de enviar o formulario via ajax caso tenha a tag data-ajax-form.
     $3('#btn_rascunho').on('click', function () {
+
         $3('input[name=siEncaminhamento]').val('0');
         $3("#form-mensagem").ajaxFormSubmit();
     });
+//    $3.ajax({
+//        url: "/form.php",
+//        type: "post",
+//        data: serializedData
+//    });
+
+//    $3('#btn_rascunho').on('click', function () {
+//
+//
+//        alert($('#form-mensagem').attr('action'));
+//    });
 
     $3('#btn_enviar').on('click', function () {
         $3('input[name=siEncaminhamento]').val('1');

@@ -17,22 +17,23 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
         $this->_idUsuario = !empty($arrAuth['usu_codigo']) ? $arrAuth['usu_codigo'] : $arrAuth['idusuario'];
     }
 
-    public function existeSolicitacaoNaoRespondida($arrData)
+    public function solicitacaoNaoRespondida($arrData)
     {
+        $where = [];
         if (isset($arrData['idPronac']) && !empty($arrData['idPronac'])) {
-            $where['idPronac = ?'] = $arrData['idPronac'];
+            $where['a.idPronac = ?'] = $arrData['idPronac'];
         }
 
         if (isset($arrData['idProjeto']) && !empty($arrData['idProjeto'])) {
-            $where['idProjeto = ?'] = $arrData['idProjeto'];
+            $where['a.idProjeto = ?'] = $arrData['idProjeto'];
         }
 
-        $where['idSolicitante = ?'] = $this->_idUsuario;
-        $where['stEstado = ?'] = 1;
+        $where['a.idSolicitante = ?'] = $this->_idUsuario;
+        $where['a.stEstado = ?'] = 1;
 
-        $vwSolicitacao = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
-        return $vwSolicitacao->buscar($where)->current()->toArray();
-
+        $tbSolicitacao = new Solicitacao_Model_DbTable_TbSolicitacao();
+        $solicitacoes = $tbSolicitacao->obterSolicitacoes($where);
+        return !empty($solicitacoes->current()) ? $solicitacoes->current()->toArray() : [];
     }
 
     public function isValid($model)

@@ -15,7 +15,10 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
     public function indexAction()
     {
         $this->view->listarTudo = $this->getRequest()->getParam('listarTudo', null);
-        $this->view->existeSolicitacaoEnviadaNaoRespondida = self::verificarSolicitacaoEnviadaNaoRespondida($this->idPreProjeto, $this->idPronac);
+        $this->view->existeSolicitacaoEnviadaNaoRespondida = $this->verificarSolicitacaoEnviadaNaoRespondida(
+            $this->idPreProjeto,
+            $this->idPronac
+        );
     }
 
     /**
@@ -52,7 +55,7 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
             'urlAction' => $strUrlAction,
             'strActionBack' => $strActionBack,
             'currentUrl' => Zend_Controller_Front::getInstance()->getRequest()->getRequestUri(),
-            'ehProponente' => $this->ehProponente
+            'isProponente' => $this->isProponente
         );
     }
 
@@ -63,42 +66,41 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
         $idPreProjeto = $this->getRequest()->getParam('idPreProjeto', null);
         $listarTudo = $this->getRequest()->getParam('listarTudo', null);
         $this->view->ehTecnico = false;
-        $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
+
+        $tbSolicitacao = new Solicitacao_Model_DbTable_TbSolicitacao();
 
         $where = [];
         if ($idPronac) {
-            $where['idPronac = ?'] = $idPronac;
+            $where['a.idPronac = ?'] = $idPronac;
         }
 
         if ($idPreProjeto) {
-            $where['idProjeto = ?'] = $idPreProjeto;
+            $where['a.idProjeto = ?'] = $idPreProjeto;
         }
 
         # Proponente
         if (isset($this->usuario['cpf'])) {
-            $where["(idAgente = {$this->idAgente} OR idSolicitante = {$this->idUsuario})"] = '';
+            $where["(a.idAgente = {$this->idAgente} OR a.idSolicitante = {$this->idUsuario})"] = '';
         }
 
         # funcionarios do minc
         if (isset($this->usuario['usu_codigo'])) {
 
-            if(empty($listarTudo)) {
+            if (empty($listarTudo)) {
 
                 $grupos = new Autenticacao_Model_Grupos();
                 $tecnicos = $grupos->buscarTecnicosPorOrgao($this->grupoAtivo->codOrgao)->toArray();
 
                 if (in_array($this->grupoAtivo->codGrupo, array_column($tecnicos, 'gru_codigo'))) {
-                    $where['idTecnico = ?'] = $this->idUsuario;
+                    $where['a.idTecnico = ?'] = $this->idUsuario;
                 }
 
-                $where['idOrgao = ?'] = $this->grupoAtivo->codOrgao;
-                $where['siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
+                $where['a.idOrgao = ?'] = $this->grupoAtivo->codOrgao;
+                $where['a.siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
             }
-
         }
 
-        $solicitacoes = $vwSolicitacoes->buscar($where);
-
+        $solicitacoes = $tbSolicitacao->obterSolicitacoes($where);
         $this->view->arrResult = $solicitacoes;
         $this->view->idPronac = $idPronac;
 
@@ -114,38 +116,38 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
         $idPreProjeto = $this->getRequest()->getParam('idPreProjeto', null);
         $this->view->ehTecnico = false;
 
-        $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
+        $tbSolicitacoes = new Solicitacao_Model_DbTable_TbSolicitacao();
 
         $where = [];
         if ($idPronac) {
-            $where['idPronac = ?'] = $idPronac;
+            $where['a.idPronac = ?'] = $idPronac;
         }
 
         if ($idPreProjeto) {
-            $where['idProjeto = ?'] = $idPreProjeto;
+            $where['a.idProjeto = ?'] = $idPreProjeto;
         }
 
         # Proponente
         if (isset($this->usuario['cpf'])) {
-            $where["(idAgente = {$this->idAgente} OR idSolicitante = {$this->idUsuario})"] = '';
-            $where['siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_FINALIZADA_MINC;
-            $where['stLeitura = ?'] = 0;
+            $where["(a.idAgente = {$this->idAgente} OR a.idSolicitante = {$this->idUsuario})"] = '';
+            $where['a.siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_FINALIZADA_MINC;
+            $where['a.stLeitura = ?'] = 0;
         }
 
         if (isset($this->usuario['usu_codigo'])) {
 
-            $where['idTecnico = ?'] = $this->idUsuario;
-            $where['dsResposta IS NULL'] = '';
+            $where['a.idTecnico = ?'] = $this->idUsuario;
+            $where['a.dsResposta IS NULL'] = '';
 
             if (isset($this->grupoAtivo->codOrgao)) {
-                $where['idOrgao = ?'] = $this->grupoAtivo->codOrgao;
+                $where['a.idOrgao = ?'] = $this->grupoAtivo->codOrgao;
             }
 
-            $where['siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
+            $where['a.siEncaminhamento = ?'] = Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC;
         }
 
 
-        $solicitacoes = $vwSolicitacoes->buscar($where, ['dtResposta DESC', 'dtSolicitacao DESC']);
+        $solicitacoes = $tbSolicitacoes->obterSolicitacoes($where, ['dtResposta DESC', 'dtSolicitacao DESC']);
 
         $this->view->arrResult = $solicitacoes;
         $this->view->idPronac = $idPronac;
@@ -163,10 +165,10 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
             if (empty($idSolicitacao))
                 throw new Exception("Informe o id da solicita&ccedil;&atilde;o para visualizar!");
 
-            $where['idSolicitacao = ?'] = $idSolicitacao;
+            $where['a.idSolicitacao = ?'] = $idSolicitacao;
 
-            $vwSolicitacao = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
-            $dataForm = $vwSolicitacao->buscar($where)->current()->toArray();
+            $tbSolicitacoes = new Solicitacao_Model_DbTable_TbSolicitacao();
+            $dataForm = $tbSolicitacoes->obterSolicitacoes($where)->current()->toArray();
 
             if (empty($dataForm))
                 throw new Exception("Nenhuma solicita&ccedil;&atilde;o encontrada!");
@@ -201,9 +203,10 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
 
     public function solicitarAction()
     {
+
         $urlAction = $this->_urlPadrao . "/solicitacao/mensagem/salvar";
         $urlCallBack = $this->_urlPadrao . "/solicitacao/mensagem/index";
-
+        $this->view->isEditavel = true;
         try {
 
             if (empty($this->idPronac) && empty($this->idPreProjeto))
@@ -215,17 +218,20 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
 
             $arrConfig['dsSolicitacao']['disabled'] = false;
             $arrConfig['actions']['show'] = true;
+            $whereSolicitacoes = [];
 
             if ($this->projeto) {
                 $urlCallBack .= '/idPronac/' . $this->idPronac;
                 $dataForm['idPronac'] = $this->idPronac;
+                $whereSolicitacoes['idPronac'] = $this->idPronac;
             } else if ($this->proposta) {
                 $urlCallBack .= '/idPreProjeto/' . $this->idPreProjeto;
                 $dataForm['idProjeto'] = $this->idPreProjeto;
+                $whereSolicitacoes['idProjeto'] = $this->idPreProjeto;
             }
 
             $mapperSolicitacao = new Solicitacao_Model_TbSolicitacaoMapper();
-            $dataForm = $mapperSolicitacao->existeSolicitacaoNaoRespondida($dataForm);
+            $dataForm = $mapperSolicitacao->solicitacaoNaoRespondida($whereSolicitacoes);
 
             if ($dataForm['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC) {
                 $this->redirect($this->_urlPadrao . '/solicitacao/mensagem/visualizar/id/' . $dataForm['idSolicitacao']);
@@ -241,7 +247,6 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
 
     public function salvarAction()
     {
-        $status = false;
 
         if ($this->getRequest()->isPost()) {
 
@@ -259,7 +264,8 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
                 $arrayForm['idUsuario'] = $this->idUsuario;
 
                 $mapperSolicitacao = new Solicitacao_Model_TbSolicitacaoMapper();
-                $solicitacao = $mapperSolicitacao->existeSolicitacaoNaoRespondida($arrayForm);
+
+                $solicitacao = $mapperSolicitacao->solicitacaoNaoRespondida($arrayForm);
 
                 if (isset($solicitacao['siEncaminhamento'])) {
 
@@ -270,13 +276,15 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
                     $arrayForm['idSolicitacao'] = $solicitacao['idSolicitacao'];
                 }
 
-                $mapperSolicitacao = new Solicitacao_Model_TbSolicitacaoMapper();
                 $idSolicitacao = $mapperSolicitacao->salvar($arrayForm);
+
 
                 if ($arrayForm['siEncaminhamento'] == 1 && $idSolicitacao) {
                     $strUrl = '/solicitacao/mensagem/visualizar/id/' . $idSolicitacao . $strParams;
                     $status = true;
-                } else {
+                } elseif($idSolicitacao == 0){
+                    $status = false;
+                }else{
                     $strUrl = '/solicitacao/mensagem/solicitar' . $strParams;
                     $status = true;
                 }
@@ -302,8 +310,8 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
 
             $where['idSolicitacao = ?'] = $idSolicitacao;
 
-            $vwSolicitacao = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
-            $solicitacao = $vwSolicitacao->buscar($where)->current()->toArray();
+            $tbSolicitacoes = new Solicitacao_Model_DbTable_TbSolicitacao();
+            $solicitacao = $tbSolicitacoes->buscar($where)->current()->toArray();
 
             if (empty($solicitacao))
                 throw new Exception("Nenhuma solicita&ccedil;&atilde;o encontrada!");
@@ -409,8 +417,10 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
         $idDocumento = $this->getRequest()->getParam('id', null);
 
         try {
-            $vwSolicitacao = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
-            $solicitacao = $vwSolicitacao->buscar(['idDocumento = ?' => $idDocumento])->current();
+            $tbSolicitacao = new Solicitacao_Model_DbTable_TbSolicitacao();
+            $solicitacao = $tbSolicitacao->obterSolicitacoes(
+                ['a.idDocumento = ?' => $idDocumento]
+            )->current();
 
             if (empty($solicitacao))
                 throw new Exception('Documento n&atilde;o encontrado!');
@@ -436,37 +446,39 @@ class Solicitacao_MensagemController extends Solicitacao_GenericController
     {
         $this->_helper->layout->disableLayout();
         $this->_helper->viewRenderer->setNoRender(true);
+        try {
+            $tbSolicitacao = new Solicitacao_Model_DbTable_TbSolicitacao();
 
-        $resultado = 0;
+            if ($this->usuario['usu_codigo']) {
+                $resultado = $tbSolicitacao->contarSolicitacoesNaoRespondidasTecnico($this->idUsuario, $this->grupoAtivo->codOrgao);
+            } else {
+                $resultado = $tbSolicitacao->contarSolicitacoesNaoRespondidasTecnico($this->idUsuario, $this->idAgente);
+            }
 
-        $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
-
-        if ($this->usuario['usu_codigo']) {
-            $resultado = $vwSolicitacoes->contarSolicitacoesNaoRespondidasTecnico($this->idUsuario, $this->grupoAtivo->codOrgao);
-        } else {
-            $resultado = $vwSolicitacoes->contarSolicitacoesNaoLidasUsuario($this->idUsuario, $this->idAgente);
+            $this->_helper->json(array('status' => true, 'msg' => $resultado));
+        } catch (Exception $objException) {
+            $this->_helper->json(array('status' => false, 'msg' => $objException->getMessage()));
         }
-
-        $this->_helper->json(array('status' => true, 'msg' => $resultado));
     }
 
     public function verificarSolicitacaoEnviadaNaoRespondida($idPreProjeto = null, $idPronac = null)
     {
-        $vwSolicitacoes = new Solicitacao_Model_vwPainelDeSolicitacaoProponente();
+        $tbSolicitacao = new Solicitacao_Model_DbTable_TbSolicitacao();
+
         $where = [
             'dtResposta IS NULL' => '',
             'siEncaminhamento' => Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC
         ];
 
-        if($idPreProjeto) {
+        if ($idPreProjeto) {
             $where['idProjeto'] = $idPreProjeto;
         }
 
-        if($idPronac) {
+        if ($idPronac) {
             $where['idPronac'] = $idPronac;
         }
 
-        return $vwSolicitacoes->findBy($where);
+        return $tbSolicitacao->findBy($where);
 
 
     }

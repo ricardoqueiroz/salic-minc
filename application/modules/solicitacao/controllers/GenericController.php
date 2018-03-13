@@ -20,7 +20,7 @@ abstract class Solicitacao_GenericController extends MinC_Controller_Action_Abst
 
     protected $cpfLogado = null;
 
-    protected $ehProponente = false;
+    protected $isProponente = false;
 
     public function init()
     {
@@ -87,12 +87,12 @@ abstract class Solicitacao_GenericController extends MinC_Controller_Action_Abst
                 $this->idAgente = $agente['idAgente'];
             }
 
-            $this->ehProponente = true;
+            $this->isProponente = true;
         }
 
         $this->usuario = $arrAuth;
         $this->view->usuario = $auth->getIdentity(); //@todo padronizar o usuario no header do layout
-        $this->view->ehProponente = $this->ehProponente;
+        $this->view->isProponente = $this->isProponente;
         $this->view->idUsuario = $this->idUsuario;
     }
 

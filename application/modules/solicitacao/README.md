@@ -5,24 +5,20 @@ Módulo de Solicita&ccedil;&atilde;o
 
 Este M&oacute;dulo disponibiliza a opção para que os proponentes façam solicitações ao MinC, realizando envio de mensagens na proposta ou projeto.
 
-
 #### Workflow
-
-## User Story
 
 #### PERFIL DO PROPONENTE
 Essa funcionalidade permite ao proponente enviar solicitação ao MinC referente a proposta ou projeto cultural.
 
 O caso de uso poderá iniciar: 
-1. pelo menu superior ao clicar no item Solicitação;
-2. pelo botão na linha da proposta;
-3. pelo botão na linha do projeto.
+1. pelo botão na linha da proposta;
+2. pelo botão na linha do projeto.
 
-Quando a opção escolhida for: 1. o sistema deverá solicitar que o proponente selecione entre proposta ou projeto e digitar o número da proposta ou do projeto. Após clicar no botão pesquisar o sistema deverá montar a tela 1 para o preenchimento da solicitação.
+Quando a opção escolhida for: 
 
-2. se o opção for na linha da proposta o sistema deverá montar a tela 2 para a solicitação do proponente.
+1. se o opção for na linha da proposta o sistema deverá montar a tela 2 para a solicitação do proponente.
 
-3.2. se o opção for na linha do projeto o sistema deverá montar a tela 2 para a solicitação do proponente.
+2. se o opção for na linha do projeto o sistema deverá montar a tela 2 para a solicitação do proponente.
 
 O sistema deverá disponibilizar ao proponente os seguintes botão de ação para o proponente:
 

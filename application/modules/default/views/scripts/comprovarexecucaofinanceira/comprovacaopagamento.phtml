@@ -81,7 +81,6 @@
                     <?php endif; ?>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col s12">
                     <div id="incluircomprovacaoAjax">
@@ -106,6 +105,8 @@
                             <input type='hidden' name='totalComprovado' id='totalComprovado'
                                    value='<?php echo $this->itemPlanilhaAprovacao->vlComprovado ? $this->itemPlanilhaAprovacao->vlComprovado : '0'; ?>'/>
 
+                      <div class="card ">
+                        <div class="card-content">
                             <table id="tabelaItem" class="bordered">
                                 <caption>Vincular Item de Custo</caption>
                                 <thead>
@@ -127,6 +128,18 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <?php if (!$this->vrSituacao) : ?>
+                                <?php echo $this->partial('partials/tabelaItens.phtml', 'prestacao-contas', $this)?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                      <div class="card ">
+                        <div class="card-content">
 
                                 <div id="tabelaComprovante">
                                     <fieldset>
@@ -151,7 +164,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="input-field col s6">
+                                            <div class=" col s6">
                                                 <p>Tipo do Fornecedor <span style='color:red'>*</span></p>
                                                 <p>
                                                     <input
@@ -236,12 +249,17 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="input-field col s4">
+                                                <div class="input-field col s3">
                                                     <input type="text" name="dtEmissao" id="dtEmissao" null="false"
                                                            data="true" value="<?php echo $this->dtEmissao; ?>"/>
-                                                    <label>Dt. do Documento<span style='color:red'>*</span></label>
+                                                    <label>Dt. de Emiss&ccedil;&atilde;o do comprovante de despesa<span style='color:red'>*</span></label>
                                                 </div>
-                                                <div class="input-field col s4">
+                                                <div class="input-field col s3">
+                                                    <input type="text" name="dtPagamento" id="dtPagamento" null="false"
+                                                           data="true" value="<?php echo $this->dtPagamento; ?>"/>
+                                                    <label>Data do pagamento<span style='color:red'>*</span></label>
+                                                </div>
+                                                <div class="input-field col s3">
                                                     <select name="tpFormaDePagamento" id="tpFormaDePagamento"
                                                             style="width: 180px;">
                                                         <?php
@@ -259,7 +277,7 @@
                                                     </select>
                                                     <label>Forma de Pagamento<span style='color:red'>*</span></label>
                                                 </div>
-                                                <div class="input-field col s4">
+                                                <div class="input-field col s3">
                                                     <input type="text" name="nrDocumentoDePagamento"
                                                            id="nrDocumentoDePagamento" maxlength="10"
                                                            null="false" sonumero="true"
@@ -432,6 +450,8 @@
                                         </fieldset>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
                                 <table id="tableItensCusto" class="tabela linhaMaior1 sumir">
                                     <tr>
@@ -473,112 +493,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col s12">
-                    <?php if (!$this->vrSituacao) : ?>
-                        <table id="tabelaComprovantePagamento" class="bordered">
-                            <thead>
-                            <tr>
-                                <th>Produto</th>
-                                <th>Etapa</th>
-                                <th>Item</th>
-                                <th>CPF/CNPJ</th>
-                                <th>N&uacute;mero</th>
-                                <th>Tipo do Doc.</th>
-                                <th>Data Emiss&atilde;o</th>
-                                <th>Documento</th>
-                                <th>Valor Comprovado</th>
-                                <th>Editar</th>
-                                <th>Excluir</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if (empty($this->comprovantes)) : ?>
-                                <tr>
-                                    <td class="centro" colspan="10">Nenhuma comprova&ccedil;&atilde;o de pagamento
-                                        cadastrada.
-                                    </td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach ($this->comprovantes as $comprovante) : ?>
-                                    <tr>
-                                        <td><?php echo $comprovante->produtonome; ?></td>
-                                        <td><?php echo $comprovante->etapanome; ?></td>
-                                        <td><?php echo $comprovante->itemnome; ?></td>
-                                        <td nowrap><?php echo $comprovante->fornecedor->CNPJCPF; ?></td>
-                                        <td><?php echo $comprovante->nrComprovante; ?></td>
-                                        <td>
-                                            <?php if ($comprovante->idFornecedorExterior == '') : ?>
-                                                <?php echo $comprovante->tipoDocumentoNome; ?>
-                                            <?php else : ?>
-                                                <?php echo ($comprovante->tpDocumento == 6) ? 'Invoice' : 'Outros'; ?>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?php echo $comprovante->dtEmissao; ?></td>
-                                        <td>
-                                            <a href=" <?php echo $this->url(array('controller' => 'upload', 'action' => 'abrir', 'id' => $comprovante->idArquivo,)); ?> ">
-                                                <?php echo $comprovante->nmArquivo; ?>
-                                            </a>
-                                        </td>
-                                        <td><?php echo $this->currency($comprovante->vlComprovacao); ?></td>
-                                        <?php
-                                        $comprovacaoTexto = array(
-                                            1 => 'Comprova¿¿o validada',
-                                            3 => 'Comprova¿¿o recusada',
-                                        );
-                                        ?>
-                                        <?php if ($comprovante->stItemAvaliado == 4 || $comprovante->stItemAvaliado == 3): /* n¿o analisado ou recusado */ ?>
-                                        <?php if ($comprovante->stItemAvaliado == 3): ?>
-                                            <span
-                                                class="bold"><?php echo $comprovacaoTexto[$comprovante->stItemAvaliado]; ?></span>
-                                        <?php endif; ?>
-                                        <td>
-                                            <a
-                                                class="small btn btn-primary"
-                                                href="
-                                                    <?php echo $this->url(
-                                                    array(
-                                                        'controller' => 'comprovarexecucaofinanceira',
-                                                        'action' => 'comprovacaopagamento',
-                                                        'idComprovantePagamento' => $comprovante->idComprovantePagamento,
-                                                    )
-                                                );
-                                                ?>"
-                                            >
-                                                <i class="material-icons">edit</i>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a
-                                                class="small waves-effect waves-darken btn  btn-danger exclusao"
-                                                href="
-                                                    <?php echo $this->url(
-                                                    array(
-                                                        'controller' => 'comprovar-pagamento',
-                                                        'action' => 'deletar',
-                                                        'comprovante' => $comprovante->idComprovantePagamento,
-                                                    )
-                                                );
-                                                ?>">
-                                                <i class="material-icons">delete</i>
-                                                <?php else: ?>
-                                                    <span
-                                                        class="bold"><?php echo $comprovacaoTexto[$comprovante->stItemAvaliado]; ?></span>
-                                                <?php endif; ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    <?php endif; ?>
-                </div>
-            </div>
+
             <div id="desc_item"></div>
         </div>
     </div>
 </div>
-
 <iframe id="anexarArquivo" name="anexarArquivo" src="#" style="width: 300px;height: 300px;display: none;"></iframe>
 
 <div id="alerta"></div>
@@ -608,13 +527,18 @@
         $('#vlComprovadoInternacional').priceFormat({limit: 8});
     });
 </script>
+
+<script type="text/javascript" src="/public/scripts/prestacao-contas/comprovacaopagamento.js">
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         // tratamento comum
         var form = '#incluircomprovacaoAjax';
-        $('input[type!=button][type!=submit]').addClass('input_simples');
-        $('textarea').addClass('textarea_simples');
-        $('select[id!=perfilXgrupo]').addClass('select_simples');
+        /* $('input[type!=button][type!=submit]').addClass('input_simples'); */
+        /* $('textarea').addClass('textarea_simples'); */
+        /* $('select[id!=perfilXgrupo]').addClass('select_simples'); */
+
         $(form).find('[data=true]').each(function () {
             $(this).keyup(function () {
                 mascara(this, format_data);
@@ -642,13 +566,17 @@
         });
 
         $(form).find('[cnpjcpf=true]').each(function () {
+            console.log('teste1:');
             var este = this;
-            $('.' + $(este).attr('classaux')).click(function () {
+            /* $('.' + $(este).attr('classaux')).click(function () { */
+            $('.' + $(este).prop('classaux')).click(function () {
                 mascaraCNPJCPF(este);
                 buscarFornecedor(este);
             });
-            $('#' + $(este).attr('idDescricao')).attr('readonly', true);
+            /* $('#' + $(este).prop('idDescricao')).attr('readonly', true); */
+            $('#' + $(este).prop('idDescricao')).prop('readonly', true);
         });
+
         $(form).find('[cnpjcpf=true]').keyup(function () {
             mascaraCNPJCPF(this);
             buscarFornecedor(this);
@@ -656,6 +584,7 @@
 
         function mascaraCNPJCPF(este) {
             var marcado = buscarRadioMarcado(este);
+            console.log('teste');
             switch (marcado) {
                 case 'cpf':
                     $(este).val($(este).val().slice(0, 14));
@@ -673,9 +602,11 @@
         }
 
         function buscarRadioMarcado(este) {
+            console.log('teste:');
             var marcado = '';
             $('.' + $(este).attr('classaux')).each(function () {
-                if ($(this).attr('checked')) {
+                /* if ($(this).attr('checked')) { */
+                if ($(this).prop('checked')) {
                     marcado = $(this).val();
                 }
             });
@@ -1086,10 +1017,11 @@
         mascaraCNPJCPF(cnpjcpf);
     }
 
-    $3('select').material_select();
+    /* $3('select').material_select(); */
 </script>
 <script>
   $(document).ready(function() {
-    $3('select').material_select();
+    /* $3('select').material_select(); */
+   console.log($3('#tpFornecedorCpf :checked').val());
   });
 </script>

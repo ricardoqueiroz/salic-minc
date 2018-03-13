@@ -73,7 +73,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         parent::init();
 
         //recupera ID do pre projeto (proposta)
-        if (!empty ($_REQUEST['idPreProjeto'])) {
+        if (!empty($_REQUEST['idPreProjeto'])) {
             $this->idPreProjeto = $_REQUEST['idPreProjeto'];
         }
 
@@ -81,7 +81,6 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
         //$this->idUsuario = $auth->getIdentity()->usu_codigo;
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sess�o com o grupo ativo
         if (isset($auth->getIdentity()->usu_codigo)) {
-
             $this->codGrupo = $GrupoAtivo->codGrupo; // manda o grupo ativo do usu�rio para a vis�o
             $this->codOrgao = $GrupoAtivo->codOrgao; // manda o �rg�o ativo do usu�rio para a vis�o
 
@@ -316,7 +315,7 @@ class Admissibilidade_MensagemController extends MinC_Controller_Action_Abstract
 //            $this->view->title = "Perguntas: {$this->arrProjeto['NomeProjeto']} ({$this->arrProjeto['IdPRONAC']})";
             $arrConfig['idDestinatario'] = array('show' => true);
 //            if (in_array($this->arrProjeto['Situacao'], array('B02', 'B03'))) {
-            $arrConfig['idDestinatario'] = array('show' => false);
+                $arrConfig['idDestinatario'] = array('show' => false);
 //            }
         }
 

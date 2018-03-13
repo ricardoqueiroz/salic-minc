@@ -4,31 +4,28 @@
  * MensagemControllerTest
  *
  */
-class MensagemControllerTest extends MinC_Test_ControllerActionTestCase
+class Solicitacao_MensagemControllerTest extends MinC_Test_ControllerActionTestCase
 {
+    public function setUp()
+    {
+        parent::setUp();
 
-    public function testListarAction() {
+        $this->idPreProjeto = 276034;
+
         $this->autenticar();
+        $this->resetRequest()->resetResponse();
+        $this->alterarPerfil(
+            Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE,
+            Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI
+        );
+        $this->resetRequest()->resetResponse();
+    }
 
-        //reset para garantir respostas.
-        $this->resetRequest()
-            ->resetResponse();
-
-        // trocar para perfil Proponente
-        $this->request->setMethod('GET');
-        $this->dispatch('/autenticacao/perfil/alterarperfil?codGrupo=1111&codOrgao=2222');
-        $this->assertRedirectTo('/principalproponente');
-
-        //reset para garantir respostas.
-        $this->resetRequest()
-            ->resetResponse();
-
+    public function testListarAction()
+    {
         $this->dispatch("/solicitacao/mensagem/index");
-        $this->assertModule('solicitacao');
-        $this->assertController('mensagem');
-        $this->assertAction('index');
+        $this->assertUrl('solicitacao', 'mensagem', 'index');
 
-        //verifica se tela carregou corretamente
         $this->assertQuery('div.container-fluid div');
     }
 }

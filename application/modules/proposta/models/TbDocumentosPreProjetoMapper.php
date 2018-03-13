@@ -7,6 +7,7 @@
  * @package Modules/Agente
  * @subpackage Models
  *
+ * @author Ruy Junior Ferreira Silva <ruyjfs@gmail.com>
  * @since 02/10/2016
  *
  * @link http://salic.cultura.gov.br
