@@ -10,9 +10,12 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
     public function setUp()
     {
         parent::setUp();
+
+        // Marcado para refatoração futura
+        // * fixture do banco de dados com dados controlados
+        $this->idPronac = $tbReadequacao->buscarIdPronacReadequacaoEmAndamento(tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
         
-        $this->idPronac = '209649';
-        $this->hashPronac = '501eac548e7d4fa987034573abc6e179MjA4OTQ3ZUA3NWVmUiEzNDUwb3RT';
+        $this->hashPronac = Seguranca::encrypt($this->idPronac);
         
         $this->autenticar();
         
@@ -37,6 +40,24 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         $this->dispatch('/readequacoes?idPronac=' . $this->hashPronac);
         $this->assertUrl('default','readequacoes', 'index');
     }
+
+    /**
+     * TestIndexIdUfAction
+     *
+     * @access public
+     * @return void
+     */    
+    public function testIndexIdUfAction()
+    {
+        $iduf = 43; // RS
+        
+        $this->request->setMethod('POST')
+            ->setPost([
+                'iduf' => $iduf
+            ]);        
+        $this->dispatch('/readequacoes?idPronac=' . $this->hashPronac);
+        //        $this->assertEquals();
+    }
     
     /**
      * TestPlanilhaOrcamentariaAction
@@ -58,24 +79,13 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
      */    
     public function testPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
     {
-        // puxar um projetos com condições não satisfeitos
-        // verificar que não consegue acessar página de readequação de planilha
+        $idPronac = $this->buscaProjetoDisponivelParaReadequacaoPlanilha();
         
-        /* Condições para realizar uma readequação de planilha orçamentária
-         
-         Regras
-         - NÃO POSSUIR ((readequação OU remanejamento 50%) E (em andamento)))
-         - POSSUIR (
-         (contrato de patrocínio) OU
-         ((plano de execução imediata) E
-         (anual OU bienal OU trienal OU quadrienal)
-         ))
-         - POSSUIR (plano de execução vigente))
-         
-         Ação
-         - ACESSAR url
+        $tbReadequacao = new tbReadequacao();
+        $possuiReadequacao = $tbReadequacao->existeReadequacaoEmAndamento($idPronac);
+        
+        $this->assertTrue($possuiReadequacao);
 
-        */
     }
     
 }

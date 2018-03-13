@@ -283,6 +283,36 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         return $this->fetchAll($select);
     }
 
+
+    /**
+     * Método para buscar id da readequacao ativa
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idTipoReadequacao
+     * @return integer
+     */    
+    public function buscarIdReadequacaoAtiva($idPronac, $idTipoReadequacao)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            'a.idReadequacao');
+        
+        $select->where('a.stEstado = ?', self::ST_ESTADO_EM_ANDAMENTO);
+        $select->where('a.idPronac = ?' , $idPronac);
+        $select->where('siEncaminhamento = ?', 12);
+        $select->where('a.idTipoReadequacao = ?', $idTipoReadequacao);
+        
+        $result = $this->fetchAll($select);
+
+        if (count($result)) {
+            return $result[0]['idReadequacao'];
+        } else {
+            return false;
+        }
+    }
+    
     /*
      * Alterada em 06/03/14
      * @author: Jefferson Alessandro
@@ -1162,12 +1192,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         
         $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento($idPronac);
         $contaLiberada = $liberacao->contaLiberada($idPronac);
-        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
-        
-        $periodoExecucaoVigente = (
-            $periodoExecucao->DtInicioExecucao < date('d/m/Y') &&
-            $periodoExecucao->DtFimExecucao > date('d/m/Y')
-        ) ? true : false;
+        $periodoExecucaoVigente = $projeto->verificarPeriodoExecucaoVigente($idPronac);
         
         if (!$existeReadequacaoEmAndamento &&
             $contaLiberada &&
@@ -1192,14 +1217,8 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         
         $existeReadequacaoEmAndamento = $this->existeReadequacaoEmAndamento($idPronac);
         $contaLiberada = $liberacao->contaLiberada($idPronac);
-        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
-        $dataCorrente = strtotime(date('d/m/Y'));
+        $periodoExecucaoVigente = $projeto->verificarPeriodoExecucaoVigente($idPronac);
         
-        $periodoExecucaoVigente = (
-            strtotime($periodoExecucao->DtInicioExecucao) < $dataCorrente &&
-            strtotime($periodoExecucao->DtFimExecucao) < $dataCorrente
-        ) ? true : false;
-
         if ($existeReadequacaoEmAndamento &&
             $contaLiberada &&
             $periodoExecucaoVigente) {
@@ -1226,13 +1245,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
             self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
         );
         $contaLiberada = $liberacao->contaLiberada($idPronac);
-        $periodoExecucao = $projeto->buscarPeriodoExecucao($idPronac);
-        $dataCorrente = strtotime(date('d/m/Y'));
-        
-        $periodoExecucaoVigente = (
-            strtotime($periodoExecucao->DtInicioExecucao) < $dataCorrente &&
-            strtotime($periodoExecucao->DtFimExecucao) < $dataCorrente
-        ) ? true : false;
+        $periodoExecucaoVigente = $projeto->verificarPeriodoExecucaoVigente($idPronac);
         
         if ($existeReadequacaoEmAndamento &&
             $contaLiberada &&
@@ -1242,5 +1255,42 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         } else {
             return false;
         }        
+    }
+
+    /**
+     * Método para retornar idPronac do projeto com readequação em andamento mais recentemente criada, com, prazo de execução vigente
+     * @param integer $idTipoReadequacao
+     * @return integer
+     */
+    public function buscarIdPronacReadequacaoEmAndamento($idTipoReadequacao)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('r' => $this->_name),
+            'r.idPronac'
+        );
+
+        $select->joinInner(
+            array('p' => 'Projetos'),
+            'r.idPronac = p.idPronac',
+            array(''),
+            $this->_schema
+        );
+        
+        $select->where('r.idTipoReadequacao = ?', $idTipoReadequacao);
+        $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
+        $select->where(new Zend_Db_Expr('p.DtInicioExecucao < GETDATE()'));
+        $select->where(new Zend_Db_Expr('p.DtFimExecucao > GETDATE()'));
+        $select->order('r.dtSolicitacao DESC');
+        $select->limit(1);
+        
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return $result->current()['idPronac'];
+        } else {
+            return false;
+        }
     }
 }

@@ -28,4 +28,65 @@ class TbPlanilhaAprovacaoTest extends MinC_Test_ModelTestCase
         $this->assertNotEmpty($result->current()['Total']);
     }
 
+    public function testItemJaAdicionado() {
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+
+        // Marcado para refatoração futura
+        // * fixture do banco de dados com dados controlados
+        $nrFonteRecurso = 109;
+        $idProduto = 51;
+        $idEtapa = 1;
+        $idMunicipioDespesa = 431490;
+        $idPlanilhaItem = 35;
+        
+        $this->assertTrue(
+            $tbPlanilhaAprovacao->itemJaAdicionado(
+                $this->idPronac,
+                $nrFonteRecurso,
+                $idProduto,
+                $idEtapa,
+                $idMunicipioDespesa,
+                $idPlanilhaItem
+            )
+        );
+    }
+    
+    public function testValorTotalPlanilhaAtiva() {
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $valorTotalPlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($this->idPronac);
+                
+        $this->assertNotEmpty($valorTotalPlanilhaAtiva);
+    }
+
+    public function testValorTotalPlanilhaReadequada() {
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+
+        $tbReadequacao = new tbReadequacao();
+        $idReadequacao = $tbReadequacao->buscarIdReadequacaoAtiva($this->idPronac, tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+        
+        $valorTotalPlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada($this->idPronac, $idReadequacao);
+                
+        $this->assertNotEmpty($valorTotalPlanilhaReadequada);
+    }
+    
+    public function testBuscarPlanilhaAtiva() {
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $planilhaAtiva = $tbPlanilhaAprovacao->buscarPlanilhaAtiva($this->idPronac);
+
+        $this->assertNotEmpty($planilhaAtiva);
+    }
+
+    public function testBuscarPlanilhaReadequadaEmEdicao() {
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $tbReadequacao = new tbReadequacao();
+        
+        $idReadequacao = $tbReadequacao->buscarIdReadequacaoAtiva($this->idPronac, tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+        $planilhaReadequadaEmEdicao = $tbPlanilhaAprovacao->buscarPlanilhaReadequadaEmEdicao($this->idPronac, $idReadequacao);
+        
+        $this->assertEmpty($planilhaReadequadaEmEdicao);
+    }        
 }
