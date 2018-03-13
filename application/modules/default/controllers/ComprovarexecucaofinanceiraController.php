@@ -779,12 +779,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         }
     }
 
-    /*
-     * Pï¿½gina de atualizar comprovaï¿½ï¿½o de pagamento
-     * @access public
-     * @param void
-     * @return void
-     */
     public function atualizarcomprovacaopagamentoAction()
     {
         try {
@@ -798,12 +792,11 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             if (!in_array($paginaRedirecionar, $redirectsValidos)) {
                 $paginaRedirecionar = 'comprovantes-recusados';
             }
-            
+
             if ($pais == 'Brasil') {
                 $comprovantePagamentoModel = new ComprovantePagamento();
                 $comprovantePagamento = $comprovantePagamentoModel->find($idComprovantePagamento)->current();
-                
-                # iniciando os trabalhos com objeto
+
                 $comprovantePagamentoModel = new ComprovantePagamento(
                     $idComprovantePagamento,
                     $request->getParam('idAgente'),
@@ -814,7 +807,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     $request->getParam('dtEmissao') ? new DateTime(data::dataAmericana($request->getParam('dtEmissao'))) : null,
                     $comprovantePagamento->idArquivo,
                     $request->getParam('tpFormaDePagamento'),
-                    new DateTime(),
+                    $request->getParam('dtPagamento') ? new DateTime(data::dataAmericana($request->getParam('dtPagamento'))) : null,
                     str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovado'))),
                     $request->getParam('nrDocumentoDePagamento'),
                     $request->getParam('dsJustificativa')
@@ -828,20 +821,20 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
                 // internacional
             } else {
-                
+
                 // verificar se alterou alguma coisa do idAgente
                 $fornecedorInternacional = new FornecedorInvoice();
-                
+
                 $dadosFornecedor = array();
                 $dadosFornecedor['dsNome'] = $pais;
                 $dadosFornecedor['dsEndereco'] = $request->getParam('nomeRazaoSocialInternacional');
                 $dadosFornecedor['dsPais'] = $request->getParam('enderecoInternacional');
-                
+
                 $fornecedorInternacional->update(
                     $dadosFornecedor,
                     sprintf('idFornecedorExterior = %d', $request->getParam('idAgente'))
                 );
-                
+
                 $comprovantePagamentoModel = new ComprovantePagamentoInvoice(
                     $idComprovantePagamento,
                     $request->getParam('idAgente'),
@@ -854,7 +847,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     str_replace(',', '.', str_replace('.', '', $request->getParam('vlComprovadoInternacional'))),
                     $request->getParam('dsJustificativaInternacional')
                 );
-                
+
                 if ($_FILES['arquivoInternacional']['name'] != '') {
                     $comprovantePagamentoModel->atualizar(4, true);
                 } else {
@@ -862,10 +855,10 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                     $comprovantePagamentoModel->atualizar(4);
                 }
             }
-            
+
             # View Parameters
             $this->view->comprovantePagamento = $comprovantePagamentoModel->toStdclass();
-            
+
             $this->_helper->flashMessenger('Comprovante enviado com sucesso.');
             $this->_helper->flashMessengerType('CONFIRM');
             $this->_redirect(
@@ -1789,21 +1782,21 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         //Adicionado para ser usado como novo parametro do metodo pesquisarComprovantePorItem
         $idPronac = $this->getRequest()->getParam('idpronac');
         $idComprovantePagamento = $this->getRequest()->getParam('idComprovantePagamento');
-        
+
         $planilhaItemModel = new PlanilhaItem();
         $produtoModel = new Produto();
         $etapaModel = new PlanilhaEtapa();
         $itemModel = new PlanilhaItem();
 
         $itemPlanilhaAprovacao = $planilhaItemModel->buscarItemDaAprovacao($idPlanilhaAprovacao);
-        
+
         $produto = $produtoModel->find($itemPlanilhaAprovacao->idProduto)->current();
         $etapa = $etapaModel->find($itemPlanilhaAprovacao->idEtapa)->current();
         $item = $itemModel->find($itemPlanilhaAprovacao->idPlanilhaItem)->current();
-        
+
         $fornecedorModel = new FornecedorModel();
         $fornecedor = $fornecedorModel->pesquisarFornecedorItem($idPlanilhaAprovacao);
-        
+
         if ($fornecedor) {
             $fornecedor = (object) array_map('utf8_encode', $fornecedor);
 
@@ -1816,7 +1809,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
 
         $comprovantePagamentoModel = new ComprovantePagamento();
         $comprovantesDePagamento = $comprovantePagamentoModel->pesquisarComprovantePorItem($item->idPlanilhaItens, $idPronac, $etapa->idPlanilhaEtapa, $itemPlanilhaAprovacao->idProduto, $itemPlanilhaAprovacao->idUFDespesa, $itemPlanilhaAprovacao->idMunicipioDespesa); //ID Recuperado
-        
+
         array_walk($comprovantesDePagamento, function (&$comprovanteDePagamento) use ($fornecedorModel) {
             $comprovanteDePagamento = (object) $comprovanteDePagamento;
 
@@ -1833,11 +1826,11 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                 $fornecedor = new stdClass();
                 $fornecedor->CNPJCPF = '<em>Fornecedor estrangeiro</em>';
             }
-            
+
             $comprovanteDePagamento->fornecedor = $fornecedor;
             unset($comprovanteDePagamento->idFornecedor);
         });
-        
+
         $pais = new Pais();
         $paises = $pais->buscar(array(), 'Descricao');
 
@@ -1847,7 +1840,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->itemPlanilhaAprovacao = $itemPlanilhaAprovacao;
         $this->view->comprovantes = $comprovantesDePagamento;
         $this->view->paises = $paises;
-        
+
         if ($this->getRequest()->isPost()) {
             $this->view->vlComprovado = filter_input(INPUT_POST, 'vlComprovado');
             $this->view->idAgente = filter_input(INPUT_POST, 'idAgente');
@@ -1862,7 +1855,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             $this->view->dsJustificativa = filter_input(INPUT_POST, 'dsJustificativa');
         } elseif ($idComprovantePagamento) {
             $comprovanteAtualizar = current($comprovantePagamentoModel->pesquisarComprovante($idComprovantePagamento));
-            
+
             $this->view->idComprovantePagamento = $idComprovantePagamento;
             $this->view->vlComprovacao = $comprovanteAtualizar['vlComprovacao'];
 
@@ -1871,7 +1864,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                 $fornecedor = $fornecedorModel->pesquisarFornecedor($comprovanteAtualizar['idFornecedor']);
                 $this->view->paisFornecedor = 'Brasil';
                 $this->view->exterior = false;
-                
+
                 $this->view->idAgente = $comprovanteAtualizar['idFornecedor'];
                 $fornecedor->usaCnpj = 14 == strlen($fornecedor->CNPJCPF);
                 $this->view->idPlanilhaAprovacao = $idPlanilhaAprovacao;
@@ -1890,7 +1883,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
                 $this->view->dsJustificativa = $comprovanteAtualizar['dsJustificativa'];
             } elseif ($comprovanteAtualizar['idFornecedorExterior']) {
                 $fornecedorInvoice = new FornecedorInvoice();
-                
+
                 $where = array();
                 $where['idFornecedorExterior = ? '] = $comprovanteAtualizar['idFornecedorExterior'];
                 $fornecedor = $fornecedorInvoice->buscar($where);
@@ -1917,12 +1910,6 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->tipoDocumentoConteudo = $this->tipoDocumento;
     }
 
-    /*
-     * Pï¿½gina de comprovaï¿½ï¿½o de pagamento recusado
-     * @access public
-     * @param void
-     * @return void
-     */
     public function comprovacaopagamentoRecusadoAction()
     {
         $idPlanilhaAprovacao = $this->getRequest()->getParam('idPlanilhaAprovacao');
@@ -1984,10 +1971,12 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
             }
 
             $dataEmissao = $comprovantePagamento->dtEmissao ? new DateTime(data::dataAmericana($comprovantePagamento->dtEmissao)) : new DateTime();
+            $dataPagamento = $comprovantePagamento->dtPagamento ? new DateTime($comprovantePagamento->dtPagamento) : new DateTime();
             $this->view->tpDocumento = $comprovantePagamento->tpDocumento;
             $this->view->nrComprovante = $comprovantePagamento->nrComprovante;
             $this->view->nrSerie = $comprovantePagamento->nrSerie;
             $this->view->dtEmissao = $dataEmissao->format('d/m/Y');
+            $this->view->dtPagamento = $dataPagamento->format('d/m/Y');
             $this->view->tpFormaDePagamento = $comprovantePagamento->tpFormaDePagamento;
             $this->view->nrDocumentoDePagamento = $comprovantePagamento->nrDocumentoDePagamento;
             $this->view->dsJustificativa = $comprovantePagamento->dsJustificativa;
@@ -2663,7 +2652,7 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
         $this->view->idusuario = Zend_Auth::getInstance()->getIdentity()->IdUsuario;
     }
 
- 
+
     /**
      * Função criada a pedido da Área Finalistica em 13/04/2016
      * @author: Fernão Lopes Ginez de Lara
@@ -2674,11 +2663,11 @@ class ComprovarexecucaofinanceiraController extends MinC_Controller_Action_Abstr
     public function enviarcomprovacaopagamentoAction()
     {
         $idPronac = $this->getRequest()->getParam('idPronac');
-        
+
         try {
             $comprovantePagamentoModel = new ComprovantePagamentoxPlanilhaAprovacao();
             $comprovantePagamento = $comprovantePagamentoModel->atualizarComprovanteRecusado($idPronac);
-            
+
             $this->_helper->flashMessenger('Comprovantes enviados com sucesso!');
             $this->_redirect(
                 str_replace(

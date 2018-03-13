@@ -116,11 +116,8 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         $select->joinInner(
                 array("b" => "tbComprovantePagamento"),
-
                 "a.idComprovantePagamento = b.idComprovantePagamento",
-
                 array(),
-
                 "BDCORPORATIVO.scSAC"
             );
         $select->joinLeft(
@@ -163,7 +160,7 @@ class tbComprovantePagamentoxPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->order("e.Descricao");
 
         return $this->fetchAll($select);
-    } // fecha m�todo buscarDados()
+    }
 
     public function pagamentosPorUFMunicipio($idPronac)
     {
