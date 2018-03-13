@@ -2312,6 +2312,37 @@ class Projetos extends MinC_Db_Table_Abstract
     // fecha metodo buscarPeriodoExecucao()
 
     /**
+     * Método que retorna se o período de um projeto está vigente ou não
+     * @param integer $idPronac
+     * @return bool
+     */
+    public function verificarPeriodoExecucaoVigente($idPronac)
+    {
+        $periodoExecucao = $this->buscarPeriodoExecucao($idPronac);
+        $dataCorrente = strtotime(date('d-m-Y'));
+        
+        $periodoExecucaoVigente = (
+            strtotime(
+                str_replace(
+                    '/',
+                    '-',
+                    $periodoExecucao->DtInicioExecucao
+                )
+            ) <= $dataCorrente
+            &&
+            strtotime(
+                str_replace(
+                    '/',
+                    '-',
+                    $periodoExecucao->DtFimExecucao
+                )
+            ) >= $dataCorrente
+        ) ? true : false;
+        
+        return $periodoExecucaoVigente;
+    }
+    
+    /**
      * Metodo para buscar o per?odo de capta??o de um determinado projeto
      * @access public
      * @param integer $idPronac

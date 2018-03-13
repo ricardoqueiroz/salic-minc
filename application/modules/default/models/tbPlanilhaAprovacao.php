@@ -54,6 +54,58 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
         return $this->fetchAll($slct);
     }
 
+    /**
+     * Função para buscar a planilha ativa
+     * @param integer $idPronac
+     * @return mixed
+     */
+    public function buscarPlanilhaAtiva($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+
+        $select->from(
+            array('a' => $this->_name),
+            '*'
+        );
+        
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('a.StAtivo = ?', 'S');
+        
+        return $this->fetchAll($select);        
+    }
+
+    /**
+     * Função para buscar a planilha ativa
+     * @param integer $idPronac
+     * @param integer $idReadequacao
+     * @return mixed
+     */
+    public function buscarPlanilhaReadequadaEmEdicao($idPronac, $idReadequacao)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+
+        $select->from(
+            array('a' => $this->_name),
+            '*'
+        );
+
+        $select->joinInner(
+            array('r' => 'tbReadequacao'),
+            'a.idReadequacao = r.idReadequacao',
+            array(''),
+            'SAC.dbo'
+        );
+        
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('a.StAtivo = ?', 'S');
+        $select->where('r.stEstado = ?', 0);
+
+        return $this->fetchAll($select);
+    }   
+    
+
     public function copiandoPlanilhaRecurso($idPronac)
     {
         $sql = "INSERT INTO SAC.dbo.tbPlanilhaAprovacao
@@ -194,4 +246,95 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
+
+    /**
+     * Método para verificar se existe algum item já cadastrado na mesma fonte, produto, etapa e município
+     * @access public
+     * @param integer $idPronac
+     * @param integer $nrFonteRecurso
+     * @param integer $idEtapa
+     * @param integer $idMunicipioDespesa
+     * @param integer $idPlanilhaItem
+     * @return boolean
+     */
+    public function itemJaAdicionado(
+        $idPronac,
+        $nrFonteRecurso,
+        $idProduto,
+        $idEtapa,
+        $idMunicipioDespesa,
+        $idPlanilhaItem
+    ) {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            'a.idPlanilhaAprovacao');
+        
+        $select->where('a.IdPRONAC = ?', $idPronac);
+        $select->where('a.nrFonteRecurso = ?', $nrFonteRecurso);
+        $select->where('a.idProduto = ?', $idProduto);
+        $select->where('a.idEtapa = ?', $idEtapa);
+        $select->where('a.idMunicipioDespesa = ?', $idMunicipioDespesa);
+        $select->where('a.idPlanilhaItem = ?', $idPlanilhaItem);
+        $select->where('a.stAtivo = ?', 'S');
+
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Método para retornar o valor total da planilha ativa
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idPlanilhaItem
+     * @return boolean
+     */
+    public function valorTotalPlanilhaAtiva($idPronac) {
+        
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            array(
+                new Zend_Db_Expr('ROUND(SUM(a.qtItem*a.nrOcorrencia*a.vlUnitario), 2) AS Total')
+            )
+        );
+        $select->where('a.idPronac = ?', $idPronac);
+        $select->where('a.stAtivo = ?', 'S');
+                
+        return $this->fetchAll($select);
+    }
+
+
+    /**
+     * Método para retornar o valor total da planilha readequada
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idReadequacao
+     * @return boolean
+     */
+    public function valorTotalPlanilhaReadequada($idPronac, $idReadequacao) {
+        
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            array(
+                new Zend_Db_Expr('ROUND(SUM(a.qtItem*a.nrOcorrencia*a.vlUnitario), 2) AS Total')
+            )
+        );
+        
+        $select->where('a.tpPlanilha = ?', 'SR');
+        $select->where('a.stAtivo = ?', 'N');
+        $select->where('a.tpAcao != ?', 'E');
+        $select->where('a.idReadequacao = ?', $idReadequacao);
+        
+        return $this->fetchAll($select);
+    }    
 }

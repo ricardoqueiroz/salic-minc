@@ -327,50 +327,13 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             $idPronac = Seguranca::dencrypt($idPronac);
         }
 
-        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $verificarPlanilhaSR = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR'));
-
-        //VERIFICA SE JÁ POSSUI A PLANILHA TIPO SR. SE NÃO TIVER, CRIA, E DEPOIS DELETA O ITEM DESEJADO.
-        if (count($verificarPlanilhaSR)==0) {
-            $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-            $planilhaSR = array();
-            foreach ($planilhaAtiva as $value) {
-                $planilhaSR['tpPlanilha'] = 'SR';
-                $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
-                $planilhaSR['idProduto'] = $value['idProduto'];
-                $planilhaSR['idEtapa'] = $value['idEtapa'];
-                $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                $planilhaSR['dsItem'] = $value['dsItem'];
-                $planilhaSR['idUnidade'] = $value['idUnidade'];
-                $planilhaSR['qtItem'] = $value['qtItem'];
-                $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
-                $planilhaSR['vlUnitario'] = $value['vlUnitario'];
-                $planilhaSR['qtDias'] = $value['qtDias'];
-                $planilhaSR['tpDespesa'] = $value['tpDespesa'];
-                $planilhaSR['tpPessoa'] = $value['tpPessoa'];
-                $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
-                $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
-                $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                $planilhaSR['dsJustificativa'] = null;
-                $planilhaSR['idAgente'] = 0;
-                $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
-                $planilhaSR['idReadequacao'] = $value['idReadequacao'];
-                $planilhaSR['tpAcao'] = 'N';
-                $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                $planilhaSR['stAtivo'] = 'N';
-                $tbPlanilhaAprovacao->inserir($planilhaSR);
-            }
-        }
-
         /* DADOS DO ITEM PARA EXCLUSAO LÓGICA DO ITEM DA READEQUACAO */
         $dados = array();
         $dados['tpAcao'] = 'E';
 
         $whereIdPlanilha = "idPlanilhaAprovacaoPai = $idPlanilhaAprovacao";
+        
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();        
         $itemTipoPlanilha = $tbPlanilhaAprovacao->buscar(array('idPlanilhaAprovacao=?'=>$idPlanilhaAprovacao))->current();
 
         if ($itemTipoPlanilha->tpAcao == 'I') {
@@ -405,46 +368,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
-        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $verificarPlanilhaSR = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR'));
-
-        //VERIFICA SE JA POSSUI A PLANILHA TIPO SR. SE NÃO TIVER, COPIA A ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
-        if (count($verificarPlanilhaSR)==0) {
-            $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-            $planilhaSR = array();
-            foreach ($planilhaAtiva as $value) {
-                $planilhaSR['tpPlanilha'] = 'SR';
-                $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
-                $planilhaSR['idProduto'] = $value['idProduto'];
-                $planilhaSR['idEtapa'] = $value['idEtapa'];
-                $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                $planilhaSR['dsItem'] = $value['dsItem'];
-                $planilhaSR['idUnidade'] = $value['idUnidade'];
-                $planilhaSR['qtItem'] = $value['qtItem'];
-                $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
-                $planilhaSR['vlUnitario'] = $value['vlUnitario'];
-                $planilhaSR['qtDias'] = $value['qtDias'];
-                $planilhaSR['tpDespesa'] = $value['tpDespesa'];
-                $planilhaSR['tpPessoa'] = $value['tpPessoa'];
-                $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
-                $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
-                $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                $planilhaSR['dsJustificativa'] = null;
-                $planilhaSR['idAgente'] = 0;
-                $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
-                $planilhaSR['idReadequacao'] = $value['idReadequacao'];
-                $planilhaSR['tpAcao'] = 'N';
-                $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                $planilhaSR['stAtivo'] = 'N';
-                $tbPlanilhaAprovacao->inserir($planilhaSR);
-            }
-        }
-
+        
         $idAgente = 0;
         $auth = Zend_Auth::getInstance(); // pega a autenticação
         $tblAgente = new Agente_Model_DbTable_Agentes();
@@ -456,38 +380,64 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $newValorUnitario = str_replace('.', '', $_POST['newValorUnitario']);
         $newValorUnitario = str_replace(',', '.', $newValorUnitario);
 
-        /* DADOS DO ITEM PARA INCLUSÃO DA READEQUAÇÃO */
-        $dadosInclusao = array();
-        $dadosInclusao['tpPlanilha'] = 'SR';
-        $dadosInclusao['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-        $dadosInclusao['IdPRONAC'] = $idPronac;
-        $dadosInclusao['idProduto'] = $_POST['newProduto'];
-        $dadosInclusao['idEtapa'] = $_POST['newEtapa'];
-        $dadosInclusao['idPlanilhaItem'] = $_POST['newItem'];
-        $dadosInclusao['dsItem'] = '';
-        $dadosInclusao['idUnidade'] = $_POST['newUnidade'];
-        $dadosInclusao['qtItem'] = $_POST['newQuantidade'];
-        $dadosInclusao['nrOcorrencia'] = $_POST['newOcorrencia'];
-        $dadosInclusao['vlUnitario'] = $newValorUnitario;
-        $dadosInclusao['qtDias'] = $_POST['newDias'];
-        $dadosInclusao['tpDespesa'] = 0;
-        $dadosInclusao['tpPessoa'] = 0;
-        $dadosInclusao['nrContraPartida'] = 0;
-        $dadosInclusao['nrFonteRecurso'] = $_POST['newRecursos'];
-        $dadosInclusao['idUFDespesa'] = $_POST['newUF'];
-        $dadosInclusao['idMunicipioDespesa'] = $_POST['newMunicipio'];
-        $dadosInclusao['dsJustificativa'] = utf8_decode($_POST['newJustificativa']);
-        $dadosInclusao['idAgente'] = $idAgente;
-        $dadosInclusao['stAtivo'] = 'N';
-        $dadosInclusao['tpAcao'] = 'I';
-        $dadosInclusao['idReadequacao'] = $_POST['idReadequacao'];
+        $nrFonteRecurso = $this->_request->getParam("newRecursos");
+        $idProduto = $this->_request->getParam("newProduto");
+        $idEtapa = $this->_request->getParam("newEtapa");
+        $idPlanilhaItem = $this->_request->getParam("newItem");
+        $idMunicipioDespesa = $this->_request->getParam("newMunicipio");
 
-        $insert = $tbPlanilhaAprovacao->inserir($dadosInclusao);
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();        
+        $existeItemSemelhante = $tbPlanilhaAprovacao->itemJaAdicionado(
+            $idPronac,
+            $nrFonteRecurso,
+            $idProduto,
+            $idEtapa,
+            $idMunicipioDespesa,
+            $idPlanilhaItem
+        );
 
-        if ($insert) {
-            $this->_helper->json(['resposta' => true]);
+        if ($existeItemSemelhante) {
+            $this->_helper->json(
+                array(
+                    'resposta' => false,
+                    'msg' => 'ITEM DUPLICADO: Já existe um item igual na mesma fonte / produto / etapa / município.'
+                )
+            );
         } else {
-            $this->_helper->json(['resposta'=> false]);
+            
+            /* DADOS DO ITEM PARA INCLUSÃO DA READEQUAÇÃO */
+            $dadosInclusao = array();
+            $dadosInclusao['tpPlanilha'] = 'SR';
+            $dadosInclusao['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
+            $dadosInclusao['IdPRONAC'] = $idPronac;
+            $dadosInclusao['idProduto'] = $idProduto;
+            $dadosInclusao['idEtapa'] = $idEtapa;
+            $dadosInclusao['idPlanilhaItem'] = $idPlanilhaItem;
+            $dadosInclusao['dsItem'] = '';
+            $dadosInclusao['idUnidade'] = $this->_request->getParam("newUnidade");
+            $dadosInclusao['qtItem'] = $this->_request->getParam("newQuantidade");$_POST['newQuantidade'];
+            $dadosInclusao['nrOcorrencia'] = $this->_request->getParam("newOcorrencia");
+            $dadosInclusao['vlUnitario'] = $newValorUnitario;
+            $dadosInclusao['qtDias'] = $this->_request->getParam("newDias");
+            $dadosInclusao['tpDespesa'] = 0;
+            $dadosInclusao['tpPessoa'] = 0;
+            $dadosInclusao['nrContraPartida'] = 0;
+            $dadosInclusao['nrFonteRecurso'] = $nrFonteRecurso;
+            $dadosInclusao['idUFDespesa'] = $this->_request->getParam("newUF");
+            $dadosInclusao['idMunicipioDespesa'] = $idMunicipioDespesa;
+            $dadosInclusao['dsJustificativa'] = utf8_decode($this->_request->getParam("newJustificativa"));
+            $dadosInclusao['idAgente'] = $idAgente;
+            $dadosInclusao['stAtivo'] = 'N';
+            $dadosInclusao['tpAcao'] = 'I';
+            $dadosInclusao['idReadequacao'] = $this->_request->getParam("idReadequacao");
+            
+            $insert = $tbPlanilhaAprovacao->inserir($dadosInclusao);
+            
+            if ($insert) {
+                $this->_helper->json(['resposta' => true]);
+            } else {
+                $this->_helper->json(['resposta'=> false]);
+            }
         }
     }
 
@@ -519,43 +469,6 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         }
 
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $verificarPlanilhaSR = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR'));
-
-        if (count($verificarPlanilhaSR)==0) {
-            $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-            $planilhaSR = array();
-            foreach ($planilhaAtiva as $value) {
-                $planilhaSR['tpPlanilha'] = 'SR';
-                $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
-                $planilhaSR['idProduto'] = $value['idProduto'];
-                $planilhaSR['idEtapa'] = $value['idEtapa'];
-                $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                $planilhaSR['dsItem'] = $value['dsItem'];
-                $planilhaSR['idUnidade'] = $value['idUnidade'];
-                $planilhaSR['qtItem'] = $value['qtItem'];
-                $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
-                $planilhaSR['vlUnitario'] = $value['vlUnitario'];
-                $planilhaSR['qtDias'] = $value['qtDias'];
-                $planilhaSR['tpDespesa'] = $value['tpDespesa'];
-                $planilhaSR['tpPessoa'] = $value['tpPessoa'];
-                $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
-                $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
-                $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                $planilhaSR['dsJustificativa'] = null;
-                $planilhaSR['idAgente'] = 0;
-                $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
-                $planilhaSR['idReadequacao'] = $value['idReadequacao'];
-                $planilhaSR['tpAcao'] = 'N';
-                $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                $planilhaSR['stAtivo'] = 'N';
-                $tbPlanilhaAprovacao->inserir($planilhaSR);
-            }
-        }
-
         $itemTipoPlanilha = $tbPlanilhaAprovacao->buscar(array('idPlanilhaAprovacao=?'=>$_POST['idPlanilha']))->current();
         if ($itemTipoPlanilha->tpPlanilha == 'SR') {
             $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR', 'idPlanilhaAprovacao=?'=>$_POST['idPlanilha']))->current();
@@ -908,41 +821,23 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
     public function carregarValorEntrePlanilhasAction()
     {
-        $auth = Zend_Auth::getInstance(); // pega a autenticacao
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $get = Zend_Registry::get('get');
+        $auth = Zend_Auth::getInstance();
+        $this->_helper->layout->disableLayout();
         $idPronac = $this->_request->getParam("idPronac");
+        
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
+        
         $tbReadequacao = new tbReadequacao();
-        $resultReadequacao = $tbReadequacao->buscar(
-            array(
-                'idPronac=?'=>$idPronac,
-                'siEncaminhamento=?'=>12,
-                'stEstado=?'=>0,
-                'idTipoReadequacao =?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
-            ))->current();
-
+        $idReadequacao = $tbReadequacao->buscarIdReadequacaoAtiva(
+            $idPronac,
+            tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+        );
+        
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-
-        //BUSCAR VALOR TOTAL DA PLANILHA ATIVA
-        $where = array();
-        $where['a.IdPRONAC = ?'] = $idPronac;
-        $where['a.stAtivo = ?'] = 'S';
-        
-        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-        
-        //BUSCAR VALOR TOTAL DA PLANILHA DE READEQUADA
-        $where = array();
-        $where['a.IdPRONAC = ?'] = $idPronac;
-        $where['a.tpPlanilha = ?'] = 'SR';
-        $where['a.stAtivo = ?'] = 'N';
-        $where['a.tpAcao != ?'] = 'E';
-        $where['a.idReadequacao = ?'] = $resultReadequacao['idReadequacao'];
-
-        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
+        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($idPronac)->current();
+        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada($idPronac, $idReadequacao)->current();
 
         if ($PlanilhaReadequada->Total > 0) {
             if ($PlanilhaAtiva->Total == $PlanilhaReadequada->Total) {
@@ -4088,7 +3983,8 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             $this->view->readequacao = $tbReadequacao->readequacoesCadastradasProponente(array(
                 'a.idPronac = ?'=>$idPronac,
                 'a.siEncaminhamento = ?'=>12,
-                'a.idTipoReadequacao = ?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+                'a.idTipoReadequacao = ?' => tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA,
+                'a.stEstado = ?' => tbReadequacao::ST_ESTADO_EM_ANDAMENTO
             ), array(1));
         } else {
             parent::message("N&uacute;mero Pronac inv&aacute;lido!", "principalproponente", "ERROR");
@@ -4096,7 +3992,94 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
     }
 
 
-    /*
+    /**
+     * Método que copia planilha associando a um idReadequacao
+     * @access private
+     * @param integer $idPronac
+     * @param integer $idReadequacao
+     * @return Bool
+     */
+    private function copiarPlanilhas($idPronac, $idReadequacao)
+    {
+        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+        $planilhaSR = array();
+        
+        try {
+            $planilhaAtiva = $tbPlanilhaAprovacao->buscarPlanilhaAtiva($idPronac);
+            
+            foreach ($planilhaAtiva as $value) {
+                $planilhaSR['tpPlanilha'] = 'SR';
+                $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
+                $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
+                $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
+                $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
+                $planilhaSR['idProduto'] = $value['idProduto'];
+                $planilhaSR['idEtapa'] = $value['idEtapa'];
+                $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
+                $planilhaSR['dsItem'] = $value['dsItem'];
+                $planilhaSR['idUnidade'] = $value['idUnidade'];
+                $planilhaSR['qtItem'] = $value['qtItem'];
+                $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
+                $planilhaSR['vlUnitario'] = $value['vlUnitario'];
+                $planilhaSR['qtDias'] = $value['qtDias'];
+                $planilhaSR['tpDespesa'] = $value['tpDespesa'];
+                $planilhaSR['tpPessoa'] = $value['tpPessoa'];
+                $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
+                $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
+                $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
+                $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
+                $planilhaSR['dsJustificativa'] = null;
+                $planilhaSR['idAgente'] = 0;
+                $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
+                $planilhaSR['idReadequacao'] = $idReadequacao;
+                $planilhaSR['tpAcao'] = 'N';
+                $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
+                $planilhaSR['stAtivo'] = 'N';
+                
+                $tbPlanilhaAprovacao->inserir($planilhaSR);
+            }
+            return true;
+        } catch (Zend_Exception $e) {
+            $this->_helper->json(array('msg' => 'Houve um erro na cria&ccedil;&atilde;o das planilhas SR'));
+        }
+    }
+
+    /**
+     * Método criar readequação de planilha orçamentária
+     * @access private
+     * @param integer $idPronac
+     * @return Bool
+     */
+    private function criarReadequacaoPlanilha($idPronac)
+    {
+        $auth = Zend_Auth::getInstance();        
+        $tblAgente = new Agente_Model_DbTable_Agentes();
+        $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
+        
+        $tbReadequacao = new tbReadequacao();
+        $dados = array();
+        $dados['idPronac'] = $idPronac;
+        $dados['idTipoReadequacao'] = tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA;
+        $dados['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
+        $dados['idSolicitante'] = $rsAgente->idAgente;
+        $dados['dsJustificativa'] = '';
+        $dados['dsSolicitacao'] = '';
+        $dados['idDocumento'] = null;
+        $dados['siEncaminhamento'] = 12;
+        $dados['stEstado'] = 0;
+        
+        try {
+            $idReadequacao = $tbReadequacao->inserir($dados);
+            
+            return $idReadequacao;
+            
+        } catch (Zend_Exception $e) {
+            $this->_helper->json(array('msg' => 'Houve um erro na criação do registro de tbReadequacao'));
+            $this->_helper->viewRenderer->setNoRender(true);
+        }
+    }
+    
+    /**
      * Função para verificar e criar planilha orçamentária. Recebe flag opcional para criar a planilha
      * Criada em 31/05/2016
      * @author: Fernão Lopes Ginez de Lara fernao.lara@cultura.gov.br
@@ -4105,94 +4088,40 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
      */
     public function verificarPlanilhaAtivaAction()
     {
-        $auth = Zend_Auth::getInstance(); // pega a autenticacao
         $this->_helper->viewRenderer->setNoRender();
-        $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $post = Zend_Registry::get('post');
-
-        $idPronac = $post->idPronac;
-        $idReadequacao = $post->idReadequacao;
-        $criarNovaPlanilha = $post->criarNovaPlanilha;
-
-        // Se não possui idReadequacao, cria entrada na tabela tbReadequacao
-        if ($idReadequacao == 0) {
-            $tblAgente = new Agente_Model_DbTable_Agentes();
-            $rsAgente = $tblAgente->buscar(array('CNPJCPF=?'=>$auth->getIdentity()->Cpf))->current();
-
-            $tbReadequacao = new tbReadequacao();
-            $dados = array();
-            $dados['idPronac'] = $idPronac;
-            $dados['idTipoReadequacao'] = tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA;
-            $dados['dtSolicitacao'] = new Zend_Db_Expr('GETDATE()');
-            $dados['idSolicitante'] = $rsAgente->idAgente;
-            $dados['dsJustificativa'] = '';
-            $dados['dsSolicitacao'] = '';
-            $dados['idDocumento'] = null;
-            $dados['siEncaminhamento'] = 12;
-            $dados['stEstado'] = 0;
-
-            try {
-                $idReadequacao = $tbReadequacao->inserir($dados);
-            } catch (Zend_Exception $e) {
-                $this->_helper->json(array('msg' => 'Houve um erro na criação do registro de tbReadequacao'));
-                $this->_helper->viewRenderer->setNoRender(true);
-            }
-        }
-
-        //VERIFICA SE JA POSSUI A PLANILHA TIPO SR. SE NÃO TIVER, COPIA A ORIGINAL
-        $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $verificarPlanilhaSR = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR'));
-
-        if ($criarNovaPlanilha && count($verificarPlanilhaSR) == 0) {
-            $planilhaAtiva = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'StAtivo=?'=>'S'));
-            $planilhaSR = array();
-
-            try {
-                foreach ($planilhaAtiva as $value) {
-                    $planilhaSR['tpPlanilha'] = 'SR';
-                    $planilhaSR['dtPlanilha'] = new Zend_Db_Expr('GETDATE()');
-                    $planilhaSR['idPlanilhaProjeto'] = $value['idPlanilhaProjeto'];
-                    $planilhaSR['idPlanilhaProposta'] = $value['idPlanilhaProposta'];
-                    $planilhaSR['IdPRONAC'] = $value['IdPRONAC'];
-                    $planilhaSR['idProduto'] = $value['idProduto'];
-                    $planilhaSR['idEtapa'] = $value['idEtapa'];
-                    $planilhaSR['idPlanilhaItem'] = $value['idPlanilhaItem'];
-                    $planilhaSR['dsItem'] = $value['dsItem'];
-                    $planilhaSR['idUnidade'] = $value['idUnidade'];
-                    $planilhaSR['qtItem'] = $value['qtItem'];
-                    $planilhaSR['nrOcorrencia'] = $value['nrOcorrencia'];
-                    $planilhaSR['vlUnitario'] = $value['vlUnitario'];
-                    $planilhaSR['qtDias'] = $value['qtDias'];
-                    $planilhaSR['tpDespesa'] = $value['tpDespesa'];
-                    $planilhaSR['tpPessoa'] = $value['tpPessoa'];
-                    $planilhaSR['nrContraPartida'] = $value['nrContraPartida'];
-                    $planilhaSR['nrFonteRecurso'] = $value['nrFonteRecurso'];
-                    $planilhaSR['idUFDespesa'] = $value['idUFDespesa'];
-                    $planilhaSR['idMunicipioDespesa'] = $value['idMunicipioDespesa'];
-                    $planilhaSR['dsJustificativa'] = null;
-                    $planilhaSR['idAgente'] = 0;
-                    $planilhaSR['idPlanilhaAprovacaoPai'] = $value['idPlanilhaAprovacao'];
-                    $planilhaSR['idReadequacao'] = $idReadequacao;
-                    $planilhaSR['tpAcao'] = 'N';
-                    $planilhaSR['idRecursoDecisao'] = $value['idRecursoDecisao'];
-                    $planilhaSR['stAtivo'] = 'N';
-                    $tbPlanilhaAprovacao->inserir($planilhaSR);
-                }
-                $this->_helper->json(
-                    array(
-                        'msg' => 'Planilhas SR criadas',
+        $this->_helper->layout->disableLayout();
+        
+        $idPronac = $this->_request->getParam('idPronac');
+        $idReadequacao = $this->_request->getParam('idReadequacao');
+        
+        if (!$idReadequacao || $idReadequacao == 0) {
+            $idReadequacao = $this->criarReadequacaoPlanilha($idPronac);
+            
+            $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
+            // TODO: verificar se funciona e replicar no resto do código
+            $verificarPlanilhaReadequadaAtual = $tbPlanilhaAprovacao->buscarPlanilhaReadequadaEmEdicao($idPronac, $idReadequacao);
+            
+            if (count($verificarPlanilhaReadequadaAtual) == 0) {
+                $planilhaAtiva = $tbPlanilhaAprovacao->buscarPlanilhaAtiva($idPronac);
+                $criarPlanilha = $this->copiarPlanilhas($idPronac, $idReadequacao);
+                
+                if ($criarPlanilha) {
+                    $this->_helper->json(array(
+                        'msg' => 'Planilha copiada corretamente',
                         'idReadequacao' => $idReadequacao
-                    )
-                );
-            } catch (Zend_Exception $e) {
-                $this->_helper->json(array('msg' => 'Houve um erro na cria&ccedil;&atilde;o das planilhas SR'));
-            }
-            $this->_helper->viewRenderer->setNoRender(true);
+                    ));
+                } else {
+                    $this->_helper->json(array(
+                        'msg' => 'Houve um erro ao tentar copiar a planilha',
+                        'idReadequacao' => $idReadequacao
+                    ));
+                }
+            }            
         } else {
             $this->_helper->json(array(
-                'msg' => 'Planilha existente',
+                'msg' => 'OK - planilha existe',
                 'idReadequacao' => $idReadequacao
-            ));
+            ));            
         }
     }
 
