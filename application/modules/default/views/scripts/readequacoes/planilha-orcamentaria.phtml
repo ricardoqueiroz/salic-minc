@@ -809,7 +809,9 @@
  }
  
  function finalizarformulario(){
-     window.location = "<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>";
+     var idReadequacao = $('#idReadequacao').val();
+     
+     window.location = "<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao=" + idReadequacao;
  }
  
  function excluirReadequacao(idReadequacao){

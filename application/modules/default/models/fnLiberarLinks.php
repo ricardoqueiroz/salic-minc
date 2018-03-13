@@ -296,7 +296,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         # FASE 4 - DA LIBERA��O DA CONTA AT� A DATA FINAL DO PER�ODO DE EXECUCAO
         $sqlDataAtualBanco = new Zend_Db_Expr('SELECT CONVERT( CHAR(8), GETDATE(), 112)');
         $dataAtualBanco = $db->fetchOne($sqlDataAtualBanco);
-
+        
         if ($contaLiberada == 'S' and $dadosProjeto->DtFinalExecucao >= $dataAtualBanco) {
             $Analise = 1;
             $Execucao = 1;
@@ -307,33 +307,17 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $SolicitarProrrogacao = 1;
             $Marcas = 1;
 
-            /* ===== CHECAR SE EXISTE READEQUA��O DE 50% ===== */
-            $vReadequacao = $db->select()
-                ->from(
-                    array('a' => 'tbReadequacao'),
-                    array(new Zend_Db_Expr('TOP 1 idPronac')),
-                    $this->_schema
-                )
-                ->joinInner(
-                    array('b' => 'tbTipoReadequacao'),
-                    'a.idTipoReadequacao = b.idTipoReadequacao',
-                    array(''),
-                    $this->_schema
-                )
-                ->where('a.idPronac = ?', $idPronac)
-                ->where('b.idTipoReadequacao = ?', 2)
-                ->where('a.siEncaminhamento = ?', 15)
-                ->where('a.stEstado = ?', 1);
+            $tbReadequacao = new tbReadequacao();
+            $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento($idPronac);
             
-            $vReadequacao = $db->fetchAll($vReadequacao);
-            if (!$vReadequacao->idPronac) {
+            if (!$existeReadequacaoEmAndamento) {
                 $Readequacao_50 = 1;
+                $ReadequacaoPlanilha = 1;
             } else {
                 $Readequacao_50 = 0;
+                $ReadequacaoPlanilha = 0;
             }
-
-            $ReadequacaoPlanilha = 1;
-                
+            
             /* ===== CHECAR SE EXISTE RELAT�RIO DE CUMPRIMENTO DO OBJETO PARA SER ENVIADO ===== */
             $relatorioCumprimentoEnvio = $db->select()
                 ->from(
@@ -365,7 +349,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             $Fase = 4;
         }
-
+        
         # FASE 5 - PRESTA��O DE CONTAS DO PROPONENTE - RELAT�RIO DE CUMPRIMENTO DO OBJETO
         if ($contaLiberada == 'S' and $dataAtualBanco > $dadosProjeto->DtFinalExecucao) {
             $Analise = 1;
@@ -373,12 +357,12 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $PrestacaoDeContas = 1;
             $Marcas = 0;
             $SolicitarProrrogacao = 0;
-            $Readequacao = 0;
+            $Readequacao = 1;
             $Readequacao_50 = 1;
             $ComprovacaoFinanceira = 1;
             $RelatorioTrimestral = 0;
             $RelatorioFinal = 1;
-
+            
             /* ===== EXCE��O PARA AJUSTAR PLANILHA PARA PRESTAR CONTAS ===== */
 
             $situacoesPlanilha = array('E13', 'E15', 'E23', 'E74', 'E75');
@@ -431,43 +415,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 }
             }
 
-            /* ===== CHECAR SE EXISTE READEQUA��O DE PLANILHA OR�AMENT�RIA @todo melhoras as variaveis ===== */
-            $queryPlanilhaOrcamentaria_1 = $db->select()
-                ->from(
-                    array('a' => 'tbReadequacao'),
-                    array(new Zend_Db_Expr('TOP 1 a.idTipoReadequacao')),
-                    $this->_schema
-                )
-                ->joinInner(
-                    array('b' => 'tbTipoReadequacao'),
-                    'a.idTipoReadequacao = b.idTipoReadequacao',
-                    array(''),
-                    $this->_schema
-                )
-                ->where('a.idPronac = ?', $idPronac)
-                ->where('b.idTipoReadequacao = ?', 2)
-                ->where('a.siEncaminhamento <> ?', 12);
-            $readequacaoDiferente12 = $db->fetchOne($queryPlanilhaOrcamentaria_1);
-
-            $queryPlanilhaOrcamentaria_2 = $db->select()
-                ->from(
-                    array('a' => 'tbReadequacao'),
-                    array(new Zend_Db_Expr('TOP 1 a.idTipoReadequacao')),
-                    $this->_schema
-                )
-                ->joinInner(
-                    array('b' => 'tbTipoReadequacao'),
-                    'a.idTipoReadequacao = b.idTipoReadequacao',
-                    array(''),
-                    $this->_schema
-                )
-                ->where('a.idPronac = ?', $idPronac)
-                ->where('b.idTipoReadequacao = ?', 2)
-                ->where('a.siEncaminhamento = ?', 12);
-
-            $readequacaoIguala12 = $db->fetchOne($queryPlanilhaOrcamentaria_2);
-
-            if (empty($readequacaoDiferente12) or $readequacaoIguala12) {
+            if (!$existeReadequacaoEmAndamento) {
                 $ReadequacaoPlanilha = 1;
             } else {
                 $ReadequacaoPlanilha = 0;

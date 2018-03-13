@@ -1814,30 +1814,47 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
+        
+        $idReadequacao = $this->_request->getParam("idReadequacao");
+        
         try {
+            $arrayBuscaReadequacao = array(
+                'idPronac = ?'=>$idPronac,
+                'siEncaminhamento = ?'=>12,
+                'stEstado = ?'=>0
+            );
+            if ($idReadequacao) {
+                $arrayBuscaReadequacao['idReadequacao = ?'] = $idReadequacao;
+            }
+            
             $tbReadequacao = new tbReadequacao();
-            $readequacoes = $tbReadequacao->buscar(array('idPronac=?'=>$idPronac, 'siEncaminhamento=?'=>12,'stEstado=?'=>0));
-
+            $readequacoes = $tbReadequacao->buscar(
+                $arrayBuscaReadequacao
+            );
+            
             $dados = array();
-            $dados['siEncaminhamento'] = 1;
+            $dados['siEncaminhamento'] = tbReadequacao::SI_ENCAMINHAMENTO_ENVIADO_MINC;
+            $dados['dtEnvio'] = new Zend_Db_Expr('GETDATE()');
             $where = "idPronac = $idPronac AND siEncaminhamento = 12 AND stEstado = 0";
+            if ($idReadequacao) {
+                $where .= " AND idReadequacao = $idReadequacao";
+            }
             $atualizar = $tbReadequacao->update($dados, $where);
 
             foreach ($readequacoes as $r) {
-                if ($r->idTipoReadequacao == 9) {
+                if ($r->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) {
                     $tbAbrangencia = new tbAbrangencia();
                     $dadosAb = array();
                     $dadosAb['idReadequacao'] = $r->idReadequacao;
                     $whereAb = "idPronac = $idPronac AND stAtivo = 'S' AND idReadequacao is null";
                     $tbAbrangencia->update($dadosAb, $whereAb);
-                } elseif ($r->idTipoReadequacao == 11) {
+                } elseif ($r->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_PLANO_DISTRIBUICAO) {
                     $tbPlanoDistribuicao = new tbPlanoDistribuicao();
                     $dadosPDDist = array();
                     $dadosPDDist['idReadequacao'] = $r->idReadequacao;
                     $wherePDDist = "idPronac = $idPronac AND stAtivo = 'S' AND idReadequacao is null";
                     $tbPlanoDistribuicao->update($dadosPDDist, $wherePDDist);
-                } elseif ($r->idTipoReadequacao == 14) {
+                } elseif ($r->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_PLANO_DIVULGACAO) {
                     $tbPlanoDivulgacao = new tbPlanoDivulgacao();
                     $dadosPDD = array();
                     $dadosPDD['idReadequacao'] = $r->idReadequacao;
@@ -2169,8 +2186,8 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
             if ($this->_request->getParam('stAtendimento') == 'I') {
                 // indeferida
-                $r->siEncaminhamento = 2; //2=Solicitação indeferida
-                $r->stEstado = 1;
+                $r->siEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_SOLICITACAO_INDEFERIDA;
+                $r->stEstado = tbReadequacao::ST_ESTADO_FINALIZADO;
             } elseif ($this->_request->getParam('stAtendimento') == 'DP') {
                 // devolvida ao proponente
                 $r->siEncaminhamento = 12;
@@ -2184,10 +2201,10 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
                     $r->idAvaliador = $this->_request->getParam('destinatario');
                 } elseif ($this->_request->getParam('vinculada') == 400) {
                     $stValidacaoCoordenador = 1;
-                    $r->siEncaminhamento = 7; //7=CNIC
+                    $r->siEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_CNIC;
                     $r->idAvaliador = $this->_request->getParam('destinatario');
                 } else {
-                    $r->siEncaminhamento = 3; //3=Enviado para o coordenador de parecer
+                    $r->siEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_ENVIADO_COORDENADOR_PARECER;
                 }
             }
             $r->save();
@@ -3015,11 +3032,11 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
                     $stEstado = 0;
                     if ($_POST['plenaria']) {
-                        $campoSiEncaminhamento = 8; // 8=Enviado à Plenária
+                        $campoSiEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_ENVIADO_PLENARIA;
                     } else {
-                        $campoSiEncaminhamento = 9; // 9=Enviado para Checklist Publicação
+                        $campoSiEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_CHECKLIST_PUBLICACAO;
                         if (!in_array($read->idTipoReadequacao, array(2,3,10,12,15))) {
-                            $campoSiEncaminhamento = 15; // 15=Finaliza a readequação sem a necessidade de enviar para publicação no DOU.
+                            $campoSiEncaminhamento = tbReadequacao::SI_ENCAMINHAMENTO_FINALIZADA_SEM_PORTARIA;
                             $stEstado = 1;
                         }
                     }
