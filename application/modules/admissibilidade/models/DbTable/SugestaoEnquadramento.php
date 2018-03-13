@@ -116,4 +116,80 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         );
     }
 
+    public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento, $id_preprojeto)
+    {
+        $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento();
+
+        $descricao_motivacao = trim($dadosSugestaoEnquadramento['descricao_motivacao']);
+        if (empty($descricao_motivacao)) {
+            throw new Exception("O campo 'Parecer de Enquadramento' é de preenchimento obrigatório.");
+        }
+
+        if ($dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
+            && !$sugestaoEnquadramento->isPermitidoSugerirEnquadramento($dadosSugestaoEnquadramento['id_perfil'])) {
+            throw new Exception("Perfil sem permissão para executar a ação");
+        }
+
+        $id_area = ($dadosSugestaoEnquadramento['id_area']) ? $dadosSugestaoEnquadramento['id_area'] : null;
+        $id_segmento = ($dadosSugestaoEnquadramento['id_segmento']) ? $dadosSugestaoEnquadramento['id_segmento'] : null;
+        $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+
+        $orgaoDbTable = new Orgaos();
+        $resultadoOrgaoSuperior = $orgaoDbTable->codigoOrgaoSuperior($dadosSugestaoEnquadramento['id_orgao']);
+        $orgaoSuperior = $resultadoOrgaoSuperior[0]['Superior'];
+
+        $distribuicaoAvaliacaoPropostaDtTable = new Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta();
+        $distribuicaoAvaliacaoProposta = $distribuicaoAvaliacaoPropostaDtTable->findBy([
+            'id_preprojeto' => $id_preprojeto,
+            'id_orgao_superior' => $orgaoSuperior,
+            'id_perfil' => $dadosSugestaoEnquadramento['id_perfil']
+        ]);
+
+        if (!$distribuicaoAvaliacaoProposta &&
+            (
+                $dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
+                && $dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE
+            )
+        ) {
+            throw new Exception("Distribui&ccedil;&atilde;o n&atilde;o localizada para o perfil atual.");
+        }
+
+        $dadosNovaSugestaoEnquadramento = [
+            'id_orgao' => $dadosSugestaoEnquadramento['id_orgao'],
+            'id_preprojeto' => $id_preprojeto,
+            'id_orgao_superior' => $orgaoSuperior,
+            'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
+            'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador'],
+            'id_area' => $id_area,
+            'id_segmento' => $id_segmento,
+            'descricao_motivacao' => $descricao_motivacao,
+            'data_avaliacao' => $sugestaoEnquadramentoDbTable->getExpressionDate(),
+            'ultima_sugestao' => Admissibilidade_Model_DbTable_SugestaoEnquadramento::ULTIMA_SUGESTAO_ATIVA,
+        ];
+
+        $dadosBuscaPorSugestao = $sugestaoEnquadramentoDbTable->findBy(
+            [
+                'id_orgao' => $dadosSugestaoEnquadramento['id_orgao'],
+                'id_preprojeto' => $id_preprojeto,
+                'id_orgao_superior' => $orgaoSuperior,
+                'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
+                'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador']
+            ]
+        );
+
+
+        if ($distribuicaoAvaliacaoProposta && $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop']) {
+            $dadosNovaSugestaoEnquadramento['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
+        }
+        if (count($dadosBuscaPorSugestao) < 1) {
+            $sugestaoEnquadramentoDbTable->inativarSugestoes($id_preprojeto);
+            $sugestaoEnquadramentoDbTable->inserir($dadosNovaSugestaoEnquadramento);
+        } else {
+            $dadosBuscaPorSugestao['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
+            $sugestaoEnquadramentoDbTable->update($dadosNovaSugestaoEnquadramento, [
+                'id_sugestao_enquadramento = ?' => $dadosBuscaPorSugestao['id_sugestao_enquadramento']
+            ]);
+        }
+    }
+
 }

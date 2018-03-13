@@ -231,4 +231,10 @@ class Admissibilidade_Model_SugestaoEnquadramento extends MinC_Db_Model
         return $this;
     }
 
+    public function isPermitidoSugerirEnquadramento($codGrupo)
+    {
+        return (Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE == $codGrupo
+            || Autenticacao_Model_Grupos::COMPONENTE_COMISSAO == $codGrupo
+            || Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE == $codGrupo);
+    }
 }

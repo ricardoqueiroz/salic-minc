@@ -121,11 +121,12 @@
         </form>
         <br/>
         <div class="center">
-            <?php if (
+            <?php
+            $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento();
+
+            if (
                 Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE == $this->codGrupo
-                || Autenticacao_Model_Grupos::COORDENADOR_ADMISSIBILIDADE == $this->codGrupo
-                || Autenticacao_Model_Grupos::COMPONENTE_COMISSAO == $this->codGrupo
-                || Autenticacao_Model_Grupos::COORDENADOR_GERAL_ADMISSIBILIDADE == $this->codGrupo
+                || $sugestaoEnquadramento->isPermitidoSugerirEnquadramento($this->codGrupo)
             ) :
                 ?>
                 <?php if (
@@ -142,7 +143,7 @@
                 </button>
             <?php endif; ?>
 
-                <?php if ($this->isPropostaEmConformidade): ?>
+                <?php if ($this->isPropostaEmConformidade && $sugestaoEnquadramento->isPermitidoSugerirEnquadramento($this->codGrupo)): ?>
                 <button class="btn waves-effect waves-light enquadrarProposta" type="button" name="action">
                     Enquadrar <i class="material-icons right">assignment</i>
                 </button>
