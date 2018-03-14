@@ -41,14 +41,6 @@ class tbReadequacao extends MinC_Db_Table_Abstract
     const PERCENTUAL_REMANEJAMENTO = 50;
     const ST_ESTADO_EM_ANDAMENTO = 0;
     const ST_ESTADO_FINALIZADO = 1;
-
-    const SI_ENCAMINHAMENTO_ENVIADO_MINC = 1;
-    const SI_ENCAMINHAMENTO_SOLICITACAO_INDEFERIDA = 2;
-    const SI_ENCAMINHAMENTO_ENVIADO_COORDENADOR_PARECER = 3;
-    const SI_ENCAMINHAMENTO_CNIC = 7;
-    const SI_ENCAMINHAMENTO_ENVIADO_PLENARIA = 8;
-    const SI_ENCAMINHAMENTO_CHECKLIST_PUBLICACAO = 9;
-    const SI_ENCAMINHAMENTO_FINALIZADA_SEM_PORTARIA = 15;
     
     /**
      * @param array $dados
@@ -1137,7 +1129,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         $select->where('a.idTipoReadequacao=?', tbReadequacao::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL);
         $select->where('a.stAtendimento=?', 'D');
         $select->where('a.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
-        $select->where('a.siEncaminhamento=?', 11);
+        $select->where('a.siEncaminhamento=?', tbTipoEncaminhamento::SI_ENCAMINHAMENTO_NAO_ENVIA_MINC);
         
         $remanejamentos = $this->fetchAll($select);
         
@@ -1186,6 +1178,35 @@ class tbReadequacao extends MinC_Db_Table_Abstract
             return false;
         }
     }
+
+    /**
+     * Método para verificar se existe readequacao de planilha em edição
+     * @access public
+     * @param integer $idPronac
+     * @param integer $idTipoReadequacao
+     * @return boolean
+     */    
+    public function existeReadequacaoPlanilhaEmEdicao($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('r' => $this->_name),
+            'r.idReadequacao'
+        );
+        $select->where('r.idPronac = ?', $idPronac);
+        $select->where('r.siEncaminhamento = ?', tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE);
+        $select->where('r.idTipoReadequacao = ?', self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+        $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
+        
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }    
 
     /**
      * Método para verificar se está o projeto está disponivel para rReadequacao de planilha 

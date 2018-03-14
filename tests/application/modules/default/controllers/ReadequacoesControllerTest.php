@@ -13,6 +13,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
 
         // Marcado para refatoração futura
         // * fixture do banco de dados com dados controlados
+        $tbReadequacao = new tbReadequacao();
         $this->idPronac = $tbReadequacao->buscarIdPronacReadequacaoEmAndamento(tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
         
         $this->hashPronac = Seguranca::encrypt($this->idPronac);
@@ -42,12 +43,12 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
     }
 
     /**
-     * TestIndexIdUfAction
+     * TestIndexIdPassandoUfAction
      *
      * @access public
      * @return void
      */    
-    public function testIndexIdUfAction()
+    public function TestIndexIdPassandoUfAction()
     {
         $iduf = 43; // RS
         
@@ -56,7 +57,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
                 'iduf' => $iduf
             ]);        
         $this->dispatch('/readequacoes?idPronac=' . $this->hashPronac);
-        //        $this->assertEquals();
+        $this->assertUrl('default', 'readequacoes', 'index');
     }
     
     /**
@@ -79,10 +80,8 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
      */    
     public function testPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
     {
-        $idPronac = $this->buscaProjetoDisponivelParaReadequacaoPlanilha();
-        
-        $tbReadequacao = new tbReadequacao();
-        $possuiReadequacao = $tbReadequacao->existeReadequacaoEmAndamento($idPronac);
+         $tbReadequacao = new tbReadequacao();
+        $possuiReadequacao = $tbReadequacao->existeReadequacaoEmAndamento($this->idPronac);
         
         $this->assertTrue($possuiReadequacao);
 

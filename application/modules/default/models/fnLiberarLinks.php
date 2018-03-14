@@ -309,15 +309,18 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             $tbReadequacao = new tbReadequacao();
             $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento($idPronac);
+            $existeReadequacaoPlanilhaEmEdicao = $tbReadequacao->existeReadequacaoPlanilhaEmEdicao($idPronac);
             
-            if (!$existeReadequacaoEmAndamento) {
+            if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
                 $Readequacao_50 = 1;
                 $ReadequacaoPlanilha = 1;
-            } else {
+            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoPlanilhaEmEdicao) {
+                $ReadequacaoPlanilha = 1;
+            } else if ($existeReadequacaoEmAndamento && !$existeReadequacaoPlanilhaEmEdicao)  {
                 $Readequacao_50 = 0;
                 $ReadequacaoPlanilha = 0;
             }
-            
+                        
             /* ===== CHECAR SE EXISTE RELAT�RIO DE CUMPRIMENTO DO OBJETO PARA SER ENVIADO ===== */
             $relatorioCumprimentoEnvio = $db->select()
                 ->from(
@@ -391,6 +394,8 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 }
             } else {
                 /* ===== CHECAR SE EXISTE READEQUA�AO DE 50% ===== */
+
+                // VERIFICAR O QUE ESTÁ CHECANDO AQUI. É PRA LIBERAR A DE 50%
                 $readequacaoFase5 = $db->select()
                     ->from(
                         array('a' => 'tbReadequacao'),
@@ -404,10 +409,17 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                         $this->_schema
                     )
                     ->where('a.idPronac = ?', $idPronac)
-                    ->where('b.idTipoReadequacao = ?', 2)
-                    ->where('a.siEncaminhamento NOT IN (?)', array(2, 15))
+                                  ->where('b.idTipoReadequacao = ?', tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA)
+                                  ->where(
+                                      'a.siEncaminhamento NOT IN (?)',
+                                      array(
+                                          tbTipoEncaminhamento::SI_ENCAMINHAMENTO_SOLICITACAO_INDEFERIDA,
+                                          tbTipoEncaminhamento::SI_ENCAMINHAMENTO_FINALIZADA_SEM_PORTARIA
+                                      )
+                                  )
                     ->where('a.stEstado = ?', 0);
                 $readequacaoFase5 = $db->fetchRow($readequacaoFase5);
+                
                 if ($readequacaoFase5->idTipoReadequacao) {
                     $Readequacao_50 = 0;
                 } else {
@@ -415,12 +427,16 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 }
             }
 
-            if (!$existeReadequacaoEmAndamento) {
+            if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
+                $Readequacao_50 = 1;
                 $ReadequacaoPlanilha = 1;
-            } else {
+            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoPlanilhaEmEdicao) {
+                $ReadequacaoPlanilha = 1;
+            } else if ($existeReadequacaoEmAndamento && !$existeReadequacaoPlanilhaEmEdicao)  {
+                $Readequacao_50 = 0;
                 $ReadequacaoPlanilha = 0;
             }
-
+            
             $Fase = 5;
         }
 
