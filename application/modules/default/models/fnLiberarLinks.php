@@ -310,12 +310,17 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $tbReadequacao = new tbReadequacao();
             $existeReadequacaoEmAndamento = $tbReadequacao->existeReadequacaoEmAndamento($idPronac);
             $existeReadequacaoPlanilhaEmEdicao = $tbReadequacao->existeReadequacaoPlanilhaEmEdicao($idPronac);
+            $existeReadequacaoParcialEmEdicao = $tbReadequacao->existeReadequacaoParcialEmEdicao($idPronac);
             
             if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
                 $Readequacao_50 = 1;
                 $ReadequacaoPlanilha = 1;
             } else if ($existeReadequacaoEmAndamento && $existeReadequacaoPlanilhaEmEdicao) {
                 $ReadequacaoPlanilha = 1;
+                $Readequacao_50 = 0;
+            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoParcialEmEdicao) {
+                $ReadequacaoPlanilha = 0;
+                $Readequacao_50 = 1;
             } else if ($existeReadequacaoEmAndamento && !$existeReadequacaoPlanilhaEmEdicao)  {
                 $Readequacao_50 = 0;
                 $ReadequacaoPlanilha = 0;

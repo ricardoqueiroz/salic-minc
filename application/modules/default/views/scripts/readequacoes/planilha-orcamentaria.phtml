@@ -319,6 +319,40 @@
      });
      
      $('.btn_finalizar').click(function(){
+
+	 var descJustificativa = CKEDITOR.instances['descJustificativa'].getData().toString().replace(/(<.*?>)|(&nbsp;)|(\s+)/g,''),
+             texto = CKEDITOR.instances['descJustificativa'].getData(),
+             erro = 0,
+             msg = 'Favor preencher os dados obrigat&oacute;rios!';
+	 
+	 if (descJustificativa == ''){
+             erro++;
+	 }
+	 
+	 if(texto.length > 6000){
+             erro++;
+             msg = 'O campo so permite 5.000 caracteres!';
+	 }
+	 if (erro > 0) {
+             $("#msgAlerta").dialog("destroy");
+             $("#msgAlerta").html(msg);
+             $("#msgAlerta").dialog({
+		 resizable: false,
+		 title: 'Alerta!',
+		 width:340,
+		 height:170,
+		 modal: true,
+		 buttons : {
+                     'OK' : function(){
+			 $(this).dialog('close');
+                     }
+		 }
+             });
+             $('.ui-dialog-titlebar-close').remove();
+	     
+	     return false;
+	 }
+         
 	 $('#mensagens').html('<span style="font-weigth: bold; color: grey">Verificando limites or&ccedil;amentarios...</span>');
 	 // verifica limites or�ament�rios
          $.ajax({

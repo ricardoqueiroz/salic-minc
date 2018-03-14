@@ -1184,7 +1184,6 @@ class tbReadequacao extends MinC_Db_Table_Abstract
      * Método para verificar se existe readequacao de planilha em edição
      * @access public
      * @param integer $idPronac
-     * @param integer $idTipoReadequacao
      * @return boolean
      */    
     public function existeReadequacaoPlanilhaEmEdicao($idPronac)
@@ -1198,6 +1197,34 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         $select->where('r.idPronac = ?', $idPronac);
         $select->where('r.siEncaminhamento = ?', tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE);
         $select->where('r.idTipoReadequacao = ?', self::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+        $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
+        
+        $result = $this->fetchAll($select);
+        
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Método para verificar se existe readequacao parcial em edição
+     * @access public
+     * @param integer $idPronac
+     * @return boolean
+     */    
+    public function existeReadequacaoParcialEmEdicao($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('r' => $this->_name),
+            'r.idReadequacao'
+        );
+        $select->where('r.idPronac = ?', $idPronac);
+        $select->where('r.siEncaminhamento = ?', tbTipoEncaminhamento::SI_ENCAMINHAMENTO_NAO_ENVIA_MINC);
+        $select->where('r.idTipoReadequacao = ?', self::TIPO_READEQUACAO_REMANEJAMENTO_PARCIAL);
         $select->where('r.stEstado=?', self::ST_ESTADO_EM_ANDAMENTO);
         
         $result = $this->fetchAll($select);

@@ -38,9 +38,18 @@ class TbReadequacaoModelTest extends MinC_Test_ModelTestCase
     {
         $tbReadequacao = new tbReadequacao();
         
-        $existeReadequacaoPlanilhaEmEdicaoEmEdicao = $tbReadequacao->existeReadequacaoPlanilhaEmEdicao($this->idPronac);
+        $existeReadequacaoPlanilhaEmEdicao = $tbReadequacao->existeReadequacaoPlanilhaEmEdicao($this->idPronac);
         
-        $this->assertTrue($existeReadequacaoPlanilhaEmEdicaoEmEdicao);
+        $this->assertTrue($existeReadequacaoPlanilhaEmEdicao);
+    }
+
+    public function testExisteReadequacaoParcialEmEdicao()
+    {
+        $tbReadequacao = new tbReadequacao();
+        
+        $existeReadequacaoParcialEmEdicao = $tbReadequacao->existeReadequacaoParcialEmEdicao($this->idPronac);
+        
+        $this->assertFalse($existeReadequacaoParcialEmEdicao);
     }
     
     public function testExisteReadequacaoPlanilhaEmAndamento()
