@@ -12,7 +12,6 @@
         $voltarHref = $this->url(\array_merge($urlArray, array('action' => 'pagamento')));
         $carregarSelectHref = $this->url(\array_merge($urlArray, array('action' => 'carregaselectajax')));
 
-
         echo '<script type="text/javascript" language="javascript" src="' . $this->baseUrl() . '/public/js/jquery/jquery.formatCurrency-1.4.0.min.js"></script>';
         echo '<script type="text/javascript" language="javascript" src="' . $this->baseUrl() . '/public/js/jquery/jquery.formatCurrency.pt-BR.js"></script>';
         echo '<script type="text/javascript" language="javascript">var planilhaItem = ' . $this->itemPlanilhaAprovacao->idPlanilhaAprovacao . '</script>';
@@ -252,7 +251,7 @@
                                                 <div class="input-field col s3">
                                                     <input type="text" name="dtEmissao" id="dtEmissao" null="false"
                                                            data="true" value="<?php echo $this->dtEmissao; ?>"/>
-                                                    <label>Dt. de Emiss&ccedil;&atilde;o do comprovante de despesa<span style='color:red'>*</span></label>
+                                                    <label>Dt. de Emiss&atilde;o do comprovante de despesa<span style='color:red'>*</span></label>
                                                 </div>
                                                 <div class="input-field col s3">
                                                     <input type="text" name="dtPagamento" id="dtPagamento" null="false"
@@ -896,13 +895,16 @@
                 msg += 'Informe o n&uacute;mero do comprovante.<br />';
             }
             if (!$("#dtEmissao").val()) {
-                msg += 'Informe a data de emiss&atilde;o do comprovante.<br />';
+                msg += 'Informe a data de emiss&atilde;o do comprovante de despesa.<br />';
             }
             if (!$("#tpFormaDePagamento").val() || 0 == $("#tpFormaDePagamento").val()) {
                 msg += 'Selecione a forma de pagamento.<br />';
             }
             if (!$("#nrDocumentoDePagamento").val()) {
                 msg += 'Informe o n&uacute;mero do Documento de pagamento.<br />';
+            }
+            if (!$("#dtPagamento").val()) {
+                msg += 'Informe o n&uacute;mero do Data de pagamento.<br />';
             }
 
             if ($("#idComprovantePagamento").val()) {
