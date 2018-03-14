@@ -340,7 +340,8 @@ class tbReadequacao extends MinC_Db_Table_Abstract
                 CAST(b.dsEncaminhamento AS TEXT) AS dsEncaminhamento,
                 a.stEstado,
                 e.idArquivo,
-                e.nmArquivo
+                e.nmArquivo,
+                a.dtEnvio
             ")
         );
         $select->joinInner(

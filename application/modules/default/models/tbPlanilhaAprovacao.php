@@ -270,6 +270,12 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->from(
             array('a' => $this->_name),
             'a.idPlanilhaAprovacao');
+        $select->joinInner(
+            array('r' => 'tbReadequacao'),
+            "a.idReadequacao = r.idReadequacao",
+            array(),
+            $this->_schema
+        );
         
         $select->where('a.IdPRONAC = ?', $idPronac);
         $select->where('a.nrFonteRecurso = ?', $nrFonteRecurso);
@@ -277,8 +283,7 @@ class tbPlanilhaAprovacao extends MinC_Db_Table_Abstract
         $select->where('a.idEtapa = ?', $idEtapa);
         $select->where('a.idMunicipioDespesa = ?', $idMunicipioDespesa);
         $select->where('a.idPlanilhaItem = ?', $idPlanilhaItem);
-        $select->where('a.stAtivo = ?', 'S');
-
+        
         $result = $this->fetchAll($select);
         
         if (count($result) > 0) {
