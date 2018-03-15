@@ -64,7 +64,7 @@
                          title: 'Carregando..'
                      });
                      $('.ui-dialog-titlebar-close').remove();
-                     window.setTimeout('excluirReadequacao('+idReadequacao+')', 1000);
+                     window.setTimeout('excluirReadequacao()', 1000);
                  }
              }
          });
@@ -304,7 +304,9 @@
                  type: "POST",
                  data :{
                      idEtapa : $('#newEtapa').val(),
-                     idProduto : $(this).val()
+		     idMunicipio: $('#newMunicipio').val(),
+                     idProduto : $(this).val(),
+		     idPronac : <?php print $this->idPronac; ?>
                  },
                  success: function(valor){
                      $("#newItem").html('<option value=""> - Selecione - </option>');
@@ -331,7 +333,7 @@
 	 
 	 if(texto.length > 6000){
              erro++;
-             msg = 'O campo so permite 5.000 caracteres!';
+             msg = 'O campo s&oacute; permite 5.000 caracteres!';
 	 }
 	 if (erro > 0) {
              $("#msgAlerta").dialog("destroy");
@@ -480,8 +482,6 @@
      $('#planilhaOrcamentariaMontada').on('click', '.editarItem', function(){
          var idPlanilhaAprovacao = $(this).attr('idPlanilhaAprovacao'), itemClicado = $(this);
 
-         console.log(idPlanilhaAprovacao);
-         
          //AO ABRIR A MODAL, LIMPA TODOS OS CAMPOS EDIT�VEIS
          $('.modalObrigatorios').each(function(){
              $(this).css('border-color', '#CCCCCC');
@@ -772,7 +772,7 @@
          $('.restaurarItem').live('click', function(){
              var idPlanilha = $(this).attr('idPlanilha'),
                  tpAcao = $(this).attr('tipo'),
-                 msg = 'Tem certeza que deseja restaurar o item exclu�do?';
+                 msg = 'Tem certeza que deseja restaurar o item exclu&iacute;do?';
 
              $("#msgAlerta").dialog("destroy");
              $("#msgAlerta").html(msg);
@@ -819,7 +819,7 @@
      
      if(texto.length > 6000){
          erro++;
-         msg = 'O campo so permite 5.000 caracteres!';
+         msg = 'O campo s&oacute; permite 5.000 caracteres!';
      }
      if (erro > 0) {
          $("#msgAlerta").dialog("destroy");
@@ -848,7 +848,9 @@
      window.location = "<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'finalizar-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao=" + idReadequacao;
  }
  
- function excluirReadequacao(idReadequacao){
+ function excluirReadequacao(){
+     var idReadequacao = $('#idReadequacao').val();
+     
      window.location = "<?php echo $this->url(array('controller' => 'readequacoes', 'action' => 'excluir-solicitacao-readequacao'), null, true); ?>?idPronac=<?php echo Seguranca::encrypt($this->idPronac); ?>&idReadequacao="+idReadequacao;
  }
 
@@ -890,7 +892,9 @@
 	     $('#idReadequacao').val(data.idReadequacao);
 	     $('#btn_excluir').removeClass('sumir');
 	     $('#btn_finalizar').removeClass('sumir');
+	     $('#adicionar_item_novo_municipio').removeClass('sumir');
 	     $('#btn_exclusao').attr('readequacao', data.idReadequacao);
+	     
 	 }
      });
  }
@@ -956,14 +960,12 @@
                                     <span class="bold black-text">R$ 0,00</span>
                                 </td>
 				<td>
-				    <?php if ($this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac)) : ?>
-				    <div class="right-align">
+				    <div id="adicionar_item_novo_municipio" class="right-align <?php if (!$this->DisponivelParaAdicaoItensReadequacaoPlanilha($this->idPronac)) : ?>sumir<?php endif; ?>">
 					<a class="waves-effect waves-light btn white-text btn-incluir-novo-item" id="AdicionarItem">
 					    <i class="material-icons left">add</i>
-					    Adicionar item em novo munic&iacute;pio
+					    Incluir item em um novo munic&iacute;pio
 					</a>
 				    </div>
-				    <?php endif; ?>
 				</td>
                             </tr>
                         </table>
