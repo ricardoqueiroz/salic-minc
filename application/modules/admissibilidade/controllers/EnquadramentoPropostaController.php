@@ -54,11 +54,33 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
 
         $mapperArea = new Agente_Model_AreaMapper();
         $this->view->comboareasculturais = $mapperArea->fetchPairs('Codigo', 'Descricao');
+
         $this->view->preprojeto = $preprojeto;
 
         if (count($this->view->comboareasculturais) < 1) {
             throw new Exception("N&atilde;o foram encontradas &Aacute;reas Culturais para o PRONAC informado.");
         }
+
+        $this->view->id_perfil_usuario = $this->grupoAtivo->codGrupo;
+
+        $sugestaoEnquadramento = new Admissibilidade_Model_DbTable_SugestaoEnquadramento;
+
+        $ultimaSugestaoPerfil = [];
+        if($this->view->id_perfil_usuario){
+            $sugestaoEnquadramento->sugestaoEnquadramento->setIdPreprojeto($preprojeto['idPreProjeto']);
+            $sugestaoEnquadramento->sugestaoEnquadramento->setIdPerfilUsuario($this->view->id_perfil_usuario);
+            $ultimaSugestaoPerfil = $sugestaoEnquadramento->obterHistoricoEnquadramento();
+            $ultimaSugestaoPerfil = count($ultimaSugestaoPerfil) >= 1 ? current($ultimaSugestaoPerfil) : $ultimaSugestaoPerfil;
+
+            if(!empty($ultimaSugestaoPerfil['id_area'])){
+                $Segmento = new Segmento();
+                $combosegmentos = $Segmento->combo(array("a.codigo = ?" => $ultimaSugestaoPerfil['id_area']), array('s.segmento ASC'));
+            }
+        }
+
+        $this->view->combosegmentos = !empty($combosegmentos) ? $combosegmentos : [];
+        $this->view->ultimaSugestaoPerfil = $sugestaoEnquadramento->createRow($ultimaSugestaoPerfil)->toArray();
+//        $this->view->historicoEnquadramento = $this->obterHistoricoSugestaoEnquadramento($preprojeto['idPreProjeto']);
     }
 
     public function salvarSugestaoEnquadramento(array $dadosSugetaoEnquadramento, $id_preprojeto)
@@ -78,16 +100,14 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
         try {
             $this->_helper->layout->disableLayout();
 
-            $sugestaoEnquadramentoModel = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
+            $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
 
             $get = $this->getRequest()->getParams();
             if (!isset($get['id_preprojeto']) || empty($get['id_preprojeto'])) {
                 throw new Exception("Identificador da proposta não informado.");
             }
-
-            $resultado = $sugestaoEnquadramentoModel->obterHistoricoEnquadramento(
-                $get['id_preprojeto']
-            );
+            $sugestaoEnquadramentoDbTable->sugestaoEnquadramento->setIdPreprojeto($get['id_preprojeto']);
+            $resultado = $sugestaoEnquadramentoDbTable->obterHistoricoEnquadramento();
 
             $resultado = array_map(function ($dado) {
                 return array_map('utf8_encode', $dado);

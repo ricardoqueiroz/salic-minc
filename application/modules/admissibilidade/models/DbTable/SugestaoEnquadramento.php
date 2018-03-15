@@ -2,16 +2,46 @@
 
 class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_Abstract
 {
-    protected $_name = "sugestao_enquadramento";
-    protected $_schema = "sac";
-    protected $_primary = "id_sugestao_enquadramento";
-
     const ULTIMA_SUGESTAO_ATIVA = 1;
     const ULTIMA_SUGESTAO_INATIVA = 0;
 
-    public function obterHistoricoEnquadramento($id_preprojeto)
-    {
+    protected $_name = "sugestao_enquadramento";
+    protected $_schema = "sac";
+    protected $_primary = "id_sugestao_enquadramento";
+    /**
+     * @var Admissibilidade_Model_SugestaoEnquadramento
+     */
+    public $sugestaoEnquadramento;
 
+    public function __construct(array $config = array())
+    {
+        $this->sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento();
+        parent::__construct($config);
+    }
+
+
+    public function obterHistoricoEnquadramento()
+    {
+        $tableSelect = $this->obterQueryDetalhadaEnquadramentosProposta();
+        $resultado = $this->fetchAll($tableSelect);
+        if ($resultado) {
+            return $resultado->toArray();
+        }
+    }
+
+    public function obterUltimaSugestaoEnquadramentoProposta()
+    {
+        $this->sugestaoEnquadramento->setUltimaSugestao(self::ULTIMA_SUGESTAO_ATIVA);
+
+        $tableSelect = $this->obterQueryDetalhadaEnquadramentosProposta();
+        $resultado = $this->fetchRow($tableSelect);
+        if ($resultado) {
+            return $resultado->toArray();
+        }
+    }
+
+    public function obterQueryDetalhadaEnquadramentosProposta()
+    {
         $tableSelect = $this->select();
         $tableSelect->setIntegrityCheck(false);
         $tableSelect->from(
@@ -48,6 +78,10 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             "{$this->_name}.id_segmento = Segmento.Codigo",
             [
                 'segmento' => 'Descricao',
+                'enquadramento' => new Zend_Db_Expr(
+                    "CASE WHEN Segmento.tp_enquadramento = 1 THEN 'Artigo 26' "
+                    . " WHEN Segmento.tp_enquadramento = 2 THEN 'Artigo 18' END"
+                ),
                 'tp_enquadramento'
             ],
             $this->_schema
@@ -61,13 +95,23 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             $this->_schema
         );
 
-        $tableSelect->where('id_preprojeto = ?', $id_preprojeto);
+        if(!$this->sugestaoEnquadramento->getIdPreprojeto()) {
+            throw new Exception("Identificador da proposta n&atilde;o informado.");
+        }
+
+        $tableSelect->where('id_preprojeto = ?', $this->sugestaoEnquadramento->getIdPreprojeto());
+        if ($this->sugestaoEnquadramento->getIdPerfilUsuario()) {
+            $tableSelect->where('id_perfil_usuario = ?', $this->sugestaoEnquadramento->getIdPerfilUsuario());
+        }
+
+        if ($this->sugestaoEnquadramento->getUltimaSugestao() === self::ULTIMA_SUGESTAO_ATIVA
+            || $this->sugestaoEnquadramento->getUltimaSugestao() === self::ULTIMA_SUGESTAO_INATIVA) {
+            $tableSelect->where('ultima_sugestao = ?', $this->sugestaoEnquadramento->getUltimaSugestao());
+        }
+
         $tableSelect->order('data_avaliacao desc');
 
-        $resultado = $this->fetchAll($tableSelect);
-        if ($resultado) {
-            return $resultado->toArray();
-        }
+        return $tableSelect;
     }
 
     /**
@@ -86,6 +130,13 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
             $arrayPesquisa['id_preprojeto'] = $sugestaoEnquadramento->getIdPreprojeto();
             $arrayPesquisa['id_orgao'] = $sugestaoEnquadramento->getIdOrgao();
             $arrayPesquisa['id_perfil_usuario'] = $sugestaoEnquadramento->getIdPerfilUsuario();
+        }
+
+        if ($sugestaoEnquadramento->getIdOrgaoSuperior()) {
+            $arrayPesquisa['id_orgao_superior'] = $sugestaoEnquadramento->getIdOrgaoSuperior();
+        }
+        if ($sugestaoEnquadramento->getUltimaSugestao()) {
+            $arrayPesquisa['ultima_sugestao'] = $sugestaoEnquadramento->getUltimaSugestao();
         }
 
         if (count($arrayPesquisa) > 0) {
@@ -118,15 +169,16 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
 
     public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento, $id_preprojeto)
     {
-        $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento();
+        $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento([
+            'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil']
+        ]);
 
         $descricao_motivacao = trim($dadosSugestaoEnquadramento['descricao_motivacao']);
         if (empty($descricao_motivacao)) {
             throw new Exception("O campo 'Parecer de Enquadramento' é de preenchimento obrigatório.");
         }
 
-        if ($dadosSugestaoEnquadramento['id_perfil'] != Autenticacao_Model_Grupos::TECNICO_ADMISSIBILIDADE
-            && !$sugestaoEnquadramento->isPermitidoSugerirEnquadramento($dadosSugestaoEnquadramento['id_perfil'])) {
+        if (!$sugestaoEnquadramento->isPermitidoSugerirEnquadramento()) {
             throw new Exception("Perfil sem permissão para executar a ação");
         }
 

@@ -95,12 +95,6 @@
                             <th>Segmento</th>
                             <th>Enquadramento</th>
                             <th>Analisar</th>
-                            <?php
-                            if ($this->liberarEncaminhamento === true) : ?>
-                                <th id="coluna_encaminhar">Encaminhar</th>
-                                <?php
-                            endif;
-                            ?>
                         </tr>
                         </thead>
                         <tbody>
@@ -135,40 +129,6 @@
         </div>
     </div>
 
-    <div id="dialogEncaminharProposta" class="modal bottom-sheet">
-        <form method="post"
-              action="<?php echo $this->url(
-                  [
-                      'module' => 'admissibilidade',
-                      'controller' => 'distribuicao-avaliacao-proposta',
-                      'action' => 'encaminhar-proposta-ajax'
-                  ]
-              ); ?>" onsubmit="return false">
-            <div class="modal-content">
-                <h4>Proposta Nr. <span id="span_id_preprojeto"></span> - Encaminhar Avalia&ccedil;&atilde;o</h4>
-                <div class="input-field col s12" style="margin-top: 35px">
-                    <select id="id_perfil" name="id_perfil">
-                        <?php foreach ($this->perfis as $perfil) { ?>
-                            <option value="<?php echo $perfil['gru_codigo'] ?>"><?php echo $perfil['gru_nome'] ?></option>
-                        <?php } ?>
-                    </select>
-                    <label>Selecione o pr&oacute;ximo perfil avaliador</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-
-                <input type="hidden" id="id_preprojeto" name="id_preprojeto"/>
-                <a class="btn waves-effect waves-dark red-text white modal-close">
-                    Cancelar
-                </a>
-                <button class="btn waves-effect waves-light "
-                        id="botaoEnviarAvaliacaoProposta"
-                        type="button">
-                    Enviar
-                </button>
-            </div>
-        </form>
-    </div>
     <br clear="all"/>
     <iframe name="gerarPDF" style="display: none;"></iframe>
     <script src="https://code.jquery.com/jquery-1.12.4.js"
