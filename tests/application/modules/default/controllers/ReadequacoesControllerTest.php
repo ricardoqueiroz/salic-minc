@@ -80,11 +80,86 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
      */    
     public function testPlanilhaOrcamentariaCondicoesNaoSatisfeitas()
     {
-         $tbReadequacao = new tbReadequacao();
+        $tbReadequacao = new tbReadequacao();
         $possuiReadequacao = $tbReadequacao->existeReadequacaoEmAndamento($this->idPronac);
         
         $this->assertTrue($possuiReadequacao);
 
     }
-    
+
+    /**
+     * TestPainelAction
+     * 
+     * @access public
+     * @return void
+     */
+    public function testPainelAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        
+        $this->dispatch('/readequacoes/painel');
+        $this->assertUrl('default','readequacoes', 'painel');
+        
+    }
+
+    /**
+     * TestPainelEmAnaliseAction
+     * 
+     * @access public
+     * @return void
+     */
+    public function testPainelEmAnaliseAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        
+        $this->dispatch('/readequacoes/painel?pronac=&qtde=10&tipoFiltro=em_analise');
+        $this->assertUrl('default','readequacoes', 'painel');
+        
+    }
+
+    /**
+     * TestPainelEmAnalisadosAction
+     * 
+     * @access public
+     * @return void
+     */
+    public function testPainelEmAnalisadosAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        
+        $this->dispatch('/readequacoes/painel?pronac=&qtde=10&tipoFiltro=em_analisados');
+        $this->assertUrl('default','readequacoes', 'painel');
+        
+    }
+
+    /**
+     * TestPainelAguardandoPublicacaoAction
+     * 
+     * @access public
+     * @return void
+     */
+    public function testPainelAguardandoPublicacaoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        
+        $this->dispatch('/readequacoes/painel?pronac=&qtde=10&tipoFiltro=aguardando_publicacao');
+        $this->assertUrl('default','readequacoes', 'painel');
+        
+    }
+
+    /**
+     * TestPainelAnalisadosPronac
+     * 
+     * @access public
+     * @return void
+     */
+    public function TestPainelAnalisadosPronacAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        
+        $idPronac = 154566;
+        $this->dispatch('/readequacoes/painel?pronac=' . $idPronac . '&qtde=10&tipoFiltro=aguardando_publicacao');
+        $this->assertUrl('default','readequacoes', 'painel');        
+    }
+
 }

@@ -1739,11 +1739,12 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
-
-        $get = Zend_Registry::get('get');
+        
+        $idReadequacao = $this->_request->getParam('idReadequacao');
+        
         try {
             $tbReadequacao = new tbReadequacao();
-            $dados = $tbReadequacao->buscar(array('idReadequacao =?'=>$get->idReadequacao))->current();
+            $dados = $tbReadequacao->buscar(array('idReadequacao =?'=>$idReadequacao))->current();
 
             if (!empty($dados->idDocumento)) {
                 $tbDocumento = new tbDocumento();
@@ -1767,7 +1768,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
             if ($dados->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA) {
                 $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
 
-                $tbPlanilhaAprovacao->delete(array('IdPRONAC = ?'=>$idPronac, 'tpPlanilha = ?'=>'SR', 'idReadequacao = ?'=>$get->idReadequacao));
+                $tbPlanilhaAprovacao->delete(array('IdPRONAC = ?'=>$idPronac, 'tpPlanilha = ?'=>'SR', 'idReadequacao = ?'=>$idReadequacao));
             }
 
             if ($dados->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_LOCAL_REALIZACAO) {
@@ -1785,7 +1786,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
                 $tbPlanoDivulgacao->delete(array('idPronac = ?'=>$idPronac, 'stAtivo = ?'=>'S'));
             }
 
-            $exclusao = $tbReadequacao->delete(array('idPronac =?'=>$idPronac, 'idReadequacao =?'=>$get->idReadequacao));
+            $exclusao = $tbReadequacao->delete(array('idPronac =?'=>$idPronac, 'idReadequacao =?'=>$idReadequacao));
 
             if ($exclusao) {
                 if ($dados->idTipoReadequacao == tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA) {
