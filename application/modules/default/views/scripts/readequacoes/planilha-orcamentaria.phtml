@@ -304,7 +304,9 @@
                  type: "POST",
                  data :{
                      idEtapa : $('#newEtapa').val(),
-                     idProduto : $(this).val()
+		     idMunicipio: $('#newMunicipio').val(),
+                     idProduto : $(this).val(),
+		     idPronac : <?php print $this->idPronac; ?>
                  },
                  success: function(valor){
                      $("#newItem").html('<option value=""> - Selecione - </option>');
@@ -766,7 +768,7 @@
      CKEDITOR.replace( 'descJustificativa', { toolbar: [] } );
      
      
-     <?php if($this->idPerfil == Autenticacao_Model_Grupos::Proponente){ ?>
+     <?php if($this->idPerfil == 1111){ ?>
          $('.restaurarItem').live('click', function(){
              var idPlanilha = $(this).attr('idPlanilha'),
                  tpAcao = $(this).attr('tipo'),
