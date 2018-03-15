@@ -10,7 +10,7 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
     public function setUp()
     {
         parent::setUp();
-
+        
         // Marcado para refatoração futura
         // * fixture do banco de dados com dados controlados
         $tbReadequacao = new tbReadequacao();
@@ -160,6 +160,13 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         $idPronac = 154566;
         $this->dispatch('/readequacoes/painel?pronac=' . $idPronac . '&qtde=10&tipoFiltro=aguardando_publicacao');
         $this->assertUrl('default','readequacoes', 'painel');        
+
+    }
+
+    public function testPainelReadequacoesAction()
+    {
+        $this->dispatch('/readequacoes/painel-readequacoes?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'readequacoes', 'painel-readequacoes');
     }
 
 }

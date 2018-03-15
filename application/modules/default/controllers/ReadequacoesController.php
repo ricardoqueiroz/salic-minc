@@ -2194,7 +2194,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
                 $r->stAtendimento = 'E';
             } else {
                 // deferida
-                if ($this->_request->getParam('vinculada') == 262 || $this->_request->getParam('vinculada') == 166) {
+                if ($this->_request->getParam('vinculada') == Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI || $this->_request->getParam('vinculada') == Orgaos::ORGAO_SAV_CAP) {
                     $r->siEncaminhamento = tbTipoEncaminhamento::SI_ENCAMINHAMENTO_ENVIADO_ANALISE_TECNICA;
                     $dataEnvio = new Zend_Db_Expr('GETDATE()');
                     $r->idAvaliador = $this->_request->getParam('destinatario');

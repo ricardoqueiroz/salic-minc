@@ -301,11 +301,16 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         
         $select->where('a.stEstado = ?', self::ST_ESTADO_EM_ANDAMENTO);
         $select->where('a.idPronac = ?' , $idPronac);
-        $select->where('siEncaminhamento = ?', 12);
+        $select->where('siEncaminhamento IN (?)',
+                       array(
+                           tbTipoEncaminhamento::SI_ENCAMINHAMENTO_ENVIADO_ANALISE_TECNICA,
+                           tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE
+                       )
+        );
         $select->where('a.idTipoReadequacao = ?', $idTipoReadequacao);
         
         $result = $this->fetchAll($select);
-
+        
         if (count($result)) {
             return $result[0]['idReadequacao'];
         } else {
