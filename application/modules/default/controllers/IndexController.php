@@ -305,12 +305,15 @@ class IndexController extends MinC_Controller_Action_Abstract
     public function montarPlanilhaOrcamentariaAction()
     {
         $this->_helper->layout->disableLayout(); // desabilita o Zend_Layout
-        $get = Zend_Registry::get('get');
-
+        
         $GrupoAtivo = new Zend_Session_Namespace('GrupoAtivo'); // cria a sessao com o grupo ativo
         $this->view->idPerfil = $GrupoAtivo->codGrupo;
 
-        $this->view->idPronac = $get->idPronac;
+        $idPronac = $this->_request->getParam('idPronac');
+        $tipoPlanilha = $this->_request->getParam('tipoPlanilha');
+        $link = ($this->_request->getParam('link')) ? true : false;
+        
+        $this->view->idPronac = $idPronac;
 
         $auth = Zend_Auth::getInstance();
         $proj = new Projetos();
@@ -322,10 +325,16 @@ class IndexController extends MinC_Controller_Action_Abstract
         if ($rsAgente->count() > 0) {
             $this->view->idAgente = $rsAgente[0]->idAgente;
         }
+
+        if ($tipoPlanilha == 6 && !$link) {
+            $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria = new spVisualizarPlanilhaOrcamentaria();
+            $planilhaOrcamentaria = $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria->exec($idPronac);
+        } else {
+            $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
+            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPronac, $tipoPlanilha);
+        }
         
-        $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
-        $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($get->idPronac, $get->tipoPlanilha);
-        $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, $get->tipoPlanilha);
+        $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, $tipoPlanilha);
         // tipoPlanilha = 0 : Planilha Orcamentaria da Proposta
         // tipoPlanilha = 1 : Planilha Orcamentaria do Proponente
         // tipoPlanilha = 2 : Planilha Orcamentaria do Parecerista
@@ -333,13 +342,11 @@ class IndexController extends MinC_Controller_Action_Abstract
         // tipoPlanilha = 4 : Cortes Orcamentarios Aprovados
         // tipoPlanilha = 5 : Remanejamento menor que 20%
         // tipoPlanilha = 6 : Readequacao
-
-        $link = isset($get->link) ? true : false;
-
+        
         $this->montaTela(
             'index/montar-planilha-orcamentaria.phtml',
             array(
-            'tipoPlanilha' => $get->tipoPlanilha,
+            'tipoPlanilha' => $tipoPlanilha,
             'tpPlanilha' => (count($planilhaOrcamentaria)>0) ? isset($planilhaOrcamentaria[0]->tpPlanilha) ? $planilhaOrcamentaria[0]->tpPlanilha : '' : '',
             'planilha' => $planilha,
             'link' => $link
