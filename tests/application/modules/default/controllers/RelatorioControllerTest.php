@@ -26,11 +26,13 @@ class RelatorioControllerTest extends MinC_Test_ControllerActionTestCase
     }
     public function testpropostaAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/relatorio/proposta?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'relatorio', 'proposta');
     }
     public function testprojetoAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/relatorio/projeto?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'relatorio', 'projeto');
     }
