@@ -442,4 +442,33 @@ class tbCumprimentoObjeto extends MinC_Db_Table_Abstract
 
         return $this->fetchAll($select);
     }
+
+    /**
+     * Método que diz se projeto possui ou não um relatório de cumprimento de objeto
+     *
+     * @param integer $idPronac
+     * @return bool
+     */
+    public function possuiRelatorioDeCumprimento($idPronac)
+    {
+        $select = $this->select();
+        $select->setIntegrityCheck(false);
+        $select->from(
+            array('a' => $this->_name),
+            ('idCumprimentoObjeto'),
+            $this->_schema
+        );
+
+        $select->where('siCumprimentoObjeto <> ?', 1);
+        $select->where('idPronac = ?', $idPronac);
+        $select->limit(1);
+        
+        $result = $this->fetchAll($select);
+
+        if (count($result) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

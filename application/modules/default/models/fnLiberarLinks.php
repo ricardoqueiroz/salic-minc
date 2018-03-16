@@ -326,17 +326,9 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 $ReadequacaoPlanilha = 0;
             }
                         
-            /* ===== CHECAR SE EXISTE RELAT�RIO DE CUMPRIMENTO DO OBJETO PARA SER ENVIADO ===== */
-            $relatorioCumprimentoEnvio = $db->select()
-                ->from(
-                    'tbCumprimentoObjeto',
-                    array(new Zend_Db_Expr('TOP 1 idCumprimentoObjeto')),
-                    $this->_schema
-                )
-                ->where('siCumprimentoObjeto <> ?', 1)
-                ->where('idPronac = ?', $idPronac);
-            $relatorioCumprimentoEnvio = $db->fetchRow($relatorioCumprimentoEnvio);
-
+            $tbCumprimentoObjeto = new tbCumprimentoObjeto();
+            $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
+            
             if ($relatorioCumprimentoEnvio->idCumprimentoObjeto) {
                 $Readequacao_50 = 0;
                 $Readequacao = 0;
@@ -360,7 +352,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
         
         # FASE 5 - PRESTA��O DE CONTAS DO PROPONENTE - RELAT�RIO DE CUMPRIMENTO DO OBJETO
         if ($contaLiberada == 'S' and $dataAtualBanco > $dadosProjeto->DtFinalExecucao) {
-            $Analise = 1;
+        $Analise = 1;
             $Execucao = 1;
             $PrestacaoDeContas = 1;
             $Marcas = 0;
@@ -378,19 +370,10 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
                 $Readequacao = 1;
             }
 
-            /* ===== CHECAR SE EXISTE RELATORIO DE CUMPRIMENTO DO OBJETO PARA SER ENVIADO ===== */
-            $relatorioDeCumprimento = $db->select()
-                ->from(
-                    'tbCumprimentoobjeto',
-                    array(new Zend_Db_Expr('TOP 1 idCumprimentoObjeto')),
-                    $this->_schema
-                )
-                ->where('siCumprimentoObjeto <> ?', 1)
-                ->where('idPronac = ?', $idPronac);
+            $tbCumprimentoObjeto = new tbCumprimentoObjeto();
+            $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
 
-            $relatorioDeCumprimento = $db->fetchRow($relatorioDeCumprimento);
-
-            if ($relatorioDeCumprimento->idCumprimentoObjeto) {
+            if ($possuiRelatorioDeCumprimento) {
                 $ComprovacaoFinanceira = 0;
                 $Readequacao_50 = 0;
                 $RelatorioFinal = 0;
@@ -434,12 +417,8 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
 
             if (!$existeReadequacaoEmAndamento && !$existeReadequacaoEmAndamento) {
                 $Readequacao_50 = 1;
-                $ReadequacaoPlanilha = 1;
-            } else if ($existeReadequacaoEmAndamento && $existeReadequacaoPlanilhaEmEdicao) {
-                $ReadequacaoPlanilha = 1;
             } else if ($existeReadequacaoEmAndamento && !$existeReadequacaoPlanilhaEmEdicao)  {
                 $Readequacao_50 = 0;
-                $ReadequacaoPlanilha = 0;
             }
             
             $Fase = 5;
