@@ -26,38 +26,44 @@ class OperacionalControllerTest extends MinC_Test_ControllerActionTestCase
     }
 
 
-    public function testDiagnosticoAction()
+    public function testdiagnosticoAction()
     {
+
         $this->dispatch('/operacional?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'diagnostico');
     }
 
     public function testeditaisMincAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/editais-minc?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'editais-minc');
     }
 
     public function testTramitacaoAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/tramitacao?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'tramitacao');
     }
 
     public function testAgenciaBancariaAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/agencia-bancaria?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'agencia-bancaria');
     }
 
     public function testPedidoProrrogacaoAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/pedido-prorrogacao?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'pedido-prorrogacao');
     }
 
     public function testContaBancariaAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/conta-bancaria?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'conta-bancaria');
     }
@@ -70,12 +76,14 @@ class OperacionalControllerTest extends MinC_Test_ControllerActionTestCase
 
     public function testTabelasAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/tabelas?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'tabelas');
     }
 
     public function testRegularidadeProponenteAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/operacional/regularidade-proponente?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'regularidade-proponente');
     }
