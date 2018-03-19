@@ -304,6 +304,7 @@ class tbReadequacao extends MinC_Db_Table_Abstract
         $select->where('siEncaminhamento IN (?)',
                        array(
                            tbTipoEncaminhamento::SI_ENCAMINHAMENTO_ENVIADO_ANALISE_TECNICA,
+                           tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CHECKLIST_PUBLICACAO,
                            tbTipoEncaminhamento::SI_ENCAMINHAMENTO_CADASTRADA_PROPONENTE
                        )
         );

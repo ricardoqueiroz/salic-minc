@@ -653,25 +653,24 @@ class PublicacaoDouController extends MinC_Controller_Action_Abstract
                     $projetos = $ap->consultaPortariaReadequacoes($where);
 
                     foreach ($projetos as $p) {
-                        // entra em cada projeto e atualiza tbReadequacao e troca planilha
                         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-                        //BUSCAR VALOR TOTAL DA PLANILHA ATIVA
-                        $where = array();
-                        $where['a.IdPRONAC = ?'] = $p->IdPRONAC;
-                        $where['a.stAtivo = ?'] = 'S';
-                        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-                        //BUSCAR VALOR TOTAL DA PLANILHA DE READEQUADA
-                        $where = array();
-                        $where['a.IdPRONAC = ?'] = $p->IdPRONAC;
-                        $where['a.tpPlanilha = ?'] = 'SR';
-                        $where['a.stAtivo = ?'] = 'N';
-                        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilha($where)->current();
-
-                        if ($PlanilhaAtiva->Total != $PlanilhaReadequada->Total) {
+                        
+                        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($p->IdPRONAC);
+                        
+                        $tbReadequacao = new tbReadequacao();
+                        $idReadequacao = $tbReadequacao->buscarIdReadequacaoAtiva(
+                            $p->IdPRONAC,
+                            tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA
+                        );
+                        
+                        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada(
+                            $p->IdPRONAC,
+                            $idReadequacao
+                        );
+                        
+                        if ($PlanilhaAtiva['Total'] != $PlanilhaReadequada['Total']) {
                             // quando atualiza portaria na dou, troca planilhas e muda status na tbReadequacao
                             //Atualiza a tabela tbReadequacao
-                            $tbReadequacao = new tbReadequacao();
 
                             $dados = array();
                             $dados['siEncaminhamento'] = 15; //Finalizam sem a necessidade de passar pela publica&ccedil;&atilde;o no DOU.

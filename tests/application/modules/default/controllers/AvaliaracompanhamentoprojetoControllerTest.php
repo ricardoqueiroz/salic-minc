@@ -1,11 +1,11 @@
 <?php
 /**
- * Projeto_AlterarprojetoControllerTest
+ * Default_AvaliaracompanhamentoprojetoControllerTest
  *
  * @package
  * @author isaiassm <isaias1113@outlook.com>
  */
-class AlterarprojetoControllerTest extends MinC_Test_ControllerActionTestCase
+class AvaliaracompanhamentoprojetoControllerTest extends MinC_Test_ControllerActionTestCase
 {
     public function setUp()
     {

@@ -886,7 +886,7 @@
 	 // ap�s carregar a planilha, monta planilha
 	 success: function(data) {
 	     jqAjaxLinkSemLoading('<?php echo $this->Url(array('controller' => 'readequacoes', 'action' => 'carregar-valor-entre-planilhas'), '', true) ?>?idPronac=<?php echo $this->idPronac; ?>', '', 'valorEntrePlanilhas');
-	     jqAjaxLinkSemLoading('<?php echo $this->Url(array('controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link', '', 'planilhaOrcamentariaMontada');
+	     jqAjaxLinkSemLoading('<?php echo $this->Url(array('controller' => 'index', 'action' => 'montar-planilha-orcamentaria')) ?>?idPronac=<?php echo $this->idPronac; ?>&tipoPlanilha=6&link=true', '', 'planilhaOrcamentariaMontada');
 
 	     /* data = JSON.parse(data); */
 	     $('#idReadequacao').val(data.idReadequacao);

@@ -1,6 +1,6 @@
 <?php
 
-class ManterregularidadeproponenteControllerTest extends MinC_Test_ControllerActionTestCase
+class ManterregularidadeControllerTest extends MinC_Test_ControllerActionTestCase
 {
      public function setUp()
      {
