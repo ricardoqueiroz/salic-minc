@@ -24,49 +24,87 @@ class OperacionalControllerTest extends MinC_Test_ControllerActionTestCase
         $this->resetRequest()
             ->resetResponse();
     }
+
+
     public function testDiagnosticoAction()
     {
         $this->dispatch('/operacional?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'diagnostico');
     }
+
     public function testeditaisMincAction()
     {
         $this->dispatch('/operacional/editais-minc?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'editais-minc');
     }
+
     public function testTramitacaoAction()
     {
         $this->dispatch('/operacional/tramitacao?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'tramitacao');
     }
+
     public function testAgenciaBancariaAction()
     {
         $this->dispatch('/operacional/agencia-bancaria?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'agencia-bancaria');
     }
+
     public function testPedidoProrrogacaoAction()
     {
         $this->dispatch('/operacional/pedido-prorrogacao?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'pedido-prorrogacao');
     }
+
     public function testContaBancariaAction()
     {
         $this->dispatch('/operacional/conta-bancaria?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'conta-bancaria');
     }
+
     public function testResultadoContaBancariaAction()
     {
         $this->dispatch('/operacional/resultado-conta-bancaria?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'resultado-conta-bancaria');
     }
+
     public function testTabelasAction()
     {
         $this->dispatch('/operacional/tabelas?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'tabelas');
     }
+
     public function testRegularidadeProponenteAction()
     {
         $this->dispatch('/operacional/regularidade-proponente?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'operacional', 'regularidade-proponente');
+    }
+
+    public function testprojetosEmPautaReuniaoCnicAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
+        $this->dispatch('/operacional/projetos-em-pauta-reuniao-cnic-sem-quebra?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'operacional', 'projetos-em-pauta-reuniao-cnic-sem-quebra');
+    }
+
+    public function testprojetosEmPautaReuniaoCnicSemQuebraAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
+        $this->dispatch('/operacional/projetos-em-pauta-reuniao-cnic?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'operacional', 'projetos-em-pauta-reuniao-cnic');
+    }
+
+    public function testprojetosAvaliadosCnicAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
+        $this->dispatch('/operacional/projetos-avaliados-cnic?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'operacional', 'projetos-avaliados-cnic');
+    }
+
+    public function testprojetosVotoAlteradoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
+        $this->dispatch('/operacional/projetos-voto-alterado?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'operacional', 'projetos-voto-alterado');
     }
 }
