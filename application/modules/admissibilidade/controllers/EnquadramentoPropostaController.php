@@ -35,14 +35,18 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
             $this->view->id_orgao = $this->grupoAtivo->codOrgao;
             $this->view->id_usuario_avaliador = $this->auth->getIdentity()->usu_codigo;
 
-            $dadosSugetaoEnquadramento = $this->getRequest()->getPost();
-            if (!$dadosSugetaoEnquadramento['descricao_motivacao']) {
+            $post = $this->getRequest()->getPost();
+            if (!$post['descricao_motivacao']) {
                 $this->carregardadosEnquadramentoProposta($preprojeto);
             } else {
-                $dadosSugetaoEnquadramento['id_orgao'] = $this->grupoAtivo->codOrgao;
-                $dadosSugetaoEnquadramento['id_perfil'] = $this->grupoAtivo->codGrupo;
-                $dadosSugetaoEnquadramento['id_usuario_avaliador'] = $this->auth->getIdentity()->usu_codigo;
-                $this->salvarSugestaoEnquadramento($dadosSugetaoEnquadramento, $get['id_preprojeto']);
+                $dadosSugestaoEnquadramento['id_orgao'] = $this->grupoAtivo->codOrgao;
+                $dadosSugestaoEnquadramento['id_perfil'] = $this->grupoAtivo->codGrupo;
+                $dadosSugestaoEnquadramento['id_usuario_avaliador'] = $this->auth->getIdentity()->usu_codigo;
+                $dadosSugestaoEnquadramento['id_preprojeto'] = $get['id_preprojeto'];
+                $dadosSugestaoEnquadramento['descricao_motivacao'] = $post['descricao_motivacao'];
+                $dadosSugestaoEnquadramento['id_area'] = $post['id_area'];
+                $dadosSugestaoEnquadramento['id_segmento'] = $post['id_segmento'];
+                $this->salvarSugestaoEnquadramento($dadosSugestaoEnquadramento);
             }
         } catch (Exception $objException) {
             parent::message($objException->getMessage(), '/admissibilidade/enquadramento/gerenciar-enquadramento');
@@ -83,15 +87,22 @@ class Admissibilidade_EnquadramentoPropostaController extends MinC_Controller_Ac
 //        $this->view->historicoEnquadramento = $this->obterHistoricoSugestaoEnquadramento($preprojeto['idPreProjeto']);
     }
 
-    public function salvarSugestaoEnquadramento(array $dadosSugetaoEnquadramento, $id_preprojeto)
+    public function salvarSugestaoEnquadramento(array $dadosSugetaoEnquadramento)
     {
         try {
             $sugestaoEnquadramentoDbTable = new Admissibilidade_Model_DbTable_SugestaoEnquadramento();
-            $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugetaoEnquadramento, $id_preprojeto);
+            $sugestaoEnquadramentoDbTable->salvarSugestaoEnquadramento($dadosSugetaoEnquadramento);
 
-            parent::message('Enquadramento armazenado com sucesso!', "/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto={$id_preprojeto}&realizar_analise=sim", 'CONFIRM');
+            parent::message(
+                'Enquadramento armazenado com sucesso!',
+                "/admissibilidade/admissibilidade/exibirpropostacultural?idPreProjeto={$dadosSugetaoEnquadramento['id_preprojeto']}&realizar_analise=sim",
+                'CONFIRM'
+            );
         } catch (Exception $objException) {
-            parent::message($objException->getMessage(), "/admissibilidade/enquadramento-proposta/sugerir-enquadramento?id_preprojeto={$id_preprojeto}");
+            parent::message(
+                $objException->getMessage(),
+                "/admissibilidade/enquadramento-proposta/sugerir-enquadramento?id_preprojeto={$dadosSugetaoEnquadramento['id_preprojeto']}"
+            );
         }
     }
 

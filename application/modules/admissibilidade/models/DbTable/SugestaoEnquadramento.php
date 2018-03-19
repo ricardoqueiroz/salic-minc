@@ -29,10 +29,12 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         }
     }
 
+    /**
+     * @return array
+     */
     public function obterUltimaSugestaoEnquadramentoProposta()
     {
         $this->sugestaoEnquadramento->setUltimaSugestao(self::ULTIMA_SUGESTAO_ATIVA);
-
         $tableSelect = $this->obterQueryDetalhadaEnquadramentosProposta();
         $resultado = $this->fetchRow($tableSelect);
         if ($resultado) {
@@ -167,7 +169,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         );
     }
 
-    public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento, $id_preprojeto)
+    public function salvarSugestaoEnquadramento(array $dadosSugestaoEnquadramento)
     {
         $sugestaoEnquadramento = new Admissibilidade_Model_SugestaoEnquadramento([
             'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil']
@@ -192,7 +194,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
 
         $distribuicaoAvaliacaoPropostaDtTable = new Admissibilidade_Model_DbTable_DistribuicaoAvaliacaoProposta();
         $distribuicaoAvaliacaoProposta = $distribuicaoAvaliacaoPropostaDtTable->findBy([
-            'id_preprojeto' => $id_preprojeto,
+            'id_preprojeto' => $dadosSugestaoEnquadramento['id_preprojeto'],
             'id_orgao_superior' => $orgaoSuperior,
             'id_perfil' => $dadosSugestaoEnquadramento['id_perfil']
         ]);
@@ -208,7 +210,7 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
 
         $dadosNovaSugestaoEnquadramento = [
             'id_orgao' => $dadosSugestaoEnquadramento['id_orgao'],
-            'id_preprojeto' => $id_preprojeto,
+            'id_preprojeto' => $dadosSugestaoEnquadramento['id_preprojeto'],
             'id_orgao_superior' => $orgaoSuperior,
             'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
             'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador'],
@@ -222,19 +224,19 @@ class Admissibilidade_Model_DbTable_SugestaoEnquadramento extends MinC_Db_Table_
         $dadosBuscaPorSugestao = $sugestaoEnquadramentoDbTable->findBy(
             [
                 'id_orgao' => $dadosSugestaoEnquadramento['id_orgao'],
-                'id_preprojeto' => $id_preprojeto,
+                'id_preprojeto' => $dadosSugestaoEnquadramento['id_preprojeto'],
                 'id_orgao_superior' => $orgaoSuperior,
                 'id_perfil_usuario' => $dadosSugestaoEnquadramento['id_perfil'],
                 'id_usuario_avaliador' => $dadosSugestaoEnquadramento['id_usuario_avaliador']
             ]
         );
 
-
         if ($distribuicaoAvaliacaoProposta && $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop']) {
             $dadosNovaSugestaoEnquadramento['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
         }
+
         if (count($dadosBuscaPorSugestao) < 1) {
-            $sugestaoEnquadramentoDbTable->inativarSugestoes($id_preprojeto);
+            $sugestaoEnquadramentoDbTable->inativarSugestoes($dadosSugestaoEnquadramento['id_preprojeto']);
             $sugestaoEnquadramentoDbTable->inserir($dadosNovaSugestaoEnquadramento);
         } else {
             $dadosBuscaPorSugestao['id_distribuicao_avaliacao_proposta'] = $distribuicaoAvaliacaoProposta['id_distribuicao_avaliacao_prop'];
