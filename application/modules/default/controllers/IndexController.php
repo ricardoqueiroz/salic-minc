@@ -312,6 +312,7 @@ class IndexController extends MinC_Controller_Action_Abstract
         $idPronac = $this->_request->getParam('idPronac');
         $tipoPlanilha = $this->_request->getParam('tipoPlanilha');
         $link = ($this->_request->getParam('link')) ? true : false;
+        $view_edicao = ($this->_request->getParam('view_edicao')) ? true : false;
         
         $this->view->idPronac = $idPronac;
 
@@ -326,12 +327,15 @@ class IndexController extends MinC_Controller_Action_Abstract
             $this->view->idAgente = $rsAgente[0]->idAgente;
         }
 
-        if ($tipoPlanilha == 6 && !$link) {
+        if ($tipoPlanilha == 6
+            &&
+            ($link || $view_edicao)
+        ) {
+            $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
+            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPronac, $tipoPlanilha);            
+        } else {
             $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria = new spVisualizarPlanilhaOrcamentaria();
             $planilhaOrcamentaria = $spVisualizarPlanilhaOrcamentariaPlanilhaOrcamentaria->exec($idPronac);
-        } else {
-            $spPlanilhaOrcamentaria = new spPlanilhaOrcamentaria();
-            $planilhaOrcamentaria = $spPlanilhaOrcamentaria->exec($idPronac, $tipoPlanilha);
         }
         
         $planilha = $this->montarPlanilhaOrcamentaria($planilhaOrcamentaria, $tipoPlanilha);

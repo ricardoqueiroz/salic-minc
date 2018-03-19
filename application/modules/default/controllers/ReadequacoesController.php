@@ -838,20 +838,24 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         );
         
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($idPronac)->current();
-        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada($idPronac, $idReadequacao)->current();
+        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($idPronac);
 
-        if ($PlanilhaReadequada->Total > 0) {
-            if ($PlanilhaAtiva->Total == $PlanilhaReadequada->Total) {
+        $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada(
+                            $idPronac,
+                            $idReadequacao
+        );
+        
+        if ($PlanilhaReadequada['Total'] > 0) {
+            if ($PlanilhaAtiva['Total'] == $PlanilhaReadequada['Total']) {
                 $statusPlanilha = 'neutro';
-            } elseif ($PlanilhaAtiva->Total > $PlanilhaReadequada->Total) {
+            } elseif ($PlanilhaAtiva['Total'] > $PlanilhaReadequada['Total']) {
                 $statusPlanilha = 'positivo';
             } else {
                 $statusPlanilha = 'negativo';
             }
         } else {
-            $PlanilhaAtiva->Total = 0;
-            $PlanilhaReadequada->Total = 0;
+            $PlanilhaAtiva['Total'] = 0;
+            $PlanilhaReadequada['Total'] = 0;
             $statusPlanilha = 'neutro';
         }
 
@@ -3494,23 +3498,18 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
                 $dadosPrj = $Projetos->find(array('IdPRONAC=?'=>$read->idPronac))->current();
 
                 $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-                //BUSCAR VALOR TOTAL DA PLANILHA ATIVA
-                $wherePlanilhaAtiva = array();
-                $wherePlanilhaAtiva['a.IdPRONAC = ?'] = $read->idPronac;
-                $wherePlanilhaAtiva['a.stAtivo = ?'] = 'S';
-                $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilha($wherePlanilhaAtiva)->current();
+                $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($read->idPronac);
 
                 //BUSCAR VALOR TOTAL DA PLANILHA DE READEQUADA
-                $whereTotalPlanilha = array();
-                $whereTotalPlanilha['a.IdPRONAC = ?'] = $read->idPronac;
-                $whereTotalPlanilha['a.tpPlanilha = ?'] = 'SR';
-                $whereTotalPlanilha['a.stAtivo = ?'] = 'N';
-                $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilha($whereTotalPlanilha)->current();
-
+                $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada(
+                    $read->idPronac,
+                    $read->idReadequacao
+                );
+                
                 // chama SP que verifica o tipo do remanejamento
                 $spTipoDeReadequacaoOrcamentaria = new spTipoDeReadequacaoOrcamentaria();
                 $TipoDeReadequacao = $spTipoDeReadequacaoOrcamentaria->exec($read->idPronac);
-
+                
                 // complementacao
                 if ($TipoDeReadequacao[0]['TipoDeReadequacao'] == 'CO') {
                     $TipoAprovacao = 2;
