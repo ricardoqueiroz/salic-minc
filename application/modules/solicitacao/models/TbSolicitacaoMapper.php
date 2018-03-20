@@ -40,13 +40,17 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
     {
         $booStatus = true;
         $arrData = $model->toArray();
-        if ($arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SOLICITACAO_CADASTRADA
-            || $arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC
+        if ($arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_CADASTRADA
+            || $arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_ENCAMINHADA_AO_MINC
         ) {
-            $arrRequired = array(
+            $arrRequired = [
                 'idOrgao',
                 'dsSolicitacao',
-            );
+            ];
+
+            if ($arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_RASCUNHO) {
+                $arrRequired = ['idOrgao'];
+            }
 
             foreach ($arrRequired as $strValue) {
                 if (!isset($arrData[$strValue]) || empty($arrData[$strValue])) {
@@ -75,7 +79,6 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                 } elseif (!empty($arrData['idProjeto'])) {
                     $tecnico = $sp->exec($arrData['idProjeto'], 'proposta');
                 }
-
                 if (empty($tecnico))
                     throw new Exeception("Erro ao salvar! T&eacute;cnico n&atilde;o encontrado!");
 
@@ -87,35 +90,39 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                 $model->setDtSolicitacao(date('Y-m-d h:i:s'));
                 $model->setIdOrgao($arrData['idOrgao']);
                 $model->setIdAgente($arrData['idAgente']);
+                $model->setDsSolicitacao(' ');
                 $model->setDsSolicitacao($arrData['dsSolicitacao']);
-                $model->setStEstado(1);
+                $model->setStEstado(Solicitacao_Model_TbSolicitacao::ESTADO_ATIVO);
                 $model->setIdPronac($arrData['idPronac']);
                 $model->setIdProjeto($arrData['idProjeto']);
                 $model->setIdTecnico($arrData['idTecnico']);
                 $model->setIdSolicitante($arrData['idUsuario']);
 
                 $mensagemSucesso = "Solicita&ccedil;&atilde;o enviada com sucesso!";
-                $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC);
+                $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_ENCAMINHADA_AO_MINC);
 
-                # define se eh para salvar ou enviar ao minc
-                if ($arrData['siEncaminhamento'] == 0) {
-                    $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SOLICITACAO_CADASTRADA);
+                # define se é para salvar ou enviar ao minc
+                if ($arrData['siEncaminhamento'] == Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_RASCUNHO) {
+                    $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_CADASTRADA);
                     $mensagemSucesso = "Rascunho salvo com sucesso!";
                 }
-
                 $file = new Zend_File_Transfer();
 
-                if (!empty($file->getFileInfo())) {
+                $model->setIdDocumento($model->getIdDocumento());
+                if($file->isUploaded()){
 
-                    $arrDoc = [];
-                    $arrDoc['idTipoDocumento'] = 24;
-                    $arrDoc['dsDocumento'] = 'Anexo solicita&ccedil;&atilde;o';
+                    if (!empty($file->getFileInfo())) {
 
-                    $mapperArquivo = new Arquivo_Model_TbDocumentoMapper();
-                    $idDocumento = $mapperArquivo->saveCustom($arrDoc, $file);
+                        $arrDoc = [];
+                        $arrDoc['idTipoDocumento'] = Arquivo_Model_TbTipoDocumento::TIPO_DOCUMENTO_ARQUIVO;
+                        $arrDoc['dsDocumento'] = 'Anexo solicita&ccedil;&atilde;o';
 
+                        $mapperArquivo = new Arquivo_Model_TbDocumentoMapper();
+                        $idDocumento = $mapperArquivo->saveCustom($arrDoc, $file);
+
+                    }
+                    $model->setIdDocumento($idDocumento);
                 }
-                $model->setIdDocumento($idDocumento);
 
                 if ($id = $this->save($model)) {
                     $booStatus = $id;
@@ -142,7 +149,7 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
                 $model->setDtResposta(date('Y-m-d h:i:s'));
                 $model->setDsResposta($arrData['dsResposta']);
                 $model->setIdTecnico($this->_idUsuario);
-                $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SOLICITACAO_FINALIZADA_MINC);
+                $model->setSiEncaminhamento(Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_FINALIZADA_MINC);
                 $model->setStEstado(0);
 
                 if ($id = $this->save($model)) {
@@ -178,4 +185,23 @@ class Solicitacao_Model_TbSolicitacaoMapper extends MinC_Db_Mapper
         }
         return $booStatus;
     }
+
+
+    public function deletarArquivo($arrData)
+    {
+        if (!empty($arrData)) {
+            try {
+
+                $model = new Solicitacao_Model_DbTable_TbSolicitacao();
+                $model->update(['idDocumento' => 0],"idSolicitacao = {$arrData['idSolicitacao']}");
+                $this->updateCustom($model);
+
+            } catch (Exception $e) {
+                $this->setMessage($e->getMessage());
+
+            }
+        }
+
+    }
+
 }

@@ -22,7 +22,7 @@ class Solicitacao_Model_DbTable_TbSolicitacao extends MinC_Db_Table_Abstract
                     'idOrgao',
                     'idSolicitante',
                     'dtSolicitacao',
-                    'dsSolicitacao',
+                    'CAST(dsSolicitacao AS TEXT) AS dsSolicitacao',
                     'dtResposta',
                     'dsResposta',
                     'idDocumento',
@@ -137,7 +137,7 @@ class Solicitacao_Model_DbTable_TbSolicitacao extends MinC_Db_Table_Abstract
         $select->where('a.idTecnico = ?', $idTecnico);
         $select->where('a.idOrgao = ?', $idOrgao);
         $select->where('a.dtResposta is null', '');
-        $select->where('a.siEncaminhamento = ?', Solicitacao_Model_TbSolicitacao::SOLICITACAO_ENCAMINHADA_AO_MINC);
+        $select->where('a.siEncaminhamento = ?', Solicitacao_Model_TbSolicitacao::SITUACAO_ENCAMINHAMENTO_ENCAMINHADA_AO_MINC);
 
         $db = Zend_Db_Table::getDefaultAdapter();
         return $db->fetchOne($select);

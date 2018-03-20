@@ -58,6 +58,18 @@ $arrMenuProponente['projeto']['menu'][] = array('label' => 'Listar Projetos', 't
     'url' => $this->url(array('controller' => 'listarprojetos', 'action' => 'index'), '', true),
     'grupo' => array()
 );
+$arrMenuProponente['solicitacoes'] = array(
+    'id' => 'solicitacoes',
+    'label' => 'Solicita&ccedil;&otilde;es',
+    'title' => 'Ir para Solicitacoes',
+    'menu' => array(),
+    'grupo' => []
+);
+$arrMenuProponente['solicitacoes']['menu'][] = [
+    'label' => 'Listar Solicita&ccedil;&otilde;es', 'title' => 'Ir para Listar Solicita&ccedil;&otilde;es',
+    'url' => $this->url(['module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'index'], null, true),
+    'grupo' => []
+];
 // ========== FIM MENU PROJETO ==========
 // ========== INICIO MENU PROTOCOLO ==========
 $arrMenuProponente['usuario'] = array(
@@ -634,6 +646,22 @@ $arrMenu['relatorios']['menu'][] = array(
     'label' => 'Listar Selecionados'
 );
 
+
+
+
+$arrMenu['solicitacoes'] = array(
+    'id' => 'solicitacoes',
+    'label' => 'Solicita&ccedil;&otilde;es',
+    'title' => 'Ir para Solicitacoes',
+    'menu' => array(),
+    'grupo' => []
+);
+$arrMenu['solicitacoes']['menu'][] = [
+    'label' => 'Listar Solicita&ccedil;&otilde;es', 'title' => 'Ir para Listar Solicita&ccedil;&otilde;es',
+    'url' => $this->url(['module' => 'solicitacao', 'controller' => 'mensagem', 'action' => 'index'], null, true),
+    'grupo' => []
+];
+
 // ========== INICIO MENU ASSINATURA ==========
 //$arrMenu['assinatura'] = array(
 //'id' => 'assinatura',
@@ -863,7 +891,7 @@ if (isset ($auth['cpf'])) {
             </ul>
             <ul class="menu-apoio right">
                 <?php echo $this->partial('partials/menu/notificacao-mensagem.phtml') ?>
-                <?php echo $this->partial('partials/menu/notificacoes.phtml') ?>
+<!--                --><?php //echo $this->partial('partials/menu/notificacoes.phtml') ?>
 
 <!--                <li><a class="white-text" href="sass.html"><i class="material-icons">power_settings_new</i></a></li>-->
 <!--                <li><a class="white-text" href="mobile.html"><i class="material-icons">more_vert</i></a></li>-->

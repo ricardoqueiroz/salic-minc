@@ -66,7 +66,8 @@
                     </td>
                     <td>
                         <a href="<?php echo $this->url($arrayUrl, null, true); ?>">
-                            <?= substr(strip_tags($arrValue['dsSolicitacao']), 0 , 150); ?> ...
+                            <?= substr(strip_tags($arrValue['dsSolicitacao']), 0 , 95); ?>
+                            <?= (strlen($arrValue['dsSolicitacao'])>=95) ? '...' : ''; ?>
                         </a>
                     </td>
                     <?php if (!$this->isProponente) : ?>
