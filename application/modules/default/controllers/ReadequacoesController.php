@@ -838,12 +838,12 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         );
         
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($idPronac);
-
+        $PlanilhaAtiva = $tbPlanilhaAprovacao->valorTotalPlanilhaAtiva($idPronac)->current();
+        
         $PlanilhaReadequada = $tbPlanilhaAprovacao->valorTotalPlanilhaReadequada(
                             $idPronac,
                             $idReadequacao
-        );
+        )->current();
         
         if ($PlanilhaReadequada['Total'] > 0) {
             if ($PlanilhaAtiva['Total'] == $PlanilhaReadequada['Total']) {
@@ -2321,7 +2321,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         $this->view->filtro = $filtro;
 
         if ($this->_request->getParam('pronac')) {
-            $where['PRONAC = ?'] = $this->_request->getParam('pronac');
+            $where['c.AnoProjeto+c.Sequencial = ?'] = $this->_request->getParam('pronac');
             $this->view->pronac = $this->_request->getParam('pronac');
         }
 

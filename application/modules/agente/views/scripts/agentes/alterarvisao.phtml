@@ -1,3 +1,10 @@
+<style>
+    .componente-select-multiplo select{
+        display: contents;
+        height: 150px;
+    }
+</style>
+
 <div class="row">
     <?php echo $this->partial('agentes/inc/menu.inc.php', $this) // menu lateral ?>
     <div class="col s12 m10 l10">
@@ -39,10 +46,11 @@
                         <th>A&ccedil;&atilde;o</th>
                         <th>Vis&otilde;es do Agente</th>
                     </tr>
-                    <tr>
+                    <tr class="componente-select-multiplo">
                         <td class="centro" valign="top">
                             <label for="visao"> </label>
-                            <select class="select w300" name="visao[]" id="visao" multiple="multiple" size="7">
+                            <select class="select w300" name="visao[]" id="visao" multiple="multiple"
+                                    size="7">
                                 <?php foreach ($this->visao as $visao) : ?>
                                     <?php if (!in_array($visao['idVerificacao'], $arrayIdVisao)) : // só mostra as visoes que o agente NAO possui ?>
                                         <option
