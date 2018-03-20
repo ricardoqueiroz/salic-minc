@@ -39,6 +39,7 @@ class RelatorioControllerTest extends MinC_Test_ControllerActionTestCase
 
     public function testgerencialAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_AVALIACAO, Orgaos::ORGAO_GEAR_SACAV);
         $this->dispatch('/relatorio/gerencial?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'relatorio', 'gerencial');

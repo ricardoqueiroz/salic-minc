@@ -1,6 +1,6 @@
 <?php
 
-class RecursoControllerTest extends MinC_Test_ControllerActionTestCase
+class RecursoEnquadramentoControllerTest extends MinC_Test_ControllerActionTestCase
 {
      public function setUp()
      {
