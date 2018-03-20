@@ -1,11 +1,21 @@
-<?php
-if ($this->arrPartial['dataForm']['idProjeto'] && $this->isProponente) {
-    echo $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->arrPartial['dataForm']['idProjeto']));
-    echo $this->partial('/mensagem/partials/proposta/conteudo-visualizar.phtml', 'solicitacao', $this);
+<style>
+    #qm0 > a:first-of-type{
+        background-color: #0A420E;
+        color: #fff;
+    }
+    #qm0, #qm0.qmmc{
+        padding-bottom: 0px;
+    }
 
-} elseif ($this->arrPartial['dataForm']['Pronac'] && $this->isProponente){
-    echo $this->partial('/mensagem/partials/projeto/conteudo-visualizar.phtml', 'solicitacao', $this);
-}else{ ?>
+    #conteudo a {
+        color: #000000;
+    }
+
+</style>
+
+<?= $this->partial('consultardadosprojeto/inc/menu.inc.php', 'default', $this); ?>
+
+<div id="conteudo">
     <div class="container-fluid">
         <div class="row top-title">
             <div class="page-title">
@@ -40,4 +50,4 @@ if ($this->arrPartial['dataForm']['idProjeto'] && $this->isProponente) {
             </div>
         </div>
     </div>
-<?php }
+</div>

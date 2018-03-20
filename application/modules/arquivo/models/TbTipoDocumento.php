@@ -5,6 +5,8 @@ class Arquivo_Model_TbTipoDocumento extends MinC_Db_Model
     protected $_idTipoDocumento;
     protected $_dsTipoDocumento;
 
+    const TIPO_DOCUMENTO_ARQUIVO = 24;
+
     /**
      * @return mixed
      */

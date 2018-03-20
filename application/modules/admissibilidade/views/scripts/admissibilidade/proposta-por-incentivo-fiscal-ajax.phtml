@@ -2,18 +2,6 @@
     <?php
     $IncluirAvaliacao = $this->url(array('module' => 'admissibilidade', 'controller' => 'admissibilidade', 'action' => 'incluiravaliacao'));
     ?>
-    <style type="text/css">
-        .mensagem {
-            padding: 8px;
-            border: darkgreen;
-            background: #e3e3c7;
-        }
-
-        fieldset {
-            margin: 10px;
-            width: 98%;
-        }
-    </style>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -942,41 +930,41 @@
                             <?php
                             $item = 1;
 
-                            $totalVal_01_Fonte = (float)0;
-                            $totalVal_02_Fonte = (float)0;
+                                $totalVal_01_Fonte = (float) 0;
+                                $totalVal_02_Fonte = (float) 0;
 
-                            // inicializa valor total por produto
-                            $totalVal_01_Produto = (float)0;
-                            $totalVal_02_Produto = (float)0;
-                            $totalVal_03_Produto = (float)0;
+                                // inicializa valor total por produto
+                                $totalVal_01_Produto = (float) 0;
+                                $totalVal_02_Produto = (float) 0;
+                                $totalVal_03_Produto = (float) 0;
 
-                            // inicializa valor total por etapa
-                            $totalVal_01_Etapa = (float)0;
-                            $totalVal_02_Etapa = (float)0;
-                            $totalVal_03_Etapa = (float)0;
+                                // inicializa valor total por etapa
+                                $totalVal_01_Etapa = (float) 0;
+                                $totalVal_02_Etapa = (float) 0;
+                                $totalVal_03_Etapa = (float) 0;
 
-                            // inicializa valor total por uf
-                            $totalVal_01_UF = (float)0;
-                            $totalVal_02_UF = (float)0;
-                            $totalVal_03_UF = (float)0;
+                                // inicializa valor total por uf
+                                $totalVal_01_UF = (float) 0;
+                                $totalVal_02_UF = (float) 0;
+                                $totalVal_03_UF = (float) 0;
 
-                            // arrays que servem para armazenar os elementos, e, posteriormente,
-                            // verificar se o elemento j&aacute; encontra-se no array e evitar a sua "impress�o" duplicada na tela
-                            $arrayIncentivo = array();
-                            $arrayProdutos = array();
-                            $arrayEtapas = array();
-                            $arrayUFs = array();
+                                // arrays que servem para armazenar os elementos, e, posteriormente,
+                                // verificar se o elemento j&aacute; encontra-se no array e evitar a sua "impress�o" duplicada na tela
+                                $arrayIncentivo = array();
+                                $arrayProdutos  = array();
+                                $arrayEtapas    = array();
+                                $arrayUFs       = array();
 
-                            // total geral
-                            $totalVal_01_Geral = (float)0;
-                            $totalVal_02_Geral = (float)0;
+                                // total geral
+                                $totalVal_01_Geral = (float) 0;
+                                $totalVal_02_Geral = (float) 0;
 
-                            foreach ($this->AnaliseCustos as $resposta) :
-                                // contador dos itens
-                                /**
-                                 * INICIO FOREACH PRODUTOS
-                                 * Percorre todos os produtos
-                                 */
+                                foreach ($this->AnaliseCustos as $resposta) :
+                                    // contador dos itens
+                                    /**
+                                     * INICIO FOREACH PRODUTOS
+                                     * Percorre todos os produtos
+                                     */
 
                                 // vari&aacute;veis que servir�o para fazer compara&ccedil;�o dos itens j&aacute; existentes,
                                 // e, evitar "imprimir" um iten j&aacute; "impresso"

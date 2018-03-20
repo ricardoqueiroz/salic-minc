@@ -18,9 +18,12 @@ class Solicitacao_Model_TbSolicitacao extends MinC_Db_Model
     protected $_stLeitura;
     protected $_stEstado;
 
-    const SOLICITACAO_CADASTRADA = 12;
-    const SOLICITACAO_ENCAMINHADA_AO_MINC = 1;
-    const SOLICITACAO_FINALIZADA_MINC = 15;
+    const SITUACAO_ENCAMINHAMENTO_CADASTRADA = 12;
+    const SITUACAO_ENCAMINHAMENTO_ENCAMINHADA_AO_MINC = 1;
+    const SITUACAO_ENCAMINHAMENTO_FINALIZADA_MINC = 15;
+    const SITUACAO_ENCAMINHAMENTO_RASCUNHO = 0;
+    const ESTADO_INATIVO = 0;
+    const ESTADO_ATIVO = 1;
 
     /**
      * @return mixed

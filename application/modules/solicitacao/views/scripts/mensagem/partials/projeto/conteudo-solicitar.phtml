@@ -1,21 +1,35 @@
-<?php
-if ($this->arrPartial['dataForm']['idProjeto'] && $this->isProponente) {
-    echo $this->action('menu', 'menu', 'proposta', array('idPreProjeto' => $this->arrPartial['dataForm']['idProjeto']));
-    echo $this->partial('/mensagem/partials/proposta/conteudo-visualizar.phtml', 'solicitacao', $this);
+<style>
+    #qm0 > a:first-of-type{
+        background-color: #0A420E;
+        color: #fff;
+    }
+    #qm0, #qm0.qmmc{
+        padding-bottom: 0px;
+    }
 
-} elseif ($this->arrPartial['dataForm']['Pronac'] && $this->isProponente){
-    echo $this->partial('/mensagem/partials/projeto/conteudo-visualizar.phtml', 'solicitacao', $this);
-}else{ ?>
+
+    #conteudo .bt_enviar, #conteudo .bt_rascunho, #conteudo .btn {
+        color: #ffffff;
+     }
+    #conteudo a {
+        color: #373737;
+    }
+
+</style>
+
+<?= $this->partial('consultardadosprojeto/inc/menu.inc.php', 'default', $this); ?>
+
+<div id="conteudo" class="content">
     <div class="container-fluid">
-        <div class="row top-title">
+        <div class="row">
             <div class="page-title">
                 <div class="row">
                     <div class="col s12 m9 l10">
-                        <h1>Visualizar</h1>
+                        <h1>Enviar nova solicita&ccedil;&atilde;o Proponente</h1>
 
                         <?php
                         gerarNovoBreadCrumb(array(
-                            array('Solicita&ccedil;&otilde;es' => [
+                            array('Solicitações' => [
                                 'module' => 'solicitacao',
                                 'controller' => 'mensagem',
                                 'action', 'index']
@@ -34,10 +48,16 @@ if ($this->arrPartial['dataForm']['idProjeto'] && $this->isProponente) {
             <div class="content">
                 <div class="card-panel">
                     <div class="row">
+                        <?php if ($this->arrPartial['dataForm']['idSolicitacao'] && $this->arrPartial['isProponente']) : ?>
+                            <div class="msgALERT">
+                                <div>Solicitação salva como rascunho!</div>
+                            </div>
+                        <?php endif; ?>
+
                         <?php echo $this->partial('/mensagem/partials/form.phtml', $this->arrPartial); ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<?php }
+</div>
