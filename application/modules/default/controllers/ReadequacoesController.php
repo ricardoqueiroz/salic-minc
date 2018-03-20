@@ -461,32 +461,56 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
         if ($rsAgente->count() > 0) {
             $idAgente = $rsAgente[0]->idAgente;
         }
+        
+        $idPlanilha = $this->_request->getParam('idPlanilha');
+        
+        $ValorUnitario = $this->_request->getParam('ValorUnitario');
 
-        $ValorUnitario = str_replace('.', '', $_POST['ValorUnitario']);
+        $ValorUnitario = str_replace('R$ ', '', $ValorUnitario);
+        $ValorUnitario = str_replace('.', '', $ValorUnitario);
         $ValorUnitario = str_replace(',', '.', $ValorUnitario);
-
+        
         $idPronac = $this->_request->getParam("idPronac");
         if (strlen($idPronac) > 7) {
             $idPronac = Seguranca::dencrypt($idPronac);
         }
 
         $tbPlanilhaAprovacao = new tbPlanilhaAprovacao();
-        $itemTipoPlanilha = $tbPlanilhaAprovacao->buscar(array('idPlanilhaAprovacao=?'=>$_POST['idPlanilha']))->current();
+        $itemTipoPlanilha = $tbPlanilhaAprovacao->buscar(
+            array(
+                'idPlanilhaAprovacao=?' => $idPlanilha
+            )
+        )->current();
+
         if ($itemTipoPlanilha->tpPlanilha == 'SR') {
-            $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR', 'idPlanilhaAprovacao=?'=>$_POST['idPlanilha']))->current();
+            $editarItem = $tbPlanilhaAprovacao->buscar(
+                array(
+                    'IdPRONAC=?'=>$idPronac,
+                    'tpPlanilha=?'=>'SR',
+                    'idPlanilhaAprovacao=?'=>$idPlanilha
+                )
+            )->current();
         } else {
-            $editarItem = $tbPlanilhaAprovacao->buscar(array('IdPRONAC=?'=>$idPronac, 'tpPlanilha=?'=>'SR', 'idPlanilhaAprovacaoPai=?'=>$_POST['idPlanilha']))->current();
+            $editarItem = $tbPlanilhaAprovacao->buscar(
+                array(
+                    'IdPRONAC=?'=>$idPronac,
+                    'tpPlanilha=?'=>'SR',
+                    'idPlanilhaAprovacaoPai=?'=>$idPlanilha
+                )
+            )->current();
         }
-        $editarItem->idUnidade = $_POST['Unidade'];
-        $editarItem->qtItem = $_POST['Quantidade'];
-        $editarItem->nrOcorrencia = $_POST['Ocorrencia'];
+        
+        $editarItem->idUnidade = $this->_request->getParam('Unidade');
+        $editarItem->qtItem = $this->_request->getParam('Quantidade');
+        $editarItem->nrOcorrencia = $this->_request->getParam('Ocorrencia');
         $editarItem->vlUnitario = $ValorUnitario;
-        $editarItem->qtDias = $_POST['QtdeDias'];
-        $editarItem->dsJustificativa = utf8_decode($_POST['Justificativa']);
+        $editarItem->qtDias = $this->_request->getParam('QtdeDias');
+        $editarItem->dsJustificativa = utf8_decode($this->_request->getParam('Justificativa'));
         $editarItem->idAgente = $idAgente;
         if ($editarItem->tpAcao == 'N') {
             $editarItem->tpAcao = 'A';
         }
+        
 //        $editarItem->idAgente = $auth->getIdentity()->IdUsuario;
         $editarItem->save();
 
@@ -1416,7 +1440,7 @@ class ReadequacoesController extends MinC_Controller_Action_Abstract
 
         //VERIFICA SE JA POSSUI OS PLANOS DE DISTRIBUIÇÃO NA TABELA tbPlanoDistribuicao (READEQUACAO), SE NÃO TIVER, COPIA DA ORIGINAL, E DEPOIS INCLUI O ITEM DESEJADO.
         $tbPlanoDistribuicao = new tbPlanoDistribuicao();
-        $readequacaoPDDist = $tbPlanoDistribuicao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
+        $readequacaoPDDist = $tbPlanoDistribuicao->buscar(array('idPronac=?'=>$idPronac, 'stAtivo=?'=>'S'));
         $planosAtivos = $tbPlanoDistribuicao->buscarPlanosDistribuicaoReadequacao($idPronac);
 
         if (count($readequacaoPDDist)==0) {
