@@ -329,7 +329,7 @@ class fnLiberarLinks extends MinC_Db_Table_Abstract
             $tbCumprimentoObjeto = new tbCumprimentoObjeto();
             $possuiRelatorioDeCumprimento = $tbCumprimentoObjeto->possuiRelatorioDeCumprimento($idPronac);
             
-            if ($relatorioCumprimentoEnvio->idCumprimentoObjeto) {
+            if ($possuiRelatorioDeCumprimento) {
                 $Readequacao_50 = 0;
                 $Readequacao = 0;
                 $ComprovacaoFinanceira = 0;

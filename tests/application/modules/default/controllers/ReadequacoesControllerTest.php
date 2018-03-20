@@ -11,10 +11,18 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
     {
         parent::setUp();
         
-        // Marcado para refatoração futura
-        // * fixture do banco de dados com dados controlados
         $tbReadequacao = new tbReadequacao();
         $this->idPronac = $tbReadequacao->buscarIdPronacReadequacaoEmAndamento(tbReadequacao::TIPO_READEQUACAO_PLANILHA_ORCAMENTARIA);
+
+        $projetos = new Projetos();
+        
+        $projeto = $projetos->buscar(
+            array(
+                'IdPRONAC = ?' => $this->idPronac
+            )
+        )->current();
+        
+        $this->pronac = $projeto->AnoProjeto . $projeto->Sequencial;
         
         $this->hashPronac = Seguranca::encrypt($this->idPronac);
         
@@ -169,4 +177,51 @@ class ReadequacoesControllerTest extends MinC_Test_ControllerActionTestCase
         $this->assertUrl('default', 'readequacoes', 'painel-readequacoes');
     }
 
+    public function testPainelReadequacoesBuscaPronacAction()
+    {
+        $this->dispatch('/readequacoes/painel-readequacoes?pronac=' . $this->pronac . '&qtde=10&tipoFiltro=aguardando_distribuicao');
+        $this->assertUrl('default', 'readequacoes', 'painel-readequacoes');
+    }    
+    
+    public function testVisualizarReadequacaoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/visualizar-readequacao?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'readequacoes', 'visualizar-readequacao');
+    }
+
+    public function testCarregarValorEntrePlanilhasAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/carregar-valor-entre-planilhas?idPronac=' . $this->idPronac);
+        $this->assertUrl('default', 'readequacoes', 'carregar-valor-entre-planilhas');
+    }
+
+    public function testAvaliarReadequacaoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/avaliar-readequacao?idPronac=' . $this->hashPronac);
+        $this->assertUrl('default', 'readequacoes', 'avaliar-readequacao');
+    }
+
+    public function testAvaliarReadequacaoTecnicoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/avaliar-readequacao?idPronac=' . $this->hashPronac);
+        $this->assertUrl('default', 'readequacoes', 'avaliar-readequacao');
+    }
+
+    public function testEncaminharReadequacaoTecnicoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/encaminhar-analise-tecnica?id=' . $this->hashPronac . '&filtro=painel_do_tecnico');
+        $this->assertUrl('default', 'readequacoes', 'encaminhar-analise-tecnica');
+    }
+
+    public function testFormAvaliarReadequacaoTecnicoAction()
+    {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::TECNICO_ACOMPANHAMENTO, Orgaos::ORGAO_GEAR_SACAV);
+        $this->dispatch('/readequacoes/form-avaliar-readequacao?id=' . $this->hashPronac . '&filtro=painel_do_tecnico');
+        $this->assertUrl('default', 'readequacoes', 'form-avaliar-readequacao');
+    }
 }
