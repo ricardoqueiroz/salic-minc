@@ -26,6 +26,7 @@ class GerarrelatorioreuniaoControllerTest extends MinC_Test_ControllerActionTest
     }
     public function testgerarrelatorioreuniaoAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/gerarrelatorioreuniao/gerarrelatorioreuniao?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'gerarrelatorioreuniao', 'gerarrelatorioreuniao');
     }

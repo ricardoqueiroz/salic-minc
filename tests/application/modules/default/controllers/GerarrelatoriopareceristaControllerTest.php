@@ -5,7 +5,7 @@
  * @package
  * @author isaiassm <isaias1113@outlook.com>
  */
-class GerarrelatorioparecistaControllerTest extends MinC_Test_ControllerActionTestCase
+class GerarrelatoriopareceristaControllerTest extends MinC_Test_ControllerActionTestCase
 {
     public function setUp()
     {
@@ -26,6 +26,7 @@ class GerarrelatorioparecistaControllerTest extends MinC_Test_ControllerActionTe
     }
     public function testgeraldeanaliseAction()
     {
+        $this->alterarPerfil(Autenticacao_Model_Grupos::COORDENADOR_ANALISE, Orgaos::ORGAO_GEAAP_SUAPI_DIAAPI);
         $this->dispatch('/gerarrelatorioparecerista/geraldeanalise?idPronac=' . $this->idPronac);
         $this->assertUrl('default', 'gerarrelatorioparecerista', 'geraldeanalise');
     }
